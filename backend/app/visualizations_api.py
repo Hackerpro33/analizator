@@ -7,6 +7,7 @@ import uuid
 import time
 import tempfile
 import shutil
+import os
 
 router = APIRouter()
 
@@ -30,7 +31,9 @@ VISUALIZATIONS_JSON = STORE_DIR / "visualizations.json"
 
 
 def _atomic_write_json(path: Path, data: Any):
-    tmp_path = Path(tempfile.mkstemp(prefix="visualizations_", suffix=".json", dir=str(path.parent))[1])
+    fd, tmp_name = tempfile.mkstemp(prefix="visualizations_", suffix=".json", dir=str(path.parent))
+    tmp_path = Path(tmp_name)
+    os.close(fd)
     try:
         with tmp_path.open("w", encoding="utf-8") as tmp_file:
             json.dump(data, tmp_file, ensure_ascii=False, indent=2)
