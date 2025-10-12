@@ -1,21 +1,17 @@
+## Запуск фронтенда
 
-## Running the frontend
-
-Some dev-container configurations fail to resolve the `frontend/` folder when
-running shell tasks (for example `npm install`) from the repository root. The
-helper script below resolves the folder using an absolute path before executing
-`npm`, which avoids the "no filesystem provider for folder frontend" error.
+В некоторых конфигурациях dev-container возникают проблемы с определением папки `frontend/`, если выполнять команды (например, `npm install`) из корня репозитория. Скрипт ниже формирует абсолютный путь к каталогу, после чего вызывает `npm` и предотвращает ошибку «no filesystem provider for folder frontend».
 
 ```bash
-# install dependencies without leaving the repo root
+# установка зависимостей, не покидая корень репозитория
 ./scripts/install_frontend_deps.sh
 
-# start the Vite dev server
+# запуск Vite dev-сервера
 cd frontend
 npm run dev
 ```
 
-## Running the backend
+## Запуск бэкенда
 
 ```bash
 cd backend
@@ -23,25 +19,25 @@ pip install -r app/requirements.txt
 uvicorn app.main:app --app-dir backend --host 0.0.0.0 --port 8000
 ```
 
-## Verifying functionality
+## Проверка работоспособности
 
-After both services are running you can exercise the full feature set through the automated test suites:
+После запуска обоих сервисов можно убедиться в корректности ключевых сценариев через автоматические тесты:
 
 ```bash
-# Backend API checks
+# Проверка API бэкенда
 pytest backend/app/tests/test_data_transformation.py
 
-# Frontend unit and integration checks
+# Юнит- и интеграционные тесты фронтенда
 cd frontend
 npm test
 ```
 
-The backend tests cover file uploads, dataset and visualisation CRUD flows, analytics generation and email logging, while the Vitest suite validates the frontend data utilities and API helpers.
+Набор тестов бэкенда охватывает загрузку файлов, CRUD-операции с наборами данных и визуализациями, генерацию аналитики и логирование писем. Тесты Vitest проверяют вспомогательные утилиты фронтенда и работу API-обёрток.
 
-## Building the frontend
+## Сборка фронтенда
 
 ```bash
-# ensure dependencies are present (safe to re-run)
+# гарантируем наличие зависимостей (команду можно запускать повторно)
 ./scripts/install_frontend_deps.sh
 
 cd frontend
