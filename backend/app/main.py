@@ -6,12 +6,19 @@ from starlette.middleware.base import BaseHTTPMiddleware
 import pandas as pd
 import numpy as np
 import os
-import io
 import json
 import sys
 import uuid
-import re
 from typing import Optional, Dict, Any, List
+
+from .utils.files import (
+    DATA_DIR,
+    UPLOAD_DIR,
+    read_table_bytes,
+    register_uploaded_file,
+    resolve_file_path,
+    safe_filename,
+)
 
 app = FastAPI(title="Insight Sphere Backend", version="0.1.0")
 
@@ -57,37 +64,14 @@ allowed_hosts.append("localhost")
 app.add_middleware(TrustedHostMiddleware, allowed_hosts=list(dict.fromkeys(allowed_hosts)))
 app.add_middleware(SecurityHeadersMiddleware)
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-UPLOAD_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "uploads"))
-DATA_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "data"))
-os.makedirs(UPLOAD_DIR, exist_ok=True)
-os.makedirs(DATA_DIR, exist_ok=True)
-EMAIL_LOG_PATH = os.path.join(DATA_DIR, "email_log.jsonl")
+EMAIL_LOG_PATH = DATA_DIR / "email_log.jsonl"
 
 MAX_UPLOAD_SIZE_MB = int(os.getenv("MAX_UPLOAD_SIZE_MB", "25"))
 MAX_UPLOAD_SIZE = MAX_UPLOAD_SIZE_MB * 1024 * 1024
 
-def _safe_name(name: str) -> str:
-    return re.sub(r"[^a-zA-Z0-9._-]+", "_", name)
-
 @app.get("/health")
 def health():
     return {"status": "ok"}
-
-def read_table_bytes(file_bytes: bytes, filename: str) -> pd.DataFrame:
-    ext = os.path.splitext(filename)[1].lower()
-    if ext in [".xlsx", ".xls"]:
-        return pd.read_excel(io.BytesIO(file_bytes))
-    elif ext in [".csv", ".tsv"]:
-        sep = "\t" if ext == ".tsv" else None
-        read_kwargs = {"sep": sep}
-        if sep is None:
-            # Let pandas automatically detect delimiters without emitting
-            # a fallback warning by explicitly selecting the python engine.
-            read_kwargs["engine"] = "python"
-        return pd.read_csv(io.BytesIO(file_bytes), **read_kwargs)
-    else:
-        raise HTTPException(status_code=400, detail=f"Unsupported format: {ext}")
 
 def detect_general_type(series: pd.Series) -> str:
     if pd.api.types.is_bool_dtype(series):
@@ -172,8 +156,6 @@ def build_extraction(df: pd.DataFrame, sample_rows: int = 100) -> Dict[str, Any]
 
 
 # simple in-memory registry file_id -> path
-FILE_REGISTRY: Dict[str, str] = {}
-
 @app.post("/api/upload")
 async def api_upload(file: UploadFile = File(...)):
     data = await file.read()
@@ -186,11 +168,11 @@ async def api_upload(file: UploadFile = File(...)):
         )
     # save
     fid = str(uuid.uuid4())
-    safe = _safe_name(file.filename or "file")
-    path = os.path.join(UPLOAD_DIR, f"{fid}_{safe}")
-    with open(path, "wb") as f:
+    safe = safe_filename(file.filename or "file")
+    path = UPLOAD_DIR / f"{fid}_{safe}"
+    with path.open("wb") as f:
         f.write(data)
-    FILE_REGISTRY[fid] = path
+    register_uploaded_file(fid, path)
     # quick extraction for preview (optional)
     try:
         df = read_table_bytes(data, file.filename)
@@ -205,18 +187,11 @@ class ExtractRequest(BaseModel):
 
 @app.post("/api/extract")
 def api_extract(req: ExtractRequest):
-    fid = req.file_url
-    path = FILE_REGISTRY.get(fid)
-    if not path or not os.path.exists(path):
-        # try direct path if file_url was actually a path
-        path = os.path.join(UPLOAD_DIR, _safe_name(fid))
-        if not os.path.exists(path):
-            raise HTTPException(status_code=404, detail="File not found")
-
-    with open(path, "rb") as f:
+    path = resolve_file_path(req.file_url)
+    with path.open("rb") as f:
         file_bytes = f.read()
     try:
-        df = read_table_bytes(file_bytes, os.path.basename(path))
+        df = read_table_bytes(file_bytes, path.name)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
     output = build_extraction(df)
@@ -238,7 +213,7 @@ async def api_send_email(payload: EmailRequest):
         "from_name": payload.from_name,
     }
     try:
-        with open(EMAIL_LOG_PATH, "a", encoding="utf-8") as log_file:
+        with EMAIL_LOG_PATH.open("a", encoding="utf-8") as log_file:
             log_file.write(json.dumps(record, ensure_ascii=False) + "\n")
     except Exception as exc:
         raise HTTPException(status_code=500, detail=f"Failed to log email: {exc}")
@@ -257,10 +232,12 @@ if __package__ in {None, ""}:
     current_dir = os.path.dirname(os.path.abspath(__file__))
     if current_dir not in sys.path:
         sys.path.append(current_dir)
+    import audit_api as audit_router_module
     import chat_api as chat_router_module
     import datasets_api as datasets_router_module
     import visualizations_api as visualizations_router_module
 else:
+    from . import audit_api as audit_router_module
     from . import chat_api as chat_router_module
     from . import datasets_api as datasets_router_module
     from . import visualizations_api as visualizations_router_module
@@ -268,7 +245,9 @@ else:
 datasets_router = datasets_router_module.router
 visualizations_router = visualizations_router_module.router
 chat_router = chat_router_module.router
+audit_router = audit_router_module.router
 
 app.include_router(datasets_router, prefix="/api/dataset")
 app.include_router(visualizations_router, prefix="/api/visualization")
 app.include_router(chat_router, prefix="/api/chat")
+app.include_router(audit_router, prefix="/api/audit")

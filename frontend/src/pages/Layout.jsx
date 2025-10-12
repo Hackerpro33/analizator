@@ -15,7 +15,8 @@ import {
   Component, // Added Component icon
   Settings as SettingsIcon, // Imported SettingsIcon
   RefreshCw, // Added RefreshCw icon for Data Transformation
-  MessageSquare
+  MessageSquare,
+  ShieldCheck
 } from "lucide-react";
 import {
   Sidebar,
@@ -38,11 +39,17 @@ const navigationItems = [
     icon: Home,
     gradient: "from-emerald-500 to-teal-600"
   },
-  {
+  { 
     title: "Аналитический ассистент",
     url: createPageUrl("Assistant"),
     icon: MessageSquare,
     gradient: "from-violet-500 to-purple-600"
+  },
+  {
+    title: "Продвинутая аналитика",
+    url: createPageUrl("AdvancedAnalytics"),
+    icon: ShieldCheck,
+    gradient: "from-blue-600 to-purple-600"
   },
   {
     title: "Источники данных",
