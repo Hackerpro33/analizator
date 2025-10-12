@@ -511,6 +511,47 @@ describe("suggestDataApplications", () => {
     expect(suggestion.suggestions.some((text) => text.toLowerCase().includes("карту"))).toBe(true);
     expect(suggestion.suggestions.some((text) => text.includes("Difference-in-Differences"))).toBe(true);
     expect(suggestion.suggestions.some((text) => text.toLowerCase().includes("social network analysis"))).toBe(true);
+    expect(
+      suggestion.suggestions.some((text) =>
+        text.toLowerCase().includes("агентно-ориентированного моделирования")
+      )
+    ).toBe(true);
+    expect(
+      suggestion.suggestions.some((text) => text.toLowerCase().includes("causalnex"))
+    ).toBe(true);
+    expect(
+      suggestion.suggestions.some((text) => text.toLowerCase().includes("bayesian"))
+    ).toBe(true);
+    expect(
+      suggestion.suggestions.some((text) => text.toLowerCase().includes("spatio-temporal"))
+    ).toBe(true);
+    expect(
+      suggestion.suggestions.some((text) => text.toLowerCase().includes("automl"))
+    ).toBe(true);
+    expect(
+      suggestion.suggestions.some((text) => text.toLowerCase().includes("цифровой двойник"))
+    ).toBe(true);
+    expect(
+      suggestion.suggestions.some((text) => text.toLowerCase().includes("gnn"))
+    ).toBe(true);
+    expect(
+      suggestion.suggestions.some((text) => text.toLowerCase().includes("reinforcement learning"))
+    ).toBe(true);
+    expect(
+      suggestion.suggestions.some((text) => text.toLowerCase().includes("детекцию аномалий"))
+    ).toBe(true);
+    expect(
+      suggestion.suggestions.some((text) => text.toLowerCase().includes("дифференциальной приватностью"))
+    ).toBe(true);
+    expect(
+      suggestion.suggestions.some((text) => text.toLowerCase().includes("федеративное обучение"))
+    ).toBe(true);
+    expect(
+      suggestion.suggestions.some((text) => text.toLowerCase().includes("синтетические наборы"))
+    ).toBe(true);
+    expect(
+      suggestion.suggestions.some((text) => text.toLowerCase().includes("edge ai"))
+    ).toBe(true);
     expect(suggestion.focus_areas).toEqual(
       expect.arrayContaining(["Общественная безопасность и правоприменение"])
     );
@@ -523,6 +564,24 @@ describe("suggestDataApplications", () => {
         "experimentation",
         "automation",
         "explainability",
+        "abm",
+        "causal",
+        "bayesian",
+        "spatiotemporal",
+        "context-embedding",
+        "ensemble",
+        "automl",
+        "active-learning",
+        "synthetic-control",
+        "multi-criteria-evaluation",
+        "digital-twin",
+        "gnn",
+        "reinforcement-learning",
+        "anomaly-detection",
+        "privacy",
+        "federated-learning",
+        "synthetic-data",
+        "edge-ai",
       ])
     );
     expect(suggestion.focus_areas.length).toBeGreaterThan(0);
@@ -567,8 +626,27 @@ describe("suggestDataApplications", () => {
 
     expect(suggestion.focus_areas[0]).toBe("Общественная безопасность и правоприменение");
     expect(suggestion.suggestions.some((text) => text.includes("Difference-in-Differences"))).toBe(true);
+    expect(
+      suggestion.suggestions.some((text) =>
+        text.toLowerCase().includes("агентно-ориентированного моделирования")
+      )
+    ).toBe(true);
+    expect(
+      suggestion.suggestions.some((text) => text.toLowerCase().includes("synthetic control"))
+    ).toBe(true);
+    expect(
+      suggestion.suggestions.some((text) => text.toLowerCase().includes("reinforcement learning"))
+    ).toBe(true);
     expect(suggestion.tags).toEqual(
-      expect.arrayContaining(["law-enforcement", "experimentation", "sna"])
+      expect.arrayContaining([
+        "law-enforcement",
+        "experimentation",
+        "sna",
+        "abm",
+        "synthetic-control",
+        "multi-criteria-evaluation",
+        "reinforcement-learning",
+      ])
     );
   });
 });
