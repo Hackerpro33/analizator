@@ -105,7 +105,7 @@ def test_extract_missing_file_returns_404(client):
 def test_dataset_create_and_list(client):
     dataset_payload = {
         "name": "Extracted Sample",
-        "description": "Generated in tests",
+        "description": "Сгенерировано в тестах",
         "tags": ["test"],
         "columns": [
             {"name": "city", "type": "string"},
@@ -145,7 +145,7 @@ def test_dataset_update_and_delete(client):
         "/api/dataset/create",
         json={
             "name": "Initial dataset",
-            "description": "Before update",
+            "description": "До обновления",
             "columns": [],
             "row_count": 0,
         },
@@ -156,7 +156,7 @@ def test_dataset_update_and_delete(client):
     update_response = client.put(
         f"/api/dataset/{dataset_id}",
         json={
-            "description": "After update",
+            "description": "После обновления",
             "tags": ["updated"],
         },
         headers=HEADERS,
@@ -164,7 +164,7 @@ def test_dataset_update_and_delete(client):
 
     assert update_response.status_code == 200
     updated = update_response.json()["dataset"]
-    assert updated["description"] == "After update"
+    assert updated["description"] == "После обновления"
     assert updated["tags"] == ["updated"]
     assert "updated_at" in updated
 
@@ -426,7 +426,7 @@ def test_upload_multiple_tables_near_limit(monkeypatch, client):
 
         dataset_payload = {
             "name": f"Batch {idx}",
-            "description": "Loaded for integration test",
+            "description": "Загружено для интеграционного теста",
             "tags": [f"batch-{idx}"],
             "columns": uploaded["quick_extraction"]["columns"],
             "row_count": uploaded["quick_extraction"]["row_count"],
@@ -579,7 +579,7 @@ def test_crime_factor_dataset_workflow(client):
         "/api/dataset/create",
         json={
             "name": "Criminogenic Factors Central District",
-            "description": "Multi-year monitoring of criminogenic indicators.",
+            "description": "Многолетний мониторинг криминогенных показателей.",
             "tags": ["crime-analysis", "trend"],
             "columns": extract_payload["columns"],
             "row_count": extract_payload["row_count"],
@@ -592,7 +592,7 @@ def test_crime_factor_dataset_workflow(client):
 
     update_response = client.put(
         f"/api/dataset/{dataset_id}",
-        json={"description": "Updated with criminogenic insights", "tags": ["crime-analysis", "hotspot"]},
+        json={"description": "Обновлено с криминогенными инсайтами", "tags": ["crime-analysis", "hotspot"]},
         headers=HEADERS,
     )
     assert update_response.status_code == 200
