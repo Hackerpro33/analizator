@@ -6,6 +6,29 @@ const toNumberArray = (values) =>
     })
     .filter((value) => value !== null);
 
+const sum = (values) => values.reduce((total, value) => total + value, 0);
+
+const safeAverage = (values) => {
+  const numeric = toNumberArray(values);
+  return numeric.length ? average(numeric) : 0;
+};
+
+const safeNumber = (value, fallback = 0) => {
+  if (Array.isArray(value)) {
+    return safeAverage(value);
+  }
+  const parsed = typeof value === "number" ? value : Number(value);
+  return Number.isFinite(parsed) ? parsed : fallback;
+};
+
+const safeDivide = (numerator, denominator, fallback = 0) => {
+  const divisor = Number(denominator);
+  if (!Number.isFinite(divisor) || Math.abs(divisor) < 1e-9) {
+    return fallback;
+  }
+  return numerator / divisor;
+};
+
 const average = (values) => {
   if (!values.length) return 0;
   return values.reduce((sum, value) => sum + value, 0) / values.length;
@@ -16,6 +39,52 @@ const standardDeviation = (values) => {
   const mean = average(values);
   const variance = values.reduce((sum, value) => sum + (value - mean) ** 2, 0) / (values.length - 1);
   return Math.sqrt(variance);
+};
+
+const fitLinearRegression = (xValues, yValues) => {
+  const length = Math.min(xValues.length, yValues.length);
+  if (length === 0) {
+    return { slope: 0, intercept: 0 };
+  }
+
+  const x = xValues.slice(0, length);
+  const y = yValues.slice(0, length);
+
+  const sumX = sum(x);
+  const sumY = sum(y);
+  const sumXY = sum(x.map((value, index) => value * y[index]));
+  const sumX2 = sum(x.map((value) => value ** 2));
+  const numerator = length * sumXY - sumX * sumY;
+  const denominator = length * sumX2 - sumX ** 2;
+
+  if (Math.abs(denominator) < 1e-9) {
+    return { slope: 0, intercept: length ? sumY / length : 0 };
+  }
+
+  const slope = numerator / denominator;
+  const intercept = (sumY - slope * sumX) / length;
+  return { slope, intercept };
+};
+
+const normaliseDate = (value) => {
+  if (!value) {
+    return null;
+  }
+  const parsed = value instanceof Date ? value : new Date(value);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+};
+
+const formatDate = (date) => {
+  if (!(date instanceof Date)) {
+    return "";
+  }
+  return date.toISOString().split("T")[0];
+};
+
+const addDays = (date, days) => {
+  const clone = new Date(date);
+  clone.setDate(clone.getDate() + days);
+  return clone;
 };
 
 const pearsonCorrelation = (seriesA, seriesB) => {
@@ -75,6 +144,224 @@ const normalizeColumnType = (type) => {
 
 const createRowFingerprint = (row, columns) =>
   JSON.stringify(columns.map((column) => (row?.[column] ?? null)));
+
+export function differenceInDifferences({
+  treatmentBefore,
+  treatmentAfter,
+  controlBefore,
+  controlAfter,
+} = {}) {
+  const treatmentBeforeMean = safeNumber(treatmentBefore, 0);
+  const treatmentAfterMean = safeNumber(treatmentAfter, treatmentBeforeMean);
+  const controlBeforeMean = safeNumber(controlBefore, 0);
+  const controlAfterMean = safeNumber(controlAfter, controlBeforeMean);
+
+  const treatmentChange = treatmentAfterMean - treatmentBeforeMean;
+  const controlChange = controlAfterMean - controlBeforeMean;
+  const effect = treatmentChange - controlChange;
+  const baseline = Math.max(Math.abs(treatmentBeforeMean), 1e-6);
+  const relativeEffect = (effect / baseline) * 100;
+
+  let interpretation = "Изменение относительно контрольной группы не обнаружено.";
+  if (effect < -1e-6) {
+    interpretation = "Вмешательство ассоциируется со снижением показателя относительно контроля.";
+  } else if (effect > 1e-6) {
+    interpretation = "Вмешательство связано с ростом показателя относительно контроля.";
+  }
+
+  return {
+    treatment: {
+      before: Number(treatmentBeforeMean.toFixed(2)),
+      after: Number(treatmentAfterMean.toFixed(2)),
+      change: Number(treatmentChange.toFixed(2)),
+    },
+    control: {
+      before: Number(controlBeforeMean.toFixed(2)),
+      after: Number(controlAfterMean.toFixed(2)),
+      change: Number(controlChange.toFixed(2)),
+    },
+    difference_in_differences: Number(effect.toFixed(2)),
+    relative_effect_pct: Number(relativeEffect.toFixed(1)),
+    interpretation,
+    summary:
+      `${interpretation} (эффект ${effect >= 0 ? "+" : ""}${effect.toFixed(2)}, ` +
+      `относительно базового периода ${relativeEffect >= 0 ? "+" : ""}${relativeEffect.toFixed(1)}%).`,
+  };
+}
+
+export function buildCounterfactualScenario({ historical = [], interventionDate, horizon = 7 } = {}) {
+  const timeline = (Array.isArray(historical) ? historical : [])
+    .filter((entry) => Number.isFinite(entry?.value))
+    .map((entry) => ({ ...entry, date: normaliseDate(entry.date) }))
+    .filter((entry) => entry.date)
+    .sort((a, b) => a.date - b.date);
+
+  if (!timeline.length) {
+    return {
+      counterfactual: [],
+      actual: [],
+      uplift: [],
+      average_uplift: 0,
+      interpretation: "Недостаточно данных для построения контрфакта.",
+    };
+  }
+
+  const interventionPoint = normaliseDate(interventionDate);
+  const defaultSplit = Math.max(Math.floor(timeline.length * 0.6), 1);
+  let splitIndex = defaultSplit;
+
+  if (interventionPoint) {
+    const index = timeline.findIndex((entry) => entry.date > interventionPoint);
+    if (index > 0) {
+      splitIndex = index;
+    }
+  }
+
+  splitIndex = Math.min(Math.max(splitIndex, 1), timeline.length - 1);
+
+  const preIntervention = timeline.slice(0, splitIndex);
+  const postIntervention = timeline.slice(splitIndex);
+
+  const xValues = preIntervention.map((_, index) => index);
+  const yValues = preIntervention.map((entry) => entry.value);
+  const { slope, intercept } = fitLinearRegression(xValues, yValues);
+
+  const counterfactual = [];
+  const actual = [];
+  const uplift = [];
+
+  const lastPreDate = preIntervention[preIntervention.length - 1].date;
+  const totalSteps = Math.max(postIntervention.length, horizon);
+
+  for (let step = 1; step <= totalSteps; step += 1) {
+    const index = preIntervention.length - 1 + step;
+    const estimate = intercept + slope * index;
+    const predictedValue = Number(estimate.toFixed(2));
+    const postEntry = postIntervention[step - 1];
+    const date = postEntry?.date ?? addDays(lastPreDate, step);
+
+    counterfactual.push({ date: formatDate(date), value: predictedValue });
+
+    if (postEntry) {
+      const actualValue = Number(postEntry.value.toFixed(2));
+      actual.push({ date: formatDate(postEntry.date), value: actualValue });
+      uplift.push({
+        date: formatDate(postEntry.date),
+        value: Number((actualValue - predictedValue).toFixed(2)),
+      });
+    } else {
+      actual.push({ date: formatDate(date), value: null });
+      uplift.push({ date: formatDate(date), value: null });
+    }
+  }
+
+  const realisedUplift = uplift.filter((entry) => entry.value !== null).map((entry) => entry.value);
+  const averageUplift = realisedUplift.length ? average(realisedUplift) : 0;
+
+  let interpretation = "Контрфактическая модель построена на линейном тренде до вмешательства.";
+  if (realisedUplift.length) {
+    if (averageUplift < -1e-6) {
+      interpretation =
+        "Фактические значения ниже контрфактических ожиданий — наблюдается улучшение показателя.";
+    } else if (averageUplift > 1e-6) {
+      interpretation =
+        "Фактические значения выше контрфактических ожиданий — возможное ухудшение показателя.";
+    }
+  }
+
+  return {
+    counterfactual,
+    actual,
+    uplift,
+    average_uplift: Number(averageUplift.toFixed(2)),
+    slope: Number(slope.toFixed(4)),
+    intercept: Number(intercept.toFixed(2)),
+    interpretation,
+    summary:
+      `${interpretation} Среднее отклонение ${averageUplift >= 0 ? "+" : ""}${averageUplift.toFixed(2)}.`,
+  };
+}
+
+export function calculateSafetyKPIs({ before = [], after = [] } = {}) {
+  const normaliseRecords = (records) =>
+    (Array.isArray(records) ? records : []).map((entry) => ({
+      incidents: safeNumber(entry?.incidents),
+      cases_cleared: safeNumber(entry?.cases_cleared),
+      response_minutes: safeNumber(entry?.response_minutes),
+      perception_score: safeNumber(entry?.perception_score),
+    }));
+
+  const beforeRecords = normaliseRecords(before);
+  const afterRecords = normaliseRecords(after);
+
+  const incidentsBefore = sum(beforeRecords.map((entry) => entry.incidents));
+  const incidentsAfter = sum(afterRecords.map((entry) => entry.incidents));
+  const solvedBefore = sum(beforeRecords.map((entry) => entry.cases_cleared));
+  const solvedAfter = sum(afterRecords.map((entry) => entry.cases_cleared));
+  const responseBefore = safeAverage(beforeRecords.map((entry) => entry.response_minutes));
+  const responseAfter = safeAverage(afterRecords.map((entry) => entry.response_minutes));
+  const perceptionBefore = safeAverage(beforeRecords.map((entry) => entry.perception_score));
+  const perceptionAfter = safeAverage(afterRecords.map((entry) => entry.perception_score));
+
+  const incidentReduction = safeDivide(incidentsBefore - incidentsAfter, incidentsBefore, 0) * 100;
+  const clearanceBefore = safeDivide(solvedBefore, incidentsBefore, 0) * 100;
+  const clearanceAfter = safeDivide(solvedAfter, incidentsAfter, 0) * 100;
+  const clearanceChange = clearanceAfter - clearanceBefore;
+  const responseDelta = responseAfter - responseBefore;
+  const perceptionDelta = perceptionAfter - perceptionBefore;
+
+  const insights = [];
+  if (Number.isFinite(incidentReduction)) {
+    insights.push(
+      `Снижение зарегистрированных инцидентов составило ${incidentReduction >= 0 ? "+" : ""}${incidentReduction.toFixed(
+        1
+      )}% по сравнению с базовым периодом.`
+    );
+  }
+  if (Number.isFinite(clearanceChange)) {
+    insights.push(
+      `Изменение раскрываемости: ${clearanceChange >= 0 ? "+" : ""}${clearanceChange.toFixed(
+        1
+      )} п.п. (с ${clearanceBefore.toFixed(1)}% до ${clearanceAfter.toFixed(1)}%).`
+    );
+  }
+  if (Number.isFinite(responseDelta)) {
+    insights.push(
+      `Среднее время реагирования изменилось на ${responseDelta >= 0 ? "+" : ""}${responseDelta.toFixed(
+        1
+      )} мин.`
+    );
+  }
+  if (Number.isFinite(perceptionDelta)) {
+    insights.push(
+      `Оценка ощущения безопасности изменилась на ${perceptionDelta >= 0 ? "+" : ""}${perceptionDelta.toFixed(
+        1
+      )} пункт(ов).`
+    );
+  }
+
+  return {
+    baseline: {
+      incidents: Number(incidentsBefore.toFixed(1)),
+      clearance_rate_pct: Number(clearanceBefore.toFixed(1)),
+      response_minutes: Number(responseBefore.toFixed(1)),
+      perception_score: Number(perceptionBefore.toFixed(1)),
+    },
+    current: {
+      incidents: Number(incidentsAfter.toFixed(1)),
+      clearance_rate_pct: Number(clearanceAfter.toFixed(1)),
+      response_minutes: Number(responseAfter.toFixed(1)),
+      perception_score: Number(perceptionAfter.toFixed(1)),
+    },
+    deltas: {
+      incident_reduction_pct: Number(incidentReduction.toFixed(1)),
+      clearance_rate_change_pct: Number(clearanceChange.toFixed(1)),
+      response_time_change_minutes: Number(responseDelta.toFixed(1)),
+      perception_change_points: Number(perceptionDelta.toFixed(1)),
+    },
+    insights,
+  };
+}
 
 export function generateForecastReport({ historical, horizon, externalFactors = [] }) {
   const horizonDays = Math.max(1, Math.floor(horizon ?? 7));
@@ -1417,6 +1704,12 @@ export function summarizeEmailBody(summary) {
   ].join("\n");
 }
 
+const LAW_ENFORCEMENT_PATTERNS = [
+  /crime/, /offense/, /incident/, /violence/, /safety/, /security/,
+  /police/, /patrol/, /enforcement/, /response/,
+  /преступ/, /правоохран/, /безопас/, /патрул/, /инцидент/, /правопорядок/,
+];
+
 const GEO_COLUMN_PATTERNS = [
   /latitude/,
   /longitude/,
@@ -1471,6 +1764,7 @@ export function suggestDataApplications({ dataset = {}, project = {} } = {}) {
   const columns = normaliseColumns(dataset.columns || []);
   const sampleRows = Array.isArray(dataset.sample_data) ? dataset.sample_data : [];
   const rowCount = dataset.row_count ?? sampleRows.length ?? 0;
+  const datasetContext = `${String(dataset.name || "").toLowerCase()} ${String(dataset.description || "").toLowerCase()}`;
 
   const hasNumeric = columns.some((column) => column.normalizedType === "number");
   const hasDate = columns.some((column) => column.normalizedType === "datetime");
@@ -1484,12 +1778,46 @@ export function suggestDataApplications({ dataset = {}, project = {} } = {}) {
     (column) => column.normalizedType === "string" && detectMatches([column], TEXT_SIGNAL_PATTERNS)
   );
   const hasRichText = columns.some((column) => column.normalizedType === "string" && hasLongTextSample(column, sampleRows));
+  const hasLawEnforcement =
+    LAW_ENFORCEMENT_PATTERNS.some((pattern) => pattern.test(datasetContext)) ||
+    columns.some((column) => LAW_ENFORCEMENT_PATTERNS.some((pattern) => pattern.test(column.lowerName)));
 
   const typeCounts = countTypes(columns);
 
   const suggestions = [];
   const focusAreas = [];
   const tags = new Set();
+
+  if (hasLawEnforcement) {
+    focusAreas.unshift("Общественная безопасность и правоприменение");
+    suggestions.push(
+      "Примените локальные методы оценки вмешательств: до–после анализ (Difference-in-Differences) и counterfactual моделировани" +
+        "е без обращения к внешним сервисам."
+    );
+    suggestions.push(
+      "Настройте локальные KPI: снижение числа преступлений, рост раскрываемости, скорость реагирования и общественное восприяти" +
+        "е безопасности."
+    );
+    suggestions.push(
+      "Экспериментируйте с маршрутами и технологиями через локальные контрольные группы и A/B-тесты между районами."
+    );
+    suggestions.push(
+      "Запустите Social Network Analysis (SNA) и графовые ML-подходы для отслеживания связей правонарушителей и прогнозирования" +
+        " распространения активности."
+    );
+    suggestions.push(
+      "Постройте локальное хранилище (Data Warehouse/Data Lake), автоматизируйте ETL (Airflow, Prefect), ускоряйте эксперименты" +
+        " AutoML (H2O, Vertex AI, PyCaret) и применяйте Explainable AI (SHAP, LIME)."
+    );
+    suggestions.push(
+      "Задействуйте встроенные функции differenceInDifferences(), buildCounterfactualScenario() и calculateSafetyKPIs() для оперативной оценки влияния мер в защищённой среде."
+    );
+    tags.add("law-enforcement");
+    tags.add("experimentation");
+    tags.add("sna");
+    tags.add("automation");
+    tags.add("explainability");
+  }
 
   if (hasNumeric && hasDate) {
     suggestions.push(

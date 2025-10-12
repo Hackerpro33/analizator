@@ -10,6 +10,9 @@ import {
   buildProjectReport,
   summarizeEmailBody,
   suggestDataApplications,
+  differenceInDifferences,
+  buildCounterfactualScenario,
+  calculateSafetyKPIs,
 } from "../localAnalysis";
 
 describe("generateForecastReport", () => {
@@ -53,6 +56,103 @@ describe("generateForecastReport", () => {
     expect(report.forecast_data).toHaveLength(2);
     expect(report.summary.key_insights.length).toBeGreaterThan(0);
   });
+
+  it("produces consistent forecast bands для линейного роста", () => {
+    const historical = [
+      { date: "2024-04-01", value: 120 },
+      { date: "2024-04-02", value: 126 },
+      { date: "2024-04-03", value: 132 },
+      { date: "2024-04-04", value: 138 },
+      { date: "2024-04-05", value: 144 },
+      { date: "2024-04-06", value: 150 },
+    ];
+
+    const report = generateForecastReport({ historical, horizon: 3 });
+
+    const predicted = report.forecast_data.map((entry) => entry.predicted_value);
+    const lower = report.forecast_data.map((entry) => entry.confidence_lower);
+    const upper = report.forecast_data.map((entry) => entry.confidence_upper);
+
+    expect(predicted).toHaveLength(3);
+    expect(predicted[0]).toBeCloseTo(157.63, 2);
+    expect(predicted[1]).toBeCloseTo(165.92, 2);
+    expect(predicted[2]).toBeCloseTo(172.38, 2);
+    expect(lower[0]).toBeLessThan(predicted[0]);
+    expect(upper[0]).toBeGreaterThan(predicted[0]);
+    expect(report.scenarios.optimistic[0]).toBeCloseTo(predicted[0] * 1.08, 2);
+    expect(report.scenarios.pessimistic[0]).toBeCloseTo(predicted[0] * 0.92, 2);
+  });
+});
+
+describe("differenceInDifferences", () => {
+  it("оценивает эффект вмешательства относительно контрольной группы", () => {
+    const evaluation = differenceInDifferences({
+      treatmentBefore: [40, 38, 42, 39],
+      treatmentAfter: [30, 28, 32, 29],
+      controlBefore: [36, 35, 37, 34],
+      controlAfter: [34, 33, 35, 34],
+    });
+
+    expect(evaluation.treatment.change).toBeCloseTo(-10, 1);
+    expect(evaluation.control.change).toBeCloseTo(-1.5, 1);
+    expect(evaluation.difference_in_differences).toBeCloseTo(-8.5, 1);
+    expect(evaluation.relative_effect_pct).toBeCloseTo(-21.4, 1);
+    expect(evaluation.interpretation).toContain("снижением");
+  });
+});
+
+describe("buildCounterfactualScenario", () => {
+  it("строит прогноз и сравнивает его с фактическими значениями", () => {
+    const historical = [
+      { date: "2024-01-01", value: 20 },
+      { date: "2024-01-02", value: 21 },
+      { date: "2024-01-03", value: 22 },
+      { date: "2024-01-04", value: 23 },
+      { date: "2024-01-05", value: 24 },
+      { date: "2024-01-06", value: 25 },
+      { date: "2024-01-07", value: 26 },
+      { date: "2024-01-08", value: 24 },
+      { date: "2024-01-09", value: 23 },
+      { date: "2024-01-10", value: 22 },
+    ];
+
+    const scenario = buildCounterfactualScenario({
+      historical,
+      interventionDate: "2024-01-07",
+      horizon: 3,
+    });
+
+    expect(scenario.counterfactual.slice(0, 3).map((entry) => entry.value)).toEqual([
+      27,
+      28,
+      29,
+    ]);
+    expect(scenario.actual.slice(0, 3).map((entry) => entry.value)).toEqual([24, 23, 22]);
+    expect(scenario.uplift.slice(0, 3).map((entry) => entry.value)).toEqual([-3, -5, -7]);
+    expect(scenario.average_uplift).toBeCloseTo(-5, 1);
+    expect(scenario.interpretation).toContain("улучшение");
+  });
+});
+
+describe("calculateSafetyKPIs", () => {
+  it("агрегирует KPI общественной безопасности для периодов до и после", () => {
+    const before = [
+      { incidents: 120, cases_cleared: 48, response_minutes: 18, perception_score: 62 },
+      { incidents: 110, cases_cleared: 44, response_minutes: 19, perception_score: 60 },
+    ];
+    const after = [
+      { incidents: 90, cases_cleared: 54, response_minutes: 15, perception_score: 68 },
+      { incidents: 85, cases_cleared: 50, response_minutes: 14, perception_score: 70 },
+    ];
+
+    const kpis = calculateSafetyKPIs({ before, after });
+
+    expect(kpis.deltas.incident_reduction_pct).toBeCloseTo(23.9, 1);
+    expect(kpis.deltas.clearance_rate_change_pct).toBeCloseTo(19.4, 1);
+    expect(kpis.deltas.response_time_change_minutes).toBeCloseTo(-4, 1);
+    expect(kpis.deltas.perception_change_points).toBeCloseTo(8, 1);
+    expect(kpis.insights.length).toBeGreaterThanOrEqual(4);
+  });
 });
 
 describe("analyzeCorrelation", () => {
@@ -78,6 +178,25 @@ describe("analyzeCorrelation", () => {
     expect(result.insights).toContain(
       "Недостаточно числовых данных для построения матрицы корреляций."
     );
+  });
+
+  it("вычисляет стабильные коэффициенты для оперативных метрик", () => {
+    const result = analyzeCorrelation({
+      features: [
+        { label: "Calls", values: [30, 32, 31, 35, 36, 38] },
+        { label: "Response", values: [12, 12, 13, 14, 15, 15] },
+        { label: "Weather", values: [0, 1, 0, 2, 1, 3] },
+      ],
+    });
+
+    const callsRow = result.correlation_matrix.find((row) => row.feature === "Calls");
+    expect(callsRow.correlations.Response).toBeCloseTo(0.924, 3);
+    expect(callsRow.correlations.Weather).toBeCloseTo(0.89, 2);
+    expect(result.strongest_correlations[0]).toMatchObject({
+      feature1: "Calls",
+      feature2: "Response",
+    });
+    expect(result.insights.some((text) => text.includes("Calls"))).toBe(true);
   });
 });
 
@@ -390,7 +509,22 @@ describe("suggestDataApplications", () => {
     expect(suggestion.summary).toContain("Локальный ассистент");
     expect(suggestion.suggestions.some((text) => text.toLowerCase().includes("прогноз"))).toBe(true);
     expect(suggestion.suggestions.some((text) => text.toLowerCase().includes("карту"))).toBe(true);
-    expect(suggestion.tags).toEqual(expect.arrayContaining(["forecast", "geo"]));
+    expect(suggestion.suggestions.some((text) => text.includes("Difference-in-Differences"))).toBe(true);
+    expect(suggestion.suggestions.some((text) => text.toLowerCase().includes("social network analysis"))).toBe(true);
+    expect(suggestion.focus_areas).toEqual(
+      expect.arrayContaining(["Общественная безопасность и правоприменение"])
+    );
+    expect(suggestion.tags).toEqual(
+      expect.arrayContaining([
+        "forecast",
+        "geo",
+        "law-enforcement",
+        "sna",
+        "experimentation",
+        "automation",
+        "explainability",
+      ])
+    );
     expect(suggestion.focus_areas.length).toBeGreaterThan(0);
     expect(suggestion.confidence).toBeGreaterThan(0);
     expect(suggestion.local_execution_note).toContain("локально");
@@ -408,5 +542,33 @@ describe("suggestDataApplications", () => {
     expect(suggestion.suggestions[0]).toContain("базовой визуализации");
     expect(suggestion.focus_areas[0]).toContain("Разведочный анализ");
     expect(suggestion.tags).toHaveLength(0);
+  });
+
+  it("распознаёт тематику правопорядка по структуре столбцов", () => {
+    const dataset = {
+      name: "Operational Metrics",
+      columns: [
+        { name: "incident_rate", type: "number" },
+        { name: "patrol_minutes", type: "number" },
+        { name: "district", type: "string" },
+        { name: "report_text", type: "string" },
+      ],
+      sample_data: [
+        {
+          incident_rate: 14,
+          patrol_minutes: 320,
+          district: "Central",
+          report_text: "Подозрительная активность у станции метро, требуется дополнительный патруль.",
+        },
+      ],
+    };
+
+    const suggestion = suggestDataApplications({ dataset });
+
+    expect(suggestion.focus_areas[0]).toBe("Общественная безопасность и правоприменение");
+    expect(suggestion.suggestions.some((text) => text.includes("Difference-in-Differences"))).toBe(true);
+    expect(suggestion.tags).toEqual(
+      expect.arrayContaining(["law-enforcement", "experimentation", "sna"])
+    );
   });
 });
