@@ -9,6 +9,135 @@ import L from 'leaflet';
 
 const DEFAULT_POSITION = [55.7558, 37.6173];
 
+const getValueByColumn = (point, column, fallbackKeys = []) => {
+  if (column && point && point[column] !== undefined && point[column] !== null) {
+    return point[column];
+  }
+  for (const key of fallbackKeys) {
+    if (point && point[key] !== undefined && point[key] !== null) {
+      return point[key];
+    }
+  }
+  return null;
+};
+
+const resolveDemography = (point, config) => ({
+  density: parseNumericValue(
+    getValueByColumn(point, config?.demography_population_column, [
+      'population_density',
+      'density',
+    ])
+  ),
+  income: parseNumericValue(
+    getValueByColumn(point, config?.demography_income_column, ['average_income', 'income'])
+  ),
+  unemployment: parseNumericValue(
+    getValueByColumn(point, config?.demography_unemployment_column, ['unemployment_rate'])
+  ),
+});
+
+const resolveTrend = (point, config) => ({
+  value: parseNumericValue(
+    getValueByColumn(point, config?.trend_metric_column || config?.value_column, ['value'])
+  ),
+  change: parseNumericValue(getValueByColumn(point, null, ['trend_change', 'change_rate', 'growth_rate'])),
+  volatility: parseNumericValue(getValueByColumn(point, null, ['trend_volatility', 'volatility_level'])),
+});
+
+const resolveHotspot = (point, config) => ({
+  metric: parseNumericValue(
+    getValueByColumn(point, config?.hotspot_metric_column || config?.value_column, ['incident_count', 'value'])
+  ),
+  change: parseNumericValue(getValueByColumn(point, null, ['incident_change', 'change_percent'])),
+});
+
+const resolveLogistics = (point, config) => ({
+  corridor: getValueByColumn(point, config?.logistics_corridor_column, ['logistics_corridor', 'corridor', 'route']),
+  travelTime: parseNumericValue(
+    getValueByColumn(point, config?.logistics_travel_time_column, ['travel_time_minutes', 'travel_minutes'])
+  ),
+  serviceRadius: parseNumericValue(
+    getValueByColumn(point, config?.logistics_service_radius_column, ['service_radius_km', 'radius_km'])
+  ),
+});
+
+const resolveClimate = (point, config) => ({
+  temperature: parseNumericValue(
+    getValueByColumn(point, config?.climate_temperature_column, ['weather_temperature', 'temperature'])
+  ),
+  precipitation: parseNumericValue(
+    getValueByColumn(point, config?.climate_precipitation_column, ['weather_precipitation', 'precipitation'])
+  ),
+  risk: parseNumericValue(
+    getValueByColumn(point, config?.climate_risk_column, ['climate_risk', 'risk_index'])
+  ),
+});
+
+const computeSpatialDetails = (points, config) => {
+  if (config?.overlay_type !== 'spatial' || !Array.isArray(points) || points.length < 3) {
+    return null;
+  }
+
+  const metricColumn = config?.spatial_metric_column || config?.value_column;
+  if (!metricColumn) {
+    return null;
+  }
+
+  const entries = points
+    .map((point, index) => {
+      const lat = config?.lat_column
+        ? parseCoordinate(point[config.lat_column])
+        : parseCoordinate(point.lat);
+      const lon = config?.lon_column
+        ? parseCoordinate(point[config.lon_column])
+        : parseCoordinate(point.lon);
+      const metric = parseNumericValue(
+        getValueByColumn(point, metricColumn, ['value', 'metric'])
+      );
+      if (lat === null || lon === null || metric === null) {
+        return null;
+      }
+      return { index, lat, lon, metric };
+    })
+    .filter(Boolean);
+
+  if (entries.length < 3) {
+    return null;
+  }
+
+  const neighborCount = Math.max(
+    3,
+    Math.min(Number(config?.spatial_neighbor_count) || 6, entries.length - 1)
+  );
+
+  const map = new Map();
+
+  entries.forEach((entry, idx) => {
+    const neighbors = entries
+      .filter((_, neighborIdx) => neighborIdx !== idx)
+      .map((other) => ({
+        distance: Math.hypot(entry.lat - other.lat, entry.lon - other.lon),
+        metric: other.metric,
+      }))
+      .sort((a, b) => a.distance - b.distance)
+      .slice(0, neighborCount);
+
+    if (!neighbors.length) {
+      map.set(entry.index, { neighborAverage: null, deviation: null, intensity: null });
+      return;
+    }
+
+    const neighborAverage =
+      neighbors.reduce((sum, neighbor) => sum + neighbor.metric, 0) / neighbors.length;
+    const deviation = entry.metric - neighborAverage;
+    const intensity = neighborAverage !== 0 ? deviation / Math.abs(neighborAverage) : null;
+
+    map.set(entry.index, { neighborAverage, deviation, intensity });
+  });
+
+  return map;
+};
+
 const formatValue = (value) => {
   if (value === null || value === undefined || Number.isNaN(value)) {
     return "—";
@@ -219,6 +348,11 @@ export default function MapView({ data, config }) {
 
   const pointsToRender = timeComparisonActive && comparisonPoints.length > 0 ? comparisonPoints : defaultPoints;
 
+  const spatialStats = useMemo(
+    () => computeSpatialDetails(pointsToRender, config),
+    [pointsToRender, config]
+  );
+
   const shouldShowEmptyState = useMemo(() => {
     if (timeComparisonActive) {
       return comparisonPoints.length === 0;
@@ -276,26 +410,89 @@ export default function MapView({ data, config }) {
         return DEFAULT_POSITION;
       })();
 
-  const getMarkerColor = (point) => {
+  const getMarkerColor = (point, index, overlayData) => {
     const rawValue = config?.value_column ? point[config.value_column] : point.value;
     const value = parseNumericValue(rawValue);
     const forecastValue = parseNumericValue(point.forecast);
     const correlationValue = parseNumericValue(point.correlation);
+    const overlayType = config?.overlay_type;
 
-    if (config?.overlay_type === 'forecast' && forecastValue !== null) {
+    if (overlayType === 'forecast' && forecastValue !== null) {
       const intensity = forecastValue / 1000;
       return `hsl(${120 - intensity * 120}, 70%, 50%)`;
     }
-    if (config?.overlay_type === 'correlation' && correlationValue !== null) {
+    if (overlayType === 'correlation' && correlationValue !== null) {
       const intensity = Math.abs(correlationValue);
       return `hsl(${correlationValue > 0 ? 240 : 0}, 70%, ${50 + intensity * 30}%)`;
+    }
+
+    if (overlayType === 'demography' && overlayData?.demography) {
+      const density = overlayData.demography.density;
+      if (density !== null && density !== undefined) {
+        const scaled = Math.max(0, Math.min(density / 6000, 1));
+        return `hsl(${240 - scaled * 180}, 70%, ${55 - scaled * 15}%)`;
+      }
+      const income = overlayData.demography.income;
+      if (income !== null && income !== undefined) {
+        const scaled = Math.max(0, Math.min(income / 120000, 1));
+        return `hsl(${200 - scaled * 140}, 70%, ${60 - scaled * 10}%)`;
+      }
+    }
+
+    if (overlayType === 'spatial' && spatialStats?.has(index)) {
+      const stats = spatialStats.get(index);
+      if (stats?.intensity !== null && Number.isFinite(stats.intensity)) {
+        const clamped = Math.max(-1, Math.min(stats.intensity, 1));
+        const hue = clamped >= 0 ? 160 : 0;
+        const lightness = 55 - Math.min(Math.abs(clamped) * 25, 25);
+        return `hsl(${hue}, 75%, ${lightness}%)`;
+      }
+    }
+
+    if (overlayType === 'trend' && overlayData?.trend) {
+      const change = overlayData.trend.change;
+      if (change !== null && change !== undefined) {
+        const scaled = Math.max(-0.3, Math.min(change, 0.3));
+        const hue = scaled >= 0 ? 10 : 180;
+        const intensity = Math.abs(scaled) / 0.3;
+        return `hsl(${hue}, 75%, ${55 - intensity * 20}%)`;
+      }
+    }
+
+    if (overlayType === 'hotspots' && overlayData?.hotspot) {
+      const incidents = overlayData.hotspot.metric;
+      if (incidents !== null && incidents !== undefined) {
+        const scaled = Math.max(0, Math.min(incidents / 400, 1));
+        return `hsl(${15}, 85%, ${60 - scaled * 20}%)`;
+      }
+    }
+
+    if (overlayType === 'logistics' && overlayData?.logistics) {
+      const travel = overlayData.logistics.travelTime;
+      if (travel !== null && travel !== undefined) {
+        const scaled = Math.max(0, Math.min(travel / 120, 1));
+        return `hsl(${150 - scaled * 120}, 70%, ${55 - scaled * 10}%)`;
+      }
+    }
+
+    if (overlayType === 'climate' && overlayData?.climate) {
+      const risk = overlayData.climate.risk;
+      if (risk !== null && risk !== undefined) {
+        const scaled = Math.max(0, Math.min(risk, 1));
+        return `hsl(${scaled * 10}, 80%, ${60 - scaled * 25}%)`;
+      }
+      const temperature = overlayData.climate.temperature;
+      if (temperature !== null && temperature !== undefined) {
+        const scaled = Math.max(-20, Math.min(temperature, 30));
+        return `hsl(${200 - ((scaled + 20) / 50) * 200}, 70%, 55%)`;
+      }
     }
 
     const intensity = value ? value / 850 : 0;
     return `hsl(${240 - intensity * 60}, 70%, ${45 + intensity * 15}%)`;
   };
 
-  const getMarkerRadius = (point) => {
+  const getMarkerRadius = (point, overlayData) => {
     const rawValue = config?.value_column ? point[config.value_column] : point.value;
     const value = parseNumericValue(rawValue);
     const baseRadius = 8;
@@ -307,6 +504,24 @@ export default function MapView({ data, config }) {
     }
     if (config?.overlay_type === 'correlation' && correlationValue !== null) {
       return baseRadius + (Math.abs(correlationValue) * 12);
+    }
+    if (config?.overlay_type === 'demography' && overlayData?.demography?.density !== null) {
+      return baseRadius + Math.min(overlayData.demography.density / 500, 18);
+    }
+    if (config?.overlay_type === 'spatial' && overlayData?.spatial?.deviation !== null) {
+      return baseRadius + Math.min(Math.abs(overlayData.spatial.deviation), 15);
+    }
+    if (config?.overlay_type === 'trend' && overlayData?.trend?.volatility !== null) {
+      return baseRadius + Math.min(overlayData.trend.volatility * 20, 12);
+    }
+    if (config?.overlay_type === 'hotspots' && overlayData?.hotspot?.metric !== null) {
+      return baseRadius + Math.min(overlayData.hotspot.metric / 40, 16);
+    }
+    if (config?.overlay_type === 'logistics' && overlayData?.logistics?.serviceRadius !== null) {
+      return baseRadius + Math.min(overlayData.logistics.serviceRadius / 30, 14);
+    }
+    if (config?.overlay_type === 'climate' && overlayData?.climate?.risk !== null) {
+      return baseRadius + Math.min(overlayData.climate.risk * 20, 12);
     }
     return baseRadius + ((value || 0) / 100);
   };
@@ -398,6 +613,16 @@ export default function MapView({ data, config }) {
               const value = parseNumericValue(rawValue);
               const name = findNameField(point) || point.name || point.city || `Точка ${index + 1}`;
 
+              const overlayType = config?.overlay_type;
+              const overlayData = {
+                demography: overlayType === 'demography' ? resolveDemography(point, config) : null,
+                spatial: overlayType === 'spatial' && spatialStats?.has(index) ? spatialStats.get(index) : null,
+                trend: overlayType === 'trend' ? resolveTrend(point, config) : null,
+                hotspot: overlayType === 'hotspots' ? resolveHotspot(point, config) : null,
+                logistics: overlayType === 'logistics' ? resolveLogistics(point, config) : null,
+                climate: overlayType === 'climate' ? resolveClimate(point, config) : null,
+              };
+
               if (lat === null || lon === null) {
                 return null;
               }
@@ -406,10 +631,10 @@ export default function MapView({ data, config }) {
                 <CircleMarker
                   key={`${lat}-${lon}-${index}`}
                   center={[lat, lon]}
-                  radius={getMarkerRadius(point)}
+                  radius={getMarkerRadius(point, overlayData)}
                   pathOptions={{
-                    color: getMarkerColor(point),
-                    fillColor: getMarkerColor(point),
+                    color: getMarkerColor(point, index, overlayData),
+                    fillColor: getMarkerColor(point, index, overlayData),
                     fillOpacity: 0.7,
                     weight: 2
                   }}

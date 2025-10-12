@@ -69,6 +69,7 @@ describe("analyzeCorrelation", () => {
     expect(result.correlation_matrix[0].correlations).toHaveProperty("Profit");
     expect(result.strongest_correlations[0].feature1).toBe("Sales");
     expect(Math.abs(result.strongest_correlations[0].correlation)).toBeCloseTo(1, 3);
+    expect(result.meta.featureCount).toBe(3);
     expect(result.insights.some((text) => text.includes("корреляцию"))).toBe(true);
   });
 

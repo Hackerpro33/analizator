@@ -212,11 +212,12 @@ export function generateForecastReport({ historical, horizon, externalFactors = 
   };
 }
 
-export function analyzeCorrelation({ features }) {
+export function analyzeCorrelation({ features, context = {} }) {
   const preparedFeatures = (features || [])
     .map((feature) => ({
       ...feature,
       values: toNumberArray(feature.values || []),
+      metadata: feature.metadata || {},
     }))
     .filter((feature) => feature.values.length > 1);
 
@@ -226,7 +227,7 @@ export function analyzeCorrelation({ features }) {
       const coefficient = pearsonCorrelation(feature.values, other.values);
       correlations[other.label] = Number(coefficient.toFixed(3));
     }
-    return { feature: feature.label, correlations };
+    return { feature: feature.label, correlations, metadata: feature.metadata };
   });
 
   const strongest = [];
@@ -243,6 +244,8 @@ export function analyzeCorrelation({ features }) {
             : Math.abs(coeff) > 0.4
             ? "Умеренная связь, возможное влияние при совместном анализе."
             : "Связь слабая, скорее всего влияния нет.",
+        feature1Meta: preparedFeatures[i].metadata,
+        feature2Meta: preparedFeatures[j].metadata,
       });
     }
   }
@@ -268,10 +271,82 @@ export function analyzeCorrelation({ features }) {
     }
   }
 
+  const featureStats = preparedFeatures.reduce(
+    (acc, feature) => {
+      const type = feature.metadata?.type || "base";
+      acc.countByType[type] = (acc.countByType[type] || 0) + 1;
+      if (feature.metadata?.externalFactor) {
+        acc.externalFactors.push(feature.label);
+      }
+      if (feature.metadata?.lag) {
+        acc.lagged.push({ label: feature.label, lag: feature.metadata.lag });
+      }
+      if (feature.metadata?.derivedFrom) {
+        acc.derived.push({
+          label: feature.label,
+          base: feature.metadata.derivedFrom,
+          type,
+        });
+      }
+      if (feature.metadata?.category) {
+        acc.categorical.push(feature.metadata.category);
+      }
+      return acc;
+    },
+    {
+      countByType: {},
+      externalFactors: [],
+      lagged: [],
+      derived: [],
+      categorical: [],
+    }
+  );
+
+  const lagHighlights = topStrongest.filter(
+    (item) => item.feature1Meta?.lag || item.feature2Meta?.lag
+  );
+
+  if (lagHighlights.length) {
+    lagHighlights.slice(0, 2).forEach((item) => {
+      const laggedFeature = item.feature1Meta?.lag ? item.feature1 : item.feature2;
+      const lagValue = item.feature1Meta?.lag || item.feature2Meta?.lag;
+      insights.push(
+        `Лаговая переменная "${laggedFeature}" (t-${lagValue}) имеет корреляцию ${item.correlation.toFixed(
+          2
+        )} с показателем "${item.feature1Meta?.lag ? item.feature2 : item.feature1}".`
+      );
+    });
+  }
+
+  if (featureStats.externalFactors.length) {
+    insights.push(
+      `Учитываются внешние факторы: ${featureStats.externalFactors
+        .map((label) => `«${label}»`)
+        .join(", ")}.`
+    );
+  }
+
+  if (featureStats.categorical.length) {
+    const uniqueCategories = [...new Set(featureStats.categorical.map((item) => item.label || item))];
+    insights.push(
+      `Категориальные признаки представлены через кодирование: ${formatList(uniqueCategories, 5)}.`
+    );
+  }
+
+  const meta = {
+    featureCount: preparedFeatures.length,
+    countByType: featureStats.countByType,
+    externalFactors: featureStats.externalFactors,
+    laggedFeatures: featureStats.lagged,
+    derivedFeatures: featureStats.derived,
+    context,
+  };
+
   return {
     correlation_matrix: matrix,
     insights,
     strongest_correlations: topStrongest,
+    meta,
   };
 }
 

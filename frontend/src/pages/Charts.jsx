@@ -16,6 +16,7 @@ import ChartBuilder from "../components/charts/ChartBuilder";
 import ChartGallery from "../components/charts/ChartGallery";
 import ChartTypeSelector from "../components/charts/ChartTypeSelector";
 import ChartViewer from "../components/charts/ChartViewer";
+import AdvancedChartInsights from "../components/charts/AdvancedChartInsights";
 
 export default function Charts() {
   const [datasets, setDatasets] = useState([]);
@@ -25,6 +26,7 @@ export default function Charts() {
   const [selectedChartType, setSelectedChartType] = useState('line');
   const [editingViz, setEditingViz] = useState(null);
   const [viewingViz, setViewingViz] =useState(null);
+  const [activeSegment, setActiveSegment] = useState(null);
 
   useEffect(() => {
     loadData();
@@ -74,9 +76,17 @@ export default function Charts() {
           </p>
         </div>
 
+        {/* Advanced Insights */}
+        {!showBuilder && (
+          <AdvancedChartInsights
+            onSegmentChange={setActiveSegment}
+            activeSegment={activeSegment}
+          />
+        )}
+
         {/* Chart Type Selector */}
         {!showBuilder && (
-          <ChartTypeSelector 
+          <ChartTypeSelector
             onSelectType={handleCreateChart}
             datasets={datasets}
           />
@@ -95,12 +105,13 @@ export default function Charts() {
 
         {/* Chart Gallery */}
         {!showBuilder && (
-          <ChartGallery 
+          <ChartGallery
             visualizations={visualizations}
             datasets={datasets}
             isLoading={isLoading}
             onEdit={handleEditChart}
             onView={(viz) => setViewingViz(viz)}
+            activeSegment={activeSegment}
           />
         )}
         

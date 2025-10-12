@@ -84,6 +84,54 @@ const buildInsights = (analytics) => {
     }
   }
 
+  if (analytics.layers?.demography?.hasData && analytics.layers.demography.topDensity) {
+    insights.push(
+      `${analytics.layers.demography.topDensity.name} лидирует по плотности (${formatNumber(
+        analytics.layers.demography.topDensity.density
+      )} чел./км²), при этом средняя нагрузка составляет ${
+        analytics.layers.demography.averageDensity !== null
+          ? formatNumber(analytics.layers.demography.averageDensity)
+          : '—'
+      }.`
+    );
+  }
+
+  if (analytics.layers?.spatial?.hasData && analytics.layers.spatial.topOutlier) {
+    insights.push(
+      `${analytics.layers.spatial.topOutlier.name} выделяется пространственно: отклонение от соседей составляет ${analytics.layers.spatial.topOutlier.deviation.toFixed(
+        1
+      )}.`
+    );
+  }
+
+  if (analytics.layers?.trend?.hasData && analytics.layers.trend.topGrowth) {
+    insights.push(
+      `${analytics.layers.trend.topGrowth.name} показывает самый высокий темп изменения (${formatPercent(
+        analytics.layers.trend.topGrowth.change
+      )}), в то время как средний тренд по карте ${
+        analytics.layers.trend.averageChange !== null
+          ? formatPercent(analytics.layers.trend.averageChange)
+          : 'не рассчитан'
+      }.`
+    );
+  }
+
+  if (analytics.layers?.logistics?.hasData && analytics.layers.logistics.slowestRoute) {
+    insights.push(
+      `Самый продолжительный маршрут — ${analytics.layers.logistics.slowestRoute.name} (${formatNumber(
+        analytics.layers.logistics.slowestRoute.travel
+      )} мин). Рассмотрите оптимизацию коридора ${analytics.layers.logistics.corridors?.[0] || ''}.`
+    );
+  }
+
+  if (analytics.layers?.climate?.hasData && analytics.layers.climate.highestRisk) {
+    insights.push(
+      `${analytics.layers.climate.highestRisk.name} имеет максимальный климатический риск ${formatPercent(
+        analytics.layers.climate.highestRisk.risk
+      )} — стоит подготовить план реагирования.`
+    );
+  }
+
   return insights.slice(0, 3);
 };
 
@@ -198,6 +246,113 @@ export default function MapAnalyticsPanel({ data, config, datasets, isLoading })
                     </Badge>
                   ))}
                 </div>
+              </div>
+            )}
+
+            {(analytics.layers?.demography?.hasData ||
+              analytics.layers?.spatial?.hasData ||
+              analytics.layers?.trend?.hasData ||
+              analytics.layers?.hotspots?.hasData ||
+              analytics.layers?.logistics?.hasData ||
+              analytics.layers?.climate?.hasData) && (
+              <div className="grid gap-3 md:grid-cols-2">
+                {analytics.layers?.demography?.hasData && (
+                  <div className="rounded-xl border border-emerald-200 bg-emerald-50/70 p-4 shadow-sm">
+                    <div className="text-sm font-semibold text-emerald-700">Демография</div>
+                    <div className="mt-2 text-xs text-emerald-700 flex justify-between">
+                      <span>Средняя плотность</span>
+                      <span>{formatNumber(analytics.layers.demography.averageDensity)} чел./км²</span>
+                    </div>
+                    <div className="text-xs text-emerald-700 flex justify-between">
+                      <span>Средний доход</span>
+                      <span>{formatNumber(analytics.layers.demography.averageIncome)} ₽</span>
+                    </div>
+                    {analytics.layers.demography.lowestUnemployment && (
+                      <div className="mt-1 text-xs text-emerald-700">
+                        Минимальная безработица: <span className="font-semibold">{analytics.layers.demography.lowestUnemployment.name}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {analytics.layers?.spatial?.hasData && (
+                  <div className="rounded-xl border border-purple-200 bg-purple-50/70 p-4 shadow-sm">
+                    <div className="text-sm font-semibold text-purple-700">Пространственные аномалии</div>
+                    <div className="mt-2 text-xs text-purple-700">
+                      Локация: <span className="font-semibold">{analytics.layers.spatial.topOutlier.name}</span>
+                    </div>
+                    <div className="text-xs text-purple-700">
+                      Отклонение: {analytics.layers.spatial.topOutlier.deviation.toFixed(1)}
+                    </div>
+                    {analytics.layers.spatial.averageIntensity !== null && (
+                      <div className="text-xs text-purple-700">
+                        Средняя интенсивность: {analytics.layers.spatial.averageIntensity.toFixed(2)}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {analytics.layers?.trend?.hasData && (
+                  <div className="rounded-xl border border-rose-200 bg-rose-50/70 p-4 shadow-sm">
+                    <div className="text-sm font-semibold text-rose-700">Динамика и сезонность</div>
+                    <div className="mt-2 text-xs text-rose-700">
+                      Средний тренд: {analytics.layers.trend.averageChange !== null ? formatPercent(analytics.layers.trend.averageChange) : '—'}
+                    </div>
+                    <div className="text-xs text-rose-700">
+                      Волатильность: {analytics.layers.trend.averageVolatility !== null ? formatPercent(analytics.layers.trend.averageVolatility) : '—'}
+                    </div>
+                    {analytics.layers.trend.topGrowth && (
+                      <div className="text-xs text-rose-700">
+                        Лидер роста: <span className="font-semibold">{analytics.layers.trend.topGrowth.name}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {analytics.layers?.hotspots?.hasData && (
+                  <div className="rounded-xl border border-red-200 bg-red-50/70 p-4 shadow-sm">
+                    <div className="text-sm font-semibold text-red-700">Горячие точки</div>
+                    <div className="mt-2 text-xs text-red-700">
+                      Всего инцидентов: {formatNumber(analytics.layers.hotspots.total)}
+                    </div>
+                    {analytics.layers.hotspots.topIncident && (
+                      <div className="text-xs text-red-700">
+                        Лидирует: <span className="font-semibold">{analytics.layers.hotspots.topIncident.name}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {analytics.layers?.logistics?.hasData && (
+                  <div className="rounded-xl border border-sky-200 bg-sky-50/70 p-4 shadow-sm">
+                    <div className="text-sm font-semibold text-sky-700">Логистика и сервис</div>
+                    <div className="mt-2 text-xs text-sky-700">
+                      Маршрутов: {analytics.layers.logistics.corridors?.length || 0}
+                    </div>
+                    {analytics.layers.logistics.fastestRoute && (
+                      <div className="text-xs text-sky-700">
+                        Быстрее всего: <span className="font-semibold">{analytics.layers.logistics.fastestRoute.name}</span> ({formatNumber(analytics.layers.logistics.fastestRoute.travel)} мин)
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {analytics.layers?.climate?.hasData && (
+                  <div className="rounded-xl border border-cyan-200 bg-cyan-50/70 p-4 shadow-sm">
+                    <div className="text-sm font-semibold text-cyan-700">Погодные условия</div>
+                    <div className="mt-2 text-xs text-cyan-700">
+                      Средняя температура: {analytics.layers.climate.averageTemp !== null ? `${analytics.layers.climate.averageTemp.toFixed(1)}°C` : '—'}
+                    </div>
+                    <div className="text-xs text-cyan-700">
+                      Осадки: {analytics.layers.climate.averagePrecip !== null ? `${analytics.layers.climate.averagePrecip.toFixed(1)} мм` : '—'}
+                    </div>
+                    {analytics.layers.climate.highestRisk && (
+                      <div className="text-xs text-cyan-700">
+                        Макс. риск: <span className="font-semibold">{analytics.layers.climate.highestRisk.name}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             )}
 
