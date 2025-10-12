@@ -1812,11 +1812,83 @@ export function suggestDataApplications({ dataset = {}, project = {} } = {}) {
     suggestions.push(
       "Задействуйте встроенные функции differenceInDifferences(), buildCounterfactualScenario() и calculateSafetyKPIs() для оперативной оценки влияния мер в защищённой среде."
     );
+    suggestions.push(
+      "Разверните локальные симуляции на основе агентно-ориентированного моделирования (AnyLogic, Mesa, NetLogo), чтобы прогнозировать реакцию преступности на перераспределение патрулей и другие меры."
+    );
+    suggestions.push(
+      "Стройте когнитивные и причинно-следственные модели в локальной среде (DoWhy, CausalNex, EconML), выявляйте ключевые факторы преступности и оценивайте сценарии \"что если\" без выгрузки данных наружу."
+    );
+    suggestions.push(
+      "Применяйте байесовские и вероятностные модели (Bayesian Hierarchical Models) для районов и временных срезов, фиксируйте распределения неопределённости прогнозов локально."
+    );
+    suggestions.push(
+      "Добавьте spatio-temporal deep learning (ST-GCN, ConvLSTM, Transformer-подходы), чтобы прогнозировать уровень преступности по районам в разрезе часов и дней без обращения к внешним API."
+    );
+    suggestions.push(
+      "Включайте контекстные embedding признаков (праздники, события, погода, транспорт), создавая числовые представления в локальной ML-цепочке."
+    );
+    suggestions.push(
+      "Комбинируйте локальные модели через ансамбли и stacking (например, ARIMA + LSTM + CatBoost) с мета-моделью, обучающейся на ошибках базовых алгоритмов."
+    );
+    suggestions.push(
+      "Автоматизируйте подбор гиперпараметров с помощью локальных AutoML и байесовской оптимизации (Optuna, Hyperopt, AutoGluon), чтобы ускорять эксперименты на закрытых данных."
+    );
+    suggestions.push(
+      "Подключите active learning: модель будет запрашивать разметку только по самым неопределённым инцидентам, что экономит локальные ресурсы аналитиков."
+    );
+    suggestions.push(
+      "Используйте counterfactual анализ и Synthetic Control: создавайте \"синтетические двойники\" районов для более точной оценки эффекта мер безопасности, например пилотов по умному освещению или камерам на перекрёстках."
+    );
+    suggestions.push(
+      "Оценивайте эффективность программ по множеству критериев: снижение страха населения, улучшение восприятия безопасности и снижение социального напряжения в локальной отчётности."
+    );
+    suggestions.push(
+      "Соберите локальный цифровой двойник района: объединяйте транспорт, освещение и отчёты, чтобы проигрывать сценарии безопасности без выхода данных наружу."
+    );
+    suggestions.push(
+      "Настройте локальные GNN-пайплайны (PyTorch Geometric, DGL) для выявления скрытых сообществ и прогнозирования связей между инцидентами."
+    );
+    suggestions.push(
+      "Внедрите reinforcement learning для оптимизации патрулирования: обучайте агента (RLlib, Stable Baselines) на исторических данных внутри защищённого контура."
+    );
+    suggestions.push(
+      "Добавьте потоковую детекцию аномалий (Kafka Streams, Flink, River) для мгновенного выявления всплесков преступности в локальном SOC."
+    );
+    suggestions.push(
+      "Организуйте приватный ML-конвейер с дифференциальной приватностью и безопасными песочницами, чтобы делиться инсайтами без раскрытия персональных данных."
+    );
+    suggestions.push(
+      "Настройте федеративное обучение между подразделениями (Flower, FedML, NVIDIA FLARE), синхронизируя веса моделей без передачи сырых инцидентных данных наружу."
+    );
+    suggestions.push(
+      "Генерируйте синтетические наборы для отработки сценариев (CTGAN, Gretel, SynthCity), сохраняя статистику реальных преступлений и приватность жителей."
+    );
+    suggestions.push(
+      "Используйте edge AI на камерах и IoT-сенсорах (OpenVINO, NVIDIA Metropolis, Azure Percept), чтобы фильтровать потоки и отправлять в SOC только тревожные события."
+    );
     tags.add("law-enforcement");
     tags.add("experimentation");
     tags.add("sna");
     tags.add("automation");
     tags.add("explainability");
+    tags.add("abm");
+    tags.add("causal");
+    tags.add("bayesian");
+    tags.add("spatiotemporal");
+    tags.add("context-embedding");
+    tags.add("ensemble");
+    tags.add("automl");
+    tags.add("active-learning");
+    tags.add("synthetic-control");
+    tags.add("multi-criteria-evaluation");
+    tags.add("digital-twin");
+    tags.add("gnn");
+    tags.add("reinforcement-learning");
+    tags.add("anomaly-detection");
+    tags.add("privacy");
+    tags.add("federated-learning");
+    tags.add("synthetic-data");
+    tags.add("edge-ai");
   }
 
   if (hasNumeric && hasDate) {
