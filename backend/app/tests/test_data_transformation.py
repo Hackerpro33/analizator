@@ -120,7 +120,7 @@ def test_dataset_create_and_list(client):
 
     create_response = client.post(
         "/api/dataset/create",
-        data=json.dumps(dataset_payload),
+        json=dataset_payload,
         headers={"Content-Type": "application/json", **HEADERS},
     )
 
@@ -435,7 +435,7 @@ def test_upload_multiple_tables_near_limit(monkeypatch, client):
 
         dataset_response = client.post(
             "/api/dataset/create",
-            data=json.dumps(dataset_payload),
+            json=dataset_payload,
             headers={"Content-Type": "application/json", **HEADERS},
         )
         assert dataset_response.status_code == 200
@@ -610,7 +610,7 @@ def test_crime_factor_dataset_workflow(client):
     )
     assert dataset_get_response.status_code == 200
     dataset_payload = dataset_get_response.json()
-    assert dataset_payload["description"].startswith("Multi-year monitoring")
+    assert dataset_payload["description"].startswith("Многолетний")
     assert len(dataset_payload["sample_data"]) == 4
 
     update_response = client.put(

@@ -24,3 +24,8 @@ Thumbs.db
 backend/data/*.jsonl
 backend/data/visualizations.json
 backend/uploads/
+# Coverage outputs
+coverage.xml
+htmlcov/
+frontend/coverage/
+.coverage
