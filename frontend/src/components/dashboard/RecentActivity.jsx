@@ -48,6 +48,63 @@ export default function RecentActivity({ datasets, visualizations, isLoading }) 
       forecast: "Прогноз"
   }
 
+  const now = new Date();
+  const last7DaysUpdates = [...datasets, ...visualizations].filter((item) => {
+    const createdAt = item?.created_date || item?.created_at || item?.createdAt;
+    if (!createdAt) return false;
+    const created = new Date(createdAt);
+    if (Number.isNaN(created.valueOf())) return false;
+    return (now - created) / (1000 * 60 * 60 * 24) <= 7;
+  }).length;
+
+  const datasetsUpdatedToday = datasets.filter((dataset) => {
+    const createdAt = dataset.created_date || dataset.created_at || dataset.createdAt;
+    if (!createdAt) return false;
+    const created = new Date(createdAt);
+    if (Number.isNaN(created.valueOf())) return false;
+    return (now - created) / (1000 * 60 * 60) <= 24;
+  }).length;
+
+  const visualizationTypeCounts = visualizations.reduce((acc, visualization) => {
+    const type = visualization.type || "other";
+    acc[type] = (acc[type] || 0) + 1;
+    return acc;
+  }, {});
+
+  const dominantVisualizationType = Object.entries(visualizationTypeCounts)
+    .sort(([, countA], [, countB]) => countB - countA)[0];
+
+  const dominantVisualizationLabel = dominantVisualizationType
+    ? typeTranslations[dominantVisualizationType[0]] || dominantVisualizationType[0]
+    : "—";
+
+  const forecastShare = visualizations.length
+    ? Math.round((visualizations.filter((v) => v.type === "forecast").length / visualizations.length) * 100)
+    : 0;
+
+  const metrics = [
+    {
+      value: last7DaysUpdates,
+      label: "Событий за 7 дней",
+      description: "индикатор активности команды",
+    },
+    {
+      value: datasetsUpdatedToday,
+      label: "Обновления за 24 часа",
+      description: "качество и свежесть данных",
+    },
+    {
+      value: dominantVisualizationLabel,
+      label: "Популярный тип",
+      description: "наиболее востребованный формат",
+    },
+    {
+      value: `${forecastShare}%`,
+      label: "Прогнозная аналитика",
+      description: "доля от всех визуализаций",
+    },
+  ];
+
   return (
     <Card className="border-0 bg-white/70 backdrop-blur-xl shadow-xl">
       <CardHeader>
@@ -57,6 +114,15 @@ export default function RecentActivity({ datasets, visualizations, isLoading }) 
         </CardTitle>
       </CardHeader>
       <CardContent>
+        <div className="grid grid-cols-2 gap-3 pb-6">
+          {metrics.map((metric) => (
+            <div key={metric.label} className="rounded-xl border border-slate-100 bg-slate-50/60 p-3">
+              <div className="text-xs font-medium uppercase tracking-wide text-slate-500">{metric.label}</div>
+              <div className="mt-1 text-lg font-semibold text-slate-900">{metric.value}</div>
+              <div className="text-[11px] text-slate-500">{metric.description}</div>
+            </div>
+          ))}
+        </div>
         {isLoading ? (
           <div className="space-y-4">
             {Array(5).fill(0).map((_, i) => (

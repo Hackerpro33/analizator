@@ -1,36 +1,23 @@
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Network, Save, ArrowLeft, Sparkles } from "lucide-react";
 import NetworkVisualization from "./NetworkVisualization";
-import { InvokeLLM } from "@/api/integrations";
-
-const networkGraphSchema = {
-    type: "object",
-    properties: {
-        nodes: {
-            type: "array",
-            items: {
-                type: "object",
-                properties: { id: { type: "string" }, group: { type: "string" } }
-            }
-        },
-        links: {
-            type: "array",
-            items: {
-                type: "object",
-                properties: { source: { type: "string" }, target: { type: "string" }, value: { type: "number" } }
-            }
-        },
-        insights: { type: "array", items: { type: "string" } }
-    },
-    required: ["nodes", "links"]
-};
+import { buildNetworkGraph } from "@/utils/localAnalysis";
 
 export default function NetworkBuilder({ datasets, onSave, onCancel }) {
   const [config, setConfig] = useState({
@@ -45,6 +32,31 @@ export default function NetworkBuilder({ datasets, onSave, onCancel }) {
   const [selectedDataset, setSelectedDataset] = useState(null);
   const [generatedGraph, setGeneratedGraph] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
+
+  const nodeMetricRows = useMemo(() => {
+    if (!generatedGraph?.node_metrics?.length) {
+      return [];
+    }
+
+    return [...generatedGraph.node_metrics]
+      .sort((a, b) => b.degree - a.degree || b.strength - a.strength)
+      .slice(0, 6);
+  }, [generatedGraph]);
+
+  const adjacencyPreview = useMemo(() => {
+    if (!generatedGraph?.adjacency_matrix?.length) {
+      return [];
+    }
+
+    return generatedGraph.adjacency_matrix.slice(0, 5).map((row) => ({
+      ...row,
+      connections: row.connections.slice(0, 5),
+    }));
+  }, [generatedGraph]);
+
+  const adjacencyHeaders = useMemo(() => {
+    return adjacencyPreview[0]?.connections?.map((conn) => conn.node) ?? [];
+  }, [adjacencyPreview]);
 
   const handleDatasetChange = (datasetId) => {
     const dataset = datasets.find(d => d.id === datasetId);
@@ -78,22 +90,21 @@ export default function NetworkBuilder({ datasets, onSave, onCancel }) {
         social: `Проанализируйте данные как социальную сеть. Идентифицируйте ключевых акторов (узлы) и их взаимодействия (связи) на основе столбцов: ${config.selectedColumns.join(', ')}. Рассчитайте центральность узлов.`,
         geo: `Создайте граф пространственных связей. Узлы - это локации, ребра - сила связи между ними (например, корреляция событий). Используйте столбцы: ${config.selectedColumns.join(', ')}.`
     };
-    
-    // In a real application, you'd pass the actual dataset data here to the LLM.
-    // For this example, we'll simulate it by only passing the column names.
-    // Assuming `InvokeLLM` somehow gets access to the current dataset rows.
-    const prompt = `
-        Вы — эксперт по графовому анализу. На основе предоставленных данных и задачи, сгенерируйте структуру графа.
-        Задача: ${prompts[config.graphType]}
-        Предоставьте результат в формате JSON, соответствующем схеме.
-    `;
+
+    const columnMetadata = selectedDataset?.columns || [];
+    const previewRows = selectedDataset?.sample_data?.slice(0, 50) || [];
 
     try {
-        const result = await InvokeLLM({ prompt, response_json_schema: networkGraphSchema });
+        const result = buildNetworkGraph({
+            datasetName: selectedDataset?.name || "",
+            columns: columnMetadata,
+            rows: previewRows,
+            graphType: config.graphType,
+        });
         setGeneratedGraph(result);
     } catch(e) {
         console.error("Ошибка генерации графа", e);
-        alert("Ошибка при генерации графа. Пожалуйста, попробуйте еще раз.");
+        alert("Ошибка при генерации графа локальными методами. Пожалуйста, проверьте данные.");
     }
     setIsGenerating(false);
   };
@@ -277,7 +288,11 @@ export default function NetworkBuilder({ datasets, onSave, onCancel }) {
         </CardHeader>
         <CardContent className="p-6">
           {generatedGraph ? (
-            <NetworkVisualization config={config} graphData={generatedGraph} />
+            <NetworkVisualization
+              config={config}
+              graphData={generatedGraph}
+              dataset={selectedDataset}
+            />
           ) : isGenerating ? (
             <div className="h-96 flex items-center justify-center text-slate-500 elegant-text">
                 <div className="text-center">
@@ -291,6 +306,168 @@ export default function NetworkBuilder({ datasets, onSave, onCancel }) {
                 <Network className="w-16 h-16 mx-auto mb-4 opacity-50" />
                 <p>Выберите данные и сгенерируйте граф</p>
               </div>
+            </div>
+          )}
+
+          {generatedGraph && (
+            <div className="mt-8 space-y-8">
+              {generatedGraph.metrics && (
+                <section className="space-y-3">
+                  <h3 className="text-lg font-semibold text-slate-900 heading-text">Глобальные показатели графа</h3>
+                  <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                    <div className="rounded-2xl border border-slate-200 bg-white/70 p-4 shadow-sm">
+                      <p className="text-xs uppercase tracking-wide text-slate-500">Плотность</p>
+                      <p className="mt-2 text-2xl font-semibold text-slate-900">
+                        {(generatedGraph.metrics.density ?? 0).toFixed(2)}
+                      </p>
+                      <p className="mt-1 text-xs text-slate-500">
+                        Отражает насыщенность связями. Значение ближе к 1 — плотная сеть.
+                      </p>
+                    </div>
+                    <div className="rounded-2xl border border-slate-200 bg-white/70 p-4 shadow-sm">
+                      <p className="text-xs uppercase tracking-wide text-slate-500">Средняя степень</p>
+                      <p className="mt-2 text-2xl font-semibold text-slate-900">
+                        {(generatedGraph.metrics.average_degree ?? 0).toFixed(1)}
+                      </p>
+                      <p className="mt-1 text-xs text-slate-500">
+                        Среднее количество связей на узел.
+                      </p>
+                    </div>
+                    <div className="rounded-2xl border border-slate-200 bg-white/70 p-4 shadow-sm">
+                      <p className="text-xs uppercase tracking-wide text-slate-500">Компоненты</p>
+                      <p className="mt-2 text-2xl font-semibold text-slate-900">
+                        {generatedGraph.metrics.community_count ?? 0}
+                      </p>
+                      <p className="mt-1 text-xs text-slate-500">
+                        Количество компонент связности в сети.
+                      </p>
+                    </div>
+                    <div className="rounded-2xl border border-slate-200 bg-white/70 p-4 shadow-sm">
+                      <p className="text-xs uppercase tracking-wide text-slate-500">Ключевые узлы</p>
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {(generatedGraph.metrics.hubs ?? []).length ? (
+                          generatedGraph.metrics.hubs.map((hub) => (
+                            <Badge key={hub} variant="secondary" className="bg-slate-100 text-slate-700">
+                              {hub}
+                            </Badge>
+                          ))
+                        ) : (
+                          <span className="text-sm text-slate-500">Не выявлены</span>
+                        )}
+                      </div>
+                      <p className="mt-1 text-xs text-slate-500">
+                        Узлы с наибольшей степенью связей.
+                      </p>
+                    </div>
+                  </div>
+                </section>
+              )}
+
+              {generatedGraph.insights?.length ? (
+                <section className="space-y-3">
+                  <h3 className="text-lg font-semibold text-slate-900 heading-text">Инсайты анализа</h3>
+                  <ul className="space-y-2 text-sm text-slate-600 list-disc list-inside">
+                    {generatedGraph.insights.map((insight, index) => (
+                      <li key={index}>{insight}</li>
+                    ))}
+                  </ul>
+                </section>
+              ) : null}
+
+              {nodeMetricRows.length ? (
+                <section className="space-y-3">
+                  <h3 className="text-lg font-semibold text-slate-900 heading-text">Метрики узлов</h3>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Узел</TableHead>
+                        <TableHead>Степень</TableHead>
+                        <TableHead>Центральность</TableHead>
+                        <TableHead>Сумма весов</TableHead>
+                        <TableHead>Кластеризация</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {nodeMetricRows.map((metric) => (
+                        <TableRow key={metric.node}>
+                          <TableCell className="font-medium text-slate-900">{metric.node}</TableCell>
+                          <TableCell>{metric.degree}</TableCell>
+                          <TableCell>{metric.degree_centrality.toFixed(2)}</TableCell>
+                          <TableCell>{metric.strength.toFixed(2)}</TableCell>
+                          <TableCell>{metric.clustering.toFixed(2)}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </section>
+              ) : null}
+
+              {generatedGraph.communities?.length ? (
+                <section className="space-y-3">
+                  <h3 className="text-lg font-semibold text-slate-900 heading-text">Компоненты связности</h3>
+                  <div className="flex flex-wrap gap-3">
+                    {generatedGraph.communities.map((community, index) => (
+                      <div
+                        key={`${community.nodes.join('-')}-${index}`}
+                        className="rounded-2xl border border-slate-200 bg-slate-50/80 p-4 shadow-sm"
+                      >
+                        <p className="text-xs uppercase tracking-wide text-slate-500">Компонента {index + 1}</p>
+                        <p className="mt-1 text-sm font-semibold text-slate-900">
+                          Узлов: {community.size}
+                        </p>
+                        <div className="mt-2 flex flex-wrap gap-1 text-xs text-slate-600">
+                          {community.nodes.map((node) => (
+                            <span
+                              key={node}
+                              className="rounded-full border border-slate-200 bg-white px-2 py-1"
+                            >
+                              {node}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              ) : null}
+
+              {adjacencyPreview.length ? (
+                <section className="space-y-3">
+                  <h3 className="text-lg font-semibold text-slate-900 heading-text">Матрица смежности (фрагмент)</h3>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Узел</TableHead>
+                        {adjacencyHeaders.map((header) => (
+                          <TableHead key={header}>{header}</TableHead>
+                        ))}
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {adjacencyPreview.map((row) => (
+                        <TableRow key={row.node}>
+                          <TableCell className="font-medium text-slate-900">{row.node}</TableCell>
+                          {row.connections.map((connection) => (
+                            <TableCell
+                              key={`${row.node}-${connection.node}`}
+                              className={
+                                connection.weight > 0
+                                  ? "text-emerald-600 font-medium"
+                                  : "text-slate-400"
+                              }
+                            >
+                              {connection.weight.toFixed(2)}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                  <p className="text-xs text-slate-500">
+                    Показаны первые узлы и их связи по абсолютным значениям корреляций.
+                  </p>
+                </section>
+              ) : null}
             </div>
           )}
         </CardContent>

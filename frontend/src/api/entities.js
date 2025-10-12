@@ -1,98 +1,86 @@
-const API_BASE = import.meta.env.VITE_API_BASE || '';
+import { jsonRequest as request } from './http';
 
-function sortByOrder(items, orderBy) {
-  if (!Array.isArray(items) || !orderBy) {
-    return Array.isArray(items) ? [...items] : [];
-  }
-  const direction = orderBy.startsWith('-') ? -1 : 1;
-  const field = orderBy.replace(/^[-+]/, '') || orderBy;
-  return [...items].sort((a, b) => {
-    const av = a?.[field];
-    const bv = b?.[field];
-    if (av === bv) return 0;
-    if (av == null) return 1 * direction;
-    if (bv == null) return -1 * direction;
-    if (typeof av === 'number' && typeof bv === 'number') {
-      return av > bv ? direction : -direction;
+function buildQuery(params = {}) {
+  const search = new URLSearchParams();
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== '') {
+      search.append(key, value);
     }
-    return String(av).localeCompare(String(bv)) * direction;
   });
+  const query = search.toString();
+  return query ? `?${query}` : '';
 }
 
 export const Dataset = {
-  async list(orderBy = '-created_date') {
-    const r = await fetch(`${API_BASE}/api/dataset/list`);
-    if (!r.ok) throw new Error(await r.text());
-    const data = await r.json();
-    return sortByOrder(data, orderBy);
+  async list(orderBy = '-created_at') {
+    return request(`/api/dataset/list${buildQuery({ order_by: orderBy })}`);
   },
+
+  async get(id) {
+    return request(`/api/dataset/${id}`);
+  },
+
   async create(payload) {
-    const r = await fetch(`${API_BASE}/api/dataset/create`, {
+    return request('/api/dataset/create', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
-    if (!r.ok) throw new Error(await r.text());
-    return r.json();
+  },
+
+  async update(id, payload) {
+    return request(`/api/dataset/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(payload),
+    });
+  },
+
+  async delete(id) {
+    return request(`/api/dataset/${id}`, {
+      method: 'DELETE',
+    });
   },
 };
-export async function getDatasets() { return Dataset.list('-created_date'); }
 
 export const Visualization = {
   async list(orderBy = '-created_at') {
-    const r = await fetch(`${API_BASE}/api/visualization/list`);
-    if (!r.ok) throw new Error(await r.text());
-    const data = await r.json();
-    return sortByOrder(data, orderBy);
+    return request(`/api/visualization/list${buildQuery({ order_by: orderBy })}`);
   },
-  async filter(criteria = {}, orderBy = '-created_at') {
-    const items = await this.list(orderBy);
-    const keys = Object.keys(criteria || {});
-    if (keys.length === 0) return items;
-    return items.filter((item) =>
-      keys.every((key) => {
-        const expected = criteria[key];
-        if (expected == null) return true;
-        const value = item?.[key];
-        if (Array.isArray(expected)) {
-          return expected.includes(value);
-        }
-        if (typeof expected === 'object' && expected !== null) {
-          return Object.entries(expected).every(([subKey, subValue]) => {
-            const nested = value && typeof value === 'object' ? value[subKey] : undefined;
-            return nested === subValue;
-          });
-        }
-        return value === expected;
-      }),
-    );
-  },
-  async create(payload) {
-    const r = await fetch(`${API_BASE}/api/visualization/create`, {
+
+  async filter(filters = {}, orderBy = '-created_at') {
+    return request('/api/visualization/filter', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ filters, order_by: orderBy }),
+    });
+  },
+
+  async get(id) {
+    return request(`/api/visualization/${id}`);
+  },
+
+  async create(payload) {
+    return request('/api/visualization/create', {
+      method: 'POST',
       body: JSON.stringify(payload),
     });
-    if (!r.ok) throw new Error(await r.text());
-    return r.json();
   },
+
   async update(id, payload) {
-    const r = await fetch(`${API_BASE}/api/visualization/${id}`, {
+    return request(`/api/visualization/${id}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
-    if (!r.ok) throw new Error(await r.text());
-    return r.json();
   },
+
   async delete(id) {
-    const r = await fetch(`${API_BASE}/api/visualization/${id}`, {
+    return request(`/api/visualization/${id}`, {
       method: 'DELETE',
     });
-    if (!r.ok) throw new Error(await r.text());
-    return r.json();
   },
 };
+
+export async function getDatasets() {
+  return Dataset.list('-created_at');
+}
 
 export async function getVisualizations() {
   return Visualization.list('-created_at');

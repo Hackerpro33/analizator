@@ -19,3 +19,13 @@ venv/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Runtime data
+backend/data/*.jsonl
+backend/data/visualizations.json
+backend/uploads/
+# Coverage outputs
+coverage.xml
+htmlcov/
+frontend/coverage/
+.coverage

@@ -1,0 +1,65 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-added-large-files
+      - id: check-merge-conflict
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+  - repo: https://github.com/psf/black
+    rev: 24.10.0
+    hooks:
+      - id: black
+        additional_dependencies: ["click==8.1.7"]
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.8.1
+    hooks:
+      - id: ruff
+      - id: ruff-format
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.14.1
+    hooks:
+      - id: mypy
+        additional_dependencies:
+          - fastapi
+          - pydantic
+          - types-requests
+          - types-setuptools
+        args: ["--config-file", "mypy.ini"]
+  - repo: https://github.com/zricethezav/gitleaks
+    rev: v8.18.2
+    hooks:
+      - id: gitleaks
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v4.0.0-alpha.8
+    hooks:
+      - id: prettier
+        additional_dependencies:
+          - prettier@3.4.2
+        types_or: ["json", "yaml", "markdown"]
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v9.19.0
+    hooks:
+      - id: eslint
+        files: ^frontend/.*\.(js|jsx|ts|tsx)$
+        additional_dependencies:
+          - eslint@9.19.0
+          - @eslint/js@9.19.0
+          - eslint-plugin-react@7.37.4
+          - eslint-plugin-react-hooks@5.0.0
+          - eslint-plugin-react-refresh@0.4.18
+          - globals@15.14.0
+  - repo: local
+    hooks:
+      - id: frontend-tests
+        name: "Frontend unit tests"
+        entry: npm test --prefix frontend -- --run
+        language: system
+        pass_filenames: false
+        stages: [pre-push]
+      - id: backend-pytest
+        name: "Backend pytest"
+        entry: pytest
+        language: system
+        pass_filenames: false
+        stages: [pre-push]

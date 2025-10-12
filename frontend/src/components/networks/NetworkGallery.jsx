@@ -52,7 +52,7 @@ export default function NetworkGallery({ networks, isLoading, onEdit }) {
                   </div>
 
                   <div className="text-xs text-slate-600 mb-4 elegant-text">
-                    {network.config?.selectedColumns?.length || 0} узлов • AI анализ связей
+                    {network.config?.selectedColumns?.length || 0} узлов • локальный анализ связей
                   </div>
 
                   <Button

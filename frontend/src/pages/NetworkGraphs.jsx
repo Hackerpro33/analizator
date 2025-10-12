@@ -3,6 +3,7 @@ import { Dataset, Visualization } from "@/api/entities";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Network, Sparkles, BarChart3, Share2 } from "lucide-react";
+import PageContainer from "@/components/layout/PageContainer";
 
 import NetworkBuilder from "../components/networks/NetworkBuilder";
 import NetworkGallery from "../components/networks/NetworkGallery";
@@ -48,10 +49,9 @@ export default function NetworkGraphs() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-6">
-      <div className="max-w-7xl mx-auto space-y-8">
-        {/* Header */}
-        <div className="text-center space-y-4">
+    <PageContainer className="space-y-8">
+      {/* Header */}
+      <div className="text-center space-y-4">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-900 via-blue-900 to-purple-900 bg-clip-text text-transparent heading-text">
             Графы связей данных
           </h1>
@@ -89,14 +89,14 @@ export default function NetworkGraphs() {
               <div className="w-12 h-12 mx-auto mb-4 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center">
                 <Sparkles className="w-6 h-6 text-white" />
               </div>
-              <div className="text-2xl font-bold text-slate-900 heading-text">AI</div>
+              <div className="text-2xl font-bold text-slate-900 heading-text">Локальный анализ</div>
               <div className="text-sm text-slate-600 elegant-text">Анализ связей</div>
             </CardContent>
           </Card>
         </div>
 
         {showBuilder ? (
-          <NetworkBuilder 
+          <NetworkBuilder
             datasets={datasets}
             onSave={handleSaveNetwork}
             onCancel={() => setShowBuilder(false)}
@@ -104,7 +104,7 @@ export default function NetworkGraphs() {
         ) : (
           <>
             <div className="text-center">
-              <Button 
+              <Button
                 onClick={() => setShowBuilder(true)}
                 className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white px-8 py-3 text-lg font-medium shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 gap-2 elegant-text"
               >
@@ -112,14 +112,13 @@ export default function NetworkGraphs() {
                 Создать граф связей
               </Button>
             </div>
-            <NetworkGallery 
+            <NetworkGallery
               networks={networks}
               isLoading={isLoading}
               onEdit={() => setShowBuilder(true)}
             />
           </>
         )}
-      </div>
-    </div>
+    </PageContainer>
   );
 }

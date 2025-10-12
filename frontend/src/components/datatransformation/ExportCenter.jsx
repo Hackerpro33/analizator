@@ -5,7 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { InvokeLLM } from "@/api/integrations";
+import { getExportContentType } from "@/utils/dataTransformation";
+import { convertDataset } from "@/utils/localAnalysis";
 import { 
   Download, 
   Database, 
@@ -37,51 +38,17 @@ export default function ExportCenter({ datasets, supportedFormats, isLoading }) 
     setExportResult(null);
 
     try {
-      const dataset = datasets.find(d => d.id === selectedDataset);
-      
-      // Используем ИИ для умного экспорта
-      const exportPrompt = `
-        Вы — эксперт по конвертации данных. Преобразуйте данные в формат ${exportFormat}.
-        
-        ИСХОДНЫЕ ДАННЫЕ:
-        Название: ${dataset.name}
-        Столбцы: ${JSON.stringify(dataset.columns)}
-        Образцы данных: ${JSON.stringify(dataset.sample_data?.slice(0, 10))}
-        
-        НАСТРОЙКИ ЭКСПОРТА:
-        Формат: ${exportFormat}
-        Включить заголовки: ${exportOptions.includeHeaders}
-        Разделитель: ${exportOptions.delimiter}
-        Кодировка: ${exportOptions.encoding}
-        
-        ЗАДАЧА:
-        Создайте оптимальное представление данных в формате ${exportFormat}, учитывая:
-        1. Сохранение структуры данных
-        2. Правильное форматирование типов данных
-        3. Совместимость с популярными программами
-        4. Качественную читаемость
-        
-        Предоставьте готовый файл в указанном формате.
-      `;
+      const dataset = datasets.find(d => String(d.id) === selectedDataset);
 
-      const result = await InvokeLLM({
-        prompt: exportPrompt,
-        response_json_schema: {
-          type: "object",
-          properties: {
-            converted_data: { type: "string" },
-            format_info: { type: "string" },
-            compatibility_notes: { type: "array", items: { type: "string" } },
-            file_size_estimate: { type: "string" },
-            export_quality: { type: "string", enum: ["excellent", "good", "fair"] }
-          },
-          required: ["converted_data", "format_info"]
-        }
-      });
+      if (!dataset) {
+        throw new Error('Выбранный набор данных не найден.');
+      }
+      
+      const result = convertDataset({ dataset, format: exportFormat, options: exportOptions });
 
       // Создаем blob для скачивания
-      const blob = new Blob([result.converted_data], { 
-        type: getContentType(exportFormat) 
+      const blob = new Blob([result.converted_data], {
+        type: getExportContentType(exportFormat)
       });
       
       const url = URL.createObjectURL(blob);
@@ -110,18 +77,6 @@ export default function ExportCenter({ datasets, supportedFormats, isLoading }) 
     }
     
     setIsExporting(false);
-  };
-
-  const getContentType = (format) => {
-    const types = {
-      'csv': 'text/csv',
-      'json': 'application/json',
-      'xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      'xml': 'application/xml',
-      'html': 'text/html',
-      'txt': 'text/plain'
-    };
-    return types[format.toLowerCase()] || 'application/octet-stream';
   };
 
   const exportFormats = [
@@ -155,7 +110,7 @@ export default function ExportCenter({ datasets, supportedFormats, isLoading }) 
                 </SelectTrigger>
                 <SelectContent>
                   {datasets.map(dataset => (
-                    <SelectItem key={dataset.id} value={dataset.id}>
+                    <SelectItem key={dataset.id} value={String(dataset.id)}>
                       <div className="flex items-center gap-2">
                         <Database className="w-4 h-4" />
                         {dataset.name}
@@ -191,7 +146,7 @@ export default function ExportCenter({ datasets, supportedFormats, isLoading }) 
             <div className="p-4 bg-slate-50 rounded-lg">
               <h4 className="font-semibold text-slate-900 mb-2">Предпросмотр данных</h4>
               {(() => {
-                const dataset = datasets.find(d => d.id === selectedDataset);
+                const dataset = datasets.find(d => String(d.id) === selectedDataset);
                 return dataset ? (
                   <div className="space-y-2">
                     <div className="flex items-center gap-4 text-sm text-slate-600">
@@ -219,7 +174,7 @@ export default function ExportCenter({ datasets, supportedFormats, isLoading }) 
           <div className="flex items-center gap-4 pt-4">
             <div className="flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-purple-600" />
-              <span className="text-sm font-medium text-purple-700">ИИ-оптимизация включена</span>
+              <span className="text-sm font-medium text-purple-700">Локальная оптимизация включена</span>
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-green-600" />

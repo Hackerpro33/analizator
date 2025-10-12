@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -20,7 +20,22 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { LineChart as ReLineChart, Line, BarChart as ReBarChart, Bar, ScatterChart as ReScatterChart, Scatter, AreaChart as ReAreaChart, Area, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 import PDFExporter from "../utils/PDFExporter";
 
-export default function ChartGallery({ visualizations, datasets, isLoading, onEdit, onView }) {
+const matchesSegment = (dataset, segment) => {
+  if (!segment || !dataset) {
+    return true;
+  }
+  const column = segment.column;
+  if (!column) {
+    return true;
+  }
+  const rows = Array.isArray(dataset.sample_data) ? dataset.sample_data : [];
+  if (!rows.length) {
+    return true;
+  }
+  return rows.some((row) => row?.[column] === segment.value);
+};
+
+export default function ChartGallery({ visualizations, datasets, isLoading, onEdit, onView, activeSegment }) {
   const getChartIcon = (type) => {
     const icons = {
       line: LineChart,
@@ -188,6 +203,21 @@ export default function ChartGallery({ visualizations, datasets, isLoading, onEd
     }, 500);
   };
 
+  const segmentMatchMap = useMemo(() => {
+    if (!activeSegment) {
+      return null;
+    }
+    return visualizations.reduce((acc, viz) => {
+      const dataset = datasets.find((d) => d.id === viz.dataset_id);
+      acc[viz.id] = matchesSegment(dataset, activeSegment);
+      return acc;
+    }, {});
+  }, [visualizations, datasets, activeSegment]);
+
+  const hasSegmentMatches = activeSegment
+    ? Object.values(segmentMatchMap || {}).some(Boolean)
+    : true;
+
   return (
     <Card className="border-0 bg-white/50 backdrop-blur-xl shadow-lg">
       <CardHeader>
@@ -197,14 +227,27 @@ export default function ChartGallery({ visualizations, datasets, isLoading, onEd
             Ваши графики
           </CardTitle>
           {visualizations.length > 0 && (
-            <PDFExporter 
-              title="Отчет по графикам DataViz Pro" 
+            <PDFExporter
+              title="Отчет по графикам Анализатор"
               elementId="charts-gallery"
             />
           )}
         </div>
       </CardHeader>
       <CardContent id="charts-gallery">
+        {activeSegment && (
+          <div className="mb-4 rounded-lg border border-indigo-100 bg-indigo-50/70 px-4 py-3 text-xs text-indigo-700">
+            Активен фильтр по сегменту
+            <span className="ml-1 font-semibold">
+              {activeSegment.label || `${activeSegment.column}: ${activeSegment.value}`}
+            </span>
+          </div>
+        )}
+        {activeSegment && !hasSegmentMatches && !isLoading && visualizations.length > 0 && (
+          <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-700">
+            Ни один из сохранённых графиков не содержит выбранный сегмент. Создайте новую визуализацию или выберите другой фильтр.
+          </div>
+        )}
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array(6).fill(0).map((_, i) => (
@@ -231,8 +274,14 @@ export default function ChartGallery({ visualizations, datasets, isLoading, onEd
             {visualizations.map((viz) => {
               const Icon = getChartIcon(viz.type);
               const dataset = datasets.find(d => d.id === viz.dataset_id);
+              const matchesFilter = activeSegment ? segmentMatchMap?.[viz.id] !== false : true;
               return (
-                <Card key={viz.id} className="group border-0 bg-white/70 backdrop-blur-sm shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105">
+                <Card
+                  key={viz.id}
+                  className={`group border-0 bg-white/70 backdrop-blur-sm shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105 ${
+                    matchesFilter ? '' : 'opacity-40'
+                  }`}
+                >
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-2">

@@ -1,43 +1,77 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from starlette.middleware.trustedhost import TrustedHostMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
 import pandas as pd
 import numpy as np
-import httpx, os, io, json, uuid, re
-from typing import Optional, Dict, Any
+import os
+import json
+import sys
+import uuid
+from typing import Optional, Dict, Any, List
+
+from .utils.files import (
+    DATA_DIR,
+    UPLOAD_DIR,
+    read_table_bytes,
+    register_uploaded_file,
+    resolve_file_path,
+    safe_filename,
+)
 
 app = FastAPI(title="Insight Sphere Backend", version="0.1.0")
 
+
+class SecurityHeadersMiddleware(BaseHTTPMiddleware):
+    """Attach a strict set of security-oriented HTTP headers."""
+
+    async def dispatch(self, request, call_next):
+        response = await call_next(request)
+        headers = {
+            "X-Content-Type-Options": "nosniff",
+            "X-Frame-Options": "DENY",
+            "Referrer-Policy": "same-origin",
+            "Permissions-Policy": "geolocation=(), microphone=(), camera=()",
+            "Cross-Origin-Opener-Policy": "same-origin",
+            "Cross-Origin-Embedder-Policy": "require-corp",
+        }
+        for header, value in headers.items():
+            response.headers.setdefault(header, value)
+        return response
+
 # --- CORS ---
 FRONTEND_ORIGIN = os.getenv("FRONTEND_ORIGIN", "http://localhost:5173")
+ADDITIONAL_ORIGINS: List[str] = [
+    origin.strip()
+    for origin in os.getenv("ADDITIONAL_CORS_ORIGINS", "").split(",")
+    if origin.strip()
+]
+allow_origins = {FRONTEND_ORIGIN, "http://127.0.0.1:5173", "http://127.0.0.1:5174"}
+allow_origins.update(ADDITIONAL_ORIGINS)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[FRONTEND_ORIGIN, "http://localhost:5174", "http://127.0.0.1:5173", "http://127.0.0.1:5174"],
+    allow_origins=sorted(allow_origins),
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type", "X-Requested-With"],
 )
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-UPLOAD_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "uploads"))
-os.makedirs(UPLOAD_DIR, exist_ok=True)
+allowed_hosts_env = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1")
+allowed_hosts = [host.strip() for host in allowed_hosts_env.split(",") if host.strip()]
+allowed_hosts.append("127.0.0.1")
+allowed_hosts.append("localhost")
+app.add_middleware(TrustedHostMiddleware, allowed_hosts=list(dict.fromkeys(allowed_hosts)))
+app.add_middleware(SecurityHeadersMiddleware)
 
-def _safe_name(name: str) -> str:
-    return re.sub(r"[^a-zA-Z0-9._-]+", "_", name)
+EMAIL_LOG_PATH = DATA_DIR / "email_log.jsonl"
+
+MAX_UPLOAD_SIZE_MB = int(os.getenv("MAX_UPLOAD_SIZE_MB", "25"))
+MAX_UPLOAD_SIZE = MAX_UPLOAD_SIZE_MB * 1024 * 1024
 
 @app.get("/health")
 def health():
     return {"status": "ok"}
-
-def read_table_bytes(file_bytes: bytes, filename: str) -> pd.DataFrame:
-    ext = os.path.splitext(filename)[1].lower()
-    if ext in [".xlsx", ".xls"]:
-        return pd.read_excel(io.BytesIO(file_bytes))
-    elif ext in [".csv", ".tsv"]:
-        sep = "\t" if ext == ".tsv" else None
-        return pd.read_csv(io.BytesIO(file_bytes), sep=sep)
-    else:
-        raise HTTPException(status_code=400, detail=f"Unsupported format: {ext}")
 
 def detect_general_type(series: pd.Series) -> str:
     if pd.api.types.is_bool_dtype(series):
@@ -48,31 +82,97 @@ def detect_general_type(series: pd.Series) -> str:
         return "datetime"
     return "string"
 
+CRIME_TREND_KEYWORDS = ("crime", "offense", "incident", "violence", "homicide")
+POLICING_TREND_KEYWORDS = ("police", "patrol", "enforcement")
+RISK_FACTOR_KEYWORDS = ("unemployment", "poverty", "alcohol", "drug", "gang", "homeless")
+
+
+def _numeric_series(series: pd.Series) -> pd.Series:
+    numeric = pd.to_numeric(series, errors="coerce")
+    return numeric.dropna()
+
+
+def _generate_domain_insights(df: pd.DataFrame) -> List[str]:
+    insights: List[str] = []
+    lower_name_map = {str(col): str(col).lower() for col in df.columns}
+
+    for original_name, lower_name in lower_name_map.items():
+        numeric = _numeric_series(df[original_name])
+        if numeric.empty:
+            continue
+
+        if any(keyword in lower_name for keyword in CRIME_TREND_KEYWORDS):
+            change = float(numeric.iloc[-1] - numeric.iloc[0])
+            if change > 0:
+                insights.append(
+                    f"Crime indicator '{original_name}' increased by {change:.2f} between the first and last records."
+                )
+            elif change < 0:
+                insights.append(
+                    f"Crime indicator '{original_name}' decreased by {abs(change):.2f} between the first and last records."
+                )
+            else:
+                insights.append(
+                    f"Crime indicator '{original_name}' remained stable across the observed period."
+                )
+            continue
+
+        if any(keyword in lower_name for keyword in POLICING_TREND_KEYWORDS):
+            change = float(numeric.iloc[-1] - numeric.iloc[0])
+            if change > 0:
+                insights.append(
+                    f"Policing resource '{original_name}' increased by {change:.2f} between the first and last records."
+                )
+            elif change < 0:
+                insights.append(
+                    f"Policing resource '{original_name}' decreased by {abs(change):.2f} between the first and last records."
+                )
+            else:
+                insights.append(
+                    f"Policing resource '{original_name}' remained stable across the observed period."
+                )
+            continue
+
+        if any(keyword in lower_name for keyword in RISK_FACTOR_KEYWORDS):
+            average = float(numeric.mean())
+            insights.append(
+                f"Risk factor '{original_name}' averages {average:.2f} across the dataset."
+            )
+
+    return insights
+
+
 def build_extraction(df: pd.DataFrame, sample_rows: int = 100) -> Dict[str, Any]:
     cols = [{"name": str(c), "type": detect_general_type(df[c])} for c in df.columns]
     sample = df.head(sample_rows).replace({np.nan: ""}).astype(object)
     sample = sample.to_dict(orient="records")
+    insights = _generate_domain_insights(df)
     return {
         "columns": cols,
         "row_count": int(len(df)),
-        "sample_data": sample
+        "sample_data": sample,
+        "insights": insights,
     }
 
-# simple in-memory registry file_id -> path
-FILE_REGISTRY: Dict[str, str] = {}
 
+# simple in-memory registry file_id -> path
 @app.post("/api/upload")
 async def api_upload(file: UploadFile = File(...)):
     data = await file.read()
     if not data:
         raise HTTPException(status_code=400, detail="Empty file")
+    if len(data) > MAX_UPLOAD_SIZE:
+        raise HTTPException(
+            status_code=413,
+            detail=f"File too large. Max allowed size is {MAX_UPLOAD_SIZE_MB} MB",
+        )
     # save
     fid = str(uuid.uuid4())
-    safe = _safe_name(file.filename or "file")
-    path = os.path.join(UPLOAD_DIR, f"{fid}_{safe}")
-    with open(path, "wb") as f:
+    safe = safe_filename(file.filename or "file")
+    path = UPLOAD_DIR / f"{fid}_{safe}"
+    with path.open("wb") as f:
         f.write(data)
-    FILE_REGISTRY[fid] = path
+    register_uploaded_file(fid, path)
     # quick extraction for preview (optional)
     try:
         df = read_table_bytes(data, file.filename)
@@ -87,80 +187,37 @@ class ExtractRequest(BaseModel):
 
 @app.post("/api/extract")
 def api_extract(req: ExtractRequest):
-    fid = req.file_url
-    path = FILE_REGISTRY.get(fid)
-    if not path or not os.path.exists(path):
-        # try direct path if file_url was actually a path
-        path = os.path.join(UPLOAD_DIR, _safe_name(fid))
-        if not os.path.exists(path):
-            raise HTTPException(status_code=404, detail="File not found")
-
-    with open(path, "rb") as f:
+    path = resolve_file_path(req.file_url)
+    with path.open("rb") as f:
         file_bytes = f.read()
     try:
-        df = read_table_bytes(file_bytes, os.path.basename(path))
+        df = read_table_bytes(file_bytes, path.name)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
     output = build_extraction(df)
     return {"status": "success", "output": output}
 
-# --- Local LLM via Ollama ---
-class LLMReq(BaseModel):
-    prompt: Optional[str] = None
-    summary: Optional[dict] = None
-    userQuestion: Optional[str] = None
-    response_json_schema: Optional[dict] = None
+class EmailRequest(BaseModel):
+    to: str
+    subject: str
+    body: str
+    from_name: Optional[str] = None
 
-OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434")
-OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.1")
 
-@app.post("/api/llm")
-async def api_llm(req: LLMReq):
-    if not (req.prompt or req.summary or req.userQuestion):
-        raise HTTPException(status_code=400, detail="No prompt/summary provided")
-
-    system = "Ты локальный аналитик таблиц. Отвечай кратко и по делу. Если просят JSON — верни ТОЛЬКО валидный JSON без пояснений."
-    prompt_parts = [f"SYSTEM:\n{system}\n"]
-    if req.summary:
-        prompt_parts.append("ДАННЫЕ:\n" + json.dumps(req.summary, ensure_ascii=False, indent=2))
-    if req.prompt:
-        prompt_parts.append("ПРОМПТ:\n" + req.prompt)
-    if req.userQuestion:
-        prompt_parts.append("ВОПРОС:\n" + req.userQuestion)
-
-    # Если передана схема — просим вернуть строго JSON
-    if req.response_json_schema:
-        prompt_parts.append("\nТребование: Ответь строго в формате JSON, соответствующем этой схеме (без комментариев и лишнего текста):\n")
-        prompt_parts.append(json.dumps(req.response_json_schema, ensure_ascii=False))
-
-    full_prompt = "\n\n".join(prompt_parts)
-
-    async with httpx.AsyncClient(timeout=120) as client:
-        r = await client.post(f"{OLLAMA_URL}/api/generate", json={
-            "model": OLLAMA_MODEL,
-            "prompt": full_prompt,
-            "stream": False
-        })
-        r.raise_for_status()
-        data = r.json()
-
-    text = data.get("response", "")
-    if req.response_json_schema:
-        # Попробуем вырезать и распарсить JSON
-        try:
-            start = text.find("{")
-            end = text.rfind("}")
-            if start != -1 and end != -1 and end > start:
-                obj = json.loads(text[start:end+1])
-                return obj
-        except Exception:
-            pass
-    return {"response": text}
-
-@app.get("/api/dataset/list")
-def dataset_list():
-    # заглушка: вернём пустой список, чтобы фронт не падал
-    return []
+@app.post("/api/utils/send-email")
+async def api_send_email(payload: EmailRequest):
+    record = {
+        "to": payload.to,
+        "subject": payload.subject,
+        "body": payload.body,
+        "from_name": payload.from_name,
+    }
+    try:
+        with EMAIL_LOG_PATH.open("a", encoding="utf-8") as log_file:
+            log_file.write(json.dumps(record, ensure_ascii=False) + "\n")
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Failed to log email: {exc}")
+    return {"status": "queued", "logged": True}
 
 if __name__ == "__main__":
     import uvicorn
@@ -169,8 +226,28 @@ if __name__ == "__main__":
 
 
 
-from datasets_api import router as datasets_router
-from visualizations_api import router as visualizations_router
+# Allow running both as part of the ``app`` package (e.g. ``uvicorn app.main:app``)
+# and as a standalone script (e.g. ``python main.py`` or ``uvicorn main:app``).
+if __package__ in {None, ""}:
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    if current_dir not in sys.path:
+        sys.path.append(current_dir)
+    import audit_api as audit_router_module
+    import chat_api as chat_router_module
+    import datasets_api as datasets_router_module
+    import visualizations_api as visualizations_router_module
+else:
+    from . import audit_api as audit_router_module
+    from . import chat_api as chat_router_module
+    from . import datasets_api as datasets_router_module
+    from . import visualizations_api as visualizations_router_module
+
+datasets_router = datasets_router_module.router
+visualizations_router = visualizations_router_module.router
+chat_router = chat_router_module.router
+audit_router = audit_router_module.router
 
 app.include_router(datasets_router, prefix="/api/dataset")
 app.include_router(visualizations_router, prefix="/api/visualization")
+app.include_router(chat_router, prefix="/api/chat")
+app.include_router(audit_router, prefix="/api/audit")

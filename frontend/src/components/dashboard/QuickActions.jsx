@@ -14,7 +14,9 @@ export default function QuickActions() {
       icon: Upload,
       href: createPageUrl("DataSources"),
       gradient: "from-emerald-500 to-teal-600",
-      hoverGradient: "hover:from-emerald-600 hover:to-teal-700"
+      hoverGradient: "hover:from-emerald-600 hover:to-teal-700",
+      kpiValue: "2.4 мин",
+      kpiDescription: "среднее время подготовки"
     },
     {
       title: "Создать график",
@@ -22,7 +24,9 @@ export default function QuickActions() {
       icon: BarChart3,
       href: createPageUrl("Charts"),
       gradient: "from-blue-500 to-cyan-600",
-      hoverGradient: "hover:from-blue-600 hover:to-cyan-700"
+      hoverGradient: "hover:from-blue-600 hover:to-cyan-700",
+      kpiValue: "98%",
+      kpiDescription: "точность аналитики"
     },
     {
       title: "Визуализация на карте",
@@ -30,15 +34,19 @@ export default function QuickActions() {
       icon: Map,
       href: createPageUrl("Maps"),
       gradient: "from-purple-500 to-indigo-600",
-      hoverGradient: "hover:from-purple-600 hover:to-indigo-700"
+      hoverGradient: "hover:from-purple-600 hover:to-indigo-700",
+      kpiValue: "12 слоёв",
+      kpiDescription: "средняя детализация"
     },
     {
-      title: "AI Прогнозирование",
-      description: "Предсказать будущие тренды",
+      title: "Локальное прогнозирование",
+      description: "Предсказать будущие тренды без подключения к сети",
       icon: TrendingUp,
       href: createPageUrl("Forecasting"),
       gradient: "from-orange-500 to-red-600",
-      hoverGradient: "hover:from-orange-600 hover:to-red-700"
+      hoverGradient: "hover:from-orange-600 hover:to-red-700",
+      kpiValue: "+31%",
+      kpiDescription: "прирост точности моделей"
     }
   ];
 
@@ -65,6 +73,10 @@ export default function QuickActions() {
                   <div>
                     <div className="font-semibold text-sm">{action.title}</div>
                     <div className="text-xs opacity-90 mt-1">{action.description}</div>
+                  </div>
+                  <div className="rounded-full bg-white/15 px-3 py-1 text-[10px] uppercase tracking-wide">
+                    <span className="font-semibold text-white/90">{action.kpiValue}</span>
+                    <span className="ml-1 text-white/70">{action.kpiDescription}</span>
                   </div>
                 </div>
               </Button>

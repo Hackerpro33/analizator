@@ -4,5 +4,7 @@ pandas
 numpy
 openpyxl
 python-multipart
-httpx
 python-dotenv
+pytest
+httpx
+pytest-cov

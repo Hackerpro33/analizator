@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Dataset } from "@/api/entities";
-import { extractDataFromUploadedFile, uploadFile, InvokeLLM } from "@/api/integrations";
+import { extractDataFromUploadedFile, uploadFile } from "@/api/integrations";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import PageContainer from "@/components/layout/PageContainer";
 import { 
   RefreshCw, 
   Upload, 
@@ -119,10 +120,9 @@ export default function DataTransformation() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-6">
-      <div className="max-w-7xl mx-auto space-y-8">
-        {/* Header */}
-        <div className="text-center space-y-4">
+    <PageContainer className="space-y-8">
+      {/* Header */}
+      <div className="text-center space-y-4">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-900 via-blue-900 to-purple-900 bg-clip-text text-transparent">
             Преобразование данных
           </h1>
@@ -207,55 +207,54 @@ export default function DataTransformation() {
           />
         )}
 
-        {activeTab === 'history' && (
-          <Card className="border-0 bg-white/70 backdrop-blur-xl shadow-xl">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-slate-900">
-                <FileText className="w-5 h-5 text-blue-500" />
-                История преобразований
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {conversionHistory.length === 0 ? (
-                <div className="text-center py-12">
-                  <RefreshCw className="w-16 h-16 mx-auto text-slate-400 mb-4" />
-                  <h3 className="text-lg font-semibold text-slate-700 mb-2">История пуста</h3>
-                  <p className="text-slate-500">Преобразования файлов будут отображаться здесь</p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {conversionHistory.map((item, index) => (
-                    <div key={index} className="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-cyan-600 rounded-lg flex items-center justify-center">
-                          <RefreshCw className="w-4 h-4 text-white" />
-                        </div>
-                        <div>
-                          <div className="font-medium text-slate-900">{item.originalName}</div>
-                          <div className="text-sm text-slate-500">
-                            {item.fromFormat} → {item.toFormat} • {new Date(item.timestamp).toLocaleString()}
-                          </div>
-                        </div>
+      {activeTab === 'history' && (
+        <Card className="border-0 bg-white/70 backdrop-blur-xl shadow-xl">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-slate-900">
+              <FileText className="w-5 h-5 text-blue-500" />
+              История преобразований
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {conversionHistory.length === 0 ? (
+              <div className="text-center py-12">
+                <RefreshCw className="w-16 h-16 mx-auto text-slate-400 mb-4" />
+                <h3 className="text-lg font-semibold text-slate-700 mb-2">История пуста</h3>
+                <p className="text-slate-500">Преобразования файлов будут отображаться здесь</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {conversionHistory.map((item, index) => (
+                  <div key={index} className="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-cyan-600 rounded-lg flex items-center justify-center">
+                        <RefreshCw className="w-4 h-4 text-white" />
                       </div>
-                      <div className="flex items-center gap-2">
-                        <Badge className={item.success ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}>
-                          {item.success ? "Успешно" : "Ошибка"}
-                        </Badge>
-                        {item.accuracy && (
-                          <Badge variant="outline">
-                            {item.accuracy}% точность
-                          </Badge>
-                        )}
+                      <div>
+                        <div className="font-medium text-slate-900">{item.originalName}</div>
+                        <div className="text-sm text-slate-500">
+                          {item.fromFormat} → {item.toFormat} • {new Date(item.timestamp).toLocaleString()}
+                        </div>
                       </div>
                     </div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        )}
-      </div>
-    </div>
+                    <div className="flex items-center gap-2">
+                      <Badge className={item.success ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}>
+                        {item.success ? "Успешно" : "Ошибка"}
+                      </Badge>
+                      {item.accuracy && (
+                        <Badge variant="outline">
+                          {item.accuracy}% точность
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+    </PageContainer>
   );
 }
 

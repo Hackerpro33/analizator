@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Dataset, Visualization } from "@/api/entities";
-import { InvokeLLM, SendEmail } from "@/api/integrations";
+import { SendEmail } from "@/api/integrations";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { TrendingUp, Sparkles, BrainCircuit, BarChart3, Mail, Map } from "lucide-react";
@@ -10,48 +10,8 @@ import ForecastResult from "../components/forecasting/ForecastResult";
 import CorrelationMatrix from "../components/forecasting/CorrelationMatrix";
 import MapView from "../components/maps/MapView";
 import MapConfigurator from "../components/maps/MapConfigurator";
-
-const forecastSchema = {
-  type: "object",
-  properties: {
-    forecast_data: {
-      type: "array",
-      items: {
-        type: "object",
-        properties: {
-          date: { type: "string", format: "date" },
-          predicted_value: { type: "number" },
-          confidence_lower: { type: "number" },
-          confidence_upper: { type: "number" }
-        },
-        required: ["date", "predicted_value"]
-      }
-    },
-    scenarios: {
-        type: "object",
-        properties: {
-            optimistic: { type: "array", items: { "type": "number" } },
-            pessimistic: { type: "array", items: { "type": "number" } }
-        },
-        description: "Прогнозы для оптимистичного и пессимистичного сценариев."
-    },
-    summary: {
-      type: "object",
-      properties: {
-        predicted_growth_percentage: { type: "number" },
-        key_insights: { type: "array", items: { type: "string" } },
-        seasonality_detected: { type: "boolean" },
-        trend_direction: { type: "string", enum: ["возрастающий", "убывающий", "стабильный"] },
-        volatility_level: { type: "string", enum: ["низкая", "средняя", "высокая"] },
-        confidence_score: { type: "number" },
-        risk_factors: { type: "array", items: { type: "string" } },
-        recommendations: { type: "array", items: { type: "string" } }
-      },
-      required: ["predicted_growth_percentage", "key_insights"]
-    }
-  },
-  required: ["forecast_data", "summary"]
-};
+import { generateForecastReport } from "@/utils/localAnalysis";
+import PageContainer from "@/components/layout/PageContainer";
 
 export default function Forecasting() {
   const [datasets, setDatasets] = useState([]);
@@ -61,12 +21,33 @@ export default function Forecasting() {
   const [historicalData, setHistoricalData] = useState([]);
   const [correlationResult, setCorrelationResult] = useState(null);
   const [activeTab, setActiveTab] = useState('forecast');
-  const [mapConfig, setMapConfig] = useState(null);
-  const [mapData, setMapData] = useState(null);
+  const defaultMapConfig = {
+    title: 'Анализ на карте',
+    dataset_id: '',
+    lat_column: '',
+    lon_column: '',
+    value_column: '',
+    overlay_type: 'none',
+    time_column: '',
+    base_period: '',
+    comparison_period: ''
+  };
+  const [mapConfig, setMapConfig] = useState(defaultMapConfig);
+  const [mapData, setMapData] = useState([]);
 
   useEffect(() => {
     loadDatasets();
   }, []);
+
+  useEffect(() => {
+    if (!mapConfig?.dataset_id) {
+      setMapData([]);
+      return;
+    }
+
+    const selectedDs = datasets.find((d) => d.id === mapConfig.dataset_id);
+    setMapData(selectedDs?.sample_data || []);
+  }, [mapConfig?.dataset_id, datasets]);
 
   const loadDatasets = async () => {
     setIsLoading(true);
@@ -82,7 +63,7 @@ export default function Forecasting() {
   const handleSendSummary = async () => {
     if (!forecastResult) return;
     
-    const subject = `AI-прогноз: Результаты анализа`;
+    const subject = `Локальный прогноз: результаты анализа`;
     const body = `
       <h1>Отчет по прогнозу</h1>
       <h2>Ключевые выводы:</h2>
@@ -97,7 +78,7 @@ export default function Forecasting() {
       <ul>
         ${forecastResult.summary.recommendations?.map(rec => `<li>${rec}</li>`).join('') || '<li>Рекомендации не сформированы</li>'}
       </ul>
-      <p>Отчет сгенерирован автоматически платформой DataViz Pro.</p>
+      <p>Отчет сгенерирован автоматически платформой Анализатор.</p>
     `;
     
     const userEmail = "user@example.com"; 
@@ -107,7 +88,7 @@ export default function Forecasting() {
         to: userEmail,
         subject: subject,
         body: body,
-        from_name: "DataViz Pro Аналитика"
+        from_name: "Анализатор Аналитика"
       });
       alert(`Отчет отправлен на ${userEmail}`);
     } catch (error) {
@@ -119,6 +100,8 @@ export default function Forecasting() {
   const handleGenerateForecast = async (config) => {
     setIsForecasting(true);
     setForecastResult(null);
+
+    const timeColumn = config.useSyntheticDates ? 'synthetic_time' : config.date_column;
 
     // Генерация более реалистичных исторических данных
     const generateHistoricalData = (days, baseValue, volatility = 0.1, trend = 0.02) => {
@@ -152,37 +135,62 @@ export default function Forecasting() {
     setHistoricalData(mockHistorical);
 
     try {
-      const externalFactorsPrompt = config.external_factors?.length > 0 
-        ? `Учтите следующие внешние факторы (экзогенные переменные) при построении прогноза: ${config.external_factors.join(', ')}. Данные из корреляционного и графового анализа можно использовать как основу для этих факторов.`
+      const externalFactorsDetails = (config.external_factors || []).map((factor) => {
+        const dataset = datasets.find((d) => d.id === factor.dataset_id);
+        const sampleValues = dataset?.sample_data
+          ?.map((row) => row?.[factor.column])
+          .filter((value) => value !== undefined && value !== null)
+          .slice(0, 5) || [];
+
+        return {
+          ...factor,
+          sampleValues,
+        };
+      });
+
+      const externalFactorsPrompt = externalFactorsDetails.length > 0
+        ? `Учтите следующие внешние факторы (экзогенные переменные) при построении прогноза: ${externalFactorsDetails.map((factor) => `"${factor.column}" из набора данных "${factor.dataset_name}" (ID: ${factor.dataset_id})${factor.sampleValues.length ? `, примеры значений: ${JSON.stringify(factor.sampleValues)}` : ''}`).join('; ')}. Данные из корреляционного и графового анализа можно использовать как основу для этих факторов.`
         : '';
-        
+
+      const externalFactorsSection = externalFactorsDetails.length > 0
+        ? `
+        ДОПОЛНИТЕЛЬНЫЕ ПЕРЕМЕННЫЕ:
+        ${externalFactorsDetails.map((factor) => `- ${factor.dataset_name} (ID: ${factor.dataset_id}) → ${factor.column}${factor.sampleValues.length ? ` | Примеры: ${factor.sampleValues.join(', ')}` : ''}`).join('\n        ')}
+      `
+        : '';
+
       const prompt = `
         Вы — эксперт по анализу временных рядов и машинному обучению.
-        
+
         Проанализируйте предоставленные исторические данные и создайте детальный прогноз на ${config.horizon} дней вперед.
-        
+
         ДАННЫЕ ДЛЯ АНАЛИЗА:
         - Основной временной ряд: '${config.value_column}' из набора данных ID ${config.dataset_id}
         - Последние 30 точек данных: ${JSON.stringify(mockHistorical.slice(-30))}
-        
+
+        ${externalFactorsSection}
+
         ${externalFactorsPrompt}
-        
+
         ТРЕБОВАНИЯ К ПРОГНОЗУ:
         1.  Постройте базовый прогноз ('predicted_value') с 95% доверительным интервалом ('confidence_lower', 'confidence_upper').
         2.  Сгенерируйте два дополнительных сценария: 'optimistic' и 'pessimistic'. Оптимистичный сценарий должен отражать наилучшее возможное развитие событий с учетом позитивных факторов, а пессимистичный — наихудшее.
         3.  Проведите глубокий анализ данных, включая тренды, сезонность, волатильность.
         4.  Сформируйте ключевые выводы, факторы риска и практические рекомендации.
-        
+        5.  Укажите уровень достоверности прогноза в поле summary.confidence_score (число от 0 до 1) с обоснованием в инсайтах.
+        6.  Объясните влияние каждого выбранного внешнего фактора в разделе key_insights или risk_factors.
+
         МЕТОДОЛОГИЯ:
         - Используйте ансамбль моделей (SARIMAX, Prophet, градиентный бустинг) для повышения точности.
         - Учтите влияние внешних факторов при построении всех сценариев.
-        
+
         Предоставьте результат в указанном JSON формате.
       `;
 
-      const result = await InvokeLLM({
-        prompt: prompt,
-        response_json_schema: forecastSchema
+      const result = generateForecastReport({
+        historical: mockHistorical,
+        horizon: config.horizon,
+        externalFactors: externalFactorsDetails,
       });
       
       // Сохранение прогноза как визуализации
@@ -190,8 +198,11 @@ export default function Forecasting() {
         title: `Прогноз: ${config.value_column}`,
         type: 'forecast',
         dataset_id: config.dataset_id,
-        config: config,
-        x_axis: config.date_column,
+        config: {
+          ...config,
+          date_column: timeColumn,
+        },
+        x_axis: timeColumn,
         y_axis: config.value_column
       });
       
@@ -209,27 +220,20 @@ export default function Forecasting() {
 
   const handleMapConfigApply = (newConfig) => {
     setMapConfig(newConfig);
-    if (newConfig.dataset_id) {
-        const selectedDs = datasets.find(d => d.id === newConfig.dataset_id);
-        if (selectedDs) {
-            setMapData(selectedDs.sample_data || []);
-        } else {
-            setMapData(null); // Clear data if dataset not found
-        }
-    } else {
-        setMapData(null); // Clear data if no dataset selected
-    }
+  };
+
+  const handleMapConfigChange = (updatedConfig) => {
+    setMapConfig(updatedConfig);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-6">
-      <div className="max-w-7xl mx-auto space-y-8">
-        <div className="text-center space-y-4">
+    <PageContainer className="space-y-8">
+      <div className="text-center space-y-4">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-900 via-blue-900 to-purple-900 bg-clip-text text-transparent">
             Прогнозирование и анализ
           </h1>
           <p className="text-slate-600 text-lg max-w-2xl mx-auto">
-            Предсказывайте будущие тенденции и принимайте решения на основе данных. Наш AI анализирует ваши данные для предоставления точных прогнозов и инсайтов.
+            Предсказывайте будущие тенденции и принимайте решения на основе данных. Локальные алгоритмы анализа используют статистику рядов без обращения к внешним сервисам.
           </p>
         </div>
         
@@ -282,32 +286,25 @@ export default function Forecasting() {
           />
         )}
 
-        {activeTab === 'map' && (
-          <div className="grid lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-1">
-              <MapConfigurator 
-                datasets={datasets}
-                onSave={handleMapConfigApply}
-                onCancel={() => {}} // This can be empty as it's not saving to backend here
-                initialConfig={{
-                    title: 'Анализ на карте',
-                    dataset_id: '',
-                    lat_column: '',
-                    lon_column: '',
-                    value_column: '',
-                    overlay_type: 'none'
-                }}
-                forecastData={forecastResult}
-                correlationData={correlationResult}
-                isEmbedded={true} // Indicate that this is used within another view, not a standalone map creator
-              />
-            </div>
-            <div className="lg:col-span-2">
-              <MapView data={mapData} config={mapConfig}/>
-            </div>
+      {activeTab === 'map' && (
+        <div className="grid lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-1">
+            <MapConfigurator
+              datasets={datasets}
+              onSave={handleMapConfigApply}
+              onCancel={() => {}}
+              initialConfig={mapConfig}
+              onConfigChange={handleMapConfigChange}
+              forecastData={forecastResult}
+              correlationData={correlationResult}
+              isEmbedded={true}
+            />
           </div>
-        )}
-      </div>
-    </div>
+          <div className="lg:col-span-2">
+            <MapView data={mapData} config={mapConfig}/>
+          </div>
+        </div>
+      )}
+    </PageContainer>
   );
 }

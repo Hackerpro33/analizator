@@ -1,5 +1,21 @@
-import Layout from "./Layout.jsx";
+import Layout from './Layout.jsx'
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom'
+import { PAGES, getCurrentPage } from './pageRegistry'
 
+function PagesContent() {
+  const location = useLocation()
+  const currentPage = getCurrentPage(location.pathname)
+
+  return (
+    <Layout currentPageName={currentPage}>
+      <Routes>
+        <Route path="/" element={<PAGES.Dashboard />} />
+        {Object.entries(PAGES).map(([name, Component]) => (
+          <Route key={name} path={`/${name}`} element={<Component />} />
+        ))}
+      </Routes>
+    </Layout>
+  )
 import Dashboard from "./Dashboard";
 
 import DataSources from "./DataSources";
@@ -17,6 +33,10 @@ import Constructor from "./Constructor";
 import Settings from "./Settings";
 
 import DataTransformation from "./DataTransformation";
+
+import Assistant from "./Assistant";
+
+import AdvancedAnalytics from "./AdvancedAnalytics";
 
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 
@@ -39,6 +59,10 @@ const PAGES = {
     Settings: Settings,
     
     DataTransformation: DataTransformation,
+
+    Assistant: Assistant,
+
+    AdvancedAnalytics: AdvancedAnalytics,
     
 }
 
@@ -82,18 +106,22 @@ function PagesContent() {
                 <Route path="/Constructor" element={<Constructor />} />
                 
                 <Route path="/Settings" element={<Settings />} />
-                
+
                 <Route path="/DataTransformation" element={<DataTransformation />} />
-                
+
+                <Route path="/Assistant" element={<Assistant />} />
+
+                <Route path="/AdvancedAnalytics" element={<AdvancedAnalytics />} />
+
             </Routes>
         </Layout>
     );
 }
 
 export default function Pages() {
-    return (
-        <Router>
-            <PagesContent />
-        </Router>
-    );
+  return (
+    <Router>
+      <PagesContent />
+    </Router>
+  )
 }

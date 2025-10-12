@@ -1,20 +1,114 @@
-# Base44 App
+## Обзор
 
+Проект собирает экспериментальную витрину данных с веб-интерфейсом на React и API на FastAPI.
+Этот документ описывает локальный запуск, а также инфраструктурные практики, которые мы
+используем для обеспечения качества и стабильности.
 
-This app was created automatically by Base44.
-It's a Vite+React app that communicates with the Base44 API.
+![Coverage badge](https://img.shields.io/badge/coverage-80%25-brightgreen.svg)
 
-## Running the app
+## Быстрый старт
+
+1. Склонируйте репозиторий и установите зависимости для фронтенда и бэкенда.
+2. Поднимите сопутствующие сервисы (Postgres, Redis, MinIO) через `docker-compose`.
+3. Запустите бэкенд и фронтенд в отдельных терминалах.
+4. Выполните автоматические тесты и линтеры (см. раздел «Проверка работоспособности»).
+
+> Подробный план развития проекта смотрите в [ROADMAP.md](ROADMAP.md), требования к
+> контрибьюторам — в [CONTRIBUTING.md](CONTRIBUTING.md), архитектурные решения описаны в
+> [docs/architecture.md](docs/architecture.md).
+
+## Запуск фронтенда
+
+В некоторых конфигурациях dev-container возникают проблемы с определением папки `frontend/`, если выполнять команды (например, `npm install`) из корня репозитория. Скрипт ниже формирует абсолютный путь к каталогу, после чего вызывает `npm` и предотвращает ошибку «no filesystem provider for folder frontend».
 
 ```bash
-npm install
+# установка зависимостей, не покидая корень репозитория
+./scripts/install_frontend_deps.sh
+
+# запуск Vite dev-сервера
+cd frontend
 npm run dev
 ```
 
-## Building the app
+## Запуск бэкенда
 
 ```bash
+cd backend
+pip install -r app/requirements.txt
+uvicorn app.main:app --app-dir backend --host 0.0.0.0 --port 8000
+```
+
+Для полноценной разработки рекомендуется использовать Postgres вместо локального файлового
+хранилища. Заполните переменные окружения из `.env.example` и примените миграции Alembic:
+
+```bash
+cp backend/.env.example backend/.env
+poetry run alembic upgrade head
+```
+
+## Проверка работоспособности
+
+После запуска обоих сервисов можно убедиться в корректности ключевых сценариев через автоматические тесты:
+
+```bash
+# Проверка API бэкенда
+pytest backend/app/tests/test_data_transformation.py
+
+# Юнит- и интеграционные тесты фронтенда
+cd frontend
+npm test
+
+# Пакетные проверки качества (линтеры, типизация, покрытие)
+pre-commit run --all-files
+pytest --cov=backend/app backend/app/tests
+cd frontend && npm run lint && npm run test -- --coverage
+```
+
+Набор тестов бэкенда охватывает загрузку файлов, CRUD-операции с наборами данных и визуализациями, генерацию аналитики и логирование писем. Тесты Vitest проверяют вспомогательные утилиты фронтенда и работу API-обёрток.
+
+## Дополнительные материалы
+
+- [Современные аналитические модули правоохранительных систем](docs/predictive_analytics_overview.md) — обзор подходов к мониторингу смещений в данных, построению графов знаний и использованию симуляторов предиктивного патрулирования.
+
+## Новые возможности веб-приложения
+
+- Раздел «Продвинутая аналитика» в интерфейсе предоставляет визуальные панели для мониторинга смещений, обзора графов знаний и моделирования сценариев предиктивного патрулирования.
+
+## Сборка фронтенда
+
+```bash
+# гарантируем наличие зависимостей (команду можно запускать повторно)
+./scripts/install_frontend_deps.sh
+
+cd frontend
 npm run build
 ```
 
-For more information and support, please contact Base44 support at app@base44.com.
+## Наблюдаемость
+
+Проект поставляется с эндпоинтами `/metrics` и `/-/health` для интеграции с Prometheus и
+системами мониторинга. Логи формируются в формате JSON и включают trace-id для связывания с
+трассировками OpenTelemetry. Для отслеживания исключений используется Sentry.
+
+## CI/CD
+
+GitHub Actions выполняют матричную сборку с Python 3.x и Node LTS. Workflow включает запуск
+`pytest`, `npm test`, сборку фронтенда, линтеры (ruff, black, mypy, eslint, prettier,
+typescript) и публикацию отчётов покрытия. Дополнительно задействованы pre-commit-hooks,
+Dependabot и CodeQL для обнаружения уязвимостей.
+
+## Pre-commit
+
+Установите и активируйте git-хуки, чтобы линтеры, типизация, gitleaks и smoke-тесты запускались до коммитов:
+
+```bash
+pip install pre-commit
+pre-commit install --install-hooks
+pre-commit install --hook-type pre-push
+```
+
+Хуки выполняют black, ruff, mypy для бэкенда, prettier и eslint для фронтенда, а также запускают юнит-тесты Vitest и pytest перед отправкой в удалённый репозиторий.
+
+## Автоматизация в CI
+
+GitHub Actions запускают три независимых job'а: матричные проверки бэкенда на Python 3.10/3.11, фронтенда на Node 18/20 и прогон pre-commit. Каждая сборка публикует отчёты покрытия (pytest, Vitest) как артефакты. Дополнительно настроены CodeQL и Dependabot для поиска уязвимостей и обновления зависимостей.

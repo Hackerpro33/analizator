@@ -333,7 +333,7 @@ export default function SystemMonitor() {
               </div>
               <div>
                 <div className="text-sm text-slate-600">Версия системы</div>
-                <div className="font-bold">DataViz Pro 2.1.0</div>
+                <div className="font-bold">Анализатор 2.1.0</div>
               </div>
               <div>
                 <div className="text-sm text-slate-600">Последнее обновление</div>

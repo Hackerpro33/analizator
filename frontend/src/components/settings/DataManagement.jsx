@@ -1,20 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { getDatasets, getVisualizations } from "@/api/entities";
+import { Dataset, Visualization, getDatasets, getVisualizations } from "@/api/entities";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { AlertTriangle, HardDrive, Database, BarChart3 } from "lucide-react";
-
-// Временные заглушки (пока нет настоящих API для delete)
-async function deleteDataset(id) {
-  // todo: реализовать через backend или просто фильтрацией локально
-  return true;
-}
-async function deleteVisualization(id) {
-  // todo: реализовать через backend или просто фильтрацией локально
-  return true;
-}
 
 export default function DataManagement() {
   const [datasets, setDatasets] = useState([]);
@@ -36,8 +26,8 @@ export default function DataManagement() {
         getDatasets(),
         getVisualizations()
       ]);
-      setDatasets(datasetsData || []);
-      setVisualizations(visualizationsData || []);
+      setDatasets(Array.isArray(datasetsData) ? datasetsData : []);
+      setVisualizations(Array.isArray(visualizationsData) ? visualizationsData : []);
     } catch (error) {
       console.error('Ошибка загрузки данных:', error);
     }
@@ -85,21 +75,13 @@ export default function DataManagement() {
   const handleDeleteSelected = async () => {
     setIsDeleting(true);
     try {
-      // Просто фильтруем локально (удаляем только из UI)
-      let updatedDatasets = datasets;
-      let updatedVisualizations = visualizations;
+      await Promise.all([
+        ...selectedDatasets.map(id => Dataset.delete(id).catch(err => { throw new Error(`Не удалось удалить набор: ${err.message || err}`); })),
+        ...selectedVisualizations.map(id => Visualization.delete(id).catch(err => { throw new Error(`Не удалось удалить визуализацию: ${err.message || err}`); })),
+      ]);
 
-      for (const id of selectedDatasets) {
-        await deleteDataset(id); // Здесь должен быть реальный вызов backend
-        updatedDatasets = updatedDatasets.filter(d => d.id !== id);
-      }
-      for (const id of selectedVisualizations) {
-        await deleteVisualization(id); // Здесь должен быть реальный вызов backend
-        updatedVisualizations = updatedVisualizations.filter(v => v.id !== id);
-      }
-
-      setDatasets(updatedDatasets);
-      setVisualizations(updatedVisualizations);
+      setDatasets(prev => prev.filter(d => !selectedDatasets.includes(d.id)));
+      setVisualizations(prev => prev.filter(v => !selectedVisualizations.includes(v.id)));
 
       setSelectedDatasets([]);
       setSelectedVisualizations([]);

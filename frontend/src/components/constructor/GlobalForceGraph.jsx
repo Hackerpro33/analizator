@@ -1,40 +1,12 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { Dataset, Visualization } from "@/api/entities";
-import { InvokeLLM } from "@/api/integrations";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { X, Sparkles, BrainCircuit, Share2, BarChart3, Map, TrendingUp, Network, Database } from 'lucide-react';
-
-const forceGraphSchema = {
-    type: "object",
-    properties: {
-        insights: {
-            type: "array",
-            items: { type: "string" },
-            description: "Ключевые выводы о структуре проекта"
-        },
-        key_datasets: {
-            type: "array",
-            items: { type: "string" },
-            description: "Наборы данных, которые используются чаще всего"
-        },
-        unused_datasets: {
-            type: "array",
-            items: { type: "string" },
-            description: "Наборы данных, которые не используются ни в одной визуализации"
-        },
-        recommendations: {
-            type: "array",
-            items: { type: "string" },
-            description: "Рекомендации по созданию новых связей или анализов"
-        }
-    },
-    required: ["insights"]
-};
-
+import { summarizeProjectStructure } from "@/utils/localAnalysis";
 
 export default function GlobalForceGraph({ onClose }) {
     const [nodes, setNodes] = useState([]);
@@ -65,44 +37,20 @@ export default function GlobalForceGraph({ onClose }) {
             setLinks(newLinks);
             setIsLoading(false);
             
-            // Generate AI insights after data is fetched
-            generateAiInsights(datasets, visualizations);
+            generateLocalInsights(datasets, visualizations);
         };
 
         fetchDataAndBuildGraph();
     }, []);
-    
-    const generateAiInsights = async (datasets, visualizations) => {
+
+    const generateLocalInsights = (datasets, visualizations) => {
         setIsAiLoading(true);
-        const prompt = `
-            Вы — ведущий системный аналитик. Проанализируйте структуру следующего аналитического проекта.
-            Вот JSON данные о наборах данных (datasets) и визуализациях (visualizations), созданных на их основе.
-
-            Наборы данных:
-            ${JSON.stringify(datasets.map(d => ({id: d.id, name: d.name})))}
-
-            Визуализации:
-            ${JSON.stringify(visualizations.map(v => ({id: v.id, title: v.title, type: v.type, dataset_id: v.dataset_id})))}
-
-            ЗАДАЧА:
-            1.  Проанализируйте, как визуализации связаны с наборами данных.
-            2.  Определите ключевые наборы данных, которые используются чаще всего.
-            3.  Найдите наборы данных, которые не используются ни в одной визуализации, если таковые имеются.
-            4.  Предоставьте краткое, но емкое резюме (insights) о структуре проекта. Какова основная направленность анализа?
-            5.  Дайте практические рекомендации по возможным новым анализам или связям, которые пользователь мог упустить.
-
-            Предоставьте результат в указанном JSON формате.
-        `;
-
         try {
-            const insights = await InvokeLLM({
-                prompt: prompt,
-                response_json_schema: forceGraphSchema
-            });
+            const insights = summarizeProjectStructure({ datasets, visualizations });
             setAiInsights(insights);
         } catch (error) {
-            console.error("Ошибка при генерации AI-выводов:", error);
-            setAiInsights({ insights: ["Не удалось получить выводы от AI."] });
+            console.error("Ошибка при локальном анализе структуры:", error);
+            setAiInsights({ insights: ["Не удалось сформировать локальные рекомендации."] });
         }
         setIsAiLoading(false);
     };
@@ -173,7 +121,7 @@ export default function GlobalForceGraph({ onClose }) {
                 <div className="lg:col-span-1">
                     <h3 className="text-lg font-semibold mb-4 heading-text flex items-center gap-2">
                         <Sparkles className="w-5 h-5 text-orange-500" />
-                        AI-Анализ структуры
+                        Локальный анализ структуры
                     </h3>
                     {isAiLoading ? (
                         <div className="space-y-4">

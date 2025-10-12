@@ -54,7 +54,7 @@ export default function SystemLogs() {
         timestamp: new Date(Date.now() - 1000 * 60 * 30),
         level: 'warning',
         category: 'ai',
-        message: 'AI модель GPT-4 недоступна, переключено на GPT-3.5',
+        message: 'Внешние модели отключены, используется локальный движок прогнозов',
         details: 'Причина: превышен лимит запросов, автоматическое восстановление через 1 час'
       },
       {

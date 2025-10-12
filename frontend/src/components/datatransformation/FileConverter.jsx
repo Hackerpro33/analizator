@@ -6,20 +6,20 @@ import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { uploadFile, extractDataFromUploadedFile, InvokeLLM } from "@/api/integrations";
+import { uploadFile, extractDataFromUploadedFile } from "@/api/integrations";
 import { Dataset } from "@/api/entities";
-import { 
-  Upload, 
-  RefreshCw, 
-  CheckCircle2, 
-  AlertTriangle, 
-  Sparkles, 
-  FileText,
+import {
+  Upload,
+  RefreshCw,
+  CheckCircle2,
+  AlertTriangle,
+  Sparkles,
   Zap,
   Target,
   Download,
   Info
 } from "lucide-react";
+import { detectFileIcon, generateCSV } from "@/utils/dataTransformation";
 
 export default function FileConverter({ supportedFormats, onConversionComplete, onDatasetCreated }) {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -60,25 +60,6 @@ export default function FileConverter({ supportedFormats, onConversionComplete, 
     }
   };
 
-  const getFileIcon = (fileName) => {
-    const extension = fileName.split('.').pop()?.toLowerCase();
-    
-    if (['xlsx', 'xls', 'xlsm', 'xlsb'].includes(extension)) {
-      return { icon: FileText, color: 'from-green-500 to-emerald-600' };
-    }
-    if (['csv', 'tsv', 'txt'].includes(extension)) {
-      return { icon: FileText, color: 'from-blue-500 to-cyan-600' };
-    }
-    if (['pdf', 'doc', 'docx'].includes(extension)) {
-      return { icon: FileText, color: 'from-red-500 to-pink-600' };
-    }
-    if (['jpg', 'jpeg', 'png', 'tiff', 'bmp'].includes(extension)) {
-      return { icon: FileText, color: 'from-purple-500 to-indigo-600' };
-    }
-    
-    return { icon: FileText, color: 'from-slate-500 to-gray-600' };
-  };
-
   const handleConversion = async () => {
     if (!selectedFile) return;
     
@@ -100,7 +81,7 @@ export default function FileConverter({ supportedFormats, onConversionComplete, 
       let extractedData = null;
       
       try {
-        const extractionResult = await ExtractDataFromUploadedFile({
+        const extractionResult = await extractDataFromUploadedFile({
           file_url,
           json_schema: {
             type: "object",
@@ -230,22 +211,6 @@ export default function FileConverter({ supportedFormats, onConversionComplete, 
     setIsConverting(false);
   };
 
-  const generateCSV = (columns, data) => {
-    if (!columns || !data || data.length === 0) return '';
-    
-    const headers = columns.map(col => col.name).join(',');
-    const rows = data.map(row => 
-      columns.map(col => {
-        const value = row[col.name] || '';
-        return typeof value === 'string' && (value.includes(',') || value.includes('"') || value.includes('\n')) 
-          ? `"${value.replace(/"/g, '""')}"` 
-          : value;
-      }).join(',')
-    );
-    
-    return [headers, ...rows].join('\n');
-  };
-
   const handleDownload = () => {
     if (!downloadableContent) return;
 
@@ -261,7 +226,7 @@ export default function FileConverter({ supportedFormats, onConversionComplete, 
     URL.revokeObjectURL(url);
   };
 
-  const fileIcon = selectedFile ? getFileIcon(selectedFile.name) : null;
+  const fileIcon = selectedFile ? detectFileIcon(selectedFile.name) : null;
 
   return (
     <div className="space-y-6">
