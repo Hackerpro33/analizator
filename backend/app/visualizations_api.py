@@ -9,6 +9,7 @@ import json
 import os
 import tempfile
 import shutil
+import os
 import time
 import uuid
 
@@ -35,6 +36,9 @@ VISUALIZATIONS_JSON = STORE_DIR / "visualizations.json"
 
 
 def _atomic_write_json(path: Path, data: Any):
+    fd, tmp_name = tempfile.mkstemp(prefix="visualizations_", suffix=".json", dir=str(path.parent))
+    tmp_path = Path(tmp_name)
+    os.close(fd)
     fd, tmp_path = tempfile.mkstemp(prefix="visualizations_", suffix=".json", dir=str(path.parent))
     tmp = Path(tmp_path)
     try:
