@@ -104,12 +104,43 @@ describe("computeMapAnalytics", () => {
     expect(analytics.layers.hotspots.hasData).toBe(true);
     expect(analytics.layers.hotspots.total).toBe(1657);
     expect(analytics.layers.hotspots.topIncident?.name).toBe("Москва");
+    expect(analytics.layers.hotspots.growthLeaders.map((entry) => entry.name)).toEqual([
+      "Красноярск",
+      "Екатеринбург",
+      "Ростов-на-Дону",
+    ]);
 
     expect(analytics.layers.logistics.hasData).toBe(true);
     expect(analytics.layers.logistics.fastestRoute?.name).toBe("Москва");
     expect(analytics.layers.logistics.slowestRoute?.name).toBe("Красноярск");
+    expect(analytics.layers.logistics.corridors).toEqual([
+      "Центральный хаб",
+      "Балтийский порт",
+      "Уральский транзит",
+      "Транссиб",
+      "Северный широтный",
+      "Поволжский маршрут",
+      "Приволжская магистраль",
+      "Южный международный",
+    ]);
+    expect(analytics.layers.logistics.maxRadius?.radius).toBe(240);
 
     expect(analytics.layers.climate.hasData).toBe(true);
     expect(analytics.layers.climate.highestRisk?.name).toBe("Красноярск");
+    expect(analytics.layers.climate.averageTemp).toBeCloseTo(-8.875, 3);
+    expect(analytics.layers.climate.averagePrecip).toBeCloseTo(12.25, 2);
+
+    expect(analytics.layers.demography.hasData).toBe(true);
+    expect(analytics.layers.demography.averageDensity).toBeCloseTo(3236.25, 2);
+    expect(analytics.layers.demography.averageIncome).toBeCloseTo(69875, 2);
+    expect(analytics.layers.demography.lowestUnemployment?.name).toBe("Москва");
+
+    expect(analytics.layers.trend.hasData).toBe(true);
+    expect(analytics.layers.trend.averageChange).toBeCloseTo(0.069625, 6);
+    expect(analytics.layers.trend.topDrop?.name).toBe("Саратов");
+
+    expect(analytics.layers.spatial.hasData).toBe(true);
+    expect(analytics.layers.spatial.topOutlier?.name).toBe("Москва");
+    expect(analytics.layers.spatial.neighborCount).toBe(6);
   });
 });
