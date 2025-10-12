@@ -103,6 +103,10 @@ describe("buildNetworkGraph", () => {
     expect(result.nodes.map((node) => node.id)).toEqual(["sales", "profit"]);
     expect(result.links).toHaveLength(1);
     expect(result.insights.some((text) => text.includes("центры влияния"))).toBe(true);
+    expect(result.metrics).toMatchObject({ total_nodes: 2, total_links: 1 });
+    expect(result.node_metrics.find((metric) => metric.node === "sales")).toMatchObject({ degree: 1 });
+    expect(result.adjacency_matrix[0].connections.find((conn) => conn.node === "profit").weight).toBeGreaterThan(0);
+    expect(result.communities).toHaveLength(1);
   });
 });
 
