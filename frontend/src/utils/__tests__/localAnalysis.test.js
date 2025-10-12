@@ -635,6 +635,11 @@ describe("suggestDataApplications", () => {
       suggestion.suggestions.some((text) => text.toLowerCase().includes("synthetic control"))
     ).toBe(true);
     expect(
+      suggestion.suggestions.some((text) =>
+        text.toLowerCase().includes("синтетические двойники") && text.toLowerCase().includes("умному освещению")
+      )
+    ).toBe(true);
+    expect(
       suggestion.suggestions.some((text) => text.toLowerCase().includes("reinforcement learning"))
     ).toBe(true);
     expect(suggestion.tags).toEqual(
