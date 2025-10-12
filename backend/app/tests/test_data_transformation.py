@@ -589,6 +589,29 @@ def test_crime_factor_dataset_workflow(client):
     )
     assert dataset_response.status_code == 200
     dataset_id = dataset_response.json()["id"]
+    dataset_detail = dataset_response.json()["dataset"]
+    assert dataset_detail["row_count"] == 4
+
+    dataset_list_response = client.get(
+        "/api/dataset/list",
+        headers=HEADERS,
+    )
+    assert dataset_list_response.status_code == 200
+    dataset_listing = next(
+        (item for item in dataset_list_response.json() if item["id"] == dataset_id),
+        None,
+    )
+    assert dataset_listing is not None
+    assert dataset_listing["tags"] == ["crime-analysis", "trend"]
+
+    dataset_get_response = client.get(
+        f"/api/dataset/{dataset_id}",
+        headers=HEADERS,
+    )
+    assert dataset_get_response.status_code == 200
+    dataset_payload = dataset_get_response.json()
+    assert dataset_payload["description"].startswith("Multi-year monitoring")
+    assert len(dataset_payload["sample_data"]) == 4
 
     update_response = client.put(
         f"/api/dataset/{dataset_id}",
@@ -611,6 +634,8 @@ def test_crime_factor_dataset_workflow(client):
     )
     assert viz_response.status_code == 200
     viz_id = viz_response.json()["id"]
+    viz_detail = viz_response.json()["visualization"]
+    assert viz_detail["config"]["y"] == ["crime_rate", "police_presence"]
 
     filtered_viz = client.post(
         "/api/visualization/filter",
@@ -619,6 +644,65 @@ def test_crime_factor_dataset_workflow(client):
     )
     assert filtered_viz.status_code == 200
     assert any(item["id"] == viz_id for item in filtered_viz.json())
+
+    viz_get_response = client.get(
+        f"/api/visualization/{viz_id}",
+        headers=HEADERS,
+    )
+    assert viz_get_response.status_code == 200
+    viz_payload = viz_get_response.json()
+    assert viz_payload["title"] == "Crime vs Policing Trend"
+
+    viz_update_response = client.put(
+        f"/api/visualization/{viz_id}",
+        json={
+            "title": "Crime vs Policing Trend (Updated)",
+            "summary": {"crime_rate": {"latest": 16.7, "trend": "rising"}},
+            "tags": ["crime-analysis", "report"],
+        },
+        headers=HEADERS,
+    )
+    assert viz_update_response.status_code == 200
+    updated_viz = viz_update_response.json()["visualization"]
+    assert updated_viz["title"].endswith("(Updated)")
+    assert updated_viz["summary"]["crime_rate"]["trend"] == "rising"
+    assert "report" in updated_viz["tags"]
+
+    viz_list_response = client.get(
+        "/api/visualization/list",
+        headers=HEADERS,
+    )
+    assert viz_list_response.status_code == 200
+    assert any(item["id"] == viz_id for item in viz_list_response.json())
+
+    viz_delete_response = client.delete(
+        f"/api/visualization/{viz_id}",
+        headers=HEADERS,
+    )
+    assert viz_delete_response.status_code == 200
+    assert viz_delete_response.json()["status"] == "deleted"
+
+    filtered_after_delete = client.post(
+        "/api/visualization/filter",
+        json={"filters": {"type": "line"}},
+        headers=HEADERS,
+    )
+    assert filtered_after_delete.status_code == 200
+    assert not any(item["id"] == viz_id for item in filtered_after_delete.json())
+
+    dataset_delete_response = client.delete(
+        f"/api/dataset/{dataset_id}",
+        headers=HEADERS,
+    )
+    assert dataset_delete_response.status_code == 200
+    assert dataset_delete_response.json()["status"] == "deleted"
+
+    dataset_list_after_delete = client.get(
+        "/api/dataset/list",
+        headers=HEADERS,
+    )
+    assert dataset_list_after_delete.status_code == 200
+    assert not any(item["id"] == dataset_id for item in dataset_list_after_delete.json())
 
 
 def test_api_send_email_logs_errors(monkeypatch):
