@@ -275,6 +275,180 @@ export function analyzeCorrelation({ features }) {
   };
 }
 
+function buildAdjacencyMaps(nodes, links) {
+  const weightMap = new Map();
+  const neighborMap = new Map();
+
+  nodes.forEach((node) => {
+    weightMap.set(node.id, new Map());
+    neighborMap.set(node.id, new Set());
+  });
+
+  links.forEach((link) => {
+    const source = link.source;
+    const target = link.target;
+    if (!weightMap.has(source)) {
+      weightMap.set(source, new Map());
+      neighborMap.set(source, new Set());
+    }
+    if (!weightMap.has(target)) {
+      weightMap.set(target, new Map());
+      neighborMap.set(target, new Set());
+    }
+
+    const value = Number.isFinite(link.value) ? link.value : Number(link.value) || 0;
+    weightMap.get(source).set(target, value);
+    weightMap.get(target).set(source, value);
+    neighborMap.get(source).add(target);
+    neighborMap.get(target).add(source);
+  });
+
+  return { weightMap, neighborMap };
+}
+
+function calculateNodeMetrics(nodes, links) {
+  if (!nodes.length) {
+    return [];
+  }
+
+  const { weightMap, neighborMap } = buildAdjacencyMaps(nodes, links);
+  const totalNodes = nodes.length;
+
+  const edgeLookup = new Set(
+    links.map((link) => {
+      const source = String(link.source);
+      const target = String(link.target);
+      return source < target ? `${source}|${target}` : `${target}|${source}`;
+    })
+  );
+
+  return nodes.map((node) => {
+    const neighbors = neighborMap.get(node.id) ?? new Set();
+    const degree = neighbors.size;
+    const degreeCentrality = totalNodes > 1 ? degree / (totalNodes - 1) : 0;
+
+    let strength = 0;
+    const weights = weightMap.get(node.id);
+    if (weights) {
+      weights.forEach((weight) => {
+        strength += Math.abs(weight);
+      });
+    }
+
+    const neighborList = Array.from(neighbors.values());
+    let triangles = 0;
+    for (let i = 0; i < neighborList.length; i += 1) {
+      for (let j = i + 1; j < neighborList.length; j += 1) {
+        const a = neighborList[i];
+        const b = neighborList[j];
+        const key = a < b ? `${a}|${b}` : `${b}|${a}`;
+        if (edgeLookup.has(key)) {
+          triangles += 1;
+        }
+      }
+    }
+    const possibleTriangles = (degree * (degree - 1)) / 2;
+    const clusteringCoefficient = possibleTriangles ? triangles / possibleTriangles : 0;
+
+    return {
+      node: node.id,
+      degree,
+      degree_centrality: Number(degreeCentrality.toFixed(3)),
+      strength: Number(strength.toFixed(3)),
+      clustering: Number(clusteringCoefficient.toFixed(3)),
+    };
+  });
+}
+
+function detectCommunities(nodes, links) {
+  if (!nodes.length) {
+    return [];
+  }
+
+  const { neighborMap } = buildAdjacencyMaps(nodes, links);
+  const visited = new Set();
+  const communities = [];
+
+  nodes.forEach((node) => {
+    if (visited.has(node.id)) return;
+    const queue = [node.id];
+    const component = new Set();
+
+    while (queue.length) {
+      const current = queue.shift();
+      if (visited.has(current)) continue;
+      visited.add(current);
+      component.add(current);
+
+      const neighbors = neighborMap.get(current) ?? new Set();
+      neighbors.forEach((neighbor) => {
+        if (!visited.has(neighbor)) {
+          queue.push(neighbor);
+        }
+      });
+    }
+
+    communities.push({ size: component.size, nodes: Array.from(component) });
+  });
+
+  return communities.sort((a, b) => b.size - a.size);
+}
+
+function buildAdjacencyMatrix(nodes, links) {
+  if (!nodes.length) {
+    return [];
+  }
+
+  const { weightMap } = buildAdjacencyMaps(nodes, links);
+
+  return nodes.map((node) => ({
+    node: node.id,
+    connections: nodes.map((targetNode) => {
+      if (node.id === targetNode.id) {
+        return { node: targetNode.id, weight: 0 };
+      }
+      const weight = weightMap.get(node.id)?.get(targetNode.id) ?? 0;
+      return {
+        node: targetNode.id,
+        weight: Number(Math.abs(weight).toFixed(3)),
+      };
+    }),
+  }));
+}
+
+function summariseGraphMetrics(nodes, links, nodeMetrics, communities) {
+  const totalNodes = nodes.length;
+  const totalLinks = links.length;
+  const metrics = {
+    total_nodes: totalNodes,
+    total_links: totalLinks,
+    density: 0,
+    average_degree: 0,
+    hubs: [],
+    isolated_nodes: [],
+    community_count: communities.length,
+  };
+
+  if (!totalNodes) {
+    return metrics;
+  }
+
+  const possibleEdges = (totalNodes * (totalNodes - 1)) / 2;
+  metrics.density = possibleEdges ? Number((totalLinks / possibleEdges).toFixed(3)) : 0;
+
+  const totalDegree = nodeMetrics.reduce((sum, metric) => sum + metric.degree, 0);
+  metrics.average_degree = Number((totalDegree / totalNodes).toFixed(2));
+
+  metrics.hubs = [...nodeMetrics]
+    .sort((a, b) => b.degree - a.degree || b.strength - a.strength)
+    .slice(0, 3)
+    .map((metric) => metric.node);
+
+  metrics.isolated_nodes = nodeMetrics.filter((metric) => metric.degree === 0).map((metric) => metric.node);
+
+  return metrics;
+}
+
 export function buildNetworkGraph({ datasetName, columns, rows, graphType }) {
   const numericColumns = (columns || []).filter((column) => column.type === "number");
   const nodes = numericColumns.map((column) => ({ id: column.name, group: column.type }));
@@ -299,6 +473,11 @@ export function buildNetworkGraph({ datasetName, columns, rows, graphType }) {
     }
   }
 
+  const nodeMetrics = calculateNodeMetrics(nodes, links);
+  const communities = detectCommunities(nodes, links);
+  const adjacencyMatrix = buildAdjacencyMatrix(nodes, links);
+  const metrics = summariseGraphMetrics(nodes, links, nodeMetrics, communities);
+
   const insights = [];
   if (!links.length) {
     insights.push("Связи с коэффициентом выше 0.3 не обнаружены — показатели независимы.");
@@ -309,23 +488,40 @@ export function buildNetworkGraph({ datasetName, columns, rows, graphType }) {
         `Наиболее выраженная связь: "${strongest.source}" и "${strongest.target}" (корреляция ${strongest.value}).`
       );
     }
+    if (metrics.hubs.length) {
+      insights.push(`Ключевые узлы с наибольшей степенью: ${metrics.hubs.join(", ")}.`);
+    }
     if (graphType === "social") {
       insights.push("Интерпретируйте узлы как акторов: высокие связи — потенциальные центры влияния.");
     } else if (graphType === "geo") {
       insights.push("Параметры с высокой корреляцией могут указывать на общую географическую динамику.");
     }
+    insights.push(`Плотность графа оценивается как ${metrics.density.toFixed(2)}.`);
+  }
+
+  if (communities.length > 1) {
+    insights.push(
+      `Обнаружено ${communities.length} компонент(ы) связности. Крупнейшая включает ${communities[0].nodes.length} узл(ов).`
+    );
   }
 
   const unused = numericColumns.filter(
     (column) => !links.some((link) => link.source === column.name || link.target === column.name)
   );
   if (unused.length) {
-    insights.push(`Столбцы без связей: ${unused.map((column) => column.name).join(", ")}. Их можно анализировать отдельно.`);
+    insights.push(
+      `Столбцы без связей: ${unused.map((column) => column.name).join(", ")}. Их можно анализировать отдельно.`
+    );
   }
 
   return {
+    dataset: datasetName ?? "",
     nodes,
     links,
+    adjacency_matrix: adjacencyMatrix,
+    communities,
+    metrics,
+    node_metrics: nodeMetrics,
     insights,
   };
 }
