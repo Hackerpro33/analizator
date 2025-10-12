@@ -28,7 +28,13 @@ import {
   Calculator,
   CheckCircle2,
   LayoutDashboard,
-  Map
+  Map,
+  Atom,
+  Infinity,
+  PiSquare,
+  Layers,
+  Grid3X3,
+  Braces
 } from "lucide-react";
 
 export default function ChartTypeSelector({ onSelectType, datasets }) {
@@ -112,6 +118,20 @@ export default function ChartTypeSelector({ onSelectType, datasets }) {
       icon: BarChart3,
       accent: 'from-rose-500 to-red-500',
       tools: ['Симуляции Монте-Карло', 'Value at Risk', 'CVaR', 'Stress-test', 'Оптимизация портфеля']
+    },
+    {
+      title: 'Байесовские и вероятностные модели',
+      description: 'Анализ неопределённости: байесовский вывод, MCMC и скрытые марковские модели.',
+      icon: Sigma,
+      accent: 'from-fuchsia-500 to-pink-500',
+      tools: ['MCMC', 'Байесовские сети', 'HMM', 'Апостериорные распределения', 'Аппроксимация Лапласа']
+    },
+    {
+      title: 'Эконометрия высокого измерения',
+      description: 'Работа с большими признаковыми пространствами, отбор переменных и регуляризация панельных данных.',
+      icon: Grid3X3,
+      accent: 'from-slate-500 to-slate-700',
+      tools: ['LASSO для панелей', 'SCAD/ElasticNet', 'Screening признаков', 'Стабильность моделей', 'Кросс-валидация']
     }
   ];
 
@@ -143,6 +163,48 @@ export default function ChartTypeSelector({ onSelectType, datasets }) {
       icon: Calculator,
       accent: 'from-lime-500 to-emerald-500',
       tools: ['NPV/IRR', 'DCF', 'Цепочки Маркова', 'Эластичности', 'Сенситивити-анализ']
+    },
+    {
+      title: 'Стохастика и симуляции',
+      description: 'Моделирование неопределённости: случайные процессы, статистические эксперименты и оценки рисков.',
+      icon: Atom,
+      accent: 'from-cyan-500 to-teal-500',
+      tools: ['Цепи Маркова', 'Стохастический градиент', 'Процесс Пуассона', 'Монте-Карло сценарии', 'Бутстрэп-симуляции']
+    },
+    {
+      title: 'Дифференциальные уравнения и динамика',
+      description: 'ODE/PDE решатели, численная интеграция, устойчивость систем и моделирование траекторий.',
+      icon: Infinity,
+      accent: 'from-indigo-500 to-blue-700',
+      tools: ['Runge-Kutta', 'Методы конечных разностей', 'PDE сетки', 'Стационарность', 'Ляпунов анализ']
+    },
+    {
+      title: 'Символьные вычисления и аналитика',
+      description: 'Автоматическое упрощение выражений, интегрирование, дифференцирование и генерация формул.',
+      icon: PiSquare,
+      accent: 'from-rose-500 to-purple-500',
+      tools: ['SymPy сценарии', 'Символьные производные', 'Интегралы', 'Решение уравнений', 'LaTeX отчёты']
+    },
+    {
+      title: 'Функциональный анализ и вариационные методы',
+      description: 'Гильбертовы пространства, разложения по базисам и решения задач оптимального управления.',
+      icon: Layers,
+      accent: 'from-blue-600 to-indigo-700',
+      tools: ['Разложения Фурье', 'Вариационные принципы', 'Ортогональные базисы', 'Функционалы энергии', 'Метод Галеркина']
+    },
+    {
+      title: 'Комбинаторика и теория графов',
+      description: 'Комбинаторные оценки, графовые алгоритмы и анализ сетевых структур.',
+      icon: Braces,
+      accent: 'from-amber-600 to-orange-600',
+      tools: ['Генераторы перестановок', 'Поиск в ширину/глубину', 'Кратчайшие пути', 'Теория матчей', 'Комбинаторные суммы']
+    },
+    {
+      title: 'Вычислительная геометрия и 3D-моделирование',
+      description: 'Геометрические алгоритмы, сеточные аппроксимации и расчёт кривых поверхностей.',
+      icon: Box,
+      accent: 'from-cyan-600 to-sky-600',
+      tools: ['Выпуклые оболочки', 'Триангуляция Делоне', 'Интерполяция сплайнами', 'Меш-анализ', 'Геометрические оптимизации']
     }
   ];
 
@@ -362,14 +424,14 @@ export default function ChartTypeSelector({ onSelectType, datasets }) {
                 </div>
               </div>
               <div className="flex flex-wrap gap-2">
-                {['Оптимизация', 'Гипотезы', 'Матрицы', 'Финансовые формулы'].map((item) => (
+                {['Оптимизация', 'Гипотезы', 'Матрицы', 'Финансовые формулы', 'Байесовский анализ', 'Комбинаторика'].map((item) => (
                   <Badge key={item} className="bg-emerald-500/20 text-emerald-50 border-emerald-400/40">
                     {item}
                   </Badge>
                 ))}
               </div>
               <div className="space-y-3 pt-2">
-                {mathTools.slice(0, 2).map((tool) => (
+                {mathTools.slice(0, 3).map((tool) => (
                   <div
                     key={tool.title}
                     className="rounded-2xl border border-emerald-400/20 bg-emerald-500/10 p-3 shadow-inner">
