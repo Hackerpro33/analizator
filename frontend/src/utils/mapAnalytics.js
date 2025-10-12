@@ -191,8 +191,7 @@ export const computeMapAnalytics = (rawData, config, options = {}) => {
     dataset = datasetSample;
   }
 
-  const shouldUseFallback =
-    datasetId === "sample" && Array.isArray(fallbackSample) && fallbackSample.length;
+  const shouldUseFallback = Array.isArray(fallbackSample) && fallbackSample.length;
 
   if (!dataset.length && shouldUseFallback) {
     dataset = fallbackSample;
