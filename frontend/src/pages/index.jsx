@@ -20,6 +20,8 @@ import DataTransformation from "./DataTransformation";
 
 import Assistant from "./Assistant";
 
+import AdvancedAnalytics from "./AdvancedAnalytics";
+
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 
 const PAGES = {
@@ -43,6 +45,8 @@ const PAGES = {
     DataTransformation: DataTransformation,
 
     Assistant: Assistant,
+
+    AdvancedAnalytics: AdvancedAnalytics,
     
 }
 
@@ -90,6 +94,8 @@ function PagesContent() {
                 <Route path="/DataTransformation" element={<DataTransformation />} />
 
                 <Route path="/Assistant" element={<Assistant />} />
+
+                <Route path="/AdvancedAnalytics" element={<AdvancedAnalytics />} />
 
             </Routes>
         </Layout>
