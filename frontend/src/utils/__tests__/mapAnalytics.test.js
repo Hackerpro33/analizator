@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 
 import { computeMapAnalytics } from "../mapAnalytics";
+import samplePoints from "../../components/maps/sampleData";
 
 describe("computeMapAnalytics", () => {
   it("normalizes points and calculates statistics", () => {
@@ -57,5 +58,58 @@ describe("computeMapAnalytics", () => {
     const result = computeMapAnalytics(null, {}, {});
     expect(result.hasData).toBe(false);
     expect(result.valueLabel).toBe("Значение");
+  });
+
+  it("builds full analytics stack for realistic sample dataset", () => {
+    const analytics = computeMapAnalytics(
+      samplePoints,
+      {
+        value_column: "value",
+        hotspot_metric_column: "incident_count",
+        demography_population_column: "population_density",
+        demography_income_column: "average_income",
+        demography_unemployment_column: "unemployment_rate",
+        logistics_corridor_column: "logistics_corridor",
+        logistics_travel_time_column: "travel_time_minutes",
+        logistics_service_radius_column: "service_radius_km",
+        climate_temperature_column: "weather_temperature",
+        climate_precipitation_column: "weather_precipitation",
+        climate_risk_column: "climate_risk",
+      },
+      { datasetName: "Демонстрационный набор", datasetId: "sample" }
+    );
+
+    expect(analytics.totalPoints).toBe(samplePoints.length);
+    expect(analytics.averageValue).toBeCloseTo(525, 5);
+    expect(analytics.categories[0]).toMatchObject({ name: "Промышленный", count: 2 });
+
+    expect(analytics.risk.hasRisk).toBe(true);
+    expect(analytics.risk.distribution).toEqual([
+      { level: "Высокий", count: 2 },
+      { level: "Средний", count: 2 },
+      { level: "Низкий", count: 4 },
+    ]);
+    expect(analytics.risk.hotspots[0]).toMatchObject({ name: "Москва", value: 850 });
+    expect(analytics.risk.pressureIndex).toBeCloseTo(0.495, 3);
+
+    expect(analytics.forecast.hasForecast).toBe(true);
+    expect(analytics.forecast.average).toBeCloseTo(571.25, 2);
+    expect(analytics.forecast.deltaFromValue).toBeCloseTo(46.25, 2);
+    expect(analytics.forecast.highestGrowthPoint?.name).toBe("Москва");
+
+    expect(analytics.correlation.hasCorrelation).toBe(true);
+    expect(analytics.correlation.average).toBeCloseTo(0.7675, 4);
+    expect(analytics.correlation.strongestPositive?.name).toBe("Москва");
+
+    expect(analytics.layers.hotspots.hasData).toBe(true);
+    expect(analytics.layers.hotspots.total).toBe(1657);
+    expect(analytics.layers.hotspots.topIncident?.name).toBe("Москва");
+
+    expect(analytics.layers.logistics.hasData).toBe(true);
+    expect(analytics.layers.logistics.fastestRoute?.name).toBe("Москва");
+    expect(analytics.layers.logistics.slowestRoute?.name).toBe("Красноярск");
+
+    expect(analytics.layers.climate.hasData).toBe(true);
+    expect(analytics.layers.climate.highestRisk?.name).toBe("Красноярск");
   });
 });
