@@ -17,10 +17,12 @@ import {
   Clock,
   AlertTriangle,
   CheckCircle,
-  User
+  User,
+  ShieldCheck
 } from "lucide-react";
 
 import AIModelSettings from "../components/settings/AIModelSettings";
+import BiasAuditCenter from "../components/settings/BiasAuditCenter";
 import DataManagement from "../components/settings/DataManagement";
 import SystemLogs from "../components/settings/SystemLogs";
 import SystemMonitor from "../components/settings/SystemMonitor";
@@ -59,6 +61,12 @@ export default function Settings() {
       label: 'Мониторинг',
       icon: Server,
       description: 'Производительность и нагрузка'
+    },
+    {
+      id: 'audit',
+      label: 'Аудит алгоритмов',
+      icon: ShieldCheck,
+      description: 'Контроль смещения и расписания проверок'
     },
     {
       id: 'users',
@@ -127,7 +135,7 @@ export default function Settings() {
         <Card className="border-0 bg-white/50 backdrop-blur-xl shadow-lg">
           <CardContent className="p-6">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-5 mb-8">
+            <TabsList className="grid w-full grid-cols-6 mb-8">
                 {settingsTabs.map(tab => (
                   <TabsTrigger
                     key={tab.id}
@@ -154,6 +162,10 @@ export default function Settings() {
 
               <TabsContent value="monitor" className="mt-0">
                 <SystemMonitor />
+              </TabsContent>
+
+              <TabsContent value="audit" className="mt-0">
+                <BiasAuditCenter />
               </TabsContent>
 
               <TabsContent value="users" className="mt-0">
