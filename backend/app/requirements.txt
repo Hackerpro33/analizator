@@ -3,6 +3,9 @@ uvicorn[standard]
 pandas
 numpy
 openpyxl
+pdfplumber
+pytesseract
+Pillow
 python-multipart
 python-dotenv
 pytest
