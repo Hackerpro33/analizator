@@ -12,3 +12,4 @@ prometheus-client
 pydantic-settings
 redis
 rq
+croniter

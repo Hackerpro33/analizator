@@ -1,9 +1,17 @@
 from pathlib import Path
+from typing import Any, Dict
 
 import pytest
 from fastapi.testclient import TestClient
 
-from app.audit_api import AUDIT_HISTORY_PATH, AUDIT_SCHEDULES_PATH
+from app.audit_api import (
+    AUDIT_HISTORY_PATH,
+    AUDIT_SCHEDULES_PATH,
+    BiasAuditMetric,
+    BiasAuditResult,
+    GroupStats,
+    _trigger_bias_alert,
+)
 from app.main import app
 
 DEFAULT_HEADERS = {"host": "localhost"}
@@ -147,3 +155,74 @@ def test_bias_audit_threshold_overrides(tmp_path):
     assert metrics["average_odds_difference"]["threshold"] == "|difference| ≤ 0.300"
 
     assert not AUDIT_HISTORY_PATH.exists()
+
+
+def test_trigger_bias_alert(monkeypatch):
+    captured: Dict[str, Any] = {}
+
+    def fake_dispatch(event_type: str, payload: Dict[str, Any]):
+        captured["event"] = event_type
+        captured["payload"] = payload
+        return {"status": "sent"}
+
+    monkeypatch.setattr("app.audit_api.dispatch_webhook", fake_dispatch)
+
+    result = BiasAuditResult(
+        id="audit-1",
+        dataset_id="dataset-1",
+        file_url="/tmp/data.csv",
+        schedule_id="schedule-1",
+        created_at="2024-01-01T00:00:00Z",
+        parameters={},
+        sample_size=10,
+        dropped_rows=0,
+        metrics=[
+            BiasAuditMetric(
+                name="statistical_parity_difference",
+                value=0.2,
+                threshold="<=0.1",
+                passed=False,
+                interpretation="Факт превышения порога",
+            ),
+            BiasAuditMetric(
+                name="accuracy",
+                value=0.95,
+                threshold=None,
+                passed=True,
+                interpretation="",
+            ),
+        ],
+        group_metrics={
+            "privileged": GroupStats(values=[], count=5),
+            "unprivileged": GroupStats(values=[], count=5),
+        },
+        flagged=True,
+        summary="Метрики отклонены",
+        recommendations=["Провести дополнительную проверку"],
+        next_run_due=None,
+        thresholds={"difference": {"statistical_parity_difference": 0.1}},
+    )
+
+    _trigger_bias_alert(result)
+    assert captured["event"] == "bias_audit.threshold_breached"
+    assert captured["payload"]["audit_id"] == "audit-1"
+    assert captured["payload"]["flagged"] is True
+    assert captured["payload"]["breaches"][0]["name"] == "statistical_parity_difference"
+
+    captured.clear()
+    safe_result = result.model_copy(
+        update={
+            "flagged": False,
+            "metrics": [
+                BiasAuditMetric(
+                    name="accuracy",
+                    value=0.95,
+                    threshold=None,
+                    passed=True,
+                    interpretation="",
+                )
+            ],
+        }
+    )
+    _trigger_bias_alert(safe_result)
+    assert captured == {}

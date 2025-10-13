@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import math
 import uuid
 from datetime import datetime, timedelta
@@ -13,6 +14,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
 from .datasets_api import _load_all as _load_datasets
+from .services.notifications import WebhookDeliveryError, dispatch_webhook
 from .utils.files import (
     DATA_DIR,
     export_json_atomic,
@@ -24,6 +26,8 @@ router = APIRouter()
 
 AUDIT_HISTORY_PATH = DATA_DIR / "bias_audits.json"
 AUDIT_SCHEDULES_PATH = DATA_DIR / "bias_audit_schedules.json"
+
+logger = logging.getLogger(__name__)
 
 
 def _load_json(path) -> List[Dict[str, Any]]:
@@ -197,6 +201,45 @@ FREQUENCY_TO_DELTA = {
     "quarterly": timedelta(days=91),
     "yearly": timedelta(days=365),
 }
+
+
+def _collect_metric_breaches(metrics: List[BiasAuditMetric]) -> List[Dict[str, Any]]:
+    breaches: List[Dict[str, Any]] = []
+    for metric in metrics:
+        if metric.passed:
+            continue
+        breaches.append(
+            {
+                "name": metric.name,
+                "value": metric.value,
+                "threshold": metric.threshold,
+                "interpretation": metric.interpretation,
+            }
+        )
+    return breaches
+
+
+def _trigger_bias_alert(result: BiasAuditResult) -> None:
+    breaches = _collect_metric_breaches(result.metrics)
+    if not breaches and not result.flagged:
+        return
+
+    payload = {
+        "audit_id": result.id,
+        "dataset_id": result.dataset_id,
+        "schedule_id": result.schedule_id,
+        "created_at": result.created_at,
+        "flagged": result.flagged,
+        "summary": result.summary,
+        "breaches": breaches,
+        "thresholds": result.thresholds,
+        "recommendations": result.recommendations,
+    }
+
+    try:
+        dispatch_webhook("bias_audit.threshold_breached", payload)
+    except WebhookDeliveryError as exc:  # pragma: no cover - logging branch
+        logger.warning("Failed to dispatch bias audit webhook: %s", exc, extra={"audit_id": result.id})
 
 
 def _ensure_file_reference(dataset_id: Optional[str], file_url: Optional[str]) -> str:
@@ -759,6 +802,8 @@ def run_bias_audit(payload: BiasAuditRequest):
                 break
         if updated:
             _save_json(AUDIT_SCHEDULES_PATH, schedules)
+
+    _trigger_bias_alert(result)
 
     return {"status": "completed", "audit": result.model_dump()}
 

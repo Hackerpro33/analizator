@@ -1,3 +1,10 @@
+import json
+import logging
+import os
+import shutil
+import tempfile
+import time
+import uuid
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -5,15 +12,17 @@ from typing import Any, Dict, List, Optional
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
-import json
-import os
-import time
-import uuid
-import tempfile
-import shutil
+from .services.notifications import WebhookDeliveryError, notify_dataset_refresh_failure
+from .services.scheduler import (
+    InvalidSchedule,
+    ScheduleConfig,
+    ScheduleNotFound,
+    TaskScheduler,
+)
 
 
 router = APIRouter()
+logger = logging.getLogger(__name__)
 
 APP_DIR = Path(__file__).resolve().parent
 CANDIDATE_DIRS = [APP_DIR.parent / "data", APP_DIR / "data"]
@@ -32,6 +41,9 @@ def _ensure_store_dir() -> Path:
 
 STORE_DIR = _ensure_store_dir()
 DATASETS_JSON = STORE_DIR / "datasets.json"
+REFRESH_SCHEDULES_JSON = STORE_DIR / "dataset_refresh_schedules.json"
+
+_refresh_scheduler = TaskScheduler(REFRESH_SCHEDULES_JSON)
 
 
 def _atomic_write_json(path: Path, data: Any):
@@ -93,6 +105,35 @@ class DatasetUpdate(DatasetBase):
     pass
 
 
+class RefreshScheduleRequest(BaseModel):
+    dataset_id: str = Field(..., description="Identifier of the dataset to refresh")
+    cron: str = Field(
+        ...,
+        description="Cron expression that defines when the refresh should run",
+        examples=["0 * * * *"],
+    )
+    sla_seconds: int = Field(
+        300,
+        ge=60,
+        le=86_400,
+        description="SLA window in seconds before a refresh is considered stale",
+    )
+    max_retries: int = Field(
+        3,
+        ge=0,
+        le=10,
+        description="Maximum number of retry attempts after a failed refresh",
+    )
+    name: Optional[str] = Field(
+        None,
+        description="Optional human friendly name that will be used for the schedule",
+    )
+
+
+class RefreshFailureReport(BaseModel):
+    error: str = Field(..., description="Description of the failure cause")
+
+
 def _ensure_dates(item: Dict[str, Any]) -> Dict[str, Any]:
     created_at = item.get("created_at")
     if not created_at:
@@ -122,6 +163,101 @@ def list_datasets(order_by: Optional[str] = "-created_at"):
         key = order_by.lstrip("-")
         items.sort(key=lambda x: x.get(key, 0), reverse=reverse)
     return items
+
+
+@router.get("/refresh/schedules")
+def list_refresh_schedules() -> Dict[str, Any]:
+    schedules = _refresh_scheduler.list_schedules()
+    return {"items": schedules, "count": len(schedules)}
+
+
+@router.get("/refresh/schedules/due")
+def list_due_refresh_schedules() -> Dict[str, Any]:
+    schedules = _refresh_scheduler.get_due_jobs()
+    return {"items": schedules, "count": len(schedules)}
+
+
+@router.post("/refresh/schedules")
+def create_refresh_schedule(payload: RefreshScheduleRequest):
+    dataset = next((item for item in _load_all() if item.get("id") == payload.dataset_id), None)
+    if not dataset:
+        raise HTTPException(status_code=404, detail="Dataset not found")
+    schedule_name = payload.name or dataset.get("name") or payload.dataset_id
+    config = ScheduleConfig(
+        name=f"refresh:{schedule_name}",
+        task="refresh_dataset",
+        cron=payload.cron,
+        sla_seconds=payload.sla_seconds,
+        max_retries=payload.max_retries,
+        payload={"dataset_id": payload.dataset_id},
+    )
+    try:
+        schedule = _refresh_scheduler.register_job(config)
+    except InvalidSchedule as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    return {"status": "scheduled", "schedule": schedule}
+
+
+@router.post("/refresh/schedules/{schedule_id}/start")
+def start_refresh_schedule(schedule_id: str):
+    try:
+        schedule = _refresh_scheduler.mark_running(schedule_id)
+    except ScheduleNotFound as exc:
+        raise HTTPException(status_code=404, detail="Schedule not found") from exc
+    return {"status": "running", "schedule": schedule}
+
+
+@router.post("/refresh/schedules/{schedule_id}/success")
+def complete_refresh_schedule(schedule_id: str):
+    try:
+        schedule = _refresh_scheduler.mark_completed(schedule_id)
+    except ScheduleNotFound as exc:
+        raise HTTPException(status_code=404, detail="Schedule not found") from exc
+    return {"status": "completed", "schedule": schedule}
+
+
+@router.post("/refresh/schedules/{schedule_id}/failure")
+def register_refresh_failure(schedule_id: str, payload: RefreshFailureReport):
+    try:
+        schedule = _refresh_scheduler.mark_failed(schedule_id, payload.error)
+    except ScheduleNotFound as exc:
+        raise HTTPException(status_code=404, detail="Schedule not found") from exc
+    try:
+        notify_dataset_refresh_failure(schedule, reason=payload.error)
+    except WebhookDeliveryError as exc:  # pragma: no cover - logging branch
+        logger.warning(
+            "Failed to dispatch dataset refresh webhook: %s",
+            exc,
+            extra={"schedule_id": schedule_id},
+        )
+    return {"status": schedule.get("status"), "schedule": schedule}
+
+
+@router.delete("/refresh/schedules/{schedule_id}")
+def delete_refresh_schedule(schedule_id: str):
+    try:
+        _refresh_scheduler.delete_schedule(schedule_id)
+    except ScheduleNotFound as exc:
+        raise HTTPException(status_code=404, detail="Schedule not found") from exc
+    return {"status": "deleted", "id": schedule_id}
+
+
+@router.post("/refresh/schedules/enforce-sla")
+def enforce_refresh_sla() -> Dict[str, Any]:
+    impacted = _refresh_scheduler.enforce_sla()
+    for schedule in impacted:
+        try:
+            notify_dataset_refresh_failure(
+                schedule,
+                reason=schedule.get("last_error") or "SLA exceeded",
+            )
+        except WebhookDeliveryError as exc:  # pragma: no cover - logging branch
+            logger.warning(
+                "Failed to dispatch dataset SLA webhook: %s",
+                exc,
+                extra={"schedule_id": schedule.get("id")},
+            )
+    return {"status": "ok", "count": len(impacted), "items": impacted}
 
 
 @router.post("/create")
