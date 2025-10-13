@@ -17,6 +17,7 @@ import httpx
 from prometheus_client import CONTENT_TYPE_LATEST, Counter, Histogram, CollectorRegistry, generate_latest
 
 from .config import get_settings
+from .version import __version__
 from .schemas import (
     EmailRequest,
     EmailResponse,
@@ -45,7 +46,7 @@ settings = get_settings()
 
 app = FastAPI(
     title="Insight Sphere Backend",
-    version="0.1.0",
+    version=__version__,
     description=(
         "API for managing analytical datasets, providing upload/extraction capabilities "
         "with strong validation, observability, and documentation."
@@ -303,6 +304,7 @@ async def api_send_email(payload: EmailRequest) -> EmailResponse:
     log_path.parent.mkdir(parents=True, exist_ok=True)
     try:
         with log_path.open("a", encoding="utf-8") as log_file:
+        with open(log_path, "a", encoding="utf-8") as log_file:
             log_file.write(json.dumps(record, ensure_ascii=False) + "\n")
     except Exception as exc:
         raise HTTPException(status_code=500, detail=f"Failed to log email: {exc}")

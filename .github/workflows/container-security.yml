@@ -1,0 +1,65 @@
+name: Container Security
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    paths:
+      - 'backend/**'
+      - '.github/workflows/container-security.yml'
+      - 'backend/Dockerfile'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  build-and-scan:
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: backend-secure
+      SBOM_PATH: sbom.spdx.json
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build backend image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: backend/Dockerfile
+          load: true
+          tags: ${{ env.IMAGE_NAME }}:latest
+
+      - name: Generate SBOM with Syft
+        id: sbom
+        uses: anchore/sbom-action@v0
+        with:
+          image: ${{ env.IMAGE_NAME }}:latest
+          format: spdx-json
+          output-file: ${{ env.SBOM_PATH }}
+
+      - name: Upload SBOM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-sbom
+          path: ${{ env.SBOM_PATH }}
+
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3.6.0
+
+      - name: Sign SBOM with Cosign keyless
+        env:
+          COSIGN_EXPERIMENTAL: 1
+        run: cosign sign-blob --yes --output-signature ${{ env.SBOM_PATH }}.sig ${{ env.SBOM_PATH }}
+
+      - name: Upload signature artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-sbom-signature
+          path: ${{ env.SBOM_PATH }}.sig

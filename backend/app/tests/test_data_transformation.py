@@ -306,6 +306,75 @@ def test_read_table_bytes_rejects_unknown_extension():
     assert excinfo.value.status_code == 400
 
 
+def test_read_table_bytes_parses_pdf(monkeypatch):
+    from app.utils import files
+
+    class _FakePage:
+        def __init__(self, tables, text):
+            self._tables = tables
+            self._text = text
+
+        def extract_tables(self):
+            return self._tables
+
+        def extract_text(self):
+            return self._text
+
+    class _FakePDF:
+        def __init__(self, pages):
+            self.pages = pages
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+    def _fake_open(_):
+        tables = [[["col1", "col2"], ["1", "2"], ["3", "4"]]]
+        text = "col1,col2\n1,2\n3,4"
+        page = _FakePage(tables=tables, text=text)
+        return _FakePDF([page])
+
+    monkeypatch.setattr(files.pdfplumber, "open", _fake_open)
+
+    df = main.read_table_bytes(b"%PDF", "report.pdf")
+    assert df.to_dict(orient="records") == [{"col1": "1", "col2": "2"}, {"col1": "3", "col2": "4"}]
+
+
+def test_read_table_bytes_parses_image(monkeypatch):
+    from app.utils import files
+
+    class _FakeImage:
+        def convert(self, *_args, **_kwargs):
+            return self
+
+    monkeypatch.setattr(files.Image, "open", lambda *_: _FakeImage())
+    monkeypatch.setattr(files.pytesseract, "image_to_string", lambda *_args, **_kwargs: "col1,col2\n1,2")
+
+    df = main.read_table_bytes(b"", "table.png")
+    assert df.to_dict(orient="records") == [{"col1": "1", "col2": "2"}]
+
+
+def test_read_table_payload_exposes_records_and_excel(tmp_path):
+    from app.utils import files
+
+    csv_bytes = b"name,score\nAlice,95\nBob,88\n"
+    payload = files.read_table_payload(csv_bytes, "scores.csv")
+
+    assert payload.records == [
+        {"name": "Alice", "score": 95},
+        {"name": "Bob", "score": 88},
+    ]
+
+    excel_bytes = payload.to_excel_bytes()
+    excel_path = tmp_path / "scores.xlsx"
+    excel_path.write_bytes(excel_bytes)
+
+    loaded = pd.read_excel(excel_path)
+    assert loaded.to_dict(orient="records") == payload.records
+
+
 def test_detect_general_type_handles_common_series():
     assert extraction.detect_general_type(pd.Series([True, False])) == "boolean"
     assert extraction.detect_general_type(pd.Series([1, 2.5])) == "number"

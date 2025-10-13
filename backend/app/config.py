@@ -65,6 +65,23 @@ class Settings(BaseSettings):
         alias="TASK_DEFAULT_TIMEOUT",
         description="Default timeout for background analytics tasks in seconds.",
     )
+    alert_webhook_url: Optional[AnyHttpUrl] = Field(
+        None,
+        alias="ALERT_WEBHOOK_URL",
+        description="Webhook endpoint for alert notifications.",
+    )
+    alert_webhook_retries: int = Field(
+        2,
+        alias="ALERT_WEBHOOK_RETRIES",
+        description="Number of retry attempts for webhook delivery.",
+        ge=0,
+    )
+    alert_webhook_timeout: float = Field(
+        5.0,
+        alias="ALERT_WEBHOOK_TIMEOUT",
+        description="Timeout in seconds for webhook delivery attempts.",
+        ge=0.1,
+    )
 
     model_config = SettingsConfigDict(
         env_file=str(ENV_FILE),

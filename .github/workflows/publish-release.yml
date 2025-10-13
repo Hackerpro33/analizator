@@ -1,0 +1,53 @@
+name: Publish Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Extract version
+        id: version
+        run: echo "value=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Ensure code version matches tag
+        run: |
+          python - <<'PY'
+          import pathlib
+          import re
+          import sys
+
+          version_file = pathlib.Path("backend/app/version.py")
+          content = version_file.read_text(encoding="utf-8")
+          match = re.search(r"__version__\s*=\s*['\"](?P<version>[^'\"]+)['\"]", content)
+          if not match:
+              sys.exit("Не удалось определить __version__ в backend/app/version.py")
+
+          code_version = match.group("version")
+          tag_version = "${GITHUB_REF_NAME#v}"
+          if code_version != tag_version:
+              sys.exit(
+                  f"Версия кода ({code_version}) не совпадает с SemVer тегом ({tag_version}). "
+                  "Обновите backend/app/version.py перед публикацией."
+              )
+          PY
+
+      - name: Publish GitHub release
+        uses: release-drafter/release-drafter@v6
+        with:
+          config-name: release-drafter.yml
+          tag: ${{ github.ref_name }}
+          version: ${{ steps.version.outputs.value }}
+          publish: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
