@@ -9,8 +9,10 @@ import os
 import json
 import sys
 import uuid
+from pathlib import Path
 from typing import Optional, Dict, Any, List
 
+from .utils import files as files_utils
 from .utils.files import (
     DATA_DIR,
     UPLOAD_DIR,
@@ -65,6 +67,9 @@ app.add_middleware(TrustedHostMiddleware, allowed_hosts=list(dict.fromkeys(allow
 app.add_middleware(SecurityHeadersMiddleware)
 
 EMAIL_LOG_PATH = DATA_DIR / "email_log.jsonl"
+
+FILE_REGISTRY = files_utils._FILE_REGISTRY
+_safe_name = safe_filename
 
 MAX_UPLOAD_SIZE_MB = int(os.getenv("MAX_UPLOAD_SIZE_MB", "25"))
 MAX_UPLOAD_SIZE = MAX_UPLOAD_SIZE_MB * 1024 * 1024
@@ -169,7 +174,9 @@ async def api_upload(file: UploadFile = File(...)):
     # save
     fid = str(uuid.uuid4())
     safe = safe_filename(file.filename or "file")
-    path = UPLOAD_DIR / f"{fid}_{safe}"
+    upload_dir = Path(UPLOAD_DIR)
+    upload_dir.mkdir(parents=True, exist_ok=True)
+    path = upload_dir / f"{fid}_{safe}"
     with path.open("wb") as f:
         f.write(data)
     register_uploaded_file(fid, path)
@@ -213,7 +220,7 @@ async def api_send_email(payload: EmailRequest):
         "from_name": payload.from_name,
     }
     try:
-        with EMAIL_LOG_PATH.open("a", encoding="utf-8") as log_file:
+        with open(EMAIL_LOG_PATH, "a", encoding="utf-8") as log_file:
             log_file.write(json.dumps(record, ensure_ascii=False) + "\n")
     except Exception as exc:
         raise HTTPException(status_code=500, detail=f"Failed to log email: {exc}")
@@ -235,19 +242,23 @@ if __package__ in {None, ""}:
     import audit_api as audit_router_module
     import chat_api as chat_router_module
     import datasets_api as datasets_router_module
+    import dictionary_api as dictionary_router_module
     import visualizations_api as visualizations_router_module
 else:
     from . import audit_api as audit_router_module
     from . import chat_api as chat_router_module
     from . import datasets_api as datasets_router_module
+    from . import dictionary_api as dictionary_router_module
     from . import visualizations_api as visualizations_router_module
 
 datasets_router = datasets_router_module.router
+dictionary_router = dictionary_router_module.router
 visualizations_router = visualizations_router_module.router
 chat_router = chat_router_module.router
 audit_router = audit_router_module.router
 
 app.include_router(datasets_router, prefix="/api/dataset")
+app.include_router(dictionary_router, prefix="/api/dictionary")
 app.include_router(visualizations_router, prefix="/api/visualization")
 app.include_router(chat_router, prefix="/api/chat")
 app.include_router(audit_router, prefix="/api/audit")
