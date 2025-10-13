@@ -1,10 +1,8 @@
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import FastAPI, File, Header, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from fastapi.responses import PlainTextResponse
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware
-import pandas as pd
-import numpy as np
 import os
 import json
 import sys
@@ -13,6 +11,23 @@ from pathlib import Path
 from typing import Optional, Dict, Any, List
 
 from .utils import files as files_utils
+from typing import Optional, Dict, Any
+
+import httpx
+from prometheus_client import CONTENT_TYPE_LATEST, Counter, Histogram, CollectorRegistry, generate_latest
+
+from .config import get_settings
+from .schemas import (
+    EmailRequest,
+    EmailResponse,
+    ErrorResponse,
+    ExtractRequest,
+    ExtractResponse,
+    FileUploadResponse,
+    QuickExtraction,
+    TaskEnqueueResponse,
+    TaskStatusResponse,
+)
 from .utils.files import (
     DATA_DIR,
     UPLOAD_DIR,
@@ -20,9 +35,26 @@ from .utils.files import (
     register_uploaded_file,
     resolve_file_path,
     safe_filename,
+    get_file_registry,
 )
+from .services.extraction import build_extraction
+from .tasks import TaskQueueUnavailable, enqueue_extraction, get_task_status
 
-app = FastAPI(title="Insight Sphere Backend", version="0.1.0")
+settings = get_settings()
+
+
+app = FastAPI(
+    title="Insight Sphere Backend",
+    version="0.1.0",
+    description=(
+        "API for managing analytical datasets, providing upload/extraction capabilities "
+        "with strong validation, observability, and documentation."
+    ),
+    contact={
+        "name": "Insight Sphere Team",
+        "url": "https://github.com/insight-sphere",
+    },
+)
 
 
 class SecurityHeadersMiddleware(BaseHTTPMiddleware):
@@ -43,14 +75,8 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         return response
 
 # --- CORS ---
-FRONTEND_ORIGIN = os.getenv("FRONTEND_ORIGIN", "http://localhost:5173")
-ADDITIONAL_ORIGINS: List[str] = [
-    origin.strip()
-    for origin in os.getenv("ADDITIONAL_CORS_ORIGINS", "").split(",")
-    if origin.strip()
-]
-allow_origins = {FRONTEND_ORIGIN, "http://127.0.0.1:5173", "http://127.0.0.1:5174"}
-allow_origins.update(ADDITIONAL_ORIGINS)
+allow_origins = {str(settings.frontend_origin), "http://127.0.0.1:5173", "http://127.0.0.1:5174"}
+allow_origins.update(settings.additional_origins)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=sorted(allow_origins),
@@ -59,11 +85,7 @@ app.add_middleware(
     allow_headers=["Authorization", "Content-Type", "X-Requested-With"],
 )
 
-allowed_hosts_env = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1")
-allowed_hosts = [host.strip() for host in allowed_hosts_env.split(",") if host.strip()]
-allowed_hosts.append("127.0.0.1")
-allowed_hosts.append("localhost")
-app.add_middleware(TrustedHostMiddleware, allowed_hosts=list(dict.fromkeys(allowed_hosts)))
+app.add_middleware(TrustedHostMiddleware, allowed_hosts=settings.allowed_host_list)
 app.add_middleware(SecurityHeadersMiddleware)
 
 EMAIL_LOG_PATH = DATA_DIR / "email_log.jsonl"
@@ -73,110 +95,114 @@ _safe_name = safe_filename
 
 MAX_UPLOAD_SIZE_MB = int(os.getenv("MAX_UPLOAD_SIZE_MB", "25"))
 MAX_UPLOAD_SIZE = MAX_UPLOAD_SIZE_MB * 1024 * 1024
+MAX_UPLOAD_SIZE = settings.max_upload_size
+MAX_UPLOAD_SIZE_MB = settings.max_upload_size_mb
+ALLOWED_EXTENSIONS = {ext.lower() for ext in settings.allowed_upload_extensions}
 
-@app.get("/health")
-def health():
+
+REGISTRY = CollectorRegistry()
+UPLOAD_COUNTER = Counter(
+    "insight_upload_total",
+    "Total number of dataset uploads",
+    registry=REGISTRY,
+)
+UPLOAD_SIZE = Histogram(
+    "insight_upload_size_bytes",
+    "Size of uploaded datasets in bytes",
+    registry=REGISTRY,
+    buckets=(10 * 1024, 100 * 1024, 1024 * 1024, 10 * 1024 * 1024, 50 * 1024 * 1024, float("inf")),
+)
+
+_IDEMPOTENCY_CACHE: Dict[str, Dict[str, Any]] = {}
+
+
+async def _scan_for_malware(file_bytes: bytes) -> None:
+    if not settings.clamav_scan_url:
+        return
+
+    timeout = httpx.Timeout(10.0, read=20.0)
+    async with httpx.AsyncClient(timeout=timeout) as client:
+        response = await client.post(
+            str(settings.clamav_scan_url),
+            files={"file": ("upload", file_bytes)},
+        )
+    if response.status_code != 200:
+        raise HTTPException(status_code=502, detail="ClamAV scanning service unavailable")
+    payload = response.json()
+    if payload.get("status") != "clean":
+        raise HTTPException(status_code=400, detail="File failed malware scan")
+
+
+@app.get("/healthz", summary="Liveness probe", response_model=Dict[str, str])
+def healthz() -> Dict[str, str]:
     return {"status": "ok"}
 
-def detect_general_type(series: pd.Series) -> str:
-    if pd.api.types.is_bool_dtype(series):
-        return "boolean"
-    if pd.api.types.is_numeric_dtype(series):
-        return "number"
-    if pd.api.types.is_datetime64_any_dtype(series):
-        return "datetime"
-    return "string"
 
-CRIME_TREND_KEYWORDS = ("crime", "offense", "incident", "violence", "homicide")
-POLICING_TREND_KEYWORDS = ("police", "patrol", "enforcement")
-RISK_FACTOR_KEYWORDS = ("unemployment", "poverty", "alcohol", "drug", "gang", "homeless")
-
-
-def _numeric_series(series: pd.Series) -> pd.Series:
-    numeric = pd.to_numeric(series, errors="coerce")
-    return numeric.dropna()
-
-
-def _generate_domain_insights(df: pd.DataFrame) -> List[str]:
-    insights: List[str] = []
-    lower_name_map = {str(col): str(col).lower() for col in df.columns}
-
-    for original_name, lower_name in lower_name_map.items():
-        numeric = _numeric_series(df[original_name])
-        if numeric.empty:
-            continue
-
-        if any(keyword in lower_name for keyword in CRIME_TREND_KEYWORDS):
-            change = float(numeric.iloc[-1] - numeric.iloc[0])
-            if change > 0:
-                insights.append(
-                    f"Crime indicator '{original_name}' increased by {change:.2f} between the first and last records."
-                )
-            elif change < 0:
-                insights.append(
-                    f"Crime indicator '{original_name}' decreased by {abs(change):.2f} between the first and last records."
-                )
-            else:
-                insights.append(
-                    f"Crime indicator '{original_name}' remained stable across the observed period."
-                )
-            continue
-
-        if any(keyword in lower_name for keyword in POLICING_TREND_KEYWORDS):
-            change = float(numeric.iloc[-1] - numeric.iloc[0])
-            if change > 0:
-                insights.append(
-                    f"Policing resource '{original_name}' increased by {change:.2f} between the first and last records."
-                )
-            elif change < 0:
-                insights.append(
-                    f"Policing resource '{original_name}' decreased by {abs(change):.2f} between the first and last records."
-                )
-            else:
-                insights.append(
-                    f"Policing resource '{original_name}' remained stable across the observed period."
-                )
-            continue
-
-        if any(keyword in lower_name for keyword in RISK_FACTOR_KEYWORDS):
-            average = float(numeric.mean())
-            insights.append(
-                f"Risk factor '{original_name}' averages {average:.2f} across the dataset."
-            )
-
-    return insights
-
-
-def build_extraction(df: pd.DataFrame, sample_rows: int = 100) -> Dict[str, Any]:
-    cols = [{"name": str(c), "type": detect_general_type(df[c])} for c in df.columns]
-    sample = df.head(sample_rows).replace({np.nan: ""}).astype(object)
-    sample = sample.to_dict(orient="records")
-    insights = _generate_domain_insights(df)
-    return {
-        "columns": cols,
-        "row_count": int(len(df)),
-        "sample_data": sample,
-        "insights": insights,
+@app.get("/readiness", summary="Readiness probe", response_model=Dict[str, Any])
+def readiness() -> Dict[str, Any]:
+    checks = {
+        "uploads_directory": Path(UPLOAD_DIR).exists(),
+        "data_directory": Path(DATA_DIR).exists(),
     }
+    status = "ready" if all(checks.values()) else "degraded"
+    return {"status": status, "checks": checks}
 
+
+@app.get("/metrics", summary="Prometheus metrics")
+def metrics() -> PlainTextResponse:
+    return PlainTextResponse(generate_latest(REGISTRY), media_type=CONTENT_TYPE_LATEST)
+
+@app.get("/health", include_in_schema=False)
+def legacy_health() -> Dict[str, str]:
+    return {"status": "ok"}
 
 # simple in-memory registry file_id -> path
-@app.post("/api/upload")
-async def api_upload(file: UploadFile = File(...)):
+
+
+def _ensure_allowed_extension(filename: Optional[str]) -> None:
+    if not filename:
+        return
+    ext = os.path.splitext(filename)[1].lower()
+    if ext and ext not in ALLOWED_EXTENSIONS:
+        raise HTTPException(status_code=400, detail=f"Unsupported file extension: {ext}")
+
+
+@app.post(
+    "/api/upload",
+    summary="Upload dataset",
+    response_model=FileUploadResponse,
+    responses={
+        400: {"model": ErrorResponse, "description": "Validation error"},
+        413: {"model": ErrorResponse, "description": "Payload too large"},
+        502: {"model": ErrorResponse, "description": "ClamAV service unavailable"},
+    },
+)
+async def api_upload(
+    file: UploadFile = File(..., description="Dataset file to upload"),
+    idempotency_key: Optional[str] = Header(None, convert_underscores=False, alias="Idempotency-Key"),
+) -> FileUploadResponse:
+    if idempotency_key and idempotency_key in _IDEMPOTENCY_CACHE:
+        return FileUploadResponse(**_IDEMPOTENCY_CACHE[idempotency_key])
+
+    _ensure_allowed_extension(file.filename)
     data = await file.read()
     if not data:
         raise HTTPException(status_code=400, detail="Empty file")
     if len(data) > MAX_UPLOAD_SIZE:
         raise HTTPException(
             status_code=413,
-            detail=f"File too large. Max allowed size is {MAX_UPLOAD_SIZE_MB} MB",
+            detail=f"File too large. Max allowed size is {settings.max_upload_size_mb} MB",
         )
+    await _scan_for_malware(data)
     # save
     fid = str(uuid.uuid4())
     safe = safe_filename(file.filename or "file")
     upload_dir = Path(UPLOAD_DIR)
     upload_dir.mkdir(parents=True, exist_ok=True)
     path = upload_dir / f"{fid}_{safe}"
+    upload_root = Path(UPLOAD_DIR)
+    upload_root.mkdir(parents=True, exist_ok=True)
+    path = upload_root / f"{fid}_{safe}"
     with path.open("wb") as f:
         f.write(data)
     register_uploaded_file(fid, path)
@@ -186,14 +212,22 @@ async def api_upload(file: UploadFile = File(...)):
         extraction = build_extraction(df)
     except Exception:
         extraction = None
-    return {"status": "success", "file_url": fid, "filename": file.filename, "quick_extraction": extraction}
+    quick = QuickExtraction.model_validate(extraction) if extraction else None
+    payload = FileUploadResponse(status="success", file_url=fid, filename=file.filename, quick_extraction=quick)
+    UPLOAD_COUNTER.inc()
+    UPLOAD_SIZE.observe(len(data))
+    if idempotency_key:
+        _IDEMPOTENCY_CACHE[idempotency_key] = payload.model_dump()
+    return payload
 
-class ExtractRequest(BaseModel):
-    file_url: str
-    json_schema: Optional[dict] = None
 
-@app.post("/api/extract")
-def api_extract(req: ExtractRequest):
+@app.post(
+    "/api/extract",
+    summary="Extract dataset metadata",
+    response_model=ExtractResponse,
+    responses={400: {"model": ErrorResponse, "description": "Unable to process dataset"}},
+)
+def api_extract(req: ExtractRequest) -> ExtractResponse:
     path = resolve_file_path(req.file_url)
     with path.open("rb") as f:
         file_bytes = f.read()
@@ -201,30 +235,79 @@ def api_extract(req: ExtractRequest):
         df = read_table_bytes(file_bytes, path.name)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    output = build_extraction(df)
-    return {"status": "success", "output": output}
-
-class EmailRequest(BaseModel):
-    to: str
-    subject: str
-    body: str
-    from_name: Optional[str] = None
+    output_dict = build_extraction(df)
+    return ExtractResponse(status="success", output=QuickExtraction.model_validate(output_dict))
 
 
-@app.post("/api/utils/send-email")
-async def api_send_email(payload: EmailRequest):
+@app.post(
+    "/api/extract/async",
+    summary="Schedule dataset metadata extraction",
+    response_model=TaskEnqueueResponse,
+    responses={
+        400: {"model": ErrorResponse, "description": "Unable to process dataset"},
+        503: {"model": ErrorResponse, "description": "Task queue unavailable"},
+    },
+)
+def api_extract_async(req: ExtractRequest) -> TaskEnqueueResponse:
+    if not settings.task_queue_enabled:
+        raise HTTPException(status_code=503, detail="Task queue is disabled")
+    # Ensure the file exists before enqueuing to fail fast for invalid identifiers.
+    resolve_file_path(req.file_url)
+    try:
+        task_id = enqueue_extraction(req.file_url)
+    except TaskQueueUnavailable as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    return TaskEnqueueResponse(task_id=task_id, status="queued", queue=settings.task_queue_name)
+
+
+@app.get(
+    "/api/tasks/{task_id}",
+    summary="Inspect background task status",
+    response_model=TaskStatusResponse,
+    responses={
+        404: {"model": ErrorResponse, "description": "Task not found"},
+        503: {"model": ErrorResponse, "description": "Task queue unavailable"},
+    },
+)
+def api_task_status(task_id: str) -> TaskStatusResponse:
+    if not settings.task_queue_enabled:
+        raise HTTPException(status_code=503, detail="Task queue is disabled")
+    try:
+        status_payload = get_task_status(task_id)
+    except TaskQueueUnavailable as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    result_payload = status_payload.get("result")
+    quick = QuickExtraction.model_validate(result_payload) if result_payload else None
+    return TaskStatusResponse(
+        task_id=status_payload["task_id"],
+        status=status_payload["status"],
+        result=quick,
+        error=status_payload.get("error"),
+    )
+
+
+@app.post(
+    "/api/utils/send-email",
+    summary="Log outgoing email",
+    response_model=EmailResponse,
+    responses={500: {"model": ErrorResponse, "description": "Failed to write audit log"}},
+)
+async def api_send_email(payload: EmailRequest) -> EmailResponse:
     record = {
         "to": payload.to,
         "subject": payload.subject,
         "body": payload.body,
         "from_name": payload.from_name,
     }
+    log_path = Path(EMAIL_LOG_PATH)
+    log_path.parent.mkdir(parents=True, exist_ok=True)
     try:
         with open(EMAIL_LOG_PATH, "a", encoding="utf-8") as log_file:
+        with open(log_path, "a", encoding="utf-8") as log_file:
             log_file.write(json.dumps(record, ensure_ascii=False) + "\n")
     except Exception as exc:
         raise HTTPException(status_code=500, detail=f"Failed to log email: {exc}")
-    return {"status": "queued", "logged": True}
+    return EmailResponse(status="queued", logged=True)
 
 if __name__ == "__main__":
     import uvicorn
@@ -262,3 +345,5 @@ app.include_router(dictionary_router, prefix="/api/dictionary")
 app.include_router(visualizations_router, prefix="/api/visualization")
 app.include_router(chat_router, prefix="/api/chat")
 app.include_router(audit_router, prefix="/api/audit")
+FILE_REGISTRY = get_file_registry()
+_safe_name = safe_filename
