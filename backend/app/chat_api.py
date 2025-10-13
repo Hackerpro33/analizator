@@ -1,17 +1,20 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Dict, List, Literal
-
-from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel, Field
+from typing import Any, Dict, List, Literal, Optional
 
 import json
 import os
+import re
 import shutil
 import tempfile
 import time
 import uuid
+
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel, Field
+
+from .utils import dictionaries as dictionary_store
 
 router = APIRouter()
 
@@ -32,6 +35,7 @@ def _ensure_store_dir() -> Path:
 
 STORE_DIR = _ensure_store_dir()
 CHAT_JSON = STORE_DIR / "chat_sessions.json"
+MAX_HINTS = 8
 
 
 def _atomic_write_json(path: Path, data: Any):
@@ -180,14 +184,56 @@ def _derive_focus_points(text: str) -> List[str]:
     return unique_focus[:MAX_FOCUS_POINTS]
 
 
+def _dictionary_hints(message: str) -> List[str]:
+    matches = dictionary_store.search_entries(message, limit=MAX_HINTS)
+    if not matches:
+        return []
+
+    hints: List[str] = []
+    seen: set[tuple[str, str]] = set()
+
+    for match in matches:
+        dictionary = match.get("dictionary", {})
+        entry = match.get("entry", {})
+
+        code = str(entry.get("code", "")).strip()
+        label = str(entry.get("label", "")).strip()
+        if not code or not label:
+            continue
+
+        key = (str(dictionary.get("id", "")), code)
+        if key in seen:
+            continue
+        seen.add(key)
+
+        source_parts = [dictionary.get("name"), dictionary.get("column")]
+        source_text = ", ".join(part for part in source_parts if part)
+
+        hint = f"{code} — {label}"
+        if source_text:
+            hint += f" ({source_text})"
+        description = entry.get("description")
+        if description:
+            hint += f": {description}"
+        hints.append(hint)
+
+    return hints
+
+
 def _generate_reply(instructions: str, user_message: str) -> str:
     instructions = instructions.strip() or DEFAULT_INSTRUCTIONS
     focus_points = _derive_focus_points(user_message)
     bullets = "\n".join(f"• {point}" for point in focus_points)
+    hints = _dictionary_hints(user_message)
+    hint_text = ""
+    if hints:
+        hint_lines = "\n".join(f"• {hint}" for hint in hints)
+        hint_text = f"\n\nКонтекст по кодам из словарей:\n{hint_lines}"
     return (
         f"Следую вашим инструкциям: {instructions}\n\n"
         f"Вот шаги, которые помогут продвинуть анализ:\n{bullets}\n\n"
         "Если хотите изменить подход, скорректируйте инструкции или уточните детали в следующем сообщении."
+        f"{hint_text}"
     )
 
 

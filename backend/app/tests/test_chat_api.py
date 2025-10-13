@@ -5,6 +5,7 @@ from fastapi.testclient import TestClient
 
 from .. import chat_api
 from .. import main
+from ..utils import dictionaries as dictionary_store
 
 
 HEADERS = {"host": "localhost"}
@@ -23,6 +24,17 @@ def isolate_chat_store(tmp_path, monkeypatch):
 
     if chat_api.CHAT_JSON.exists():
         chat_api.CHAT_JSON.unlink()
+
+
+@pytest.fixture(autouse=True)
+def isolate_dictionary_store(tmp_path, monkeypatch):
+    dictionary_path = tmp_path / "dictionary_store.json"
+    monkeypatch.setattr(dictionary_store, "DICTIONARY_JSON", dictionary_path)
+    if dictionary_path.exists():
+        dictionary_path.unlink()
+    yield
+    if dictionary_path.exists():
+        dictionary_path.unlink()
 
 
 @pytest.fixture
@@ -110,3 +122,38 @@ def test_update_instructions_and_reset(client):
     reset_payload = reset_response.json()
     assert len(reset_payload["messages"]) == 1
     assert reset_payload["messages"][0]["content"] == chat_api.DEFAULT_GREETING
+
+
+def test_dictionary_hints_are_appended(client):
+    dictionary_store.save_dictionaries(
+        [
+            {
+                "id": "dict1",
+                "name": "Статусы обращений",
+                "column": "status_code",
+                "entries": [
+                    {
+                        "code": "A01",
+                        "label": "Активный кейс",
+                        "description": "Заявка находится в работе",
+                        "keywords": ["активный"],
+                    }
+                ],
+                "created_at": 1,
+                "updated_at": 1,
+            }
+        ]
+    )
+
+    response = client.post(
+        "/api/chat/message",
+        json={"user_id": "dave", "message": "Что означает код A01 в таблице?"},
+        headers=HEADERS,
+    )
+    assert response.status_code == 200
+
+    payload = response.json()
+    assistant_message = payload["messages"][-1]["content"]
+    assert "Контекст по кодам из словарей" in assistant_message
+    assert "A01" in assistant_message
+    assert "Активный кейс" in assistant_message
