@@ -12,6 +12,7 @@ from fastapi.testclient import TestClient
 from .. import datasets_api
 from .. import visualizations_api
 from .. import main
+from ..services import extraction
 
 HEADERS = {"host": "localhost"}
 
@@ -306,15 +307,15 @@ def test_read_table_bytes_rejects_unknown_extension():
 
 
 def test_detect_general_type_handles_common_series():
-    assert main.detect_general_type(pd.Series([True, False])) == "boolean"
-    assert main.detect_general_type(pd.Series([1, 2.5])) == "number"
-    assert main.detect_general_type(pd.Series(pd.to_datetime(["2024-01-01", "2024-01-02"]))) == "datetime"
-    assert main.detect_general_type(pd.Series(["a", "b"])) == "string"
+    assert extraction.detect_general_type(pd.Series([True, False])) == "boolean"
+    assert extraction.detect_general_type(pd.Series([1, 2.5])) == "number"
+    assert extraction.detect_general_type(pd.Series(pd.to_datetime(["2024-01-01", "2024-01-02"]))) == "datetime"
+    assert extraction.detect_general_type(pd.Series(["a", "b"])) == "string"
 
 
 def test_build_extraction_replaces_nan_values():
     df = pd.DataFrame({"num": [1, np.nan], "text": ["alpha", "beta"]})
-    result = main.build_extraction(df, sample_rows=2)
+    result = extraction.build_extraction(df, sample_rows=2)
     assert result["columns"] == [
         {"name": "num", "type": "number"},
         {"name": "text", "type": "string"},

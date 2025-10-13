@@ -66,12 +66,10 @@ def read_table_bytes(file_bytes: bytes, filename: str) -> pd.DataFrame:
     ext = Path(filename).suffix.lower()
     if ext in {".xlsx", ".xls"}:
         return pd.read_excel(io.BytesIO(file_bytes))
-    if ext in {".csv", ".tsv"}:
-        sep = "\t" if ext == ".tsv" else None
-        read_kwargs = {"sep": sep}
-        if sep is None:
-            read_kwargs["engine"] = "python"
-        return pd.read_csv(io.BytesIO(file_bytes), **read_kwargs)
+    if ext == ".tsv":
+        return pd.read_csv(io.BytesIO(file_bytes), sep="\t")
+    if ext == ".csv":
+        return pd.read_csv(io.BytesIO(file_bytes))
     raise HTTPException(status_code=400, detail=f"Unsupported format: {ext}")
 
 
@@ -93,4 +91,4 @@ def export_json_atomic(path: Path, payload) -> None:
 
 def get_file_registry() -> Dict[str, str]:
     """Expose the in-memory file registry for inspection/testing."""
-    return dict(_FILE_REGISTRY)
+    return _FILE_REGISTRY
