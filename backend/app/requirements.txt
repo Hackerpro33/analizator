@@ -8,3 +8,7 @@ python-dotenv
 pytest
 httpx
 pytest-cov
+prometheus-client
+pydantic-settings
+redis
+rq
