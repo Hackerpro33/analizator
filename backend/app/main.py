@@ -17,6 +17,7 @@ import httpx
 from prometheus_client import CONTENT_TYPE_LATEST, Counter, Histogram, CollectorRegistry, generate_latest
 
 from .config import get_settings
+from .version import __version__
 from .schemas import (
     EmailRequest,
     EmailResponse,
@@ -45,7 +46,7 @@ settings = get_settings()
 
 app = FastAPI(
     title="Insight Sphere Backend",
-    version="0.1.0",
+    version=__version__,
     description=(
         "API for managing analytical datasets, providing upload/extraction capabilities "
         "with strong validation, observability, and documentation."
