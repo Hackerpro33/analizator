@@ -304,7 +304,8 @@ async def api_send_email(payload: EmailRequest) -> EmailResponse:
     log_path.parent.mkdir(parents=True, exist_ok=True)
     try:
         with log_path.open("a", encoding="utf-8") as log_file:
-            log_file.write(json.dumps(record, ensure_ascii=False) + "\n")
+            json.dump(record, log_file, ensure_ascii=False)
+            log_file.write("\n")
     except Exception as exc:
         raise HTTPException(status_code=500, detail=f"Failed to log email: {exc}")
     return EmailResponse(status="queued", logged=True)
