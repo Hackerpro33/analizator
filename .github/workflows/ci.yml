@@ -37,7 +37,7 @@ jobs:
           pytest
       - name: Upload coverage report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: backend-coverage-${{ matrix.python-version }}
           path: coverage.xml
@@ -66,7 +66,7 @@ jobs:
         run: npm run build --prefix frontend
       - name: Upload frontend coverage
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: frontend-coverage-${{ matrix.node-version }}
           path: frontend/coverage
