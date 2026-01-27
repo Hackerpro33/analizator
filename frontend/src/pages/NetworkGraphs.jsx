@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Dataset, Visualization } from "@/api/entities";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Network, Sparkles, BarChart3, Share2 } from "lucide-react";
+import { Network, Sparkles, Share2 } from "lucide-react";
 import PageContainer from "@/components/layout/PageContainer";
 
 import NetworkBuilder from "../components/networks/NetworkBuilder";

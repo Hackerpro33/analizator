@@ -51,7 +51,7 @@ def test_bias_audit_run_and_schedule(tmp_path):
         "notes": "Automated regression check",
     }
 
-    schedule_response = client.post("/api/audit/bias/schedules", json=schedule_payload, headers=DEFAULT_HEADERS)
+    schedule_response = client.post("/api/v1/audit/bias/schedules", json=schedule_payload, headers=DEFAULT_HEADERS)
     assert schedule_response.status_code == 200
     schedule_data = schedule_response.json()["schedule"]
     assert schedule_data["next_run_due"] is not None
@@ -68,7 +68,7 @@ def test_bias_audit_run_and_schedule(tmp_path):
         "schedule_frequency": "monthly",
     }
 
-    audit_response = client.post("/api/audit/bias/run", json=audit_payload, headers=DEFAULT_HEADERS)
+    audit_response = client.post("/api/v1/audit/bias/run", json=audit_payload, headers=DEFAULT_HEADERS)
     assert audit_response.status_code == 200
     audit_result = audit_response.json()["audit"]
     assert audit_result["flagged"] is True
@@ -89,27 +89,27 @@ def test_bias_audit_run_and_schedule(tmp_path):
     assert thresholds["ratio"]["disparate_impact"]["min"] == pytest.approx(0.8)
     assert thresholds["ratio"]["disparate_impact"]["max"] == pytest.approx(1.25)
 
-    history_response = client.get("/api/audit/bias/history", headers=DEFAULT_HEADERS)
+    history_response = client.get("/api/v1/audit/bias/history", headers=DEFAULT_HEADERS)
     assert history_response.status_code == 200
     history_payload = history_response.json()
     assert history_payload["count"] == 1
     assert history_payload["items"][0]["flagged"] is True
 
-    schedules_response = client.get("/api/audit/bias/schedules", headers=DEFAULT_HEADERS)
+    schedules_response = client.get("/api/v1/audit/bias/schedules", headers=DEFAULT_HEADERS)
     assert schedules_response.status_code == 200
     schedules_payload = schedules_response.json()
     assert schedules_payload["count"] == 1
     updated_schedule = schedules_payload["items"][0]
     assert updated_schedule["last_run_at"] is not None
 
-    delete_response = client.delete(f"/api/audit/bias/schedules/{schedule_data['id']}", headers=DEFAULT_HEADERS)
+    delete_response = client.delete(f"/api/v1/audit/bias/schedules/{schedule_data['id']}", headers=DEFAULT_HEADERS)
     assert delete_response.status_code == 200
     assert delete_response.json()["status"] == "deleted"
 
-    schedules_empty = client.get("/api/audit/bias/schedules", headers=DEFAULT_HEADERS).json()
+    schedules_empty = client.get("/api/v1/audit/bias/schedules", headers=DEFAULT_HEADERS).json()
     assert schedules_empty["count"] == 0
 
-    history_response_after = client.get("/api/audit/bias/history", headers=DEFAULT_HEADERS).json()
+    history_response_after = client.get("/api/v1/audit/bias/history", headers=DEFAULT_HEADERS).json()
     assert history_response_after["count"] == 1
 
 
@@ -136,7 +136,7 @@ def test_bias_audit_threshold_overrides(tmp_path):
         },
     }
 
-    audit_response = client.post("/api/audit/bias/run", json=audit_payload, headers=DEFAULT_HEADERS)
+    audit_response = client.post("/api/v1/audit/bias/run", json=audit_payload, headers=DEFAULT_HEADERS)
     assert audit_response.status_code == 200
     audit_result = audit_response.json()["audit"]
 

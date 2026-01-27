@@ -1,299 +1,308 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { 
-  Activity, 
-  Download, 
-  Search, 
-  Filter, 
-  Clock, 
+import { Skeleton } from "@/components/ui/skeleton";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Activity,
+  Download,
+  Search,
+  Clock,
   AlertCircle,
   CheckCircle,
   Info,
-  AlertTriangle
+  AlertTriangle,
+  RefreshCcw,
 } from "lucide-react";
+import { fetchSystemLogs, downloadSystemLogs } from "@/api/system";
+import { useToast } from "@/components/ui/use-toast";
+import { useAuth } from "@/contexts/AuthContext.jsx";
+import AccessMessage from "@/components/auth/AccessMessage.jsx";
+
+const LEVEL_META = {
+  info: { icon: <Info className="w-4 h-4 text-blue-600" />, badge: "bg-blue-100 text-blue-700" },
+  success: { icon: <CheckCircle className="w-4 h-4 text-green-600" />, badge: "bg-green-100 text-green-700" },
+  warning: { icon: <AlertTriangle className="w-4 h-4 text-yellow-600" />, badge: "bg-yellow-100 text-yellow-700" },
+  error: { icon: <AlertCircle className="w-4 h-4 text-red-600" />, badge: "bg-red-100 text-red-700" },
+};
+
+const CATEGORY_COLORS = {
+  dataset: "bg-purple-100 text-purple-700",
+  visualization: "bg-blue-100 text-blue-700",
+  ai: "bg-orange-100 text-orange-700",
+  system: "bg-gray-100 text-gray-700",
+  forecast: "bg-green-100 text-green-700",
+  user: "bg-indigo-100 text-indigo-700",
+  map: "bg-teal-100 text-teal-700",
+};
 
 export default function SystemLogs() {
-  const [logs, setLogs] = useState([]);
+  const { hasRole } = useAuth();
+  const allowed = hasRole(["admin", "security"]);
+  const { toast } = useToast();
+
+  const [rawLogs, setRawLogs] = useState([]);
   const [filteredLogs, setFilteredLogs] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [logLevel, setLogLevel] = useState('all');
-  const [dateFilter, setDateFilter] = useState('today');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [logLevel, setLogLevel] = useState("all");
+  const [dateFilter, setDateFilter] = useState("today");
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [lastUpdated, setLastUpdated] = useState(null);
+
+  const canDownload = hasRole(["admin"]);
+
+  const loadLogs = useCallback(async () => {
+    if (!allowed) {
+      return;
+    }
+    setIsLoading(true);
+    try {
+      const response = await fetchSystemLogs({ limit: 500 });
+      setRawLogs(response.items || []);
+      setLastUpdated(new Date());
+      setError(null);
+    } catch (err) {
+      setError(err?.message || "Не удалось загрузить логи");
+      setRawLogs([]);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [allowed]);
 
   useEffect(() => {
-    generateMockLogs();
-  }, []);
+    loadLogs();
+  }, [loadLogs]);
+
+  const filterLogs = useCallback(() => {
+    let logs = rawLogs;
+    if (logLevel !== "all") {
+      logs = logs.filter((log) => (log.level || "").toLowerCase() === logLevel);
+    }
+    if (searchTerm) {
+      const query = searchTerm.toLowerCase();
+      logs = logs.filter(
+        (log) =>
+          (log.message || "").toLowerCase().includes(query) ||
+          (log.logger || "").toLowerCase().includes(query) ||
+          JSON.stringify(log.extra || {}).toLowerCase().includes(query)
+      );
+    }
+    if (dateFilter !== "any") {
+      const now = new Date();
+      logs = logs.filter((log) => {
+        const timestamp = log.timestamp ? new Date(log.timestamp) : null;
+        if (!timestamp) return false;
+        if (dateFilter === "today") {
+          return timestamp.toDateString() === now.toDateString();
+        }
+        if (dateFilter === "week") {
+          const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+          return timestamp >= weekAgo;
+        }
+        if (dateFilter === "month") {
+          const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+          return timestamp >= monthAgo;
+        }
+        return true;
+      });
+    }
+    setFilteredLogs(logs);
+  }, [rawLogs, logLevel, searchTerm, dateFilter]);
 
   useEffect(() => {
     filterLogs();
-  }, [searchTerm, logLevel, dateFilter, logs]);
+  }, [filterLogs]);
 
-  const generateMockLogs = () => {
-    const mockLogs = [
-      {
-        id: 1,
-        timestamp: new Date(Date.now() - 1000 * 60 * 5),
-        level: 'info',
-        category: 'dataset',
-        message: 'Пользователь загрузил новый набор данных "Продажи Q4"',
-        details: 'Файл: sales_q4.csv, Размер: 2.3MB, Строк: 15420'
-      },
-      {
-        id: 2,
-        timestamp: new Date(Date.now() - 1000 * 60 * 15),
-        level: 'success',
-        category: 'visualization',
-        message: 'Создана новая визуализация "Тренды продаж"',
-        details: 'Тип: line, Dataset: Продажи Q4, X-axis: date, Y-axis: revenue'
-      },
-      {
-        id: 3,
-        timestamp: new Date(Date.now() - 1000 * 60 * 30),
-        level: 'warning',
-        category: 'ai',
-        message: 'Внешние модели отключены, используется локальный движок прогнозов',
-        details: 'Причина: превышен лимит запросов, автоматическое восстановление через 1 час'
-      },
-      {
-        id: 4,
-        timestamp: new Date(Date.now() - 1000 * 60 * 45),
-        level: 'error',
-        category: 'system',
-        message: 'Ошибка при обработке Excel файла',
-        details: 'Файл: data.xlsx содержит неподдерживаемые макросы'
-      },
-      {
-        id: 5,
-        timestamp: new Date(Date.now() - 1000 * 60 * 60),
-        level: 'info',
-        category: 'forecast',
-        message: 'Завершено создание прогноза на 30 дней',
-        details: 'Dataset: Продажи Q4, Точность модели: 94.2%, Время обработки: 2.3с'
-      },
-      {
-        id: 6,
-        timestamp: new Date(Date.now() - 1000 * 60 * 90),
-        level: 'info',
-        category: 'user',
-        message: 'Новый пользователь зарегистрировался в системе',
-        details: 'Email: user@example.com, Роль: user, IP: 192.168.1.100'
-      },
-      {
-        id: 7,
-        timestamp: new Date(Date.now() - 1000 * 60 * 120),
-        level: 'success',
-        category: 'map',
-        message: 'Создана географическая карта "Распределение клиентов"',
-        details: 'Источник: dataset_customers, Точек данных: 1247'
-      }
-    ];
-    setLogs(mockLogs);
-  };
-
-  const filterLogs = () => {
-    let filtered = logs;
-
-    // Фильтр по поиску
-    if (searchTerm) {
-      filtered = filtered.filter(log => 
-        log.message.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        log.details.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        log.category.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-
-    // Фильтр по уровню
-    if (logLevel !== 'all') {
-      filtered = filtered.filter(log => log.level === logLevel);
-    }
-
-    // Фильтр по дате
-    const now = new Date();
-    switch (dateFilter) {
-      case 'today':
-        filtered = filtered.filter(log => {
-          const logDate = new Date(log.timestamp);
-          return logDate.toDateString() === now.toDateString();
-        });
-        break;
-      case 'week':
-        const weekAgo = new Date(now - 7 * 24 * 60 * 60 * 1000);
-        filtered = filtered.filter(log => new Date(log.timestamp) >= weekAgo);
-        break;
-      case 'month':
-        const monthAgo = new Date(now - 30 * 24 * 60 * 60 * 1000);
-        filtered = filtered.filter(log => new Date(log.timestamp) >= monthAgo);
-        break;
-    }
-
-    setFilteredLogs(filtered);
-  };
-
-  const exportLogs = () => {
-    const logsText = filteredLogs.map(log => 
-      `[${log.timestamp.toLocaleString()}] ${log.level.toUpperCase()} [${log.category}] ${log.message}\nДетали: ${log.details}\n`
-    ).join('\n');
-    
-    const blob = new Blob([logsText], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `system_logs_${new Date().toISOString().split('T')[0]}.txt`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  };
-
-  const getLevelIcon = (level) => {
-    switch (level) {
-      case 'error':
-        return <AlertCircle className="w-4 h-4 text-red-600" />;
-      case 'warning':
-        return <AlertTriangle className="w-4 h-4 text-yellow-600" />;
-      case 'success':
-        return <CheckCircle className="w-4 h-4 text-green-600" />;
-      default:
-        return <Info className="w-4 h-4 text-blue-600" />;
+  const exportLogs = async () => {
+    try {
+      await downloadSystemLogs({ level: logLevel, query: searchTerm });
+      toast({ title: "Логи скачаны" });
+    } catch (err) {
+      toast({
+        title: "Ошибка скачивания",
+        description: err?.message,
+        variant: "destructive",
+      });
     }
   };
 
   const getLevelBadge = (level) => {
-    const variants = {
-      error: 'bg-red-100 text-red-700',
-      warning: 'bg-yellow-100 text-yellow-700',
-      success: 'bg-green-100 text-green-700',
-      info: 'bg-blue-100 text-blue-700'
-    };
-    
-    return (
-      <Badge className={`${variants[level]} text-xs font-medium`}>
-        {level.toUpperCase()}
-      </Badge>
-    );
+    const meta = LEVEL_META[level] || LEVEL_META.info;
+    return <Badge className={`${meta.badge} text-xs font-medium`}>{level?.toUpperCase() || "INFO"}</Badge>;
   };
 
-  const getCategoryColor = (category) => {
-    const colors = {
-      dataset: 'bg-purple-100 text-purple-700',
-      visualization: 'bg-blue-100 text-blue-700',
-      ai: 'bg-orange-100 text-orange-700',
-      system: 'bg-gray-100 text-gray-700',
-      forecast: 'bg-green-100 text-green-700',
-      user: 'bg-indigo-100 text-indigo-700',
-      map: 'bg-teal-100 text-teal-700'
-    };
-    return colors[category] || 'bg-gray-100 text-gray-700';
-  };
+  const getCategoryColor = (category) => CATEGORY_COLORS[category] || "bg-gray-100 text-gray-700";
+
+  const stats = useMemo(() => {
+    const totals = { info: 0, success: 0, warning: 0, error: 0 };
+    rawLogs.forEach((log) => {
+      const level = (log.level || "info").toLowerCase();
+      if (totals[level] !== undefined) {
+        totals[level] += 1;
+      }
+    });
+    return totals;
+  }, [rawLogs]);
+
+  if (!allowed) {
+    return (
+      <Card className="border border-slate-200">
+        <CardContent className="py-10">
+          <AccessMessage type="forbidden" />
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <div className="space-y-6">
-      {/* Log Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        {['info', 'success', 'warning', 'error'].map(level => {
-          const count = logs.filter(log => log.level === level).length;
-          return (
-            <Card key={level}>
-              <CardContent className="p-4 text-center">
-                <div className="flex items-center justify-center mb-2">
-                  {getLevelIcon(level)}
-                </div>
-                <div className="text-2xl font-bold">{count}</div>
-                <div className="text-xs text-slate-600 uppercase">{level}</div>
-              </CardContent>
-            </Card>
-          );
-        })}
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div>
+          <h2 className="text-2xl font-semibold text-slate-900">Логи системы</h2>
+          <p className="text-sm text-slate-500">
+            Просматривайте события, фильтруйте по уровню и экспортируйте полные журналы.
+          </p>
+        </div>
+        <div className="flex items-center gap-3">
+          <Button variant="outline" className="gap-2" onClick={loadLogs} disabled={isLoading}>
+            <RefreshCcw className="w-4 h-4" />
+            Обновить
+          </Button>
+          <Button variant="outline" className="gap-2" onClick={exportLogs} disabled={!canDownload || filteredLogs.length === 0}>
+            <Download className="w-4 h-4" />
+            Скачать логи
+          </Button>
+        </div>
       </div>
 
-      {/* Filters and Export */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        {["info", "success", "warning", "error"].map((level) => (
+          <Card key={level}>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-sm text-slate-500 capitalize">
+                  {LEVEL_META[level].icon}
+                  {level}
+                </div>
+                <span className="text-2xl font-semibold">{stats[level]}</span>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
       <Card>
         <CardHeader>
-          <div className="flex justify-between items-center">
-            <CardTitle className="flex items-center gap-2">
-              <Activity className="w-5 h-5 text-emerald-500" />
-              Системные логи
-            </CardTitle>
-            <Button onClick={exportLogs} className="gap-2">
-              <Download className="w-4 h-4" />
-              Экспорт логов
-            </Button>
-          </div>
+          <CardTitle className="flex flex-wrap gap-3 items-center justify-between">
+            <span>Фильтры</span>
+            {lastUpdated && <span className="text-sm text-slate-500">Обновлено: {lastUpdated.toLocaleTimeString("ru-RU")}</span>}
+          </CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="flex flex-col md:flex-row gap-4 mb-6">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
               <Input
-                placeholder="Поиск в логах..."
+                placeholder="Поиск по сообщению, источнику или деталям"
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={(event) => setSearchTerm(event.target.value)}
                 className="pl-10"
               />
             </div>
-            <Select value={logLevel} onValueChange={setLogLevel}>
-              <SelectTrigger className="w-48">
-                <SelectValue placeholder="Уровень логов" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Все уровни</SelectItem>
-                <SelectItem value="info">Info</SelectItem>
-                <SelectItem value="success">Success</SelectItem>
-                <SelectItem value="warning">Warning</SelectItem>
-                <SelectItem value="error">Error</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={dateFilter} onValueChange={setDateFilter}>
-              <SelectTrigger className="w-48">
-                <SelectValue placeholder="Период" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="today">Сегодня</SelectItem>
-                <SelectItem value="week">Неделя</SelectItem>
-                <SelectItem value="month">Месяц</SelectItem>
-                <SelectItem value="all">Все время</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Logs List */}
-          <div className="space-y-3 max-h-96 overflow-y-auto">
-            {filteredLogs.map(log => (
-              <div key={log.id} className="border rounded-lg p-4 hover:bg-slate-50">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex items-start gap-3 flex-1">
-                    {getLevelIcon(log.level)}
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="font-medium text-slate-900">{log.message}</span>
-                        <Badge className={`${getCategoryColor(log.category)} text-xs`}>
-                          {log.category}
-                        </Badge>
-                      </div>
-                      <div className="text-sm text-slate-600 mb-2">{log.details}</div>
-                      <div className="flex items-center gap-2 text-xs text-slate-500">
-                        <Clock className="w-3 h-3" />
-                        {log.timestamp.toLocaleString()}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex-shrink-0">
-                    {getLevelBadge(log.level)}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {filteredLogs.length === 0 && (
-            <div className="text-center py-12">
-              <Activity className="w-16 h-16 mx-auto text-slate-400 mb-4" />
-              <h3 className="text-lg font-semibold text-slate-700 mb-2">Логи не найдены</h3>
-              <p className="text-slate-500">Попробуйте изменить параметры фильтрации</p>
+            <div>
+              <Select value={logLevel} onValueChange={setLogLevel}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Уровень" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Все уровни</SelectItem>
+                  <SelectItem value="info">Info</SelectItem>
+                  <SelectItem value="success">Success</SelectItem>
+                  <SelectItem value="warning">Warning</SelectItem>
+                  <SelectItem value="error">Error</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
+            <div>
+              <Select value={dateFilter} onValueChange={setDateFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Период" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="today">Сегодня</SelectItem>
+                  <SelectItem value="week">Последние 7 дней</SelectItem>
+                  <SelectItem value="month">Последние 30 дней</SelectItem>
+                  <SelectItem value="any">За всё время</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {error && (
+        <Card className="border-red-200 bg-red-50">
+          <CardContent className="text-sm text-red-700 py-4 flex items-center gap-2">
+            <AlertCircle className="w-4 h-4" />
+            {error}
+          </CardContent>
+        </Card>
+      )}
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Activity className="w-5 h-5 text-slate-600" />
+            Записи журнала
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-0">
+          {isLoading ? (
+            <div className="space-y-2 p-6">
+              {[...Array(5)].map((_, idx) => (
+                <Skeleton className="h-16 w-full" key={`log-skeleton-${idx}`} />
+              ))}
+            </div>
+          ) : filteredLogs.length === 0 ? (
+            <div className="py-16 text-center text-slate-500">Логи по выбранным критериям отсутствуют.</div>
+          ) : (
+            <ScrollArea className="max-h-[600px]">
+              <div className="divide-y divide-slate-100">
+                {filteredLogs.map((log, index) => {
+                  const timestamp = log.timestamp ? new Date(log.timestamp) : null;
+                  const level = (log.level || "info").toLowerCase();
+                  return (
+                    <div key={`${log.timestamp}-${index}`} className="p-4 flex flex-col gap-2">
+                      <div className="flex flex-wrap items-center gap-3 justify-between">
+                        <div className="flex items-center gap-3">
+                          {LEVEL_META[level]?.icon || LEVEL_META.info.icon}
+                          {getLevelBadge(level)}
+                          {timestamp && (
+                            <div className="flex items-center gap-1 text-sm text-slate-500">
+                              <Clock className="w-3 h-3" />
+                              {timestamp.toLocaleString("ru-RU")}
+                            </div>
+                          )}
+                        </div>
+                        {log.logger && (
+                          <Badge className={`text-xs ${getCategoryColor(log.logger)}`}>{log.logger}</Badge>
+                        )}
+                      </div>
+                      <div className="text-base font-semibold text-slate-900">{log.message || "Без сообщения"}</div>
+                      {log.extra && Object.keys(log.extra).length > 0 && (
+                        <pre className="bg-slate-50 rounded-lg p-3 text-xs text-left whitespace-pre-wrap text-slate-600">
+                          {JSON.stringify(log.extra, null, 2)}
+                        </pre>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </ScrollArea>
           )}
         </CardContent>
       </Card>

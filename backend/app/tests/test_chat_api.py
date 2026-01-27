@@ -61,7 +61,7 @@ def test_derive_focus_points_handles_multiple_signals():
 
 
 def test_get_state_returns_default_greeting(client):
-    response = client.get("/api/chat/state/alice", headers=HEADERS)
+    response = client.get("/api/v1/chat/state/alice", headers=HEADERS)
     assert response.status_code == 200
 
     payload = response.json()
@@ -72,7 +72,7 @@ def test_get_state_returns_default_greeting(client):
 
 def test_post_message_generates_reply_and_persists(client):
     response = client.post(
-        "/api/chat/message",
+        "/api/v1/chat/message",
         json={"user_id": "bob", "message": "Покажи данные 2022 и визуализацию"},
         headers=HEADERS,
     )
@@ -85,6 +85,8 @@ def test_post_message_generates_reply_and_persists(client):
     assistant_message = payload["messages"][-1]
     assert assistant_message["role"] == "assistant"
     assert "•" in assistant_message["content"]
+    assert "Локальный ИИ" in assistant_message["content"]
+    assert "Уточните детали" in assistant_message["content"]
     assert "визуал" in assistant_message["content"].lower()
     assert "числов" in assistant_message["content"].lower()
 
@@ -97,7 +99,7 @@ def test_post_message_generates_reply_and_persists(client):
 
 def test_update_instructions_and_reset(client):
     update_response = client.post(
-        "/api/chat/instructions",
+        "/api/v1/chat/instructions",
         json={"user_id": "carol", "instructions": "Быть кратким"},
         headers=HEADERS,
     )
@@ -105,7 +107,7 @@ def test_update_instructions_and_reset(client):
     assert update_response.json()["instructions"] == "Быть кратким"
 
     message_response = client.post(
-        "/api/chat/message",
+        "/api/v1/chat/message",
         json={"user_id": "carol", "message": "Нужен отчет"},
         headers=HEADERS,
     )
@@ -113,7 +115,7 @@ def test_update_instructions_and_reset(client):
     assert "Быть кратким" in message_response.json()["messages"][-1]["content"]
 
     reset_response = client.post(
-        "/api/chat/reset",
+        "/api/v1/chat/reset",
         json={"user_id": "carol"},
         headers=HEADERS,
     )
@@ -146,7 +148,7 @@ def test_dictionary_hints_are_appended(client):
     )
 
     response = client.post(
-        "/api/chat/message",
+        "/api/v1/chat/message",
         json={"user_id": "dave", "message": "Что означает код A01 в таблице?"},
         headers=HEADERS,
     )
@@ -157,3 +159,22 @@ def test_dictionary_hints_are_appended(client):
     assert "Контекст по кодам из словарей" in assistant_message
     assert "A01" in assistant_message
     assert "Активный кейс" in assistant_message
+
+
+def test_dataset_analysis_summary_is_included(client, tmp_path, monkeypatch):
+    dataset_path = tmp_path / "sales.csv"
+    dataset_path.write_text("city,value\nМосква,10\nМосква,20\nКазань,5\n", encoding="utf-8")
+
+    monkeypatch.setattr(chat_api.file_utils, "resolve_file_path", lambda identifier: dataset_path)
+
+    response = client.post(
+        "/api/v1/chat/message",
+        json={"user_id": "erin", "message": "анализируй file:sales.csv"},
+        headers=HEADERS,
+    )
+    assert response.status_code == 200
+
+    assistant_message = response.json()["messages"][-1]["content"]
+    assert "Локальный разбор файла" in assistant_message
+    assert "sales.csv" in assistant_message
+    assert "строк" in assistant_message

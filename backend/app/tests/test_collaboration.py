@@ -42,7 +42,7 @@ def test_comment_creation_and_listing(tmp_path):
         "tags": ["ops"],
     }
     workspace_response = client.post(
-        "/api/collaboration/workspaces",
+        "/api/v1/collaboration/workspaces",
         json=workspace_payload,
         headers=DEFAULT_HEADERS,
     )
@@ -64,7 +64,7 @@ def test_comment_creation_and_listing(tmp_path):
     }
 
     comment_response = client.post(
-        "/api/collaboration/comments",
+        "/api/v1/collaboration/comments",
         json=comment_payload,
         headers=DEFAULT_HEADERS,
     )
@@ -76,7 +76,7 @@ def test_comment_creation_and_listing(tmp_path):
     assert created_comment["target"]["row"] == 5
 
     list_response = client.get(
-        f"/api/collaboration/comments?dataset_id=sales-q1",
+        f"/api/v1/collaboration/comments?dataset_id=sales-q1",
         headers=DEFAULT_HEADERS,
     )
     assert list_response.status_code == 200
@@ -92,7 +92,7 @@ def test_access_policy_inheritance(tmp_path):
     client = TestClient(app)
 
     parent_response = client.post(
-        "/api/collaboration/workspaces",
+        "/api/v1/collaboration/workspaces",
         json={"name": "HQ", "created_by": "owner"},
         headers=DEFAULT_HEADERS,
     )
@@ -100,7 +100,7 @@ def test_access_policy_inheritance(tmp_path):
     parent_id = parent_response.json()["workspace"]["id"]
 
     child_response = client.post(
-        "/api/collaboration/workspaces",
+        "/api/v1/collaboration/workspaces",
         json={
             "name": "Research",
             "created_by": "owner",
@@ -119,7 +119,7 @@ def test_access_policy_inheritance(tmp_path):
         "actor": "owner",
     }
     parent_policy_response = client.put(
-        f"/api/collaboration/access-policies/{parent_id}",
+        f"/api/v1/collaboration/access-policies/{parent_id}",
         json=parent_policy,
         headers=DEFAULT_HEADERS,
     )
@@ -133,7 +133,7 @@ def test_access_policy_inheritance(tmp_path):
         "actor": "owner",
     }
     child_policy_response = client.put(
-        f"/api/collaboration/access-policies/{child_id}",
+        f"/api/v1/collaboration/access-policies/{child_id}",
         json=child_policy,
         headers=DEFAULT_HEADERS,
     )
@@ -143,7 +143,7 @@ def test_access_policy_inheritance(tmp_path):
     assert payload["roles_summary"]["editor"] == 1
 
     policy_fetch = client.get(
-        f"/api/collaboration/access-policies/{child_id}",
+        f"/api/v1/collaboration/access-policies/{child_id}",
         headers=DEFAULT_HEADERS,
     )
     assert policy_fetch.status_code == 200
@@ -151,7 +151,7 @@ def test_access_policy_inheritance(tmp_path):
     assert len(effective) == 2
     assert {assignment["role"] for assignment in effective} == {"owner", "editor"}
 
-    workspaces_list = client.get("/api/collaboration/workspaces", headers=DEFAULT_HEADERS)
+    workspaces_list = client.get("/api/v1/collaboration/workspaces", headers=DEFAULT_HEADERS)
     assert workspaces_list.status_code == 200
     workspaces_payload = workspaces_list.json()
     research_entry = next(
@@ -164,7 +164,7 @@ def test_comment_filters_and_deletion(tmp_path):
     client = TestClient(app)
 
     workspace_response = client.post(
-        "/api/collaboration/workspaces",
+        "/api/v1/collaboration/workspaces",
         json={"name": "Operations", "created_by": "alice"},
         headers=DEFAULT_HEADERS,
     )
@@ -172,7 +172,7 @@ def test_comment_filters_and_deletion(tmp_path):
     workspace_id = workspace_response.json()["workspace"]["id"]
 
     first_comment = client.post(
-        "/api/collaboration/comments",
+        "/api/v1/collaboration/comments",
         json={
             "text": "Нужно сверить числа @bob",
             "created_by": "alice",
@@ -189,7 +189,7 @@ def test_comment_filters_and_deletion(tmp_path):
     first_payload = first_comment.json()
 
     second_comment = client.post(
-        "/api/collaboration/comments",
+        "/api/v1/collaboration/comments",
         json={
             "text": "@dora проверь тренд",
             "created_by": "carol",
@@ -205,7 +205,7 @@ def test_comment_filters_and_deletion(tmp_path):
     second_payload = second_comment.json()
 
     widget_filtered = client.get(
-        "/api/collaboration/comments",
+        "/api/v1/collaboration/comments",
         params={"workspace_id": workspace_id, "widget_id": "table-1"},
         headers=DEFAULT_HEADERS,
     )
@@ -214,7 +214,7 @@ def test_comment_filters_and_deletion(tmp_path):
     assert widget_filtered.json()["items"][0]["id"] == first_payload["id"]
 
     mention_filtered = client.get(
-        "/api/collaboration/comments",
+        "/api/v1/collaboration/comments",
         params={"workspace_id": workspace_id, "mentioned_user": "dora"},
         headers=DEFAULT_HEADERS,
     )
@@ -223,7 +223,7 @@ def test_comment_filters_and_deletion(tmp_path):
     assert mention_filtered.json()["items"][0]["id"] == second_payload["id"]
 
     resolve_response = client.patch(
-        f"/api/collaboration/comments/{first_payload['id']}",
+        f"/api/v1/collaboration/comments/{first_payload['id']}",
         json={"resolved": True, "actor": "bob"},
         headers=DEFAULT_HEADERS,
     )
@@ -233,21 +233,21 @@ def test_comment_filters_and_deletion(tmp_path):
     assert resolved_payload["updated_at"] is not None
 
     get_response = client.get(
-        f"/api/collaboration/comments/{first_payload['id']}",
+        f"/api/v1/collaboration/comments/{first_payload['id']}",
         headers=DEFAULT_HEADERS,
     )
     assert get_response.status_code == 200
     assert get_response.json()["resolved"] is True
 
     delete_response = client.delete(
-        f"/api/collaboration/comments/{first_payload['id']}",
+        f"/api/v1/collaboration/comments/{first_payload['id']}",
         params={"actor": "bob"},
         headers=DEFAULT_HEADERS,
     )
     assert delete_response.status_code == 204
 
     remaining = client.get(
-        "/api/collaboration/comments",
+        "/api/v1/collaboration/comments",
         params={"workspace_id": workspace_id},
         headers=DEFAULT_HEADERS,
     )
@@ -256,7 +256,7 @@ def test_comment_filters_and_deletion(tmp_path):
     assert remaining.json()["items"][0]["id"] == second_payload["id"]
 
     audit_response = client.get(
-        "/api/collaboration/audit-log",
+        "/api/v1/collaboration/audit-log",
         params={"limit": 5},
         headers=DEFAULT_HEADERS,
     )
@@ -271,14 +271,14 @@ def test_access_policy_attribute_evaluation(tmp_path):
     client = TestClient(app)
 
     parent_response = client.post(
-        "/api/collaboration/workspaces",
+        "/api/v1/collaboration/workspaces",
         json={"name": "Finance", "created_by": "owner"},
         headers=DEFAULT_HEADERS,
     )
     parent_id = parent_response.json()["workspace"]["id"]
 
     child_response = client.post(
-        "/api/collaboration/workspaces",
+        "/api/v1/collaboration/workspaces",
         json={
             "name": "Analytics",
             "created_by": "owner",
@@ -290,7 +290,7 @@ def test_access_policy_attribute_evaluation(tmp_path):
     child_id = child_response.json()["workspace"]["id"]
 
     client.put(
-        f"/api/collaboration/access-policies/{parent_id}",
+        f"/api/v1/collaboration/access-policies/{parent_id}",
         json={
             "assignments": [
                 {"user_id": "alice", "role": "owner", "tags": ["finance"]},
@@ -301,7 +301,7 @@ def test_access_policy_attribute_evaluation(tmp_path):
     )
 
     client.put(
-        f"/api/collaboration/access-policies/{child_id}",
+        f"/api/v1/collaboration/access-policies/{child_id}",
         json={
             "assignments": [
                 {
@@ -316,7 +316,7 @@ def test_access_policy_attribute_evaluation(tmp_path):
     )
 
     allowed_response = client.post(
-        f"/api/collaboration/access-policies/{child_id}/evaluate",
+        f"/api/v1/collaboration/access-policies/{child_id}/evaluate",
         json={
             "user_id": "alice",
             "required_role": "viewer",
@@ -331,7 +331,7 @@ def test_access_policy_attribute_evaluation(tmp_path):
     assert allowed_payload["matched_assignments"][0]["user_id"] == "alice"
 
     denied_tags = client.post(
-        f"/api/collaboration/access-policies/{child_id}/evaluate",
+        f"/api/v1/collaboration/access-policies/{child_id}/evaluate",
         json={
             "user_id": "alice",
             "required_role": "viewer",
@@ -344,7 +344,7 @@ def test_access_policy_attribute_evaluation(tmp_path):
     assert denied_tags.json()["matched_assignments"] == []
 
     insufficient_role = client.post(
-        f"/api/collaboration/access-policies/{child_id}/evaluate",
+        f"/api/v1/collaboration/access-policies/{child_id}/evaluate",
         json={
             "user_id": "bob",
             "required_role": "owner",
@@ -360,7 +360,7 @@ def test_access_policy_attribute_evaluation(tmp_path):
     assert "insufficient" in payload["reason"]
 
     audit_events = client.get(
-        "/api/collaboration/audit-log",
+        "/api/v1/collaboration/audit-log",
         params={"limit": 20},
         headers=DEFAULT_HEADERS,
     )

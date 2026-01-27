@@ -9,6 +9,10 @@ export default function Chart3D({ data, config }) {
 
   useEffect(() => {
     if (!data || data.length === 0 || !config.x_axis || !config.y_axis || !config.z_axis) return;
+    const mount = mountRef.current;
+    if (!mount) {
+      return;
+    }
 
     // Scene setup
     const scene = new THREE.Scene();
@@ -18,7 +22,7 @@ export default function Chart3D({ data, config }) {
     // Camera setup
     const camera = new THREE.PerspectiveCamera(
       75,
-      mountRef.current.clientWidth / mountRef.current.clientHeight,
+      mount.clientWidth / mount.clientHeight,
       0.1,
       1000
     );
@@ -27,11 +31,11 @@ export default function Chart3D({ data, config }) {
 
     // Renderer setup
     const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
+    renderer.setSize(mount.clientWidth, mount.clientHeight);
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     rendererRef.current = renderer;
-    mountRef.current.appendChild(renderer.domElement);
+    mount.appendChild(renderer.domElement);
 
     // Lighting
     const ambientLight = new THREE.AmbientLight(0x404040, 0.8);
@@ -58,17 +62,17 @@ export default function Chart3D({ data, config }) {
     animate();
 
     const handleResize = () => {
-      if (!mountRef.current || !renderer || !camera) return;
-      camera.aspect = mountRef.current.clientWidth / mountRef.current.clientHeight;
+      if (!mount || !renderer || !camera) return;
+      camera.aspect = mount.clientWidth / mount.clientHeight;
       camera.updateProjectionMatrix();
-      renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
+      renderer.setSize(mount.clientWidth, mount.clientHeight);
     };
     window.addEventListener('resize', handleResize);
 
     return () => {
       if (animationIdRef.current) cancelAnimationFrame(animationIdRef.current);
       window.removeEventListener('resize', handleResize);
-      if (mountRef.current && renderer.domElement) mountRef.current.removeChild(renderer.domElement);
+      if (mount && renderer.domElement) mount.removeChild(renderer.domElement);
       renderer.dispose();
     };
   }, [data, config]);

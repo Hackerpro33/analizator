@@ -12,7 +12,7 @@
         "selected": true
       }
     ],
-    "file_url": "demo",
+    "file_url": "samples/demo.csv",
     "row_count": 2,
     "sample_data": [
       {
@@ -24,5 +24,2364 @@
     ],
     "id": "712e98de-f2fe-44df-94e2-10f13905ac53",
     "created_at": 1759807129
+  },
+  {
+    "name": "Книга1",
+    "description": "Автоматически распознанный набор данных из Книга1.xlsx",
+    "tags": [
+      "загружено",
+      "новое"
+    ],
+    "columns": [
+      {
+        "name": "Unnamed: 0",
+        "type": "number",
+        "selected": true
+      },
+      {
+        "name": "Преступность",
+        "type": "number",
+        "selected": true
+      },
+      {
+        "name": "Год ",
+        "type": "number",
+        "selected": true
+      },
+      {
+        "name": "Тяжесть",
+        "type": "string",
+        "selected": true
+      },
+      {
+        "name": "Координаты",
+        "type": "string",
+        "selected": true
+      },
+      {
+        "name": "Unnamed: 5",
+        "type": "number",
+        "selected": true
+      }
+    ],
+    "file_url": "samples/book1.csv",
+    "row_count": 19,
+    "sample_data": [
+      {
+        "Unnamed: 0": "",
+        "Преступность": 1,
+        "Год ": 2021,
+        "Тяжесть": "Высокая",
+        "Координаты": " 65° 13′ 48.3355″ N, 21° 27′ 57.7142″ W",
+        "Unnamed: 5": 2000
+      },
+      {
+        "Unnamed: 0": "",
+        "Преступность": 0,
+        "Год ": 2022,
+        "Тяжесть": "Средняя",
+        "Координаты": " 65° 13′ 48.3355″ N, 21° 27′ 57.7142″ W",
+        "Unnamed: 5": 4000
+      },
+      {
+        "Unnamed: 0": "",
+        "Преступность": 1,
+        "Год ": 2023,
+        "Тяжесть": "Высокая",
+        "Координаты": " 65° 13′ 48.3355″ N, 21° 27′ 57.7142″ W",
+        "Unnamed: 5": 2392
+      },
+      {
+        "Unnamed: 0": "",
+        "Преступность": 1,
+        "Год ": 2024,
+        "Тяжесть": "Низкая",
+        "Координаты": " 65° 13′ 48.3355″ N, 21° 27′ 57.7142″ W",
+        "Unnamed: 5": 1121
+      },
+      {
+        "Unnamed: 0": "",
+        "Преступность": 1,
+        "Год ": 2025,
+        "Тяжесть": "Средняя",
+        "Координаты": " 65° 13′ 48.3355″ N, 21° 27′ 57.7142″ W",
+        "Unnamed: 5": 1317
+      },
+      {
+        "Unnamed: 0": "",
+        "Преступность": 1,
+        "Год ": 2026,
+        "Тяжесть": "Высокая",
+        "Координаты": " 65° 13′ 48.3355″ N, 21° 27′ 57.7142″ W",
+        "Unnamed: 5": 892.5
+      },
+      {
+        "Unnamed: 0": "",
+        "Преступность": 1,
+        "Год ": 2027,
+        "Тяжесть": "Средняя",
+        "Координаты": " 65° 13′ 48.3355″ N, 21° 27′ 57.7142″ W",
+        "Unnamed: 5": 468
+      },
+      {
+        "Unnamed: 0": "",
+        "Преступность": 1,
+        "Год ": 2028,
+        "Тяжесть": "Высокая",
+        "Координаты": " 65° 13′ 48.3355″ N, 21° 27′ 57.7142″ W",
+        "Unnamed: 5": 43.5
+      },
+      {
+        "Unnamed: 0": "",
+        "Преступность": 0,
+        "Год ": 2029,
+        "Тяжесть": "Низкая",
+        "Координаты": " 65° 13′ 48.3355″ N, 21° 27′ 57.7142″ W",
+        "Unnamed: 5": -381
+      },
+      {
+        "Unnamed: 0": "",
+        "Преступность": 1,
+        "Год ": 2030,
+        "Тяжесть": "Средняя",
+        "Координаты": " 65° 13′ 48.3355″ N, 21° 27′ 57.7142″ W",
+        "Unnamed: 5": -805.5
+      },
+      {
+        "Unnamed: 0": "",
+        "Преступность": 0,
+        "Год ": 2031,
+        "Тяжесть": "Высокая",
+        "Координаты": " 65° 13′ 48.3355″ N, 21° 27′ 57.7142″ W",
+        "Unnamed: 5": -1230
+      },
+      {
+        "Unnamed: 0": "",
+        "Преступность": 0,
+        "Год ": 2032,
+        "Тяжесть": "Средняя",
+        "Координаты": " 65° 13′ 48.3355″ N, 21° 27′ 57.7142″ W",
+        "Unnamed: 5": -1654.5
+      },
+      {
+        "Unnamed: 0": "",
+        "Преступность": 0,
+        "Год ": 2033,
+        "Тяжесть": "Высокая",
+        "Координаты": " 65° 13′ 48.3355″ N, 21° 27′ 57.7142″ W",
+        "Unnamed: 5": -2079
+      },
+      {
+        "Unnamed: 0": "",
+        "Преступность": 0,
+        "Год ": 2034,
+        "Тяжесть": "Низкая",
+        "Координаты": " 65° 13′ 48.3355″ N, 21° 27′ 57.7142″ W",
+        "Unnamed: 5": -2503.5
+      },
+      {
+        "Unnamed: 0": "",
+        "Преступность": 0,
+        "Год ": 2035,
+        "Тяжесть": "Средняя",
+        "Координаты": " 65° 13′ 48.3355″ N, 21° 27′ 57.7142″ W",
+        "Unnamed: 5": -2928
+      },
+      {
+        "Unnamed: 0": "",
+        "Преступность": 0,
+        "Год ": 2036,
+        "Тяжесть": "Высокая",
+        "Координаты": " 65° 13′ 48.3355″ N, 21° 27′ 57.7142″ W",
+        "Unnamed: 5": -3352.5
+      },
+      {
+        "Unnamed: 0": "",
+        "Преступность": 0,
+        "Год ": 2037,
+        "Тяжесть": "Средняя",
+        "Координаты": " 65° 13′ 48.3355″ N, 21° 27′ 57.7142″ W",
+        "Unnamed: 5": -3777
+      },
+      {
+        "Unnamed: 0": "",
+        "Преступность": 0,
+        "Год ": 2038,
+        "Тяжесть": "Высокая",
+        "Координаты": " 65° 13′ 48.3355″ N, 21° 27′ 57.7142″ W",
+        "Unnamed: 5": -4201.5
+      },
+      {
+        "Unnamed: 0": "",
+        "Преступность": 1,
+        "Год ": 2039,
+        "Тяжесть": "Низкая",
+        "Координаты": " 65° 13′ 48.3355″ N, 21° 27′ 57.7142″ W",
+        "Unnamed: 5": -4626
+      }
+    ],
+    "id": "27a7875e-aa69-4082-aac9-70c83fb8ccac",
+    "created_at": 1765420620,
+    "created_date": "2025-12-11T02:37:00Z"
+  },
+  {
+    "name": "AI — карта рисков",
+    "description": "Синтетический набор для обучения моделей оценки уровня угроз по районам",
+    "tags": [
+      "demo",
+      "ml-ready"
+    ],
+    "columns": [
+      {
+        "name": "week_id",
+        "type": "number",
+        "selected": true
+      },
+      {
+        "name": "district",
+        "type": "string",
+        "selected": true
+      },
+      {
+        "name": "incident_reports",
+        "type": "number",
+        "selected": true
+      },
+      {
+        "name": "population_density",
+        "type": "number",
+        "selected": true
+      },
+      {
+        "name": "response_time_minutes",
+        "type": "number",
+        "selected": true
+      },
+      {
+        "name": "community_alerts",
+        "type": "number",
+        "selected": true
+      },
+      {
+        "name": "critical_infrastructure",
+        "type": "number",
+        "selected": true
+      },
+      {
+        "name": "intelligence_score",
+        "type": "number",
+        "selected": true
+      },
+      {
+        "name": "weather_index",
+        "type": "number",
+        "selected": true
+      },
+      {
+        "name": "public_sentiment",
+        "type": "number",
+        "selected": true
+      },
+      {
+        "name": "special_events",
+        "type": "number",
+        "selected": true
+      },
+      {
+        "name": "alert_level",
+        "type": "string",
+        "selected": true
+      }
+    ],
+    "file_url": "samples/ai_demo_incidents.csv",
+    "row_count": 160,
+    "sample_data": [
+      {
+        "week_id": 1,
+        "district": "Северный сектор",
+        "incident_reports": 93,
+        "population_density": 1656,
+        "response_time_minutes": 4.8,
+        "community_alerts": 22,
+        "critical_infrastructure": 6,
+        "intelligence_score": 0.37,
+        "weather_index": 1.45,
+        "public_sentiment": 0.69,
+        "special_events": 1,
+        "alert_level": "Высокий"
+      },
+      {
+        "week_id": 1,
+        "district": "Южный берег",
+        "incident_reports": 23,
+        "population_density": 3618,
+        "response_time_minutes": 10.0,
+        "community_alerts": 6,
+        "critical_infrastructure": 4,
+        "intelligence_score": 0.36,
+        "weather_index": 0.52,
+        "public_sentiment": 0.27,
+        "special_events": 0,
+        "alert_level": "Низкий"
+      },
+      {
+        "week_id": 1,
+        "district": "Восточный пояс",
+        "incident_reports": 95,
+        "population_density": 4072,
+        "response_time_minutes": 11.6,
+        "community_alerts": 19,
+        "critical_infrastructure": 10,
+        "intelligence_score": 0.64,
+        "weather_index": 1.74,
+        "public_sentiment": 0.25,
+        "special_events": 0,
+        "alert_level": "Высокий"
+      },
+      {
+        "week_id": 1,
+        "district": "Центральный узел",
+        "incident_reports": 66,
+        "population_density": 2593,
+        "response_time_minutes": 8.1,
+        "community_alerts": 18,
+        "critical_infrastructure": 8,
+        "intelligence_score": 0.28,
+        "weather_index": 0.02,
+        "public_sentiment": 0.48,
+        "special_events": 0,
+        "alert_level": "Средний"
+      },
+      {
+        "week_id": 1,
+        "district": "Западный кордон",
+        "incident_reports": 89,
+        "population_density": 2283,
+        "response_time_minutes": 15.0,
+        "community_alerts": 51,
+        "critical_infrastructure": 10,
+        "intelligence_score": 0.6,
+        "weather_index": 2.39,
+        "public_sentiment": 0.5,
+        "special_events": 1,
+        "alert_level": "Высокий"
+      }
+    ],
+    "id": "46363c0e-0163-4d9d-82a4-5d275b43d783",
+    "created_at": 1765744415,
+    "created_date": "2025-12-14T20:33:35Z"
+  },
+  {
+    "name": "AI Lab — помесячные KPI",
+    "description": "Синтетический помесячный ряд для демонстрации новых возможностей ИИ-лаборатории.",
+    "tags": [
+      "ai-lab",
+      "timeseries"
+    ],
+    "columns": [
+      {
+        "name": "month",
+        "type": "date",
+        "selected": true
+      },
+      {
+        "name": "target_value",
+        "type": "number",
+        "selected": true
+      },
+      {
+        "name": "sef_budget",
+        "type": "number",
+        "selected": true
+      },
+      {
+        "name": "sef_campaigns",
+        "type": "number",
+        "selected": true
+      },
+      {
+        "name": "sef_index",
+        "type": "number",
+        "selected": true
+      }
+    ],
+    "file_url": "samples/ai_lab_monthly.csv",
+    "row_count": 36,
+    "sample_data": [
+      {
+        "month": "2022-01-01",
+        "target_value": 120.0,
+        "sef_budget": 89.0,
+        "sef_campaigns": 6.0,
+        "sef_index": 70.0
+      },
+      {
+        "month": "2022-02-01",
+        "target_value": 129.42,
+        "sef_budget": 89.18,
+        "sef_campaigns": 7.2,
+        "sef_index": 72.4
+      },
+      {
+        "month": "2022-03-01",
+        "target_value": 136.94,
+        "sef_budget": 89.11,
+        "sef_campaigns": 8.4,
+        "sef_index": 74.21
+      }
+    ],
+    "id": "ai-lab-monthly",
+    "created_at": 1766000000,
+    "created_date": "2025-12-17T00:00:00Z"
+  },
+  {
+    "name": "MTA_NYCT_Safety_Data__Beginning_2019",
+    "description": "Автоматически распознанный набор данных из MTA_NYCT_Safety_Data__Beginning_2019.csv",
+    "tags": [
+      "загружено",
+      "новое"
+    ],
+    "columns": [
+      {
+        "name": "Month",
+        "type": "string",
+        "selected": true
+      },
+      {
+        "name": "Value",
+        "type": "number",
+        "selected": true
+      }
+    ],
+    "file_url": "9a86fb1c-1b4e-4cfb-95de-55cd7be51cf0",
+    "row_count": 655,
+    "sample_data": [
+      {
+        "Month": "04/01/2019",
+        "Department": "Bus",
+        "Metric": "Bus Collision Per Million Miles",
+        "Value": 53.04
+      },
+      {
+        "Month": "04/01/2019",
+        "Department": "Bus",
+        "Metric": "Bus Collision Injuries Per Million Miles",
+        "Value": 3.76
+      },
+      {
+        "Month": "04/01/2019",
+        "Department": "Bus",
+        "Metric": "Bus Customer Accidents per million customers",
+        "Value": 1.48
+      },
+      {
+        "Month": "04/01/2019",
+        "Department": "Subway",
+        "Metric": "Subway Customer Accidents",
+        "Value": 2.8
+      },
+      {
+        "Month": "04/01/2019",
+        "Department": "Subway",
+        "Metric": "Subway Fires",
+        "Value": 57
+      },
+      {
+        "Month": "05/01/2019",
+        "Department": "Bus",
+        "Metric": "Bus Collision Per Million Miles",
+        "Value": 57.92
+      },
+      {
+        "Month": "05/01/2019",
+        "Department": "Bus",
+        "Metric": "Bus Collision Injuries Per Million Miles",
+        "Value": 7.61
+      },
+      {
+        "Month": "05/01/2019",
+        "Department": "Bus",
+        "Metric": "Bus Customer Accidents per million customers",
+        "Value": 1.57
+      },
+      {
+        "Month": "05/01/2019",
+        "Department": "Subway",
+        "Metric": "Subway Customer Accidents",
+        "Value": 2.81
+      },
+      {
+        "Month": "05/01/2019",
+        "Department": "Subway",
+        "Metric": "Subway Fires",
+        "Value": 50
+      },
+      {
+        "Month": "06/01/2019",
+        "Department": "Bus",
+        "Metric": "Bus Collision Per Million Miles",
+        "Value": 60.88
+      },
+      {
+        "Month": "06/01/2019",
+        "Department": "Bus",
+        "Metric": "Bus Collision Injuries Per Million Miles",
+        "Value": 8.04
+      },
+      {
+        "Month": "06/01/2019",
+        "Department": "Bus",
+        "Metric": "Bus Customer Accidents per million customers",
+        "Value": 1.44
+      },
+      {
+        "Month": "06/01/2019",
+        "Department": "Subway",
+        "Metric": "Subway Customer Accidents",
+        "Value": 2.98
+      },
+      {
+        "Month": "06/01/2019",
+        "Department": "Subway",
+        "Metric": "Subway Fires",
+        "Value": 43
+      },
+      {
+        "Month": "07/01/2019",
+        "Department": "Bus",
+        "Metric": "Bus Collision Per Million Miles",
+        "Value": 51.79
+      },
+      {
+        "Month": "07/01/2019",
+        "Department": "Bus",
+        "Metric": "Bus Collision Injuries Per Million Miles",
+        "Value": 6.35
+      },
+      {
+        "Month": "07/01/2019",
+        "Department": "Bus",
+        "Metric": "Bus Customer Accidents per million customers",
+        "Value": 1.65
+      },
+      {
+        "Month": "07/01/2019",
+        "Department": "Subway",
+        "Metric": "Subway Customer Accidents",
+        "Value": 2.5
+      },
+      {
+        "Month": "07/01/2019",
+        "Department": "Subway",
+        "Metric": "Subway Fires",
+        "Value": 59
+      },
+      {
+        "Month": "08/01/2019",
+        "Department": "Bus",
+        "Metric": "Bus Collision Per Million Miles",
+        "Value": 48.87
+      },
+      {
+        "Month": "08/01/2019",
+        "Department": "Bus",
+        "Metric": "Bus Collision Injuries Per Million Miles",
+        "Value": 6.15
+      },
+      {
+        "Month": "08/01/2019",
+        "Department": "Bus",
+        "Metric": "Bus Customer Accidents per million customers",
+        "Value": 1.81
+      },
+      {
+        "Month": "08/01/2019",
+        "Department": "Subway",
+        "Metric": "Subway Customer Accidents",
+        "Value": 2.55
+      },
+      {
+        "Month": "08/01/2019",
+        "Department": "Subway",
+        "Metric": "Subway Fires",
+        "Value": 55
+      },
+      {
+        "Month": "09/01/2019",
+        "Department": "Bus",
+        "Metric": "Bus Collision Per Million Miles",
+        "Value": 58.69
+      },
+      {
+        "Month": "09/01/2019",
+        "Department": "Bus",
+        "Metric": "Bus Collision Injuries Per Million Miles",
+        "Value": 7.5
+      },
+      {
+        "Month": "09/01/2019",
+        "Department": "Bus",
+        "Metric": "Bus Customer Accidents per million customers",
+        "Value": 1.54
+      },
+      {
+        "Month": "09/01/2019",
+        "Department": "Subway",
+        "Metric": "Subway Customer Accidents",
+        "Value": 2.33
+      },
+      {
+        "Month": "09/01/2019",
+        "Department": "Subway",
+        "Metric": "Subway Fires",
+        "Value": 52
+      },
+      {
+        "Month": "10/01/2019",
+        "Department": "Bus",
+        "Metric": "Bus Collision Per Million Miles",
+        "Value": 53.26
+      },
+      {
+        "Month": "10/01/2019",
+        "Department": "Bus",
+        "Metric": "Bus Collision Injuries Per Million Miles",
+        "Value": 6.24
+      },
+      {
+        "Month": "10/01/2019",
+        "Department": "Bus",
+        "Metric": "Bus Customer Accidents per million customers",
+        "Value": 1.55
+      },
+      {
+        "Month": "10/01/2019",
+        "Department": "Subway",
+        "Metric": "Subway Customer Accidents",
+        "Value": 2.37
+      },
+      {
+        "Month": "10/01/2019",
+        "Department": "Subway",
+        "Metric": "Subway Fires",
+        "Value": 58
+      },
+      {
+        "Month": "11/01/2019",
+        "Department": "Bus",
+        "Metric": "Bus Collision Per Million Miles",
+        "Value": 57.97
+      },
+      {
+        "Month": "11/01/2019",
+        "Department": "Bus",
+        "Metric": "Bus Collision Injuries Per Million Miles",
+        "Value": 7.08
+      },
+      {
+        "Month": "11/01/2019",
+        "Department": "Bus",
+        "Metric": "Bus Customer Accidents per million customers",
+        "Value": 1.65
+      },
+      {
+        "Month": "11/01/2019",
+        "Department": "Subway",
+        "Metric": "Subway Customer Accidents",
+        "Value": 2.52
+      },
+      {
+        "Month": "11/01/2019",
+        "Department": "Subway",
+        "Metric": "Subway Fires",
+        "Value": 71
+      },
+      {
+        "Month": "12/01/2019",
+        "Department": "Bus",
+        "Metric": "Bus Collision Per Million Miles",
+        "Value": 57.22
+      },
+      {
+        "Month": "12/01/2019",
+        "Department": "Bus",
+        "Metric": "Bus Collision Injuries Per Million Miles",
+        "Value": 5.81
+      },
+      {
+        "Month": "12/01/2019",
+        "Department": "Bus",
+        "Metric": "Bus Customer Accidents per million customers",
+        "Value": 1.12
+      },
+      {
+        "Month": "12/01/2019",
+        "Department": "Subway",
+        "Metric": "Subway Customer Accidents",
+        "Value": 4.07
+      },
+      {
+        "Month": "12/01/2019",
+        "Department": "Subway",
+        "Metric": "Subway Fires",
+        "Value": 74
+      },
+      {
+        "Month": "01/01/2020",
+        "Department": "Bus",
+        "Metric": "Bus Collision Per Million Miles",
+        "Value": 46.93
+      },
+      {
+        "Month": "01/01/2020",
+        "Department": "Bus",
+        "Metric": "Bus Collision Injuries Per Million Miles",
+        "Value": 5.76
+      },
+      {
+        "Month": "01/01/2020",
+        "Department": "Bus",
+        "Metric": "Bus Customer Accidents per million customers",
+        "Value": 1.4
+      },
+      {
+        "Month": "01/01/2020",
+        "Department": "Subway",
+        "Metric": "Subway Customer Accidents",
+        "Value": 3.1
+      },
+      {
+        "Month": "01/01/2020",
+        "Department": "Subway",
+        "Metric": "Subway Fires",
+        "Value": 74
+      },
+      {
+        "Month": "02/01/2020",
+        "Department": "Bus",
+        "Metric": "Bus Collision Per Million Miles",
+        "Value": 48.14
+      },
+      {
+        "Month": "02/01/2020",
+        "Department": "Bus",
+        "Metric": "Bus Collision Injuries Per Million Miles",
+        "Value": 4.45
+      },
+      {
+        "Month": "02/01/2020",
+        "Department": "Bus",
+        "Metric": "Bus Customer Accidents per million customers",
+        "Value": 1.16
+      },
+      {
+        "Month": "02/01/2020",
+        "Department": "Subway",
+        "Metric": "Subway Customer Accidents",
+        "Value": 2.99
+      },
+      {
+        "Month": "02/01/2020",
+        "Department": "Subway",
+        "Metric": "Subway Fires",
+        "Value": 86
+      },
+      {
+        "Month": "03/01/2020",
+        "Department": "Bus",
+        "Metric": "Bus Collision Per Million Miles",
+        "Value": 41.32
+      },
+      {
+        "Month": "03/01/2020",
+        "Department": "Bus",
+        "Metric": "Bus Collision Injuries Per Million Miles",
+        "Value": 6.05
+      },
+      {
+        "Month": "03/01/2020",
+        "Department": "Bus",
+        "Metric": "Bus Customer Accidents per million customers",
+        "Value": 1.7
+      },
+      {
+        "Month": "03/01/2020",
+        "Department": "Subway",
+        "Metric": "Subway Customer Accidents",
+        "Value": 3.91
+      },
+      {
+        "Month": "03/01/2020",
+        "Department": "Subway",
+        "Metric": "Subway Fires",
+        "Value": 75
+      },
+      {
+        "Month": "04/01/2020",
+        "Department": "Bus",
+        "Metric": "Bus Collision Per Million Miles",
+        "Value": 22.26
+      },
+      {
+        "Month": "04/01/2020",
+        "Department": "Bus",
+        "Metric": "Bus Collision Injuries Per Million Miles",
+        "Value": 1.69
+      },
+      {
+        "Month": "04/01/2020",
+        "Department": "Bus",
+        "Metric": "Bus Customer Accidents per million customers",
+        "Value": 2.03
+      },
+      {
+        "Month": "04/01/2020",
+        "Department": "Subway",
+        "Metric": "Subway Customer Accidents",
+        "Value": 13.63
+      },
+      {
+        "Month": "04/01/2020",
+        "Department": "Subway",
+        "Metric": "Subway Fires",
+        "Value": 60
+      },
+      {
+        "Month": "05/01/2020",
+        "Department": "Bus",
+        "Metric": "Bus Collision Per Million Miles",
+        "Value": 29.73
+      },
+      {
+        "Month": "05/01/2020",
+        "Department": "Bus",
+        "Metric": "Bus Collision Injuries Per Million Miles",
+        "Value": 2.45
+      },
+      {
+        "Month": "05/01/2020",
+        "Department": "Bus",
+        "Metric": "Bus Customer Accidents per million customers",
+        "Value": 1.91
+      },
+      {
+        "Month": "05/01/2020",
+        "Department": "Subway",
+        "Metric": "Subway Customer Accidents",
+        "Value": 8.41
+      },
+      {
+        "Month": "05/01/2020",
+        "Department": "Subway",
+        "Metric": "Subway Fires",
+        "Value": 83
+      },
+      {
+        "Month": "06/01/2020",
+        "Department": "Bus",
+        "Metric": "Bus Collision Per Million Miles",
+        "Value": 35.21
+      },
+      {
+        "Month": "06/01/2020",
+        "Department": "Bus",
+        "Metric": "Bus Collision Injuries Per Million Miles",
+        "Value": 5.16
+      },
+      {
+        "Month": "06/01/2020",
+        "Department": "Bus",
+        "Metric": "Bus Customer Accidents per million customers",
+        "Value": 2.15
+      },
+      {
+        "Month": "06/01/2020",
+        "Department": "Subway",
+        "Metric": "Subway Customer Accidents",
+        "Value": 6.18
+      },
+      {
+        "Month": "06/01/2020",
+        "Department": "Subway",
+        "Metric": "Subway Fires",
+        "Value": 75
+      },
+      {
+        "Month": "07/01/2020",
+        "Department": "Bus",
+        "Metric": "Bus Collision Per Million Miles",
+        "Value": 37.73
+      },
+      {
+        "Month": "07/01/2020",
+        "Department": "Bus",
+        "Metric": "Bus Collision Injuries Per Million Miles",
+        "Value": 4.6
+      },
+      {
+        "Month": "07/01/2020",
+        "Department": "Bus",
+        "Metric": "Bus Customer Accidents per million customers",
+        "Value": 1.49
+      },
+      {
+        "Month": "07/01/2020",
+        "Department": "Subway",
+        "Metric": "Subway Customer Accidents",
+        "Value": 5.72
+      },
+      {
+        "Month": "07/01/2020",
+        "Department": "Subway",
+        "Metric": "Subway Fires",
+        "Value": 84
+      },
+      {
+        "Month": "08/01/2020",
+        "Department": "Bus",
+        "Metric": "Bus Collision Per Million Miles",
+        "Value": 42.23
+      },
+      {
+        "Month": "08/01/2020",
+        "Department": "Bus",
+        "Metric": "Bus Collision Injuries Per Million Miles",
+        "Value": 6.21
+      },
+      {
+        "Month": "08/01/2020",
+        "Department": "Bus",
+        "Metric": "Bus Customer Accidents per million customers",
+        "Value": 1.78
+      },
+      {
+        "Month": "08/01/2020",
+        "Department": "Subway",
+        "Metric": "Subway Customer Accidents",
+        "Value": 4.74
+      },
+      {
+        "Month": "08/01/2020",
+        "Department": "Subway",
+        "Metric": "Subway Fires",
+        "Value": 70
+      },
+      {
+        "Month": "09/01/2020",
+        "Department": "Bus",
+        "Metric": "Bus Collision Per Million Miles",
+        "Value": 42.84
+      },
+      {
+        "Month": "09/01/2020",
+        "Department": "Bus",
+        "Metric": "Bus Collision Injuries Per Million Miles",
+        "Value": 5.15
+      },
+      {
+        "Month": "09/01/2020",
+        "Department": "Bus",
+        "Metric": "Bus Customer Accidents per million customers",
+        "Value": 2.28
+      },
+      {
+        "Month": "09/01/2020",
+        "Department": "Subway",
+        "Metric": "Subway Customer Accidents",
+        "Value": 4.26
+      },
+      {
+        "Month": "09/01/2020",
+        "Department": "Subway",
+        "Metric": "Subway Fires",
+        "Value": 58
+      },
+      {
+        "Month": "10/01/2020",
+        "Department": "Bus",
+        "Metric": "Bus Collision Per Million Miles",
+        "Value": 48.23
+      },
+      {
+        "Month": "10/01/2020",
+        "Department": "Bus",
+        "Metric": "Bus Collision Injuries Per Million Miles",
+        "Value": 3.61
+      },
+      {
+        "Month": "10/01/2020",
+        "Department": "Bus",
+        "Metric": "Bus Customer Accidents per million customers",
+        "Value": 2.06
+      },
+      {
+        "Month": "10/01/2020",
+        "Department": "Subway",
+        "Metric": "Subway Customer Accidents",
+        "Value": 4.25
+      },
+      {
+        "Month": "10/01/2020",
+        "Department": "Subway",
+        "Metric": "Subway Fires",
+        "Value": 70
+      },
+      {
+        "Month": "11/01/2020",
+        "Department": "Bus",
+        "Metric": "Bus Collision Per Million Miles",
+        "Value": 46.82
+      },
+      {
+        "Month": "11/01/2020",
+        "Department": "Bus",
+        "Metric": "Bus Collision Injuries Per Million Miles",
+        "Value": 3.98
+      },
+      {
+        "Month": "11/01/2020",
+        "Department": "Bus",
+        "Metric": "Bus Customer Accidents per million customers",
+        "Value": 2.26
+      },
+      {
+        "Month": "11/01/2020",
+        "Department": "Subway",
+        "Metric": "Subway Customer Accidents",
+        "Value": 4.85
+      },
+      {
+        "Month": "11/01/2020",
+        "Department": "Subway",
+        "Metric": "Subway Fires",
+        "Value": 75
+      }
+    ],
+    "id": "433b8de1-2deb-4844-98a4-3f486baf5fc3",
+    "created_at": 1768262933,
+    "created_date": "2026-01-13T05:08:53"
+  },
+  {
+    "name": "Full_Sample_Nationwide_overview",
+    "description": "Автоматически распознанный набор данных из Full_Sample_Nationwide_overview.csv",
+    "tags": [
+      "загружено",
+      "новое"
+    ],
+    "columns": [
+      {
+        "name": "Unnamed: 0",
+        "type": "string",
+        "selected": true
+      },
+      {
+        "name": "2025 (YTD)",
+        "type": "string",
+        "selected": true
+      },
+      {
+        "name": "2024 (YTD)",
+        "type": "string",
+        "selected": true
+      },
+      {
+        "name": "2023 (YTD)",
+        "type": "string",
+        "selected": true
+      },
+      {
+        "name": "% Change 2024-2025 (YTD)",
+        "type": "string",
+        "selected": true
+      },
+      {
+        "name": "% Change 2023-2025 (YTD)",
+        "type": "string",
+        "selected": true
+      },
+      {
+        "name": "2024 (Full Year)",
+        "type": "string",
+        "selected": true
+      },
+      {
+        "name": "2023 (Full Year)",
+        "type": "string",
+        "selected": true
+      },
+      {
+        "name": "% Change 2023-2024 (Full Year)",
+        "type": "string",
+        "selected": true
+      }
+    ],
+    "file_url": "84831a5b-4a6f-4c0d-853c-e2bb13fce235",
+    "row_count": 9,
+    "sample_data": [
+      {
+        "Unnamed: 0": "Violent Crime",
+        "2025 (YTD)": "450 186",
+        "2024 (YTD)": "501 281",
+        "2023 (YTD)": "519 944",
+        "% Change 2024-2025 (YTD)": "-10.2%",
+        "% Change 2023-2025 (YTD)": "-13.4%",
+        "2024 (Full Year)": "593 272",
+        "2023 (Full Year)": "615 661",
+        "% Change 2023-2024 (Full Year)": "-3.6%"
+      },
+      {
+        "Unnamed: 0": "Murder",
+        "2025 (YTD)": "5 912",
+        "2024 (YTD)": "7 369",
+        "2023 (YTD)": "8 520",
+        "% Change 2024-2025 (YTD)": "-19.8%",
+        "% Change 2023-2025 (YTD)": "-30.6%",
+        "2024 (Full Year)": "8 665",
+        "2023 (Full Year)": "9 975",
+        "% Change 2023-2024 (Full Year)": "-13.1%"
+      },
+      {
+        "Unnamed: 0": "Rape",
+        "2025 (YTD)": "37 532",
+        "2024 (YTD)": "41 093",
+        "2023 (YTD)": "42 319",
+        "% Change 2024-2025 (YTD)": "-8.7%",
+        "% Change 2023-2025 (YTD)": "-11.3%",
+        "2024 (Full Year)": "48 438",
+        "2023 (Full Year)": "49 402",
+        "% Change 2023-2024 (Full Year)": "-2.0%"
+      },
+      {
+        "Unnamed: 0": "Robbery",
+        "2025 (YTD)": "91 564",
+        "2024 (YTD)": "112 059",
+        "2023 (YTD)": "120 550",
+        "% Change 2024-2025 (YTD)": "-18.3%",
+        "% Change 2023-2025 (YTD)": "-24.0%",
+        "2024 (Full Year)": "133 087",
+        "2023 (Full Year)": "144 833",
+        "% Change 2023-2024 (Full Year)": "-8.1%"
+      },
+      {
+        "Unnamed: 0": "Aggravated Assault",
+        "2025 (YTD)": "315 178",
+        "2024 (YTD)": "340 760",
+        "2023 (YTD)": "348 555",
+        "% Change 2024-2025 (YTD)": "-7.5%",
+        "% Change 2023-2025 (YTD)": "-9.6%",
+        "2024 (Full Year)": "403 082",
+        "2023 (Full Year)": "411 451",
+        "% Change 2023-2024 (Full Year)": "-2.0%"
+      },
+      {
+        "Unnamed: 0": "Property Crime",
+        "2025 (YTD)": "2 005 051",
+        "2024 (YTD)": "2 286 635",
+        "2023 (YTD)": "2 464 454",
+        "% Change 2024-2025 (YTD)": "-12.3%",
+        "% Change 2023-2025 (YTD)": "-18.6%",
+        "2024 (Full Year)": "2 727 140",
+        "2023 (Full Year)": "2 947 713",
+        "% Change 2023-2024 (Full Year)": "-7.5%"
+      },
+      {
+        "Unnamed: 0": "Burglary",
+        "2025 (YTD)": "251 350",
+        "2024 (YTD)": "295 103",
+        "2023 (YTD)": "312 957",
+        "% Change 2024-2025 (YTD)": "-14.8%",
+        "% Change 2023-2025 (YTD)": "-19.7%",
+        "2024 (Full Year)": "352 954",
+        "2023 (Full Year)": "374 745",
+        "% Change 2023-2024 (Full Year)": "-5.8%"
+      },
+      {
+        "Unnamed: 0": "Theft",
+        "2025 (YTD)": "1 429 698",
+        "2024 (YTD)": "1 569 741",
+        "2023 (YTD)": "1 636 197",
+        "% Change 2024-2025 (YTD)": "-8.9%",
+        "% Change 2023-2025 (YTD)": "-12.6%",
+        "2024 (Full Year)": "1 878 390",
+        "2023 (Full Year)": "1 958 023",
+        "% Change 2023-2024 (Full Year)": "-4.1%"
+      },
+      {
+        "Unnamed: 0": "Motor Vehicle Theft",
+        "2025 (YTD)": "324 003",
+        "2024 (YTD)": "421 791",
+        "2023 (YTD)": "515 300",
+        "% Change 2024-2025 (YTD)": "-23.2%",
+        "% Change 2023-2025 (YTD)": "-37.1%",
+        "2024 (Full Year)": "495 796",
+        "2023 (Full Year)": "614 945",
+        "% Change 2023-2024 (Full Year)": "-19.4%"
+      }
+    ],
+    "id": "7a93c505-5c5c-4333-a588-bb4a75e0c9d8",
+    "created_at": 1768263358,
+    "created_date": "2026-01-13T05:15:58"
+  },
+  {
+    "name": "Murders_Individual Agencies_YTD_Report",
+    "description": "Автоматически распознанный набор данных из Murders_Individual Agencies_YTD_Report.csv",
+    "tags": [
+      "загружено",
+      "новое"
+    ],
+    "columns": [
+      {
+        "name": "agency_full",
+        "type": "string",
+        "selected": true
+      },
+      {
+        "name": "#_of_agencies",
+        "type": "number",
+        "selected": true
+      },
+      {
+        "name": "population",
+        "type": "number",
+        "selected": true
+      },
+      {
+        "name": "crime_type",
+        "type": "string",
+        "selected": true
+      },
+      {
+        "name": "YTD",
+        "type": "number",
+        "selected": true
+      },
+      {
+        "name": "PrevYTD",
+        "type": "number",
+        "selected": true
+      },
+      {
+        "name": "Percent_Change",
+        "type": "string",
+        "selected": true
+      },
+      {
+        "name": "YTD_Range",
+        "type": "string",
+        "selected": true
+      },
+      {
+        "name": "Last Updated",
+        "type": "string",
+        "selected": true
+      }
+    ],
+    "file_url": "abdfe9c0-52bc-476e-9e7e-221a62589c80",
+    "row_count": 702,
+    "sample_data": [
+      {
+        "agency_full": "Chicago, Illinois",
+        "#_of_agencies": 1,
+        "population": 2628298,
+        "crime_type": "Murders",
+        "YTD": 366,
+        "PrevYTD": 506,
+        "Percent_Change": "-27.67%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "New York City, New York",
+        "#_of_agencies": 1,
+        "population": 8184044,
+        "crime_type": "Murders",
+        "YTD": 262,
+        "PrevYTD": 318,
+        "Percent_Change": "-17.61%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Houston, Texas",
+        "#_of_agencies": 1,
+        "population": 2304406,
+        "crime_type": "Murders",
+        "YTD": 227,
+        "PrevYTD": 272,
+        "Percent_Change": "-16.54%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Los Angeles, California",
+        "#_of_agencies": 1,
+        "population": 3786018,
+        "crime_type": "Murders",
+        "YTD": 194,
+        "PrevYTD": 239,
+        "Percent_Change": "-18.83%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Philadelphia, Pennsylvania",
+        "#_of_agencies": 1,
+        "population": 1550843,
+        "crime_type": "Murders",
+        "YTD": 184,
+        "PrevYTD": 218,
+        "Percent_Change": "-15.60%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Memphis, Tennessee",
+        "#_of_agencies": 1,
+        "population": 616061,
+        "crime_type": "Murders",
+        "YTD": 161,
+        "PrevYTD": 201,
+        "Percent_Change": "-19.90%",
+        "YTD_Range": "Jan - Sep 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Detroit, Michigan",
+        "#_of_agencies": 1,
+        "population": 615501,
+        "crime_type": "Murders",
+        "YTD": 145,
+        "PrevYTD": 173,
+        "Percent_Change": "-16.18%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "St Louis, Missouri",
+        "#_of_agencies": 1,
+        "population": 280108,
+        "crime_type": "Murders",
+        "YTD": 121,
+        "PrevYTD": 124,
+        "Percent_Change": "-2.42%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Kansas City, Missouri",
+        "#_of_agencies": 1,
+        "population": 509855,
+        "crime_type": "Murders",
+        "YTD": 119,
+        "PrevYTD": 125,
+        "Percent_Change": "-4.80%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Los Angeles County, California",
+        "#_of_agencies": 1,
+        "population": 1008018,
+        "crime_type": "Murders",
+        "YTD": 118,
+        "PrevYTD": 139,
+        "Percent_Change": "-15.11%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Washington, District of Columbia",
+        "#_of_agencies": 1,
+        "population": 678972,
+        "crime_type": "Murders",
+        "YTD": 117,
+        "PrevYTD": 162,
+        "Percent_Change": "-27.78%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Milwaukee, Wisconsin",
+        "#_of_agencies": 1,
+        "population": 558698,
+        "crime_type": "Murders",
+        "YTD": 115,
+        "PrevYTD": 111,
+        "Percent_Change": "3.60%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Dallas, Texas",
+        "#_of_agencies": 1,
+        "population": 1304989,
+        "crime_type": "Murders",
+        "YTD": 112,
+        "PrevYTD": 152,
+        "Percent_Change": "-26.32%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Indianapolis, Indiana",
+        "#_of_agencies": 1,
+        "population": 887131,
+        "crime_type": "Murders",
+        "YTD": 111,
+        "PrevYTD": 147,
+        "Percent_Change": "-24.49%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Baltimore, Maryland",
+        "#_of_agencies": 1,
+        "population": 565192,
+        "crime_type": "Murders",
+        "YTD": 108,
+        "PrevYTD": 164,
+        "Percent_Change": "-34.15%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "New Orleans, Louisiana",
+        "#_of_agencies": 1,
+        "population": 364197,
+        "crime_type": "Murders",
+        "YTD": 98,
+        "PrevYTD": 106,
+        "Percent_Change": "-7.55%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Louisville, Kentucky",
+        "#_of_agencies": 1,
+        "population": 669468,
+        "crime_type": "Murders",
+        "YTD": 97,
+        "PrevYTD": 136,
+        "Percent_Change": "-28.68%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Cleveland, Ohio",
+        "#_of_agencies": 1,
+        "population": 358146,
+        "crime_type": "Murders",
+        "YTD": 89,
+        "PrevYTD": 92,
+        "Percent_Change": "-3.26%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "San Antonio, Texas",
+        "#_of_agencies": 1,
+        "population": 1490047,
+        "crime_type": "Murders",
+        "YTD": 88,
+        "PrevYTD": 110,
+        "Percent_Change": "-20.00%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Harris County, Texas",
+        "#_of_agencies": 1,
+        "population": 2057899,
+        "crime_type": "Murders",
+        "YTD": 82,
+        "PrevYTD": 99,
+        "Percent_Change": "-17.17%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Charlotte, North Carolina",
+        "#_of_agencies": 1,
+        "population": 979304,
+        "crime_type": "Murders",
+        "YTD": 77,
+        "PrevYTD": 86,
+        "Percent_Change": "-10.47%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Phoenix, Arizona",
+        "#_of_agencies": 1,
+        "population": 1660686,
+        "crime_type": "Murders",
+        "YTD": 74,
+        "PrevYTD": 98,
+        "Percent_Change": "-24.49%",
+        "YTD_Range": "Jan - Aug 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Las Vegas, Nevada",
+        "#_of_agencies": 1,
+        "population": 1670226,
+        "crime_type": "Murders",
+        "YTD": 68,
+        "PrevYTD": 93,
+        "Percent_Change": "-26.88%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Birmingham, Alabama",
+        "#_of_agencies": 1,
+        "population": 195224,
+        "crime_type": "Murders",
+        "YTD": 67,
+        "PrevYTD": 123,
+        "Percent_Change": "-45.53%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Fort Worth, Texas",
+        "#_of_agencies": 1,
+        "population": 973722,
+        "crime_type": "Murders",
+        "YTD": 66,
+        "PrevYTD": 61,
+        "Percent_Change": "8.20%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Atlanta, Georgia",
+        "#_of_agencies": 1,
+        "population": 500212,
+        "crime_type": "Murders",
+        "YTD": 65,
+        "PrevYTD": 97,
+        "Percent_Change": "-32.99%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Jacksonville, Florida",
+        "#_of_agencies": 1,
+        "population": 983663,
+        "crime_type": "Murders",
+        "YTD": 61,
+        "PrevYTD": 52,
+        "Percent_Change": "17.31%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Albuquerque, New Mexico",
+        "#_of_agencies": 1,
+        "population": 559094,
+        "crime_type": "Murders",
+        "YTD": 58,
+        "PrevYTD": 83,
+        "Percent_Change": "-30.12%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Cincinnati, Ohio",
+        "#_of_agencies": 1,
+        "population": 309484,
+        "crime_type": "Murders",
+        "YTD": 55,
+        "PrevYTD": 62,
+        "Percent_Change": "-11.29%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Minneapolis, Minnesota",
+        "#_of_agencies": 1,
+        "population": 422341,
+        "crime_type": "Murders",
+        "YTD": 52,
+        "PrevYTD": 66,
+        "Percent_Change": "-21.21%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Oklahoma City, Oklahoma",
+        "#_of_agencies": 1,
+        "population": 700764,
+        "crime_type": "Murders",
+        "YTD": 49,
+        "PrevYTD": 67,
+        "Percent_Change": "-26.87%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Nashville, Tennessee",
+        "#_of_agencies": 1,
+        "population": 690495,
+        "crime_type": "Murders",
+        "YTD": 48,
+        "PrevYTD": 84,
+        "Percent_Change": "-42.86%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Richmond, Virginia",
+        "#_of_agencies": 1,
+        "population": 230789,
+        "crime_type": "Murders",
+        "YTD": 47,
+        "PrevYTD": 47,
+        "Percent_Change": "0.00%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Austin, Texas",
+        "#_of_agencies": 1,
+        "population": 978816,
+        "crime_type": "Murders",
+        "YTD": 44,
+        "PrevYTD": 45,
+        "Percent_Change": "-2.22%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Tucson, Arizona",
+        "#_of_agencies": 1,
+        "population": 548544,
+        "crime_type": "Murders",
+        "YTD": 42,
+        "PrevYTD": 54,
+        "Percent_Change": "-22.22%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Columbus, Ohio",
+        "#_of_agencies": 1,
+        "population": 908834,
+        "crime_type": "Murders",
+        "YTD": 41,
+        "PrevYTD": 91,
+        "Percent_Change": "-54.95%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Denver, Colorado",
+        "#_of_agencies": 1,
+        "population": 712222,
+        "crime_type": "Murders",
+        "YTD": 39,
+        "PrevYTD": 66,
+        "Percent_Change": "-40.91%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Portland, Oregon",
+        "#_of_agencies": 1,
+        "population": 626146,
+        "crime_type": "Murders",
+        "YTD": 39,
+        "PrevYTD": 61,
+        "Percent_Change": "-36.07%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Sacramento, California",
+        "#_of_agencies": 1,
+        "population": 529172,
+        "crime_type": "Murders",
+        "YTD": 38,
+        "PrevYTD": 39,
+        "Percent_Change": "-2.56%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Little Rock, Arkansas",
+        "#_of_agencies": 1,
+        "population": 202986,
+        "crime_type": "Murders",
+        "YTD": 37,
+        "PrevYTD": 35,
+        "Percent_Change": "5.71%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Mobile, Alabama",
+        "#_of_agencies": 1,
+        "population": 237469,
+        "crime_type": "Murders",
+        "YTD": 34,
+        "PrevYTD": 30,
+        "Percent_Change": "13.33%",
+        "YTD_Range": "Jan - Sep 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Stockton, California",
+        "#_of_agencies": 1,
+        "population": 322220,
+        "crime_type": "Murders",
+        "YTD": 33,
+        "PrevYTD": 43,
+        "Percent_Change": "-23.26%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Prince George's County, Maryland",
+        "#_of_agencies": 1,
+        "population": 725229,
+        "crime_type": "Murders",
+        "YTD": 32,
+        "PrevYTD": 57,
+        "Percent_Change": "-43.86%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Durham, North Carolina",
+        "#_of_agencies": 1,
+        "population": 295788,
+        "crime_type": "Murders",
+        "YTD": 31,
+        "PrevYTD": 29,
+        "Percent_Change": "6.90%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Shreveport, Louisiana",
+        "#_of_agencies": 1,
+        "population": 176906,
+        "crime_type": "Murders",
+        "YTD": 31,
+        "PrevYTD": 40,
+        "Percent_Change": "-22.50%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Bakersfield, California",
+        "#_of_agencies": 1,
+        "population": 413409,
+        "crime_type": "Murders",
+        "YTD": 29,
+        "PrevYTD": 23,
+        "Percent_Change": "26.09%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Fort Wayne, Indiana",
+        "#_of_agencies": 1,
+        "population": 269728,
+        "crime_type": "Murders",
+        "YTD": 29,
+        "PrevYTD": 24,
+        "Percent_Change": "20.83%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Rochester, New York",
+        "#_of_agencies": 1,
+        "population": 208452,
+        "crime_type": "Murders",
+        "YTD": 29,
+        "PrevYTD": 36,
+        "Percent_Change": "-19.44%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Aurora, Colorado",
+        "#_of_agencies": 1,
+        "population": 396976,
+        "crime_type": "Murders",
+        "YTD": 28,
+        "PrevYTD": 34,
+        "Percent_Change": "-17.65%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Pittsburgh, Pennsylvania",
+        "#_of_agencies": 1,
+        "population": 304825,
+        "crime_type": "Murders",
+        "YTD": 28,
+        "PrevYTD": 33,
+        "Percent_Change": "-15.15%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "San Diego, California",
+        "#_of_agencies": 1,
+        "population": 1378349,
+        "crime_type": "Murders",
+        "YTD": 28,
+        "PrevYTD": 29,
+        "Percent_Change": "-3.45%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Seattle, Washington",
+        "#_of_agencies": 1,
+        "population": 753786,
+        "crime_type": "Murders",
+        "YTD": 28,
+        "PrevYTD": 48,
+        "Percent_Change": "-41.67%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Baton Rouge, Louisiana",
+        "#_of_agencies": 1,
+        "population": 219086,
+        "crime_type": "Murders",
+        "YTD": 27,
+        "PrevYTD": 35,
+        "Percent_Change": "-22.86%",
+        "YTD_Range": "Jan - Apr 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Buffalo, New York",
+        "#_of_agencies": 1,
+        "population": 275922,
+        "crime_type": "Murders",
+        "YTD": 26,
+        "PrevYTD": 37,
+        "Percent_Change": "-29.73%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Fayetteville, North Carolina",
+        "#_of_agencies": 1,
+        "population": 209262,
+        "crime_type": "Murders",
+        "YTD": 26,
+        "PrevYTD": 14,
+        "Percent_Change": "85.71%",
+        "YTD_Range": "Jan - Sep 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Greensboro, North Carolina",
+        "#_of_agencies": 1,
+        "population": 303237,
+        "crime_type": "Murders",
+        "YTD": 26,
+        "PrevYTD": 27,
+        "Percent_Change": "-3.70%",
+        "YTD_Range": "Jan - Sep 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Miami, Florida",
+        "#_of_agencies": 1,
+        "population": 452929,
+        "crime_type": "Murders",
+        "YTD": 26,
+        "PrevYTD": 23,
+        "Percent_Change": "13.04%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Tulsa, Oklahoma",
+        "#_of_agencies": 1,
+        "population": 411002,
+        "crime_type": "Murders",
+        "YTD": 26,
+        "PrevYTD": 35,
+        "Percent_Change": "-25.71%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Baltimore County, Maryland",
+        "#_of_agencies": 1,
+        "population": 845222,
+        "crime_type": "Murders",
+        "YTD": 25,
+        "PrevYTD": 17,
+        "Percent_Change": "47.06%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Dayton, Ohio",
+        "#_of_agencies": 1,
+        "population": 135181,
+        "crime_type": "Murders",
+        "YTD": 25,
+        "PrevYTD": 29,
+        "Percent_Change": "-13.79%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Newark, New Jersey",
+        "#_of_agencies": 1,
+        "population": 303827,
+        "crime_type": "Murders",
+        "YTD": 25,
+        "PrevYTD": 34,
+        "Percent_Change": "-26.47%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Colorado Springs, Colorado",
+        "#_of_agencies": 1,
+        "population": 489254,
+        "crime_type": "Murders",
+        "YTD": 24,
+        "PrevYTD": 36,
+        "Percent_Change": "-33.33%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "San Francisco, California",
+        "#_of_agencies": 1,
+        "population": 782846,
+        "crime_type": "Murders",
+        "YTD": 24,
+        "PrevYTD": 30,
+        "Percent_Change": "-20.00%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "St Louis County, Missouri",
+        "#_of_agencies": 1,
+        "population": 398969,
+        "crime_type": "Murders",
+        "YTD": 23,
+        "PrevYTD": 27,
+        "Percent_Change": "-14.81%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Winston-Salem, North Carolina",
+        "#_of_agencies": 1,
+        "population": 252132,
+        "crime_type": "Murders",
+        "YTD": 23,
+        "PrevYTD": 20,
+        "Percent_Change": "15.00%",
+        "YTD_Range": "Jan - Sep 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Akron, Ohio",
+        "#_of_agencies": 1,
+        "population": 187705,
+        "crime_type": "Murders",
+        "YTD": 22,
+        "PrevYTD": 17,
+        "Percent_Change": "29.41%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Boston, Massachusetts",
+        "#_of_agencies": 1,
+        "population": 642823,
+        "crime_type": "Murders",
+        "YTD": 22,
+        "PrevYTD": 20,
+        "Percent_Change": "10.00%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Hampton, Virginia",
+        "#_of_agencies": 1,
+        "population": 138533,
+        "crime_type": "Murders",
+        "YTD": 22,
+        "PrevYTD": 10,
+        "Percent_Change": "120.00%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Long Beach, California",
+        "#_of_agencies": 1,
+        "population": 444415,
+        "crime_type": "Murders",
+        "YTD": 22,
+        "PrevYTD": 33,
+        "Percent_Change": "-33.33%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Raleigh, North Carolina",
+        "#_of_agencies": 1,
+        "population": 482842,
+        "crime_type": "Murders",
+        "YTD": 22,
+        "PrevYTD": 22,
+        "Percent_Change": "0.00%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "San Jose, California",
+        "#_of_agencies": 1,
+        "population": 952530,
+        "crime_type": "Murders",
+        "YTD": 22,
+        "PrevYTD": 22,
+        "Percent_Change": "0.00%",
+        "YTD_Range": "Jan - Sep 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Fresno, California",
+        "#_of_agencies": 1,
+        "population": 547134,
+        "crime_type": "Murders",
+        "YTD": 20,
+        "PrevYTD": 28,
+        "Percent_Change": "-28.57%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Omaha, Nebraska",
+        "#_of_agencies": 1,
+        "population": 481471,
+        "crime_type": "Murders",
+        "YTD": 20,
+        "PrevYTD": 16,
+        "Percent_Change": "25.00%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "El Paso, Texas",
+        "#_of_agencies": 1,
+        "population": 676665,
+        "crime_type": "Murders",
+        "YTD": 19,
+        "PrevYTD": 17,
+        "Percent_Change": "11.76%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Norfolk, Virginia",
+        "#_of_agencies": 1,
+        "population": 230849,
+        "crime_type": "Murders",
+        "YTD": 19,
+        "PrevYTD": 27,
+        "Percent_Change": "-29.63%",
+        "YTD_Range": "Jan - Sep 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "North Las Vegas, Nevada",
+        "#_of_agencies": 1,
+        "population": 290751,
+        "crime_type": "Murders",
+        "YTD": 18,
+        "PrevYTD": 30,
+        "Percent_Change": "-40.00%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Jefferson Parish, Louisiana",
+        "#_of_agencies": 1,
+        "population": 321980,
+        "crime_type": "Murders",
+        "YTD": 17,
+        "PrevYTD": 17,
+        "Percent_Change": "0.00%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Montgomery County, Maryland",
+        "#_of_agencies": 1,
+        "population": 896963,
+        "crime_type": "Murders",
+        "YTD": 17,
+        "PrevYTD": 17,
+        "Percent_Change": "0.00%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "East Baton Rouge Parish, Louisiana",
+        "#_of_agencies": 1,
+        "population": 197853,
+        "crime_type": "Murders",
+        "YTD": 16,
+        "PrevYTD": 34,
+        "Percent_Change": "-52.94%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Greenville County, South Carolina",
+        "#_of_agencies": 1,
+        "population": 379428,
+        "crime_type": "Murders",
+        "YTD": 16,
+        "PrevYTD": 18,
+        "Percent_Change": "-11.11%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Mesa, Arizona",
+        "#_of_agencies": 1,
+        "population": 515848,
+        "crime_type": "Murders",
+        "YTD": 16,
+        "PrevYTD": 12,
+        "Percent_Change": "33.33%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Portsmouth, Virginia",
+        "#_of_agencies": 1,
+        "population": 96649,
+        "crime_type": "Murders",
+        "YTD": 15,
+        "PrevYTD": 31,
+        "Percent_Change": "-51.61%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Tacoma, Washington",
+        "#_of_agencies": 1,
+        "population": 222828,
+        "crime_type": "Murders",
+        "YTD": 15,
+        "PrevYTD": 19,
+        "Percent_Change": "-21.05%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Vallejo, California",
+        "#_of_agencies": 1,
+        "population": 122419,
+        "crime_type": "Murders",
+        "YTD": 15,
+        "PrevYTD": 20,
+        "Percent_Change": "-25.00%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Albany, Georgia",
+        "#_of_agencies": 1,
+        "population": 66281,
+        "crime_type": "Murders",
+        "YTD": 14,
+        "PrevYTD": 16,
+        "Percent_Change": "-12.50%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Chattanooga, Tennessee",
+        "#_of_agencies": 1,
+        "population": 185370,
+        "crime_type": "Murders",
+        "YTD": 14,
+        "PrevYTD": 22,
+        "Percent_Change": "-36.36%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Johnston County, North Carolina",
+        "#_of_agencies": 1,
+        "population": 177923,
+        "crime_type": "Murders",
+        "YTD": 14,
+        "PrevYTD": 2,
+        "Percent_Change": "600.00%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Killeen, Texas",
+        "#_of_agencies": 1,
+        "population": 161968,
+        "crime_type": "Murders",
+        "YTD": 14,
+        "PrevYTD": 19,
+        "Percent_Change": "-26.32%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Lake Charles, Louisiana",
+        "#_of_agencies": 1,
+        "population": 76393,
+        "crime_type": "Murders",
+        "YTD": 14,
+        "PrevYTD": 10,
+        "Percent_Change": "40.00%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "New Haven, Connecticut",
+        "#_of_agencies": 1,
+        "population": 141481,
+        "crime_type": "Murders",
+        "YTD": 14,
+        "PrevYTD": 9,
+        "Percent_Change": "55.56%",
+        "YTD_Range": "Jan - Sep 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Reno, Nevada",
+        "#_of_agencies": 1,
+        "population": 277792,
+        "crime_type": "Murders",
+        "YTD": 14,
+        "PrevYTD": 18,
+        "Percent_Change": "-22.22%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Springfield, Massachusetts",
+        "#_of_agencies": 1,
+        "population": 154218,
+        "crime_type": "Murders",
+        "YTD": 14,
+        "PrevYTD": 16,
+        "Percent_Change": "-12.50%",
+        "YTD_Range": "Jan - Sep 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Chesterfield County, Virginia",
+        "#_of_agencies": 1,
+        "population": 385204,
+        "crime_type": "Murders",
+        "YTD": 13,
+        "PrevYTD": 11,
+        "Percent_Change": "18.18%",
+        "YTD_Range": "Jan - Sep 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Clarksville, Tennessee",
+        "#_of_agencies": 1,
+        "population": 181916,
+        "crime_type": "Murders",
+        "YTD": 13,
+        "PrevYTD": 8,
+        "Percent_Change": "62.50%",
+        "YTD_Range": "Jan - Sep 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Corpus Christi, Texas",
+        "#_of_agencies": 1,
+        "population": 315340,
+        "crime_type": "Murders",
+        "YTD": 13,
+        "PrevYTD": 25,
+        "Percent_Change": "-48.00%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Lexington, Kentucky",
+        "#_of_agencies": 1,
+        "population": 319994,
+        "crime_type": "Murders",
+        "YTD": 13,
+        "PrevYTD": 16,
+        "Percent_Change": "-18.75%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Paterson, New Jersey",
+        "#_of_agencies": 1,
+        "population": 155991,
+        "crime_type": "Murders",
+        "YTD": 13,
+        "PrevYTD": 8,
+        "Percent_Change": "62.50%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Sacramento County, California",
+        "#_of_agencies": 1,
+        "population": 604738,
+        "crime_type": "Murders",
+        "YTD": 13,
+        "PrevYTD": 19,
+        "Percent_Change": "-31.58%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Arlington, Texas",
+        "#_of_agencies": 1,
+        "population": 394799,
+        "crime_type": "Murders",
+        "YTD": 12,
+        "PrevYTD": 12,
+        "Percent_Change": "0.00%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Fontana, California",
+        "#_of_agencies": 1,
+        "population": 214429,
+        "crime_type": "Murders",
+        "YTD": 12,
+        "PrevYTD": 2,
+        "Percent_Change": "500.00%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      }
+    ],
+    "id": "d9eeb19b-291e-4827-a7a6-7da24cef87e5",
+    "created_at": 1768264206,
+    "created_date": "2026-01-13T05:30:06"
   }
 ]

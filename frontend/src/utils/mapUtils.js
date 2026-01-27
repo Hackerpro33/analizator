@@ -1,27 +1,11 @@
+import { parseNumberLike } from "./numberUtils";
+
 export const parseCoordinate = (value) => {
-  if (typeof value === "number" && Number.isFinite(value)) {
-    return value;
-  }
-  if (typeof value === "string") {
-    const normalized = value.replace(",", ".").trim();
-    if (!normalized) return null;
-    const parsed = Number(normalized);
-    return Number.isFinite(parsed) ? parsed : null;
-  }
-  return null;
+  return parseNumberLike(value);
 };
 
 export const parseNumericValue = (value) => {
-  if (typeof value === "number" && Number.isFinite(value)) {
-    return value;
-  }
-  if (typeof value === "string") {
-    const normalized = value.replace(",", ".").trim();
-    if (!normalized) return null;
-    const parsed = Number(normalized);
-    return Number.isFinite(parsed) ? parsed : null;
-  }
-  return null;
+  return parseNumberLike(value);
 };
 
 export const findFirstValue = (point, candidates = []) => {

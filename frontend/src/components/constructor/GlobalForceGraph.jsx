@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dataset, Visualization } from "@/api/entities";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -14,8 +14,6 @@ export default function GlobalForceGraph({ onClose }) {
     const [isLoading, setIsLoading] = useState(true);
     const [aiInsights, setAiInsights] = useState(null);
     const [isAiLoading, setIsAiLoading] = useState(true);
-    const svgRef = useRef();
-
     useEffect(() => {
         const fetchDataAndBuildGraph = async () => {
             setIsLoading(true);

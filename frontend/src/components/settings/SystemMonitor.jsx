@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { 
-  Server, 
-  Cpu, 
-  HardDrive, 
-  Network, 
+import {
+  Server,
+  Cpu,
+  HardDrive,
+  Network,
   Activity,
   Clock,
   Zap,
@@ -15,131 +15,149 @@ import {
   Database,
   Gauge,
   CheckCircle,
-  Download
+  Download,
+  AlertTriangle,
 } from "lucide-react";
-import { LineChart, Line, AreaChart, Area, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
+import { LineChart, Line, AreaChart, Area, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts";
+import { fetchSystemMetrics } from "@/api/system";
+import { useAuth } from "@/contexts/AuthContext.jsx";
+
+const MAX_POINTS = 30;
+
+const formatDuration = (seconds) => {
+  if (seconds == null) return "—";
+  const days = Math.floor(seconds / 86400);
+  const hours = Math.floor((seconds % 86400) / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  if (days) {
+    return `${days}д ${hours}ч ${minutes}м`;
+  }
+  if (hours) {
+    return `${hours}ч ${minutes}м`;
+  }
+  return `${minutes} мин`;
+};
+
+const formatBytes = (bytes) => {
+  if (bytes == null) return "—";
+  if (bytes === 0) return "0 B";
+  const units = ["B", "KB", "MB", "GB", "TB"];
+  const index = Math.floor(Math.log(bytes) / Math.log(1024));
+  return `${(bytes / 1024 ** index).toFixed(1)} ${units[index]}`;
+};
 
 export default function SystemMonitor() {
-  const [systemStats, setSystemStats] = useState({
-    cpu: 0,
-    memory: 0,
-    disk: 0,
-    network: 0,
-    activeConnections: 0,
-    uptime: '2d 14h 32m'
-  });
+  const { hasRole } = useAuth();
+  const isAdmin = hasRole(["admin"]);
 
+  const [metrics, setMetrics] = useState(null);
   const [performanceData, setPerformanceData] = useState([]);
   const [networkData, setNetworkData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    // Симуляция обновления метрик в реальном времени
-    const interval = setInterval(() => {
-      updateSystemStats();
-      updatePerformanceData();
-      updateNetworkData();
-    }, 2000);
+  const fetchSnapshot = useCallback(async () => {
+    try {
+      const payload = await fetchSystemMetrics();
+      setMetrics(payload);
 
-    // Инициализация данных
-    updateSystemStats();
-    initializePerformanceData();
-    initializeNetworkData();
+      const timeLabel = new Date(payload.timestamp * 1000).toLocaleTimeString("ru-RU", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
 
-    return () => clearInterval(interval);
+      setPerformanceData((prev) => {
+        const next = [
+          ...prev,
+          {
+            time: timeLabel,
+            cpu: payload.cpu_percent,
+            memory: payload.memory_percent,
+          },
+        ];
+        return next.slice(-MAX_POINTS);
+      });
+
+      setNetworkData((prev) => {
+        const next = [
+          ...prev,
+          {
+            time: timeLabel,
+            download: payload.network?.download_mbps ?? 0,
+            upload: payload.network?.upload_mbps ?? 0,
+          },
+        ];
+        return next.slice(-MAX_POINTS);
+      });
+
+      if (payload.psutil_available === false) {
+        setError(
+          "На сервере отсутствует модуль psutil, поэтому отображаются ограниченные данные. Установите psutil, чтобы видеть полные метрики."
+        );
+      } else {
+        setError(null);
+      }
+
+      setIsLoading(false);
+    } catch (err) {
+      console.error("Failed to load system metrics", err);
+      setError("Не удалось получить фактические метрики. Проверьте соединение или логи сервера.");
+      setIsLoading(false);
+    }
   }, []);
 
-  const updateSystemStats = () => {
-    setSystemStats(prev => ({
-      ...prev,
-      cpu: Math.max(0, Math.min(100, prev.cpu + (Math.random() - 0.5) * 10)),
-      memory: Math.max(0, Math.min(100, prev.memory + (Math.random() - 0.5) * 5)),
-      disk: Math.max(0, Math.min(100, prev.disk + (Math.random() - 0.5) * 2)),
-      network: Math.max(0, Math.min(100, Math.random() * 30 + 10)),
-      activeConnections: Math.floor(Math.random() * 50) + 10
-    }));
-  };
+  useEffect(() => {
+    fetchSnapshot();
+    const interval = setInterval(fetchSnapshot, 10000);
+    return () => clearInterval(interval);
+  }, [fetchSnapshot]);
 
-  const initializePerformanceData = () => {
-    const data = [];
-    const now = Date.now();
-    for (let i = 29; i >= 0; i--) {
-      data.push({
-        time: new Date(now - i * 60000).toLocaleTimeString('ru-RU', { 
-          hour: '2-digit', 
-          minute: '2-digit' 
-        }),
-        cpu: Math.random() * 80 + 10,
-        memory: Math.random() * 70 + 20,
-        timestamp: now - i * 60000
-      });
-    }
-    setPerformanceData(data);
-  };
+  const psutilAvailable = metrics?.psutil_available !== false;
 
-  const updatePerformanceData = () => {
-    setPerformanceData(prev => {
-      const newData = [...prev.slice(1)];
-      newData.push({
-        time: new Date().toLocaleTimeString('ru-RU', { 
-          hour: '2-digit', 
-          minute: '2-digit' 
-        }),
-        cpu: systemStats.cpu,
-        memory: systemStats.memory,
-        timestamp: Date.now()
-      });
-      return newData;
-    });
-  };
+  const stats = useMemo(() => {
+    const guard = (value) => (psutilAvailable && typeof value === "number" ? value : null);
+    return {
+      cpu: guard(metrics?.cpu_percent),
+      memory: guard(metrics?.memory_percent),
+      disk: guard(metrics?.disk_percent),
+      networkDownload: metrics?.network?.download_mbps ?? 0,
+      networkUpload: metrics?.network?.upload_mbps ?? 0,
+      activeConnections: guard(metrics?.active_connections),
+      uptime: psutilAvailable && metrics?.uptime_seconds != null ? formatDuration(metrics.uptime_seconds) : "—",
+    };
+  }, [metrics, psutilAvailable]);
 
-  const initializeNetworkData = () => {
-    const data = [];
-    const now = Date.now();
-    for (let i = 29; i >= 0; i--) {
-      data.push({
-        time: new Date(now - i * 60000).toLocaleTimeString('ru-RU', { 
-          hour: '2-digit', 
-          minute: '2-digit' 
-        }),
-        download: Math.random() * 50 + 5,
-        upload: Math.random() * 20 + 2,
-        timestamp: now - i * 60000
-      });
-    }
-    setNetworkData(data);
-  };
-
-  const updateNetworkData = () => {
-    setNetworkData(prev => {
-      const newData = [...prev.slice(1)];
-      newData.push({
-        time: new Date().toLocaleTimeString('ru-RU', { 
-          hour: '2-digit', 
-          minute: '2-digit' 
-        }),
-        download: Math.random() * 50 + 5,
-        upload: Math.random() * 20 + 2,
-        timestamp: Date.now()
-      });
-      return newData;
-    });
-  };
+  const databaseInfo = metrics?.database;
+  const networkLabel =
+    metrics?.network && metrics.network.download_mbps !== undefined
+      ? `${metrics.network.download_mbps.toFixed(1)} ↓ / ${metrics.network.upload_mbps.toFixed(1)} ↑ Mbps`
+      : "—";
 
   const getStatusColor = (value) => {
-    if (value < 30) return 'text-green-600';
-    if (value < 70) return 'text-yellow-600';
-    return 'text-red-600';
+    if (value == null) return "text-slate-500";
+    if (value < 30) return "text-green-600";
+    if (value < 70) return "text-yellow-600";
+    return "text-red-600";
   };
 
   const getProgressColor = (value) => {
-    if (value < 30) return '';
-    if (value < 70) return 'bg-yellow-500';
-    return 'bg-red-500';
+    if (value == null) return "";
+    if (value < 30) return "";
+    if (value < 70) return "bg-yellow-500";
+    return "bg-red-500";
   };
 
   return (
     <div className="space-y-6">
-      {/* System Overview */}
+      {error && (
+        <Card className="border-red-200 bg-red-50">
+          <CardContent className="flex items-center gap-3 py-4 text-sm text-red-800">
+            <AlertTriangle className="w-4 h-4" />
+            {error}
+          </CardContent>
+        </Card>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
           <CardContent className="p-4">
@@ -148,14 +166,11 @@ export default function SystemMonitor() {
                 <Cpu className="w-4 h-4 text-blue-500" />
                 <span className="font-medium text-sm">CPU</span>
               </div>
-              <span className={`text-sm font-bold ${getStatusColor(systemStats.cpu)}`}>
-                {Math.round(systemStats.cpu)}%
+              <span className={`text-sm font-bold ${getStatusColor(stats.cpu)}`}>
+                {stats.cpu == null ? "—" : `${Math.round(stats.cpu)}%`}
               </span>
             </div>
-            <Progress 
-              value={systemStats.cpu} 
-              className={`h-2 ${getProgressColor(systemStats.cpu)}`}
-            />
+            <Progress value={stats.cpu ?? 0} className={`h-2 ${getProgressColor(stats.cpu)}`} />
           </CardContent>
         </Card>
 
@@ -166,14 +181,11 @@ export default function SystemMonitor() {
                 <Activity className="w-4 h-4 text-green-500" />
                 <span className="font-medium text-sm">Память</span>
               </div>
-              <span className={`text-sm font-bold ${getStatusColor(systemStats.memory)}`}>
-                {Math.round(systemStats.memory)}%
+              <span className={`text-sm font-bold ${getStatusColor(stats.memory)}`}>
+                {stats.memory == null ? "—" : `${Math.round(stats.memory)}%`}
               </span>
             </div>
-            <Progress 
-              value={systemStats.memory} 
-              className={`h-2 ${getProgressColor(systemStats.memory)}`}
-            />
+            <Progress value={stats.memory ?? 0} className={`h-2 ${getProgressColor(stats.memory)}`} />
           </CardContent>
         </Card>
 
@@ -184,14 +196,11 @@ export default function SystemMonitor() {
                 <HardDrive className="w-4 h-4 text-purple-500" />
                 <span className="font-medium text-sm">Диск</span>
               </div>
-              <span className={`text-sm font-bold ${getStatusColor(systemStats.disk)}`}>
-                {Math.round(systemStats.disk)}%
+              <span className={`text-sm font-bold ${getStatusColor(stats.disk)}`}>
+                {stats.disk == null ? "—" : `${Math.round(stats.disk)}%`}
               </span>
             </div>
-            <Progress 
-              value={systemStats.disk} 
-              className={`h-2 ${getProgressColor(systemStats.disk)}`}
-            />
+            <Progress value={stats.disk ?? 0} className={`h-2 ${getProgressColor(stats.disk)}`} />
           </CardContent>
         </Card>
 
@@ -202,16 +211,16 @@ export default function SystemMonitor() {
                 <Network className="w-4 h-4 text-orange-500" />
                 <span className="font-medium text-sm">Сеть</span>
               </div>
-              <span className="text-sm font-bold text-blue-600">
-                {Math.round(systemStats.network)} Mbps
-              </span>
+              <span className="text-sm font-bold text-blue-600">{networkLabel}</span>
             </div>
-            <Progress value={(systemStats.network / 100) * 100} className="h-2" />
+            <Progress
+              value={Math.min(stats.networkDownload + stats.networkUpload, 100)}
+              className="h-2 bg-blue-100"
+            />
           </CardContent>
         </Card>
       </div>
 
-      {/* Performance Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
@@ -224,35 +233,18 @@ export default function SystemMonitor() {
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={performanceData}>
-                  <XAxis 
-                    dataKey="time" 
-                    tick={{ fontSize: 10 }}
-                    interval="preserveStartEnd"
-                  />
+                  <XAxis dataKey="time" tick={{ fontSize: 10 }} interval="preserveStartEnd" />
                   <YAxis tick={{ fontSize: 10 }} />
-                  <Tooltip 
+                  <Tooltip
                     labelFormatter={(label) => `Время: ${label}`}
-                    formatter={(value, name) => [
-                      `${Math.round(value)}%`, 
-                      name === 'cpu' ? 'CPU' : 'Память'
-                    ]}
+                    formatter={(value, name) =>
+                      value == null
+                        ? ["—", name === "cpu" ? "CPU" : "Память"]
+                        : [`${Math.round(value)}%`, name === "cpu" ? "CPU" : "Память"]
+                    }
                   />
-                  <Line 
-                    type="monotone" 
-                    dataKey="cpu" 
-                    stroke="#3B82F6" 
-                    strokeWidth={2}
-                    dot={false}
-                    name="cpu"
-                  />
-                  <Line 
-                    type="monotone" 
-                    dataKey="memory" 
-                    stroke="#10B981" 
-                    strokeWidth={2}
-                    dot={false}
-                    name="memory"
-                  />
+                  <Line type="monotone" dataKey="cpu" stroke="#3B82F6" strokeWidth={2} dot={false} name="cpu" />
+                  <Line type="monotone" dataKey="memory" stroke="#10B981" strokeWidth={2} dot={false} name="memory" />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -270,35 +262,14 @@ export default function SystemMonitor() {
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={networkData}>
-                  <XAxis 
-                    dataKey="time" 
-                    tick={{ fontSize: 10 }}
-                    interval="preserveStartEnd"
-                  />
+                  <XAxis dataKey="time" tick={{ fontSize: 10 }} interval="preserveStartEnd" />
                   <YAxis tick={{ fontSize: 10 }} />
-                  <Tooltip 
+                  <Tooltip
                     labelFormatter={(label) => `Время: ${label}`}
-                    formatter={(value, name) => [
-                      `${Math.round(value)} Mbps`, 
-                      name === 'download' ? 'Загрузка' : 'Отправка'
-                    ]}
+                    formatter={(value, name) => [`${value?.toFixed?.(1) ?? value} Mbps`, name === "download" ? "Загрузка" : "Отправка"]}
                   />
-                  <Area 
-                    type="monotone" 
-                    dataKey="download" 
-                    stackId="1"
-                    stroke="#F59E0B" 
-                    fill="#FDE68A"
-                    name="download"
-                  />
-                  <Area 
-                    type="monotone" 
-                    dataKey="upload" 
-                    stackId="1"
-                    stroke="#EF4444" 
-                    fill="#FECACA"
-                    name="upload"
-                  />
+                  <Area type="monotone" dataKey="download" stackId="1" stroke="#F59E0B" fill="#FDE68A" name="download" />
+                  <Area type="monotone" dataKey="upload" stackId="1" stroke="#EF4444" fill="#FECACA" name="upload" />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -306,7 +277,6 @@ export default function SystemMonitor() {
         </Card>
       </div>
 
-      {/* System Information */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
@@ -321,23 +291,23 @@ export default function SystemMonitor() {
                 <div className="text-sm text-slate-600">Время работы</div>
                 <div className="font-bold flex items-center gap-1">
                   <Clock className="w-4 h-4" />
-                  {systemStats.uptime}
+                  {stats.uptime}
                 </div>
               </div>
               <div>
                 <div className="text-sm text-slate-600">Активные соединения</div>
                 <div className="font-bold flex items-center gap-1">
                   <Users className="w-4 h-4" />
-                  {systemStats.activeConnections}
+                  {stats.activeConnections ?? "—"}
                 </div>
               </div>
               <div>
                 <div className="text-sm text-slate-600">Версия системы</div>
-                <div className="font-bold">Анализатор 2.1.0</div>
+                <div className="font-bold">{metrics?.system?.version ?? "—"}</div>
               </div>
               <div>
-                <div className="text-sm text-slate-600">Последнее обновление</div>
-                <div className="font-bold">15 янв 2024</div>
+                <div className="text-sm text-slate-600">Платформа</div>
+                <div className="font-bold text-xs">{metrics?.system?.platform ?? "—"}</div>
               </div>
             </div>
           </CardContent>
@@ -354,29 +324,32 @@ export default function SystemMonitor() {
             <div className="space-y-3">
               <div className="flex justify-between items-center">
                 <span className="text-sm text-slate-600">Статус</span>
-                <Badge className="bg-green-100 text-green-700">
+                <Badge
+                  className={`text-xs ${
+                    databaseInfo?.status === "online" ? "bg-green-100 text-green-700" : "bg-amber-100 text-amber-700"
+                  }`}
+                >
                   <CheckCircle className="w-3 h-3 mr-1" />
-                  Подключена
+                  {databaseInfo?.status || "unknown"}
                 </Badge>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-slate-600">Размер БД</span>
-                <span className="font-bold">127.3 MB</span>
+                <span className="font-bold">{formatBytes(databaseInfo?.size_bytes)}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-slate-600">Тип</span>
+                <span className="font-bold">{databaseInfo?.type || "—"}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-slate-600">Активные запросы</span>
-                <span className="font-bold">4</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-slate-600">Последний бэкап</span>
-                <span className="font-bold">Сегодня, 03:00</span>
+                <span className="font-bold">{databaseInfo?.active_queries ?? "—"}</span>
               </div>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Quick Actions */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -386,7 +359,7 @@ export default function SystemMonitor() {
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-4">
-            <Button variant="outline" className="gap-2">
+            <Button variant="outline" className="gap-2" disabled={!isAdmin} title={!isAdmin ? "Доступно только администратору" : undefined}>
               <Server className="w-4 h-4" />
               Перезапуск сервера
             </Button>
@@ -398,7 +371,7 @@ export default function SystemMonitor() {
               <Activity className="w-4 h-4" />
               Создать снимок системы
             </Button>
-            <Button variant="outline" className="gap-2">
+            <Button variant="outline" className="gap-2" disabled={!isAdmin} title={!isAdmin ? "Доступно только администратору" : undefined}>
               <Download className="w-4 h-4" />
               Скачать логи
             </Button>

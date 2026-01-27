@@ -1,43 +1,39 @@
-import React, { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import React, { useEffect, useMemo, useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PageContainer from "@/components/layout/PageContainer";
 import {
-  Settings as SettingsIcon,
-  Trash2,
   Activity,
-  Server,
-  Download,
-  Upload,
   Database,
   Cpu,
   HardDrive,
-  Network,
-  Clock,
-  AlertTriangle,
-  CheckCircle,
   User,
-  ShieldCheck
+  ShieldCheck,
+  Server,
+  Search,
 } from "lucide-react";
 
 import AIModelSettings from "../components/settings/AIModelSettings";
 import BiasAuditCenter from "../components/settings/BiasAuditCenter";
 import DataManagement from "../components/settings/DataManagement";
+import DataAuditPanel from "../components/settings/DataAuditPanel";
 import SystemLogs from "../components/settings/SystemLogs";
 import SystemMonitor from "../components/settings/SystemMonitor";
 import UserManagement from "../components/settings/UserManagement";
+import { useAuth } from "@/contexts/AuthContext.jsx";
 
 export default function Settings() {
   const [activeTab, setActiveTab] = useState('modules');
-  const [systemStats, setSystemStats] = useState({
+  const [systemStats] = useState({
     totalDatasets: 0,
     totalVisualizations: 0,
     storageUsed: 0,
     activeUsers: 1
   });
+  const { hasRole } = useAuth();
+  const canViewLogs = hasRole(['admin', 'security']);
 
-  const settingsTabs = [
+  const settingsTabs = useMemo(() => [
     {
       id: 'modules',
       label: 'Локальные алгоритмы',
@@ -49,6 +45,12 @@ export default function Settings() {
       label: 'Управление данными',
       icon: Database,
       description: 'Очистка и управление данными'
+    },
+    {
+      id: 'data-audit',
+      label: 'Аудит данных',
+      icon: Search,
+      description: 'Проверка качества наборов и подсказки для ИИ-лаборатории'
     },
     {
       id: 'logs',
@@ -74,7 +76,15 @@ export default function Settings() {
       icon: User,
       description: 'Управление пользователями'
     }
-  ];
+  ], []);
+
+  const visibleTabs = settingsTabs.filter(tab => tab.id !== 'logs' || canViewLogs);
+
+  useEffect(() => {
+    if (!visibleTabs.find(tab => tab.id === activeTab)) {
+      setActiveTab(visibleTabs[0]?.id ?? 'modules');
+    }
+  }, [activeTab, visibleTabs]);
 
   return (
     <PageContainer className="space-y-8">
@@ -135,8 +145,8 @@ export default function Settings() {
         <Card className="border-0 bg-white/50 backdrop-blur-xl shadow-lg">
           <CardContent className="p-6">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-6 mb-8">
-                {settingsTabs.map(tab => (
+            <TabsList className="grid w-full grid-cols-7 mb-8">
+                {visibleTabs.map(tab => (
                   <TabsTrigger
                     key={tab.id}
                     value={tab.id}
@@ -156,9 +166,11 @@ export default function Settings() {
                 <DataManagement />
               </TabsContent>
 
-              <TabsContent value="logs" className="mt-0">
-                <SystemLogs />
-              </TabsContent>
+              {canViewLogs && (
+                <TabsContent value="logs" className="mt-0">
+                  <SystemLogs />
+                </TabsContent>
+              )}
 
               <TabsContent value="monitor" className="mt-0">
                 <SystemMonitor />
@@ -166,6 +178,10 @@ export default function Settings() {
 
               <TabsContent value="audit" className="mt-0">
                 <BiasAuditCenter />
+              </TabsContent>
+
+              <TabsContent value="data-audit" className="mt-0">
+                <DataAuditPanel />
               </TabsContent>
 
               <TabsContent value="users" className="mt-0">

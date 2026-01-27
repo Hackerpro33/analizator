@@ -2,9 +2,9 @@
 import React, { useState, useEffect } from "react";
 import { Dataset, Visualization } from "@/api/entities";
 import { SendEmail } from "@/api/integrations";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { TrendingUp, Sparkles, BrainCircuit, BarChart3, Mail, Map } from "lucide-react";
+import { TrendingUp, BarChart3, Map } from "lucide-react";
 import ForecastSetup from "../components/forecasting/ForecastSetup";
 import ForecastResult from "../components/forecasting/ForecastResult";
 import CorrelationMatrix from "../components/forecasting/CorrelationMatrix";
@@ -12,6 +12,8 @@ import MapView from "../components/maps/MapView";
 import MapConfigurator from "../components/maps/MapConfigurator";
 import { generateForecastReport } from "@/utils/localAnalysis";
 import PageContainer from "@/components/layout/PageContainer";
+import useAIInsights from "@/hooks/useAIInsights";
+import AIInsightPanel from "@/components/ai/InsightPanel";
 
 export default function Forecasting() {
   const [datasets, setDatasets] = useState([]);
@@ -34,6 +36,11 @@ export default function Forecasting() {
   };
   const [mapConfig, setMapConfig] = useState(defaultMapConfig);
   const [mapData, setMapData] = useState([]);
+  const {
+    data: aiInsights,
+    isLoading: aiLoading,
+    refresh: refreshAi,
+  } = useAIInsights({ autoRefresh: true });
 
   useEffect(() => {
     loadDatasets();
@@ -148,45 +155,6 @@ export default function Forecasting() {
         };
       });
 
-      const externalFactorsPrompt = externalFactorsDetails.length > 0
-        ? `Учтите следующие внешние факторы (экзогенные переменные) при построении прогноза: ${externalFactorsDetails.map((factor) => `"${factor.column}" из набора данных "${factor.dataset_name}" (ID: ${factor.dataset_id})${factor.sampleValues.length ? `, примеры значений: ${JSON.stringify(factor.sampleValues)}` : ''}`).join('; ')}. Данные из корреляционного и графового анализа можно использовать как основу для этих факторов.`
-        : '';
-
-      const externalFactorsSection = externalFactorsDetails.length > 0
-        ? `
-        ДОПОЛНИТЕЛЬНЫЕ ПЕРЕМЕННЫЕ:
-        ${externalFactorsDetails.map((factor) => `- ${factor.dataset_name} (ID: ${factor.dataset_id}) → ${factor.column}${factor.sampleValues.length ? ` | Примеры: ${factor.sampleValues.join(', ')}` : ''}`).join('\n        ')}
-      `
-        : '';
-
-      const prompt = `
-        Вы — эксперт по анализу временных рядов и машинному обучению.
-
-        Проанализируйте предоставленные исторические данные и создайте детальный прогноз на ${config.horizon} дней вперед.
-
-        ДАННЫЕ ДЛЯ АНАЛИЗА:
-        - Основной временной ряд: '${config.value_column}' из набора данных ID ${config.dataset_id}
-        - Последние 30 точек данных: ${JSON.stringify(mockHistorical.slice(-30))}
-
-        ${externalFactorsSection}
-
-        ${externalFactorsPrompt}
-
-        ТРЕБОВАНИЯ К ПРОГНОЗУ:
-        1.  Постройте базовый прогноз ('predicted_value') с 95% доверительным интервалом ('confidence_lower', 'confidence_upper').
-        2.  Сгенерируйте два дополнительных сценария: 'optimistic' и 'pessimistic'. Оптимистичный сценарий должен отражать наилучшее возможное развитие событий с учетом позитивных факторов, а пессимистичный — наихудшее.
-        3.  Проведите глубокий анализ данных, включая тренды, сезонность, волатильность.
-        4.  Сформируйте ключевые выводы, факторы риска и практические рекомендации.
-        5.  Укажите уровень достоверности прогноза в поле summary.confidence_score (число от 0 до 1) с обоснованием в инсайтах.
-        6.  Объясните влияние каждого выбранного внешнего фактора в разделе key_insights или risk_factors.
-
-        МЕТОДОЛОГИЯ:
-        - Используйте ансамбль моделей (SARIMAX, Prophet, градиентный бустинг) для повышения точности.
-        - Учтите влияние внешних факторов при построении всех сценариев.
-
-        Предоставьте результат в указанном JSON формате.
-      `;
-
       const result = generateForecastReport({
         historical: mockHistorical,
         horizon: config.horizon,
@@ -236,7 +204,9 @@ export default function Forecasting() {
             Предсказывайте будущие тенденции и принимайте решения на основе данных. Локальные алгоритмы анализа используют статистику рядов без обращения к внешним сервисам.
           </p>
         </div>
-        
+
+        <AIInsightPanel insights={aiInsights} isLoading={aiLoading} onRefresh={refreshAi} />
+
         <Card className="border-0 bg-white/50 backdrop-blur-xl shadow-lg">
           <CardContent className="p-4">
             <div className="flex justify-center gap-2 flex-wrap">

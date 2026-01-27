@@ -1,0 +1,24 @@
+[
+  {
+    "id": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+    "email": "azatkhamzin@bk.ru",
+    "full_name": "Азат Рашитович",
+    "hashed_password": "$pbkdf2-sha256$29000$uNdaC0GIsVaqlbK21jpnzA$l6LzqsmN5jwX0gp9zxvlK915fQMwoc/E7f8OBnyIVig",
+    "role": "admin",
+    "is_active": true,
+    "created_at": "2026-01-11T21:08:53.907406+00:00",
+    "updated_at": "2026-01-22T16:50:49.578766+00:00",
+    "last_login_at": "2026-01-22T16:50:49.578604+00:00"
+  },
+  {
+    "id": "8fba3965-4526-4b02-959e-011c7357625c",
+    "email": "dfvdfvfgb@mail.ru",
+    "full_name": "vzdf dfve",
+    "hashed_password": "$pbkdf2-sha256$29000$WgshRMg5Z6yVkjJmDOHcuw$AjcMKXcW2jmHy3XvFkSbKJ7gTO0azy0KUd.1FCME1TY",
+    "role": "admin",
+    "is_active": false,
+    "created_at": "2026-01-11T21:25:55.617918+00:00",
+    "updated_at": "2026-01-17T15:33:07.904758+00:00",
+    "last_login_at": null
+  }
+]

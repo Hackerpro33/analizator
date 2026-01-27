@@ -5,7 +5,7 @@ import json
 import logging
 import math
 import uuid
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
@@ -14,6 +14,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
 from .datasets_api import _load_all as _load_datasets
+from .services.data_audit import get_latest_audit as _get_data_audit, run_data_audit as _run_data_audit
 from .services.notifications import WebhookDeliveryError, dispatch_webhook
 from .utils.files import (
     DATA_DIR,
@@ -28,6 +29,14 @@ AUDIT_HISTORY_PATH = DATA_DIR / "bias_audits.json"
 AUDIT_SCHEDULES_PATH = DATA_DIR / "bias_audit_schedules.json"
 
 logger = logging.getLogger(__name__)
+
+
+def _utc_now() -> datetime:
+    return datetime.now(timezone.utc)
+
+
+def _utc_now_iso() -> str:
+    return _utc_now().isoformat().replace("+00:00", "Z")
 
 
 def _load_json(path) -> List[Dict[str, Any]]:
@@ -192,6 +201,12 @@ class BiasAuditScheduleRequest(BaseModel):
             else None,
             "notes": self.notes,
         }
+
+
+class DataAuditRequest(BaseModel):
+    dataset_id: str = Field(..., description="Набор данных для аудита")
+    date_column: Optional[str] = Field(None, description="Колонка с датами")
+    target_column: Optional[str] = Field(None, description="Целевой столбец для прогноза")
 
 
 FREQUENCY_TO_DELTA = {
@@ -379,7 +394,7 @@ def _calculate_next_run(frequency: Optional[str], reference: Optional[datetime] 
     delta = FREQUENCY_TO_DELTA.get(frequency.lower())
     if not delta:
         return None
-    base = reference or datetime.utcnow()
+    base = reference or _utc_now()
     return (base + delta).isoformat() + "Z"
 
 
@@ -753,7 +768,7 @@ def run_bias_audit(payload: BiasAuditRequest):
         )
     summary = " ".join(summary_parts)
 
-    created_at = datetime.utcnow().isoformat() + "Z"
+    created_at = _utc_now().isoformat() + "Z"
     parameters = payload.model_dump_parameters()
     parameters["resolved_positive_label"] = _serialize_value(positive_value)
     if actual_positive_value is not None:
@@ -796,7 +811,7 @@ def run_bias_audit(payload: BiasAuditRequest):
             if schedule.get("id") == payload.schedule_id:
                 schedule["last_run_at"] = created_at
                 schedule["next_run_due"] = _calculate_next_run(
-                    schedule.get("frequency"), datetime.utcnow()
+                    schedule.get("frequency"), _utc_now()
                 )
                 updated = True
                 break
@@ -825,6 +840,27 @@ def delete_audit_record(audit_id: str):
     return {"status": "deleted", "id": audit_id}
 
 
+@router.post("/data/run")
+def run_data_audit_endpoint(payload: DataAuditRequest):
+    try:
+        report = _run_data_audit(
+            payload.dataset_id,
+            date_column=payload.date_column,
+            target_column=payload.target_column,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    return {"status": "completed", "report": report}
+
+
+@router.get("/data/report/{dataset_id}")
+def fetch_data_audit_report(dataset_id: str):
+    report = _get_data_audit(dataset_id)
+    if not report:
+        raise HTTPException(status_code=404, detail="Report not found")
+    return report
+
+
 @router.get("/bias/schedules")
 def list_schedules() -> Dict[str, Any]:
     schedules = _load_json(AUDIT_SCHEDULES_PATH)
@@ -845,8 +881,8 @@ def create_schedule(payload: BiasAuditScheduleRequest):
         "frequency": payload.frequency,
         "notes": payload.notes,
         "parameters": payload.as_parameters(),
-        "created_at": datetime.utcnow().isoformat() + "Z",
-        "updated_at": datetime.utcnow().isoformat() + "Z",
+        "created_at": _utc_now().isoformat() + "Z",
+        "updated_at": _utc_now().isoformat() + "Z",
         "last_run_at": None,
         "next_run_due": _calculate_next_run(payload.frequency),
     }
@@ -873,7 +909,7 @@ def update_schedule(schedule_id: str, payload: BiasAuditScheduleRequest):
                     "frequency": payload.frequency,
                     "notes": payload.notes,
                     "parameters": payload.as_parameters(),
-                    "updated_at": datetime.utcnow().isoformat() + "Z",
+                    "updated_at": _utc_now().isoformat() + "Z",
                     "next_run_due": _calculate_next_run(payload.frequency),
                 }
             )

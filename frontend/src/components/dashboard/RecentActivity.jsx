@@ -138,7 +138,7 @@ export default function RecentActivity({ datasets, visualizations, isLoading }) 
           </div>
         ) : (
           <div className="space-y-3">
-            {recentItems.map((item, index) => {
+            {recentItems.map((item) => {
               const Icon = getIcon(item.type);
               return (
                 <div key={item.id} className="group flex items-center gap-4 p-4 rounded-xl hover:bg-slate-50/50 transition-colors duration-200">

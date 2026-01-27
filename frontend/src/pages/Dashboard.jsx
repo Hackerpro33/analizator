@@ -9,11 +9,18 @@ import QuickActions from "../components/dashboard/QuickActions";
 import RecentActivity from "../components/dashboard/RecentActivity";
 import TrendingCharts from "../components/dashboard/TrendingCharts";
 import PageContainer from "@/components/layout/PageContainer";
+import useAIInsights from "@/hooks/useAIInsights";
+import AIInsightPanel from "@/components/ai/InsightPanel";
 
 export default function Dashboard() {
   const [datasets, setDatasets] = useState([]);
   const [visualizations, setVisualizations] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const {
+    data: aiInsights,
+    isLoading: isAiLoading,
+    refresh: refreshAi,
+  } = useAIInsights();
 
   const formatNumber = (value, options = {}) => {
     if (value === null || value === undefined || Number.isNaN(value)) {
@@ -319,6 +326,12 @@ export default function Dashboard() {
         visualizations={visualizations}
         isLoading={isLoading}
         changes={metrics.changes}
+      />
+
+      <AIInsightPanel
+        insights={aiInsights}
+        isLoading={isAiLoading}
+        onRefresh={refreshAi}
       />
 
       {/* Quick Actions */}

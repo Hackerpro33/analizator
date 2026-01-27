@@ -11,7 +11,6 @@ export default function DataManagement() {
   const [visualizations, setVisualizations] = useState([]);
   const [selectedDatasets, setSelectedDatasets] = useState([]);
   const [selectedVisualizations, setSelectedVisualizations] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -20,7 +19,6 @@ export default function DataManagement() {
   }, []);
 
   const loadData = async () => {
-    setIsLoading(true);
     try {
       const [datasetsData, visualizationsData] = await Promise.all([
         getDatasets(),
@@ -31,7 +29,6 @@ export default function DataManagement() {
     } catch (error) {
       console.error('Ошибка загрузки данных:', error);
     }
-    setIsLoading(false);
   };
 
   const handleDatasetSelection = (datasetId, checked) => {
@@ -272,4 +269,3 @@ export default function DataManagement() {
     </div>
   );
 }
-

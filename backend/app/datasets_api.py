@@ -5,7 +5,7 @@ import shutil
 import tempfile
 import time
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -44,6 +44,10 @@ DATASETS_JSON = STORE_DIR / "datasets.json"
 REFRESH_SCHEDULES_JSON = STORE_DIR / "dataset_refresh_schedules.json"
 
 _refresh_scheduler = TaskScheduler(REFRESH_SCHEDULES_JSON)
+
+
+def _iso_from_timestamp(value: int) -> str:
+    return datetime.fromtimestamp(value).isoformat()
 
 
 def _atomic_write_json(path: Path, data: Any):
@@ -147,11 +151,11 @@ def _ensure_dates(item: Dict[str, Any]) -> Dict[str, Any]:
             created_at = int(time.time())
     item["created_at"] = created_at
     if not item.get("created_date"):
-        item["created_date"] = datetime.utcfromtimestamp(created_at).isoformat() + "Z"
+        item["created_date"] = _iso_from_timestamp(created_at)
 
     updated_at = item.get("updated_at")
     if updated_at and not item.get("updated_date"):
-        item["updated_date"] = datetime.utcfromtimestamp(updated_at).isoformat() + "Z"
+        item["updated_date"] = _iso_from_timestamp(updated_at)
     return item
 
 
@@ -266,7 +270,7 @@ def create_dataset(payload: DatasetCreate):
     dataset = payload.model_dump()
     dataset["id"] = str(uuid.uuid4())
     dataset["created_at"] = int(time.time())
-    dataset["created_date"] = datetime.utcfromtimestamp(dataset["created_at"]).isoformat() + "Z"
+    dataset["created_date"] = _iso_from_timestamp(dataset["created_at"])
     items.append(dataset)
     _save_all(items)
     return {"status": "created", "id": dataset["id"], "dataset": _ensure_dates(dataset)}
@@ -289,10 +293,10 @@ def update_dataset(dataset_id: str, payload: DatasetUpdate):
             updated.update(payload.model_dump(exclude_unset=True))
             updated["id"] = dataset_id
             updated["updated_at"] = int(time.time())
-            updated["updated_date"] = datetime.utcfromtimestamp(updated["updated_at"]).isoformat() + "Z"
+            updated["updated_date"] = _iso_from_timestamp(updated["updated_at"])
             if not updated.get("created_at"):
                 updated["created_at"] = int(time.time())
-            updated["created_date"] = updated.get("created_date") or datetime.utcfromtimestamp(updated["created_at"]).isoformat() + "Z"
+            updated["created_date"] = updated.get("created_date") or _iso_from_timestamp(updated["created_at"])
             items[index] = updated
             _save_all(items)
             return {"status": "updated", "dataset": _ensure_dates(updated)}

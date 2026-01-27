@@ -151,11 +151,11 @@ export default function MapAnalyticsPanel({ data, config, datasets, isLoading })
     }
 
     return "";
-  }, [selectedDataset?.name, config?.dataset_id]);
+  }, [selectedDataset?.name, config]);
 
   const fallbackSample = useMemo(
     () => (config?.dataset_id === "sample" ? samplePoints : undefined),
-    [config?.dataset_id]
+    [config]
   );
 
   const analytics = useMemo(
@@ -166,14 +166,7 @@ export default function MapAnalyticsPanel({ data, config, datasets, isLoading })
         datasetName: datasetLabel,
         fallbackSample,
       }),
-    [
-      data,
-      config,
-      selectedDataset?.sample_data,
-      config?.dataset_id,
-      datasetLabel,
-      fallbackSample,
-    ]
+    [data, config, selectedDataset?.sample_data, datasetLabel, fallbackSample]
   );
 
   const insights = useMemo(() => buildInsights(analytics), [analytics]);

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Card,
   CardContent,
@@ -150,7 +150,7 @@ export default function BiasAuditCenter() {
     return selectedDataset.columns.map((column) => column.name || column.id || "").filter(Boolean);
   }, [selectedDataset]);
 
-  const loadDatasets = async () => {
+  const loadDatasets = useCallback(async () => {
     try {
       const data = await Dataset.list("-created_at");
       setDatasets(Array.isArray(data) ? data : []);
@@ -162,31 +162,31 @@ export default function BiasAuditCenter() {
         variant: "destructive",
       });
     }
-  };
+  }, [toast]);
 
-  const loadHistory = async () => {
+  const loadHistory = useCallback(async () => {
     try {
       const data = await fetchBiasAuditHistory();
       setHistory(Array.isArray(data?.items) ? data.items : []);
     } catch (error) {
       console.error("Не удалось загрузить историю аудитов", error);
     }
-  };
+  }, []);
 
-  const loadSchedules = async () => {
+  const loadSchedules = useCallback(async () => {
     try {
       const data = await fetchBiasAuditSchedules();
       setSchedules(Array.isArray(data?.items) ? data.items : []);
     } catch (error) {
       console.error("Не удалось загрузить расписания", error);
     }
-  };
+  }, []);
 
   useEffect(() => {
     loadDatasets();
     loadHistory();
     loadSchedules();
-  }, []);
+  }, [loadDatasets, loadHistory, loadSchedules]);
 
   const handleDatasetChange = (value) => {
     const datasetId = value === "__none__" ? "" : value;

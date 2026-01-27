@@ -94,7 +94,7 @@ export default function DatasetPreview({ dataset, onClose }) {
     if (columnType === 'date' && value) {
       try {
         return new Date(value).toLocaleDateString();
-      } catch (e) {
+      } catch (_error) {
         return String(value);
       }
     }

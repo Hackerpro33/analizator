@@ -72,7 +72,7 @@ export default function AdvancedChartInsights({ onSegmentChange, activeSegment }
 
   useEffect(() => {
     setSelectedSegment(activeSegment || null);
-  }, [activeSegment?.column, activeSegment?.value]);
+  }, [activeSegment]);
 
   const handleSegmentClick = (segment) => {
     const isSame = selectedSegment?.column === segment.column && selectedSegment?.value === segment.value;

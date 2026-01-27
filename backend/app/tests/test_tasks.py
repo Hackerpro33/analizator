@@ -34,7 +34,7 @@ def test_process_extraction_job_generates_preview(tmp_path):
 
 def test_extract_async_requires_queue_enabled(client):
     response = client.post(
-        "/api/extract/async",
+        "/api/v1/extract/async",
         json={"file_url": "job-unknown"},
         headers={"host": "localhost"},
     )
@@ -44,7 +44,7 @@ def test_extract_async_requires_queue_enabled(client):
 
 
 def test_task_status_requires_queue_enabled(client):
-    response = client.get("/api/tasks/rq:job:123", headers={"host": "localhost"})
+    response = client.get("/api/v1/tasks/rq:job:123", headers={"host": "localhost"})
 
     assert response.status_code == 503
     assert response.json()["detail"] == "Task queue is disabled"

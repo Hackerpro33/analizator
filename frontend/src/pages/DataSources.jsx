@@ -1,23 +1,16 @@
 import { Dataset } from "@/api/entities";
 import React, { useState, useEffect } from "react";
 import { extractDataFromUploadedFile, uploadFile } from "@/api/integrations";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
 import {
-  Upload,
-  FileText,
   Database,
   Tag,
-  Calendar,
-  BarChart,
   Search,
   Filter,
   Plus
 } from "lucide-react";
-import { format } from "date-fns";
 
 import FileUploadZone from "../components/datasources/FileUploadZone";
 import DatasetCard from "../components/datasources/DatasetCard";
@@ -177,8 +170,6 @@ export default function DataSources() {
     const fileName = file.name.toLowerCase();
     const fileExtension = file.name.split('.').pop().toLowerCase();
     let estimatedColumns = [];
-    let sampleData = []; // Данные в резервном режиме всегда пустые
-
     // Определяем структуру на основе имени файла
     if (fileName.includes('employ') || fileName.includes('сотрудник') || fileName.includes('staff')) {
       estimatedColumns = [

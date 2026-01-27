@@ -1,7 +1,6 @@
 import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { X, BarChart3, LineChart as LineChartIcon, ScatterChart as ScatterChartIcon, TrendingUp, Box } from 'lucide-react';
+import { BarChart3, LineChart as LineChartIcon, ScatterChart as ScatterChartIcon, TrendingUp, Box } from 'lucide-react';
 import { LineChart, Line, BarChart, Bar, ScatterChart, Scatter, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import Chart3D from './Chart3D';
 
@@ -48,7 +47,7 @@ export default function ChartViewer({ visualization, datasets, onClose }) {
                         {visualization.title}
                     </DialogTitle>
                     <DialogDescription>
-                        Просмотр графика: {visualization.x_axis} × {visualization.y_axis} на основе набора данных "{dataset?.name}"
+                        Просмотр графика: {visualization.x_axis} × {visualization.y_axis} на основе набора данных &quot;{dataset?.name}&quot;
                     </DialogDescription>
                 </DialogHeader>
                 <div className="flex-grow min-h-0 py-4">

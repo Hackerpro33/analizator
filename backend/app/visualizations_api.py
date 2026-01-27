@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -33,6 +33,10 @@ def _ensure_store_dir() -> Path:
 
 STORE_DIR = _ensure_store_dir()
 VISUALIZATIONS_JSON = STORE_DIR / "visualizations.json"
+
+
+def _iso_from_timestamp(value: int) -> str:
+    return datetime.fromtimestamp(value).isoformat()
 
 
 def _atomic_write_json(path: Path, data: Any):
@@ -112,11 +116,11 @@ def _ensure_dates(item: Dict[str, Any]) -> Dict[str, Any]:
             created_at = int(time.time())
     item["created_at"] = created_at
     if not item.get("created_date"):
-        item["created_date"] = datetime.utcfromtimestamp(created_at).isoformat() + "Z"
+        item["created_date"] = _iso_from_timestamp(created_at)
 
     updated_at = item.get("updated_at")
     if updated_at and not item.get("updated_date"):
-        item["updated_date"] = datetime.utcfromtimestamp(updated_at).isoformat() + "Z"
+        item["updated_date"] = _iso_from_timestamp(updated_at)
     return item
 
 
@@ -140,7 +144,7 @@ def create_visualization(payload: VisualizationCreate):
     viz = payload.model_dump()
     viz["id"] = str(uuid.uuid4())
     viz["created_at"] = int(time.time())
-    viz["created_date"] = datetime.utcfromtimestamp(viz["created_at"]).isoformat() + "Z"
+    viz["created_date"] = _iso_from_timestamp(viz["created_at"])
     items.append(viz)
     _save_all(items)
     return {"status": "created", "id": viz["id"], "visualization": _ensure_dates(viz)}
@@ -163,10 +167,10 @@ def update_visualization(viz_id: str, payload: VisualizationUpdate):
             updated.update(payload.model_dump(exclude_unset=True))
             updated["id"] = viz_id
             updated["updated_at"] = int(time.time())
-            updated["updated_date"] = datetime.utcfromtimestamp(updated["updated_at"]).isoformat() + "Z"
+            updated["updated_date"] = _iso_from_timestamp(updated["updated_at"])
             if not updated.get("created_at"):
                 updated["created_at"] = int(time.time())
-            updated["created_date"] = updated.get("created_date") or datetime.utcfromtimestamp(updated["created_at"]).isoformat() + "Z"
+            updated["created_date"] = updated.get("created_date") or _iso_from_timestamp(updated["created_at"])
             items[index] = updated
             _save_all(items)
             return {"status": "updated", "visualization": _ensure_dates(updated)}

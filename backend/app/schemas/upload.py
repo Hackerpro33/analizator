@@ -52,6 +52,28 @@ class FileUploadResponse(BaseModel):
         description="Original filename provided by the client",
         examples=["incidents.csv"],
     )
+    storage_bucket: Optional[str] = Field(
+        None,
+        description="Name of the object storage bucket where the file resides",
+        examples=["insight-artifacts"],
+    )
+    storage_key: Optional[str] = Field(
+        None,
+        description="Object key within the bucket that uniquely identifies the upload",
+        examples=["datasets/123/incidents.csv"],
+    )
+    checksum: Optional[str] = Field(
+        None,
+        description="SHA-256 checksum of the uploaded file for tamper detection",
+    )
+    size_bytes: Optional[int] = Field(
+        None,
+        description="Size of the uploaded file in bytes",
+    )
+    content_type: Optional[str] = Field(
+        None,
+        description="Content type detected for the uploaded file",
+    )
     quick_extraction: Optional[QuickExtraction] = Field(
         None,
         description="Optional quick extraction payload with structural information about the dataset",

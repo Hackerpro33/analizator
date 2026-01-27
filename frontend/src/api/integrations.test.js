@@ -34,7 +34,7 @@ describe("integrations API", () => {
 
     expect(response).toEqual({ status: "success" });
     const [url, options] = global.fetch.mock.calls[0];
-    expect(url).toBe("/api/upload");
+    expect(url).toBe("/api/v1/upload");
     expect(options.method).toBe("POST");
     expect(options.body).toBeInstanceOf(FormData);
     expect(options.body.get("file")).toBe(file);
@@ -50,7 +50,7 @@ describe("integrations API", () => {
     await ExtractDataFromUploadedFile({ file_url: "demo", json_schema: { id: "string" } });
 
     expect(global.fetch).toHaveBeenCalledWith(
-      "/api/extract",
+      "/api/v1/extract",
       expect.objectContaining({
         method: "POST",
         headers: expect.objectContaining({ "Content-Type": "application/json" }),
@@ -71,7 +71,7 @@ describe("integrations API", () => {
 
     expect(response.status).toBe("queued");
     expect(global.fetch).toHaveBeenCalledWith(
-      "/api/utils/send-email",
+      "/api/v1/utils/send-email",
       expect.objectContaining({
         method: "POST",
         headers: expect.objectContaining({ "Content-Type": "application/json" }),

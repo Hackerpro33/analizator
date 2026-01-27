@@ -17,7 +17,11 @@ import {
   RefreshCw, // Added RefreshCw icon for Data Transformation
   MessageSquare,
   ShieldCheck,
-  Users
+  Users,
+  Brain,
+  Shield,
+  UserCog,
+  Columns3,
 } from "lucide-react";
 import {
   Sidebar,
@@ -32,84 +36,142 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import AuthControls from "@/components/auth/AuthControls.jsx";
+import { useAuth } from "@/contexts/AuthContext.jsx";
 
 const navigationItems = [
   {
     title: "Панель управления",
     url: createPageUrl("Dashboard"),
     icon: Home,
-    gradient: "from-emerald-500 to-teal-600"
+    gradient: "from-emerald-500 to-teal-600",
+    requireAuth: false
   },
-  { 
+  {
     title: "Аналитический ассистент",
     url: createPageUrl("Assistant"),
     icon: MessageSquare,
-    gradient: "from-violet-500 to-purple-600"
+    gradient: "from-violet-500 to-purple-600",
+    requireAuth: true
+  },
+  {
+    title: "ИИ-лаборатория",
+    url: createPageUrl("AILab"),
+    icon: Brain,
+    gradient: "from-purple-500 to-indigo-500",
+    requireAuth: true
   },
   {
     title: "Продвинутая аналитика",
     url: createPageUrl("AdvancedAnalytics"),
     icon: ShieldCheck,
-    gradient: "from-blue-600 to-purple-600"
+    gradient: "from-blue-600 to-purple-600",
+    requireAuth: true
+  },
+  {
+    title: "Кибербезопасность",
+    url: createPageUrl("CyberSecurity"),
+    icon: Shield,
+    gradient: "from-slate-600 to-slate-900",
+    requireAuth: true,
+    roles: ["admin", "security"]
   },
   {
     title: "Источники данных",
     url: createPageUrl("DataSources"),
     icon: Database,
-    gradient: "from-blue-500 to-cyan-600"
+    gradient: "from-blue-500 to-cyan-600",
+    requireAuth: true
   },
   {
     title: "Преобразование данных",
     url: createPageUrl("DataTransformation"),
     icon: RefreshCw,
-    gradient: "from-green-500 to-emerald-600"
+    gradient: "from-green-500 to-emerald-600",
+    requireAuth: true
+  },
+  {
+    title: "Линейка",
+    url: createPageUrl("Lineyka"),
+    icon: Columns3,
+    gradient: "from-amber-500 to-orange-600",
+    requireAuth: true
   },
   {
     title: "Карты",
     url: createPageUrl("Maps"),
     icon: Map,
-    gradient: "from-purple-500 to-indigo-600"
+    gradient: "from-purple-500 to-indigo-600",
+    requireAuth: true
   },
   {
     title: "Графики",
     url: createPageUrl("Charts"),
     icon: BarChart3,
-    gradient: "from-orange-500 to-red-600"
+    gradient: "from-orange-500 to-red-600",
+    requireAuth: true
   },
   {
     title: "Прогнозирование",
     url: createPageUrl("Forecasting"),
     icon: TrendingUp,
-    gradient: "from-pink-500 to-rose-600"
+    gradient: "from-pink-500 to-rose-600",
+    requireAuth: true
   },
   {
     title: "Графы связей",
     url: createPageUrl("NetworkGraphs"),
     icon: Network,
-    gradient: "from-cyan-500 to-blue-600"
+    gradient: "from-cyan-500 to-blue-600",
+    requireAuth: true
   },
   {
     title: "Конструктор",
     url: createPageUrl("Constructor"),
     icon: Component,
-    gradient: "from-slate-500 to-slate-600"
+    gradient: "from-slate-500 to-slate-600",
+    requireAuth: true
   },
   {
     title: "Совместная работа",
     url: createPageUrl("Collaboration"),
     icon: Users,
-    gradient: "from-sky-500 to-blue-600"
+    gradient: "from-sky-500 to-blue-600",
+    requireAuth: true
   },
   {
     title: "Настройки",
     url: createPageUrl("Settings"),
     icon: SettingsIcon,
-    gradient: "from-gray-500 to-slate-600"
+    gradient: "from-gray-500 to-slate-600",
+    requireAuth: true
+  },
+  {
+    title: "Администрирование",
+    url: createPageUrl("Admin"),
+    icon: UserCog,
+    gradient: "from-gray-800 to-black",
+    requireAuth: true,
+    roles: ["admin"]
   }
 ];
 
-export default function Layout({ children, currentPageName }) {
+export default function Layout({ children }) {
   const location = useLocation();
+  const { user, hasRole } = useAuth();
+
+  const filteredNavigation = navigationItems.filter((item) => {
+    if (item.requireAuth === false) {
+      return true;
+    }
+    if (!user) {
+      return false;
+    }
+    if (item.roles && !hasRole(item.roles)) {
+      return false;
+    }
+    return true;
+  });
 
   return (
     <SidebarProvider>
@@ -172,6 +234,9 @@ export default function Layout({ children, currentPageName }) {
                 <p className="text-xs text-slate-400 elegant-text">Платформа для аналитики</p>
               </div>
             </div>
+            <div className="mt-4">
+              <AuthControls />
+            </div>
           </SidebarHeader>
           
           <SidebarContent className="p-4">
@@ -181,7 +246,7 @@ export default function Layout({ children, currentPageName }) {
               </SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu className="space-y-2">
-                  {navigationItems.map((item) => {
+                  {filteredNavigation.map((item) => {
                     const isActive = location.pathname === item.url;
                     return (
                       <SidebarMenuItem key={item.title}>
@@ -234,9 +299,10 @@ export default function Layout({ children, currentPageName }) {
 
         <main className="flex-1 flex flex-col">
           <header className="bg-white/70 backdrop-blur-xl border-b border-white/20 px-6 py-4 md:hidden">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 justify-between">
               <SidebarTrigger className="hover:bg-slate-100 p-2 rounded-lg transition-colors duration-200" />
               <h1 className="text-xl font-bold heading-text text-orange-600">Анализатор</h1>
+              <AuthControls />
             </div>
           </header>
 
@@ -248,4 +314,3 @@ export default function Layout({ children, currentPageName }) {
     </SidebarProvider>
   );
 }
-

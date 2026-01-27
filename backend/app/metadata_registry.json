@@ -1,0 +1,7058 @@
+{
+  "datasets": {
+    "a60247f5-3e6d-4445-a86a-95635575dc09": {
+      "id": "a60247f5-3e6d-4445-a86a-95635575dc09",
+      "filename": "cities.csv",
+      "storage_bucket": "artifacts",
+      "storage_key": "datasets/a60247f5-3e6d-4445-a86a-95635575dc09/cities.csv",
+      "content_type": "text/csv",
+      "size_bytes": 45,
+      "checksum": "700b1f126a6685a9fab856f3eec0a39112258b52d70a2d646ac1ef80718eb1e3",
+      "status": "uploaded",
+      "metadata": {
+        "quick_extraction": {
+          "columns": [
+            {
+              "name": "city",
+              "type": "string"
+            },
+            {
+              "name": "population",
+              "type": "number"
+            }
+          ],
+          "row_count": 2,
+          "sample_data": [
+            {
+              "city": "Paris",
+              "population": 2148327
+            },
+            {
+              "city": "Berlin",
+              "population": 3769495
+            }
+          ],
+          "insights": []
+        }
+      },
+      "created_at": "2026-01-11T20:55:51.555708+00:00",
+      "updated_at": "2026-01-11T20:55:51.555708+00:00"
+    },
+    "7a48e6f1-4c59-4a01-b985-8ec943654efc": {
+      "id": "7a48e6f1-4c59-4a01-b985-8ec943654efc",
+      "filename": "table_0.csv",
+      "storage_bucket": "artifacts",
+      "storage_key": "datasets/7a48e6f1-4c59-4a01-b985-8ec943654efc/table_0.csv",
+      "content_type": "text/csv",
+      "size_bytes": 735,
+      "checksum": "d29bad3db968576c8ebbde284e05da89ad0e07aa5c8d79c5a8b8350980f4c833",
+      "status": "uploaded",
+      "metadata": {
+        "quick_extraction": {
+          "columns": [
+            {
+              "name": "col0",
+              "type": "string"
+            },
+            {
+              "name": "col1",
+              "type": "string"
+            },
+            {
+              "name": "col2",
+              "type": "string"
+            }
+          ],
+          "row_count": 50,
+          "sample_data": [
+            {
+              "col0": "0_0",
+              "col1": "0_1",
+              "col2": "0_2"
+            },
+            {
+              "col0": "1_0",
+              "col1": "1_1",
+              "col2": "1_2"
+            },
+            {
+              "col0": "2_0",
+              "col1": "2_1",
+              "col2": "2_2"
+            },
+            {
+              "col0": "3_0",
+              "col1": "3_1",
+              "col2": "3_2"
+            },
+            {
+              "col0": "4_0",
+              "col1": "4_1",
+              "col2": "4_2"
+            },
+            {
+              "col0": "5_0",
+              "col1": "5_1",
+              "col2": "5_2"
+            },
+            {
+              "col0": "6_0",
+              "col1": "6_1",
+              "col2": "6_2"
+            },
+            {
+              "col0": "7_0",
+              "col1": "7_1",
+              "col2": "7_2"
+            },
+            {
+              "col0": "8_0",
+              "col1": "8_1",
+              "col2": "8_2"
+            },
+            {
+              "col0": "9_0",
+              "col1": "9_1",
+              "col2": "9_2"
+            },
+            {
+              "col0": "10_0",
+              "col1": "10_1",
+              "col2": "10_2"
+            },
+            {
+              "col0": "11_0",
+              "col1": "11_1",
+              "col2": "11_2"
+            },
+            {
+              "col0": "12_0",
+              "col1": "12_1",
+              "col2": "12_2"
+            },
+            {
+              "col0": "13_0",
+              "col1": "13_1",
+              "col2": "13_2"
+            },
+            {
+              "col0": "14_0",
+              "col1": "14_1",
+              "col2": "14_2"
+            },
+            {
+              "col0": "15_0",
+              "col1": "15_1",
+              "col2": "15_2"
+            },
+            {
+              "col0": "16_0",
+              "col1": "16_1",
+              "col2": "16_2"
+            },
+            {
+              "col0": "17_0",
+              "col1": "17_1",
+              "col2": "17_2"
+            },
+            {
+              "col0": "18_0",
+              "col1": "18_1",
+              "col2": "18_2"
+            },
+            {
+              "col0": "19_0",
+              "col1": "19_1",
+              "col2": "19_2"
+            },
+            {
+              "col0": "20_0",
+              "col1": "20_1",
+              "col2": "20_2"
+            },
+            {
+              "col0": "21_0",
+              "col1": "21_1",
+              "col2": "21_2"
+            },
+            {
+              "col0": "22_0",
+              "col1": "22_1",
+              "col2": "22_2"
+            },
+            {
+              "col0": "23_0",
+              "col1": "23_1",
+              "col2": "23_2"
+            },
+            {
+              "col0": "24_0",
+              "col1": "24_1",
+              "col2": "24_2"
+            },
+            {
+              "col0": "25_0",
+              "col1": "25_1",
+              "col2": "25_2"
+            },
+            {
+              "col0": "26_0",
+              "col1": "26_1",
+              "col2": "26_2"
+            },
+            {
+              "col0": "27_0",
+              "col1": "27_1",
+              "col2": "27_2"
+            },
+            {
+              "col0": "28_0",
+              "col1": "28_1",
+              "col2": "28_2"
+            },
+            {
+              "col0": "29_0",
+              "col1": "29_1",
+              "col2": "29_2"
+            },
+            {
+              "col0": "30_0",
+              "col1": "30_1",
+              "col2": "30_2"
+            },
+            {
+              "col0": "31_0",
+              "col1": "31_1",
+              "col2": "31_2"
+            },
+            {
+              "col0": "32_0",
+              "col1": "32_1",
+              "col2": "32_2"
+            },
+            {
+              "col0": "33_0",
+              "col1": "33_1",
+              "col2": "33_2"
+            },
+            {
+              "col0": "34_0",
+              "col1": "34_1",
+              "col2": "34_2"
+            },
+            {
+              "col0": "35_0",
+              "col1": "35_1",
+              "col2": "35_2"
+            },
+            {
+              "col0": "36_0",
+              "col1": "36_1",
+              "col2": "36_2"
+            },
+            {
+              "col0": "37_0",
+              "col1": "37_1",
+              "col2": "37_2"
+            },
+            {
+              "col0": "38_0",
+              "col1": "38_1",
+              "col2": "38_2"
+            },
+            {
+              "col0": "39_0",
+              "col1": "39_1",
+              "col2": "39_2"
+            },
+            {
+              "col0": "40_0",
+              "col1": "40_1",
+              "col2": "40_2"
+            },
+            {
+              "col0": "41_0",
+              "col1": "41_1",
+              "col2": "41_2"
+            },
+            {
+              "col0": "42_0",
+              "col1": "42_1",
+              "col2": "42_2"
+            },
+            {
+              "col0": "43_0",
+              "col1": "43_1",
+              "col2": "43_2"
+            },
+            {
+              "col0": "44_0",
+              "col1": "44_1",
+              "col2": "44_2"
+            },
+            {
+              "col0": "45_0",
+              "col1": "45_1",
+              "col2": "45_2"
+            },
+            {
+              "col0": "46_0",
+              "col1": "46_1",
+              "col2": "46_2"
+            },
+            {
+              "col0": "47_0",
+              "col1": "47_1",
+              "col2": "47_2"
+            },
+            {
+              "col0": "48_0",
+              "col1": "48_1",
+              "col2": "48_2"
+            },
+            {
+              "col0": "49_0",
+              "col1": "49_1",
+              "col2": "49_2"
+            }
+          ],
+          "insights": []
+        }
+      },
+      "created_at": "2026-01-11T20:55:52.886385+00:00",
+      "updated_at": "2026-01-11T20:55:52.886385+00:00"
+    },
+    "667bfaa2-a934-4c62-a626-1850dd7ce45f": {
+      "id": "667bfaa2-a934-4c62-a626-1850dd7ce45f",
+      "filename": "crime_factors.csv",
+      "storage_bucket": "artifacts",
+      "storage_key": "datasets/667bfaa2-a934-4c62-a626-1850dd7ce45f/crime_factors.csv",
+      "content_type": "text/csv",
+      "size_bytes": 195,
+      "checksum": "1658c4f300e55eabcb2827c9d7af636aa3ea6e98765067206b2b0945a4f3327a",
+      "status": "uploaded",
+      "metadata": {
+        "quick_extraction": {
+          "columns": [
+            {
+              "name": "region",
+              "type": "string"
+            },
+            {
+              "name": "year",
+              "type": "number"
+            },
+            {
+              "name": "crime_rate",
+              "type": "number"
+            },
+            {
+              "name": "unemployment_rate",
+              "type": "number"
+            },
+            {
+              "name": "poverty_index",
+              "type": "number"
+            },
+            {
+              "name": "police_presence",
+              "type": "number"
+            }
+          ],
+          "row_count": 4,
+          "sample_data": [
+            {
+              "region": "Central",
+              "year": 2020,
+              "crime_rate": 12.5,
+              "unemployment_rate": 5.1,
+              "poverty_index": 18.4,
+              "police_presence": 220
+            },
+            {
+              "region": "Central",
+              "year": 2021,
+              "crime_rate": 13.9,
+              "unemployment_rate": 5.3,
+              "poverty_index": 18.9,
+              "police_presence": 215
+            },
+            {
+              "region": "Central",
+              "year": 2022,
+              "crime_rate": 15.8,
+              "unemployment_rate": 5.6,
+              "poverty_index": 19.5,
+              "police_presence": 208
+            },
+            {
+              "region": "Central",
+              "year": 2023,
+              "crime_rate": 16.7,
+              "unemployment_rate": 5.4,
+              "poverty_index": 19.8,
+              "police_presence": 200
+            }
+          ],
+          "insights": [
+            "Crime indicator 'crime_rate' increased by 4.20 between the first and last records.",
+            "Risk factor 'unemployment_rate' averages 5.35 across the dataset.",
+            "Risk factor 'poverty_index' averages 19.15 across the dataset.",
+            "Policing resource 'police_presence' decreased by 20.00 between the first and last records."
+          ]
+        }
+      },
+      "created_at": "2026-01-11T20:55:53.340962+00:00",
+      "updated_at": "2026-01-11T20:55:53.340962+00:00"
+    },
+    "5621c8d0-7f3b-4ac8-9817-21178a86a6f3": {
+      "id": "5621c8d0-7f3b-4ac8-9817-21178a86a6f3",
+      "filename": "cities.csv",
+      "storage_bucket": "artifacts",
+      "storage_key": "datasets/5621c8d0-7f3b-4ac8-9817-21178a86a6f3/cities.csv",
+      "content_type": "text/csv",
+      "size_bytes": 45,
+      "checksum": "700b1f126a6685a9fab856f3eec0a39112258b52d70a2d646ac1ef80718eb1e3",
+      "status": "uploaded",
+      "metadata": {
+        "quick_extraction": {
+          "columns": [
+            {
+              "name": "city",
+              "type": "string"
+            },
+            {
+              "name": "population",
+              "type": "number"
+            }
+          ],
+          "row_count": 2,
+          "sample_data": [
+            {
+              "city": "Paris",
+              "population": 2148327
+            },
+            {
+              "city": "Berlin",
+              "population": 3769495
+            }
+          ],
+          "insights": []
+        }
+      },
+      "created_at": "2026-01-11T20:56:59.618526+00:00",
+      "updated_at": "2026-01-11T20:56:59.618526+00:00"
+    },
+    "23356244-4a9a-419e-9344-dec921c278bb": {
+      "id": "23356244-4a9a-419e-9344-dec921c278bb",
+      "filename": "table_0.csv",
+      "storage_bucket": "artifacts",
+      "storage_key": "datasets/23356244-4a9a-419e-9344-dec921c278bb/table_0.csv",
+      "content_type": "text/csv",
+      "size_bytes": 735,
+      "checksum": "d29bad3db968576c8ebbde284e05da89ad0e07aa5c8d79c5a8b8350980f4c833",
+      "status": "uploaded",
+      "metadata": {
+        "quick_extraction": {
+          "columns": [
+            {
+              "name": "col0",
+              "type": "string"
+            },
+            {
+              "name": "col1",
+              "type": "string"
+            },
+            {
+              "name": "col2",
+              "type": "string"
+            }
+          ],
+          "row_count": 50,
+          "sample_data": [
+            {
+              "col0": "0_0",
+              "col1": "0_1",
+              "col2": "0_2"
+            },
+            {
+              "col0": "1_0",
+              "col1": "1_1",
+              "col2": "1_2"
+            },
+            {
+              "col0": "2_0",
+              "col1": "2_1",
+              "col2": "2_2"
+            },
+            {
+              "col0": "3_0",
+              "col1": "3_1",
+              "col2": "3_2"
+            },
+            {
+              "col0": "4_0",
+              "col1": "4_1",
+              "col2": "4_2"
+            },
+            {
+              "col0": "5_0",
+              "col1": "5_1",
+              "col2": "5_2"
+            },
+            {
+              "col0": "6_0",
+              "col1": "6_1",
+              "col2": "6_2"
+            },
+            {
+              "col0": "7_0",
+              "col1": "7_1",
+              "col2": "7_2"
+            },
+            {
+              "col0": "8_0",
+              "col1": "8_1",
+              "col2": "8_2"
+            },
+            {
+              "col0": "9_0",
+              "col1": "9_1",
+              "col2": "9_2"
+            },
+            {
+              "col0": "10_0",
+              "col1": "10_1",
+              "col2": "10_2"
+            },
+            {
+              "col0": "11_0",
+              "col1": "11_1",
+              "col2": "11_2"
+            },
+            {
+              "col0": "12_0",
+              "col1": "12_1",
+              "col2": "12_2"
+            },
+            {
+              "col0": "13_0",
+              "col1": "13_1",
+              "col2": "13_2"
+            },
+            {
+              "col0": "14_0",
+              "col1": "14_1",
+              "col2": "14_2"
+            },
+            {
+              "col0": "15_0",
+              "col1": "15_1",
+              "col2": "15_2"
+            },
+            {
+              "col0": "16_0",
+              "col1": "16_1",
+              "col2": "16_2"
+            },
+            {
+              "col0": "17_0",
+              "col1": "17_1",
+              "col2": "17_2"
+            },
+            {
+              "col0": "18_0",
+              "col1": "18_1",
+              "col2": "18_2"
+            },
+            {
+              "col0": "19_0",
+              "col1": "19_1",
+              "col2": "19_2"
+            },
+            {
+              "col0": "20_0",
+              "col1": "20_1",
+              "col2": "20_2"
+            },
+            {
+              "col0": "21_0",
+              "col1": "21_1",
+              "col2": "21_2"
+            },
+            {
+              "col0": "22_0",
+              "col1": "22_1",
+              "col2": "22_2"
+            },
+            {
+              "col0": "23_0",
+              "col1": "23_1",
+              "col2": "23_2"
+            },
+            {
+              "col0": "24_0",
+              "col1": "24_1",
+              "col2": "24_2"
+            },
+            {
+              "col0": "25_0",
+              "col1": "25_1",
+              "col2": "25_2"
+            },
+            {
+              "col0": "26_0",
+              "col1": "26_1",
+              "col2": "26_2"
+            },
+            {
+              "col0": "27_0",
+              "col1": "27_1",
+              "col2": "27_2"
+            },
+            {
+              "col0": "28_0",
+              "col1": "28_1",
+              "col2": "28_2"
+            },
+            {
+              "col0": "29_0",
+              "col1": "29_1",
+              "col2": "29_2"
+            },
+            {
+              "col0": "30_0",
+              "col1": "30_1",
+              "col2": "30_2"
+            },
+            {
+              "col0": "31_0",
+              "col1": "31_1",
+              "col2": "31_2"
+            },
+            {
+              "col0": "32_0",
+              "col1": "32_1",
+              "col2": "32_2"
+            },
+            {
+              "col0": "33_0",
+              "col1": "33_1",
+              "col2": "33_2"
+            },
+            {
+              "col0": "34_0",
+              "col1": "34_1",
+              "col2": "34_2"
+            },
+            {
+              "col0": "35_0",
+              "col1": "35_1",
+              "col2": "35_2"
+            },
+            {
+              "col0": "36_0",
+              "col1": "36_1",
+              "col2": "36_2"
+            },
+            {
+              "col0": "37_0",
+              "col1": "37_1",
+              "col2": "37_2"
+            },
+            {
+              "col0": "38_0",
+              "col1": "38_1",
+              "col2": "38_2"
+            },
+            {
+              "col0": "39_0",
+              "col1": "39_1",
+              "col2": "39_2"
+            },
+            {
+              "col0": "40_0",
+              "col1": "40_1",
+              "col2": "40_2"
+            },
+            {
+              "col0": "41_0",
+              "col1": "41_1",
+              "col2": "41_2"
+            },
+            {
+              "col0": "42_0",
+              "col1": "42_1",
+              "col2": "42_2"
+            },
+            {
+              "col0": "43_0",
+              "col1": "43_1",
+              "col2": "43_2"
+            },
+            {
+              "col0": "44_0",
+              "col1": "44_1",
+              "col2": "44_2"
+            },
+            {
+              "col0": "45_0",
+              "col1": "45_1",
+              "col2": "45_2"
+            },
+            {
+              "col0": "46_0",
+              "col1": "46_1",
+              "col2": "46_2"
+            },
+            {
+              "col0": "47_0",
+              "col1": "47_1",
+              "col2": "47_2"
+            },
+            {
+              "col0": "48_0",
+              "col1": "48_1",
+              "col2": "48_2"
+            },
+            {
+              "col0": "49_0",
+              "col1": "49_1",
+              "col2": "49_2"
+            }
+          ],
+          "insights": []
+        }
+      },
+      "created_at": "2026-01-11T20:57:01.091283+00:00",
+      "updated_at": "2026-01-11T20:57:01.091283+00:00"
+    },
+    "3e7a0793-b08a-4ee1-b1c7-32f2a57687ed": {
+      "id": "3e7a0793-b08a-4ee1-b1c7-32f2a57687ed",
+      "filename": "crime_factors.csv",
+      "storage_bucket": "artifacts",
+      "storage_key": "datasets/3e7a0793-b08a-4ee1-b1c7-32f2a57687ed/crime_factors.csv",
+      "content_type": "text/csv",
+      "size_bytes": 195,
+      "checksum": "1658c4f300e55eabcb2827c9d7af636aa3ea6e98765067206b2b0945a4f3327a",
+      "status": "uploaded",
+      "metadata": {
+        "quick_extraction": {
+          "columns": [
+            {
+              "name": "region",
+              "type": "string"
+            },
+            {
+              "name": "year",
+              "type": "number"
+            },
+            {
+              "name": "crime_rate",
+              "type": "number"
+            },
+            {
+              "name": "unemployment_rate",
+              "type": "number"
+            },
+            {
+              "name": "poverty_index",
+              "type": "number"
+            },
+            {
+              "name": "police_presence",
+              "type": "number"
+            }
+          ],
+          "row_count": 4,
+          "sample_data": [
+            {
+              "region": "Central",
+              "year": 2020,
+              "crime_rate": 12.5,
+              "unemployment_rate": 5.1,
+              "poverty_index": 18.4,
+              "police_presence": 220
+            },
+            {
+              "region": "Central",
+              "year": 2021,
+              "crime_rate": 13.9,
+              "unemployment_rate": 5.3,
+              "poverty_index": 18.9,
+              "police_presence": 215
+            },
+            {
+              "region": "Central",
+              "year": 2022,
+              "crime_rate": 15.8,
+              "unemployment_rate": 5.6,
+              "poverty_index": 19.5,
+              "police_presence": 208
+            },
+            {
+              "region": "Central",
+              "year": 2023,
+              "crime_rate": 16.7,
+              "unemployment_rate": 5.4,
+              "poverty_index": 19.8,
+              "police_presence": 200
+            }
+          ],
+          "insights": [
+            "Crime indicator 'crime_rate' increased by 4.20 between the first and last records.",
+            "Risk factor 'unemployment_rate' averages 5.35 across the dataset.",
+            "Risk factor 'poverty_index' averages 19.15 across the dataset.",
+            "Policing resource 'police_presence' decreased by 20.00 between the first and last records."
+          ]
+        }
+      },
+      "created_at": "2026-01-11T20:57:01.623443+00:00",
+      "updated_at": "2026-01-11T20:57:01.623443+00:00"
+    },
+    "37556600-e695-44d7-9c1a-4c33d204e97d": {
+      "id": "37556600-e695-44d7-9c1a-4c33d204e97d",
+      "filename": "cities.csv",
+      "storage_bucket": "artifacts",
+      "storage_key": "datasets/37556600-e695-44d7-9c1a-4c33d204e97d/cities.csv",
+      "content_type": "text/csv",
+      "size_bytes": 45,
+      "checksum": "700b1f126a6685a9fab856f3eec0a39112258b52d70a2d646ac1ef80718eb1e3",
+      "status": "uploaded",
+      "metadata": {
+        "quick_extraction": {
+          "columns": [
+            {
+              "name": "city",
+              "type": "string"
+            },
+            {
+              "name": "population",
+              "type": "number"
+            }
+          ],
+          "row_count": 2,
+          "sample_data": [
+            {
+              "city": "Paris",
+              "population": 2148327
+            },
+            {
+              "city": "Berlin",
+              "population": 3769495
+            }
+          ],
+          "insights": []
+        }
+      },
+      "created_at": "2026-01-11T20:57:37.142746+00:00",
+      "updated_at": "2026-01-11T20:57:37.142746+00:00"
+    },
+    "1c7a5da6-db8f-4750-8adb-5b7b452cc387": {
+      "id": "1c7a5da6-db8f-4750-8adb-5b7b452cc387",
+      "filename": "table_0.csv",
+      "storage_bucket": "artifacts",
+      "storage_key": "datasets/1c7a5da6-db8f-4750-8adb-5b7b452cc387/table_0.csv",
+      "content_type": "text/csv",
+      "size_bytes": 735,
+      "checksum": "d29bad3db968576c8ebbde284e05da89ad0e07aa5c8d79c5a8b8350980f4c833",
+      "status": "uploaded",
+      "metadata": {
+        "quick_extraction": {
+          "columns": [
+            {
+              "name": "col0",
+              "type": "string"
+            },
+            {
+              "name": "col1",
+              "type": "string"
+            },
+            {
+              "name": "col2",
+              "type": "string"
+            }
+          ],
+          "row_count": 50,
+          "sample_data": [
+            {
+              "col0": "0_0",
+              "col1": "0_1",
+              "col2": "0_2"
+            },
+            {
+              "col0": "1_0",
+              "col1": "1_1",
+              "col2": "1_2"
+            },
+            {
+              "col0": "2_0",
+              "col1": "2_1",
+              "col2": "2_2"
+            },
+            {
+              "col0": "3_0",
+              "col1": "3_1",
+              "col2": "3_2"
+            },
+            {
+              "col0": "4_0",
+              "col1": "4_1",
+              "col2": "4_2"
+            },
+            {
+              "col0": "5_0",
+              "col1": "5_1",
+              "col2": "5_2"
+            },
+            {
+              "col0": "6_0",
+              "col1": "6_1",
+              "col2": "6_2"
+            },
+            {
+              "col0": "7_0",
+              "col1": "7_1",
+              "col2": "7_2"
+            },
+            {
+              "col0": "8_0",
+              "col1": "8_1",
+              "col2": "8_2"
+            },
+            {
+              "col0": "9_0",
+              "col1": "9_1",
+              "col2": "9_2"
+            },
+            {
+              "col0": "10_0",
+              "col1": "10_1",
+              "col2": "10_2"
+            },
+            {
+              "col0": "11_0",
+              "col1": "11_1",
+              "col2": "11_2"
+            },
+            {
+              "col0": "12_0",
+              "col1": "12_1",
+              "col2": "12_2"
+            },
+            {
+              "col0": "13_0",
+              "col1": "13_1",
+              "col2": "13_2"
+            },
+            {
+              "col0": "14_0",
+              "col1": "14_1",
+              "col2": "14_2"
+            },
+            {
+              "col0": "15_0",
+              "col1": "15_1",
+              "col2": "15_2"
+            },
+            {
+              "col0": "16_0",
+              "col1": "16_1",
+              "col2": "16_2"
+            },
+            {
+              "col0": "17_0",
+              "col1": "17_1",
+              "col2": "17_2"
+            },
+            {
+              "col0": "18_0",
+              "col1": "18_1",
+              "col2": "18_2"
+            },
+            {
+              "col0": "19_0",
+              "col1": "19_1",
+              "col2": "19_2"
+            },
+            {
+              "col0": "20_0",
+              "col1": "20_1",
+              "col2": "20_2"
+            },
+            {
+              "col0": "21_0",
+              "col1": "21_1",
+              "col2": "21_2"
+            },
+            {
+              "col0": "22_0",
+              "col1": "22_1",
+              "col2": "22_2"
+            },
+            {
+              "col0": "23_0",
+              "col1": "23_1",
+              "col2": "23_2"
+            },
+            {
+              "col0": "24_0",
+              "col1": "24_1",
+              "col2": "24_2"
+            },
+            {
+              "col0": "25_0",
+              "col1": "25_1",
+              "col2": "25_2"
+            },
+            {
+              "col0": "26_0",
+              "col1": "26_1",
+              "col2": "26_2"
+            },
+            {
+              "col0": "27_0",
+              "col1": "27_1",
+              "col2": "27_2"
+            },
+            {
+              "col0": "28_0",
+              "col1": "28_1",
+              "col2": "28_2"
+            },
+            {
+              "col0": "29_0",
+              "col1": "29_1",
+              "col2": "29_2"
+            },
+            {
+              "col0": "30_0",
+              "col1": "30_1",
+              "col2": "30_2"
+            },
+            {
+              "col0": "31_0",
+              "col1": "31_1",
+              "col2": "31_2"
+            },
+            {
+              "col0": "32_0",
+              "col1": "32_1",
+              "col2": "32_2"
+            },
+            {
+              "col0": "33_0",
+              "col1": "33_1",
+              "col2": "33_2"
+            },
+            {
+              "col0": "34_0",
+              "col1": "34_1",
+              "col2": "34_2"
+            },
+            {
+              "col0": "35_0",
+              "col1": "35_1",
+              "col2": "35_2"
+            },
+            {
+              "col0": "36_0",
+              "col1": "36_1",
+              "col2": "36_2"
+            },
+            {
+              "col0": "37_0",
+              "col1": "37_1",
+              "col2": "37_2"
+            },
+            {
+              "col0": "38_0",
+              "col1": "38_1",
+              "col2": "38_2"
+            },
+            {
+              "col0": "39_0",
+              "col1": "39_1",
+              "col2": "39_2"
+            },
+            {
+              "col0": "40_0",
+              "col1": "40_1",
+              "col2": "40_2"
+            },
+            {
+              "col0": "41_0",
+              "col1": "41_1",
+              "col2": "41_2"
+            },
+            {
+              "col0": "42_0",
+              "col1": "42_1",
+              "col2": "42_2"
+            },
+            {
+              "col0": "43_0",
+              "col1": "43_1",
+              "col2": "43_2"
+            },
+            {
+              "col0": "44_0",
+              "col1": "44_1",
+              "col2": "44_2"
+            },
+            {
+              "col0": "45_0",
+              "col1": "45_1",
+              "col2": "45_2"
+            },
+            {
+              "col0": "46_0",
+              "col1": "46_1",
+              "col2": "46_2"
+            },
+            {
+              "col0": "47_0",
+              "col1": "47_1",
+              "col2": "47_2"
+            },
+            {
+              "col0": "48_0",
+              "col1": "48_1",
+              "col2": "48_2"
+            },
+            {
+              "col0": "49_0",
+              "col1": "49_1",
+              "col2": "49_2"
+            }
+          ],
+          "insights": []
+        }
+      },
+      "created_at": "2026-01-11T20:57:38.570508+00:00",
+      "updated_at": "2026-01-11T20:57:38.570508+00:00"
+    },
+    "f6149891-8235-4944-b908-f9ba824c76f3": {
+      "id": "f6149891-8235-4944-b908-f9ba824c76f3",
+      "filename": "crime_factors.csv",
+      "storage_bucket": "artifacts",
+      "storage_key": "datasets/f6149891-8235-4944-b908-f9ba824c76f3/crime_factors.csv",
+      "content_type": "text/csv",
+      "size_bytes": 195,
+      "checksum": "1658c4f300e55eabcb2827c9d7af636aa3ea6e98765067206b2b0945a4f3327a",
+      "status": "uploaded",
+      "metadata": {
+        "quick_extraction": {
+          "columns": [
+            {
+              "name": "region",
+              "type": "string"
+            },
+            {
+              "name": "year",
+              "type": "number"
+            },
+            {
+              "name": "crime_rate",
+              "type": "number"
+            },
+            {
+              "name": "unemployment_rate",
+              "type": "number"
+            },
+            {
+              "name": "poverty_index",
+              "type": "number"
+            },
+            {
+              "name": "police_presence",
+              "type": "number"
+            }
+          ],
+          "row_count": 4,
+          "sample_data": [
+            {
+              "region": "Central",
+              "year": 2020,
+              "crime_rate": 12.5,
+              "unemployment_rate": 5.1,
+              "poverty_index": 18.4,
+              "police_presence": 220
+            },
+            {
+              "region": "Central",
+              "year": 2021,
+              "crime_rate": 13.9,
+              "unemployment_rate": 5.3,
+              "poverty_index": 18.9,
+              "police_presence": 215
+            },
+            {
+              "region": "Central",
+              "year": 2022,
+              "crime_rate": 15.8,
+              "unemployment_rate": 5.6,
+              "poverty_index": 19.5,
+              "police_presence": 208
+            },
+            {
+              "region": "Central",
+              "year": 2023,
+              "crime_rate": 16.7,
+              "unemployment_rate": 5.4,
+              "poverty_index": 19.8,
+              "police_presence": 200
+            }
+          ],
+          "insights": [
+            "Crime indicator 'crime_rate' increased by 4.20 between the first and last records.",
+            "Risk factor 'unemployment_rate' averages 5.35 across the dataset.",
+            "Risk factor 'poverty_index' averages 19.15 across the dataset.",
+            "Policing resource 'police_presence' decreased by 20.00 between the first and last records."
+          ]
+        }
+      },
+      "created_at": "2026-01-11T20:57:39.061184+00:00",
+      "updated_at": "2026-01-11T20:57:39.061184+00:00"
+    },
+    "d00412cc-484e-4bc8-b0ab-6201827ce9ee": {
+      "id": "d00412cc-484e-4bc8-b0ab-6201827ce9ee",
+      "filename": "cities.csv",
+      "storage_bucket": "artifacts",
+      "storage_key": "datasets/d00412cc-484e-4bc8-b0ab-6201827ce9ee/cities.csv",
+      "content_type": "text/csv",
+      "size_bytes": 45,
+      "checksum": "700b1f126a6685a9fab856f3eec0a39112258b52d70a2d646ac1ef80718eb1e3",
+      "status": "uploaded",
+      "metadata": {
+        "quick_extraction": {
+          "columns": [
+            {
+              "name": "city",
+              "type": "string"
+            },
+            {
+              "name": "population",
+              "type": "number"
+            }
+          ],
+          "row_count": 2,
+          "sample_data": [
+            {
+              "city": "Paris",
+              "population": 2148327
+            },
+            {
+              "city": "Berlin",
+              "population": 3769495
+            }
+          ],
+          "insights": []
+        }
+      },
+      "created_at": "2026-01-11T20:59:24.433668+00:00",
+      "updated_at": "2026-01-11T20:59:24.433668+00:00"
+    },
+    "4188d447-ba1b-42a4-8949-f0640646d99b": {
+      "id": "4188d447-ba1b-42a4-8949-f0640646d99b",
+      "filename": "table_0.csv",
+      "storage_bucket": "artifacts",
+      "storage_key": "datasets/4188d447-ba1b-42a4-8949-f0640646d99b/table_0.csv",
+      "content_type": "text/csv",
+      "size_bytes": 735,
+      "checksum": "d29bad3db968576c8ebbde284e05da89ad0e07aa5c8d79c5a8b8350980f4c833",
+      "status": "uploaded",
+      "metadata": {
+        "quick_extraction": {
+          "columns": [
+            {
+              "name": "col0",
+              "type": "string"
+            },
+            {
+              "name": "col1",
+              "type": "string"
+            },
+            {
+              "name": "col2",
+              "type": "string"
+            }
+          ],
+          "row_count": 50,
+          "sample_data": [
+            {
+              "col0": "0_0",
+              "col1": "0_1",
+              "col2": "0_2"
+            },
+            {
+              "col0": "1_0",
+              "col1": "1_1",
+              "col2": "1_2"
+            },
+            {
+              "col0": "2_0",
+              "col1": "2_1",
+              "col2": "2_2"
+            },
+            {
+              "col0": "3_0",
+              "col1": "3_1",
+              "col2": "3_2"
+            },
+            {
+              "col0": "4_0",
+              "col1": "4_1",
+              "col2": "4_2"
+            },
+            {
+              "col0": "5_0",
+              "col1": "5_1",
+              "col2": "5_2"
+            },
+            {
+              "col0": "6_0",
+              "col1": "6_1",
+              "col2": "6_2"
+            },
+            {
+              "col0": "7_0",
+              "col1": "7_1",
+              "col2": "7_2"
+            },
+            {
+              "col0": "8_0",
+              "col1": "8_1",
+              "col2": "8_2"
+            },
+            {
+              "col0": "9_0",
+              "col1": "9_1",
+              "col2": "9_2"
+            },
+            {
+              "col0": "10_0",
+              "col1": "10_1",
+              "col2": "10_2"
+            },
+            {
+              "col0": "11_0",
+              "col1": "11_1",
+              "col2": "11_2"
+            },
+            {
+              "col0": "12_0",
+              "col1": "12_1",
+              "col2": "12_2"
+            },
+            {
+              "col0": "13_0",
+              "col1": "13_1",
+              "col2": "13_2"
+            },
+            {
+              "col0": "14_0",
+              "col1": "14_1",
+              "col2": "14_2"
+            },
+            {
+              "col0": "15_0",
+              "col1": "15_1",
+              "col2": "15_2"
+            },
+            {
+              "col0": "16_0",
+              "col1": "16_1",
+              "col2": "16_2"
+            },
+            {
+              "col0": "17_0",
+              "col1": "17_1",
+              "col2": "17_2"
+            },
+            {
+              "col0": "18_0",
+              "col1": "18_1",
+              "col2": "18_2"
+            },
+            {
+              "col0": "19_0",
+              "col1": "19_1",
+              "col2": "19_2"
+            },
+            {
+              "col0": "20_0",
+              "col1": "20_1",
+              "col2": "20_2"
+            },
+            {
+              "col0": "21_0",
+              "col1": "21_1",
+              "col2": "21_2"
+            },
+            {
+              "col0": "22_0",
+              "col1": "22_1",
+              "col2": "22_2"
+            },
+            {
+              "col0": "23_0",
+              "col1": "23_1",
+              "col2": "23_2"
+            },
+            {
+              "col0": "24_0",
+              "col1": "24_1",
+              "col2": "24_2"
+            },
+            {
+              "col0": "25_0",
+              "col1": "25_1",
+              "col2": "25_2"
+            },
+            {
+              "col0": "26_0",
+              "col1": "26_1",
+              "col2": "26_2"
+            },
+            {
+              "col0": "27_0",
+              "col1": "27_1",
+              "col2": "27_2"
+            },
+            {
+              "col0": "28_0",
+              "col1": "28_1",
+              "col2": "28_2"
+            },
+            {
+              "col0": "29_0",
+              "col1": "29_1",
+              "col2": "29_2"
+            },
+            {
+              "col0": "30_0",
+              "col1": "30_1",
+              "col2": "30_2"
+            },
+            {
+              "col0": "31_0",
+              "col1": "31_1",
+              "col2": "31_2"
+            },
+            {
+              "col0": "32_0",
+              "col1": "32_1",
+              "col2": "32_2"
+            },
+            {
+              "col0": "33_0",
+              "col1": "33_1",
+              "col2": "33_2"
+            },
+            {
+              "col0": "34_0",
+              "col1": "34_1",
+              "col2": "34_2"
+            },
+            {
+              "col0": "35_0",
+              "col1": "35_1",
+              "col2": "35_2"
+            },
+            {
+              "col0": "36_0",
+              "col1": "36_1",
+              "col2": "36_2"
+            },
+            {
+              "col0": "37_0",
+              "col1": "37_1",
+              "col2": "37_2"
+            },
+            {
+              "col0": "38_0",
+              "col1": "38_1",
+              "col2": "38_2"
+            },
+            {
+              "col0": "39_0",
+              "col1": "39_1",
+              "col2": "39_2"
+            },
+            {
+              "col0": "40_0",
+              "col1": "40_1",
+              "col2": "40_2"
+            },
+            {
+              "col0": "41_0",
+              "col1": "41_1",
+              "col2": "41_2"
+            },
+            {
+              "col0": "42_0",
+              "col1": "42_1",
+              "col2": "42_2"
+            },
+            {
+              "col0": "43_0",
+              "col1": "43_1",
+              "col2": "43_2"
+            },
+            {
+              "col0": "44_0",
+              "col1": "44_1",
+              "col2": "44_2"
+            },
+            {
+              "col0": "45_0",
+              "col1": "45_1",
+              "col2": "45_2"
+            },
+            {
+              "col0": "46_0",
+              "col1": "46_1",
+              "col2": "46_2"
+            },
+            {
+              "col0": "47_0",
+              "col1": "47_1",
+              "col2": "47_2"
+            },
+            {
+              "col0": "48_0",
+              "col1": "48_1",
+              "col2": "48_2"
+            },
+            {
+              "col0": "49_0",
+              "col1": "49_1",
+              "col2": "49_2"
+            }
+          ],
+          "insights": []
+        }
+      },
+      "created_at": "2026-01-11T20:59:24.775434+00:00",
+      "updated_at": "2026-01-11T20:59:24.775434+00:00"
+    },
+    "65fc430b-4251-48e7-9146-875dddead85b": {
+      "id": "65fc430b-4251-48e7-9146-875dddead85b",
+      "filename": "table_1.csv",
+      "storage_bucket": "artifacts",
+      "storage_key": "datasets/65fc430b-4251-48e7-9146-875dddead85b/table_1.csv",
+      "content_type": "text/csv",
+      "size_bytes": 735,
+      "checksum": "d29bad3db968576c8ebbde284e05da89ad0e07aa5c8d79c5a8b8350980f4c833",
+      "status": "uploaded",
+      "metadata": {
+        "quick_extraction": {
+          "columns": [
+            {
+              "name": "col0",
+              "type": "string"
+            },
+            {
+              "name": "col1",
+              "type": "string"
+            },
+            {
+              "name": "col2",
+              "type": "string"
+            }
+          ],
+          "row_count": 50,
+          "sample_data": [
+            {
+              "col0": "0_0",
+              "col1": "0_1",
+              "col2": "0_2"
+            },
+            {
+              "col0": "1_0",
+              "col1": "1_1",
+              "col2": "1_2"
+            },
+            {
+              "col0": "2_0",
+              "col1": "2_1",
+              "col2": "2_2"
+            },
+            {
+              "col0": "3_0",
+              "col1": "3_1",
+              "col2": "3_2"
+            },
+            {
+              "col0": "4_0",
+              "col1": "4_1",
+              "col2": "4_2"
+            },
+            {
+              "col0": "5_0",
+              "col1": "5_1",
+              "col2": "5_2"
+            },
+            {
+              "col0": "6_0",
+              "col1": "6_1",
+              "col2": "6_2"
+            },
+            {
+              "col0": "7_0",
+              "col1": "7_1",
+              "col2": "7_2"
+            },
+            {
+              "col0": "8_0",
+              "col1": "8_1",
+              "col2": "8_2"
+            },
+            {
+              "col0": "9_0",
+              "col1": "9_1",
+              "col2": "9_2"
+            },
+            {
+              "col0": "10_0",
+              "col1": "10_1",
+              "col2": "10_2"
+            },
+            {
+              "col0": "11_0",
+              "col1": "11_1",
+              "col2": "11_2"
+            },
+            {
+              "col0": "12_0",
+              "col1": "12_1",
+              "col2": "12_2"
+            },
+            {
+              "col0": "13_0",
+              "col1": "13_1",
+              "col2": "13_2"
+            },
+            {
+              "col0": "14_0",
+              "col1": "14_1",
+              "col2": "14_2"
+            },
+            {
+              "col0": "15_0",
+              "col1": "15_1",
+              "col2": "15_2"
+            },
+            {
+              "col0": "16_0",
+              "col1": "16_1",
+              "col2": "16_2"
+            },
+            {
+              "col0": "17_0",
+              "col1": "17_1",
+              "col2": "17_2"
+            },
+            {
+              "col0": "18_0",
+              "col1": "18_1",
+              "col2": "18_2"
+            },
+            {
+              "col0": "19_0",
+              "col1": "19_1",
+              "col2": "19_2"
+            },
+            {
+              "col0": "20_0",
+              "col1": "20_1",
+              "col2": "20_2"
+            },
+            {
+              "col0": "21_0",
+              "col1": "21_1",
+              "col2": "21_2"
+            },
+            {
+              "col0": "22_0",
+              "col1": "22_1",
+              "col2": "22_2"
+            },
+            {
+              "col0": "23_0",
+              "col1": "23_1",
+              "col2": "23_2"
+            },
+            {
+              "col0": "24_0",
+              "col1": "24_1",
+              "col2": "24_2"
+            },
+            {
+              "col0": "25_0",
+              "col1": "25_1",
+              "col2": "25_2"
+            },
+            {
+              "col0": "26_0",
+              "col1": "26_1",
+              "col2": "26_2"
+            },
+            {
+              "col0": "27_0",
+              "col1": "27_1",
+              "col2": "27_2"
+            },
+            {
+              "col0": "28_0",
+              "col1": "28_1",
+              "col2": "28_2"
+            },
+            {
+              "col0": "29_0",
+              "col1": "29_1",
+              "col2": "29_2"
+            },
+            {
+              "col0": "30_0",
+              "col1": "30_1",
+              "col2": "30_2"
+            },
+            {
+              "col0": "31_0",
+              "col1": "31_1",
+              "col2": "31_2"
+            },
+            {
+              "col0": "32_0",
+              "col1": "32_1",
+              "col2": "32_2"
+            },
+            {
+              "col0": "33_0",
+              "col1": "33_1",
+              "col2": "33_2"
+            },
+            {
+              "col0": "34_0",
+              "col1": "34_1",
+              "col2": "34_2"
+            },
+            {
+              "col0": "35_0",
+              "col1": "35_1",
+              "col2": "35_2"
+            },
+            {
+              "col0": "36_0",
+              "col1": "36_1",
+              "col2": "36_2"
+            },
+            {
+              "col0": "37_0",
+              "col1": "37_1",
+              "col2": "37_2"
+            },
+            {
+              "col0": "38_0",
+              "col1": "38_1",
+              "col2": "38_2"
+            },
+            {
+              "col0": "39_0",
+              "col1": "39_1",
+              "col2": "39_2"
+            },
+            {
+              "col0": "40_0",
+              "col1": "40_1",
+              "col2": "40_2"
+            },
+            {
+              "col0": "41_0",
+              "col1": "41_1",
+              "col2": "41_2"
+            },
+            {
+              "col0": "42_0",
+              "col1": "42_1",
+              "col2": "42_2"
+            },
+            {
+              "col0": "43_0",
+              "col1": "43_1",
+              "col2": "43_2"
+            },
+            {
+              "col0": "44_0",
+              "col1": "44_1",
+              "col2": "44_2"
+            },
+            {
+              "col0": "45_0",
+              "col1": "45_1",
+              "col2": "45_2"
+            },
+            {
+              "col0": "46_0",
+              "col1": "46_1",
+              "col2": "46_2"
+            },
+            {
+              "col0": "47_0",
+              "col1": "47_1",
+              "col2": "47_2"
+            },
+            {
+              "col0": "48_0",
+              "col1": "48_1",
+              "col2": "48_2"
+            },
+            {
+              "col0": "49_0",
+              "col1": "49_1",
+              "col2": "49_2"
+            }
+          ],
+          "insights": []
+        }
+      },
+      "created_at": "2026-01-11T20:59:24.821901+00:00",
+      "updated_at": "2026-01-11T20:59:24.821901+00:00"
+    },
+    "6ad1300f-a155-4224-898f-17fb7cd2dbd8": {
+      "id": "6ad1300f-a155-4224-898f-17fb7cd2dbd8",
+      "filename": "table_2.csv",
+      "storage_bucket": "artifacts",
+      "storage_key": "datasets/6ad1300f-a155-4224-898f-17fb7cd2dbd8/table_2.csv",
+      "content_type": "text/csv",
+      "size_bytes": 735,
+      "checksum": "d29bad3db968576c8ebbde284e05da89ad0e07aa5c8d79c5a8b8350980f4c833",
+      "status": "uploaded",
+      "metadata": {
+        "quick_extraction": {
+          "columns": [
+            {
+              "name": "col0",
+              "type": "string"
+            },
+            {
+              "name": "col1",
+              "type": "string"
+            },
+            {
+              "name": "col2",
+              "type": "string"
+            }
+          ],
+          "row_count": 50,
+          "sample_data": [
+            {
+              "col0": "0_0",
+              "col1": "0_1",
+              "col2": "0_2"
+            },
+            {
+              "col0": "1_0",
+              "col1": "1_1",
+              "col2": "1_2"
+            },
+            {
+              "col0": "2_0",
+              "col1": "2_1",
+              "col2": "2_2"
+            },
+            {
+              "col0": "3_0",
+              "col1": "3_1",
+              "col2": "3_2"
+            },
+            {
+              "col0": "4_0",
+              "col1": "4_1",
+              "col2": "4_2"
+            },
+            {
+              "col0": "5_0",
+              "col1": "5_1",
+              "col2": "5_2"
+            },
+            {
+              "col0": "6_0",
+              "col1": "6_1",
+              "col2": "6_2"
+            },
+            {
+              "col0": "7_0",
+              "col1": "7_1",
+              "col2": "7_2"
+            },
+            {
+              "col0": "8_0",
+              "col1": "8_1",
+              "col2": "8_2"
+            },
+            {
+              "col0": "9_0",
+              "col1": "9_1",
+              "col2": "9_2"
+            },
+            {
+              "col0": "10_0",
+              "col1": "10_1",
+              "col2": "10_2"
+            },
+            {
+              "col0": "11_0",
+              "col1": "11_1",
+              "col2": "11_2"
+            },
+            {
+              "col0": "12_0",
+              "col1": "12_1",
+              "col2": "12_2"
+            },
+            {
+              "col0": "13_0",
+              "col1": "13_1",
+              "col2": "13_2"
+            },
+            {
+              "col0": "14_0",
+              "col1": "14_1",
+              "col2": "14_2"
+            },
+            {
+              "col0": "15_0",
+              "col1": "15_1",
+              "col2": "15_2"
+            },
+            {
+              "col0": "16_0",
+              "col1": "16_1",
+              "col2": "16_2"
+            },
+            {
+              "col0": "17_0",
+              "col1": "17_1",
+              "col2": "17_2"
+            },
+            {
+              "col0": "18_0",
+              "col1": "18_1",
+              "col2": "18_2"
+            },
+            {
+              "col0": "19_0",
+              "col1": "19_1",
+              "col2": "19_2"
+            },
+            {
+              "col0": "20_0",
+              "col1": "20_1",
+              "col2": "20_2"
+            },
+            {
+              "col0": "21_0",
+              "col1": "21_1",
+              "col2": "21_2"
+            },
+            {
+              "col0": "22_0",
+              "col1": "22_1",
+              "col2": "22_2"
+            },
+            {
+              "col0": "23_0",
+              "col1": "23_1",
+              "col2": "23_2"
+            },
+            {
+              "col0": "24_0",
+              "col1": "24_1",
+              "col2": "24_2"
+            },
+            {
+              "col0": "25_0",
+              "col1": "25_1",
+              "col2": "25_2"
+            },
+            {
+              "col0": "26_0",
+              "col1": "26_1",
+              "col2": "26_2"
+            },
+            {
+              "col0": "27_0",
+              "col1": "27_1",
+              "col2": "27_2"
+            },
+            {
+              "col0": "28_0",
+              "col1": "28_1",
+              "col2": "28_2"
+            },
+            {
+              "col0": "29_0",
+              "col1": "29_1",
+              "col2": "29_2"
+            },
+            {
+              "col0": "30_0",
+              "col1": "30_1",
+              "col2": "30_2"
+            },
+            {
+              "col0": "31_0",
+              "col1": "31_1",
+              "col2": "31_2"
+            },
+            {
+              "col0": "32_0",
+              "col1": "32_1",
+              "col2": "32_2"
+            },
+            {
+              "col0": "33_0",
+              "col1": "33_1",
+              "col2": "33_2"
+            },
+            {
+              "col0": "34_0",
+              "col1": "34_1",
+              "col2": "34_2"
+            },
+            {
+              "col0": "35_0",
+              "col1": "35_1",
+              "col2": "35_2"
+            },
+            {
+              "col0": "36_0",
+              "col1": "36_1",
+              "col2": "36_2"
+            },
+            {
+              "col0": "37_0",
+              "col1": "37_1",
+              "col2": "37_2"
+            },
+            {
+              "col0": "38_0",
+              "col1": "38_1",
+              "col2": "38_2"
+            },
+            {
+              "col0": "39_0",
+              "col1": "39_1",
+              "col2": "39_2"
+            },
+            {
+              "col0": "40_0",
+              "col1": "40_1",
+              "col2": "40_2"
+            },
+            {
+              "col0": "41_0",
+              "col1": "41_1",
+              "col2": "41_2"
+            },
+            {
+              "col0": "42_0",
+              "col1": "42_1",
+              "col2": "42_2"
+            },
+            {
+              "col0": "43_0",
+              "col1": "43_1",
+              "col2": "43_2"
+            },
+            {
+              "col0": "44_0",
+              "col1": "44_1",
+              "col2": "44_2"
+            },
+            {
+              "col0": "45_0",
+              "col1": "45_1",
+              "col2": "45_2"
+            },
+            {
+              "col0": "46_0",
+              "col1": "46_1",
+              "col2": "46_2"
+            },
+            {
+              "col0": "47_0",
+              "col1": "47_1",
+              "col2": "47_2"
+            },
+            {
+              "col0": "48_0",
+              "col1": "48_1",
+              "col2": "48_2"
+            },
+            {
+              "col0": "49_0",
+              "col1": "49_1",
+              "col2": "49_2"
+            }
+          ],
+          "insights": []
+        }
+      },
+      "created_at": "2026-01-11T20:59:24.872943+00:00",
+      "updated_at": "2026-01-11T20:59:24.872943+00:00"
+    },
+    "63b93261-622a-45a1-bbe6-dc7e36ccc823": {
+      "id": "63b93261-622a-45a1-bbe6-dc7e36ccc823",
+      "filename": "crime_factors.csv",
+      "storage_bucket": "artifacts",
+      "storage_key": "datasets/63b93261-622a-45a1-bbe6-dc7e36ccc823/crime_factors.csv",
+      "content_type": "text/csv",
+      "size_bytes": 195,
+      "checksum": "1658c4f300e55eabcb2827c9d7af636aa3ea6e98765067206b2b0945a4f3327a",
+      "status": "uploaded",
+      "metadata": {
+        "quick_extraction": {
+          "columns": [
+            {
+              "name": "region",
+              "type": "string"
+            },
+            {
+              "name": "year",
+              "type": "number"
+            },
+            {
+              "name": "crime_rate",
+              "type": "number"
+            },
+            {
+              "name": "unemployment_rate",
+              "type": "number"
+            },
+            {
+              "name": "poverty_index",
+              "type": "number"
+            },
+            {
+              "name": "police_presence",
+              "type": "number"
+            }
+          ],
+          "row_count": 4,
+          "sample_data": [
+            {
+              "region": "Central",
+              "year": 2020,
+              "crime_rate": 12.5,
+              "unemployment_rate": 5.1,
+              "poverty_index": 18.4,
+              "police_presence": 220
+            },
+            {
+              "region": "Central",
+              "year": 2021,
+              "crime_rate": 13.9,
+              "unemployment_rate": 5.3,
+              "poverty_index": 18.9,
+              "police_presence": 215
+            },
+            {
+              "region": "Central",
+              "year": 2022,
+              "crime_rate": 15.8,
+              "unemployment_rate": 5.6,
+              "poverty_index": 19.5,
+              "police_presence": 208
+            },
+            {
+              "region": "Central",
+              "year": 2023,
+              "crime_rate": 16.7,
+              "unemployment_rate": 5.4,
+              "poverty_index": 19.8,
+              "police_presence": 200
+            }
+          ],
+          "insights": [
+            "Crime indicator 'crime_rate' increased by 4.20 between the first and last records.",
+            "Risk factor 'unemployment_rate' averages 5.35 across the dataset.",
+            "Risk factor 'poverty_index' averages 19.15 across the dataset.",
+            "Policing resource 'police_presence' decreased by 20.00 between the first and last records."
+          ]
+        }
+      },
+      "created_at": "2026-01-11T20:59:24.996175+00:00",
+      "updated_at": "2026-01-11T20:59:24.996175+00:00"
+    },
+    "2d62bde8-a755-4f3e-9367-c5e5ab00353e": {
+      "id": "2d62bde8-a755-4f3e-9367-c5e5ab00353e",
+      "filename": "cities.csv",
+      "storage_bucket": "artifacts",
+      "storage_key": "datasets/2d62bde8-a755-4f3e-9367-c5e5ab00353e/cities.csv",
+      "content_type": "text/csv",
+      "size_bytes": 45,
+      "checksum": "700b1f126a6685a9fab856f3eec0a39112258b52d70a2d646ac1ef80718eb1e3",
+      "status": "uploaded",
+      "metadata": {
+        "quick_extraction": {
+          "columns": [
+            {
+              "name": "city",
+              "type": "string"
+            },
+            {
+              "name": "population",
+              "type": "number"
+            }
+          ],
+          "row_count": 2,
+          "sample_data": [
+            {
+              "city": "Paris",
+              "population": 2148327
+            },
+            {
+              "city": "Berlin",
+              "population": 3769495
+            }
+          ],
+          "insights": []
+        }
+      },
+      "created_at": "2026-01-11T21:00:02.293495+00:00",
+      "updated_at": "2026-01-11T21:00:02.293495+00:00"
+    },
+    "0dfe8c36-1f02-4fe7-8f21-2672b111bb42": {
+      "id": "0dfe8c36-1f02-4fe7-8f21-2672b111bb42",
+      "filename": "table_0.csv",
+      "storage_bucket": "artifacts",
+      "storage_key": "datasets/0dfe8c36-1f02-4fe7-8f21-2672b111bb42/table_0.csv",
+      "content_type": "text/csv",
+      "size_bytes": 735,
+      "checksum": "d29bad3db968576c8ebbde284e05da89ad0e07aa5c8d79c5a8b8350980f4c833",
+      "status": "uploaded",
+      "metadata": {
+        "quick_extraction": {
+          "columns": [
+            {
+              "name": "col0",
+              "type": "string"
+            },
+            {
+              "name": "col1",
+              "type": "string"
+            },
+            {
+              "name": "col2",
+              "type": "string"
+            }
+          ],
+          "row_count": 50,
+          "sample_data": [
+            {
+              "col0": "0_0",
+              "col1": "0_1",
+              "col2": "0_2"
+            },
+            {
+              "col0": "1_0",
+              "col1": "1_1",
+              "col2": "1_2"
+            },
+            {
+              "col0": "2_0",
+              "col1": "2_1",
+              "col2": "2_2"
+            },
+            {
+              "col0": "3_0",
+              "col1": "3_1",
+              "col2": "3_2"
+            },
+            {
+              "col0": "4_0",
+              "col1": "4_1",
+              "col2": "4_2"
+            },
+            {
+              "col0": "5_0",
+              "col1": "5_1",
+              "col2": "5_2"
+            },
+            {
+              "col0": "6_0",
+              "col1": "6_1",
+              "col2": "6_2"
+            },
+            {
+              "col0": "7_0",
+              "col1": "7_1",
+              "col2": "7_2"
+            },
+            {
+              "col0": "8_0",
+              "col1": "8_1",
+              "col2": "8_2"
+            },
+            {
+              "col0": "9_0",
+              "col1": "9_1",
+              "col2": "9_2"
+            },
+            {
+              "col0": "10_0",
+              "col1": "10_1",
+              "col2": "10_2"
+            },
+            {
+              "col0": "11_0",
+              "col1": "11_1",
+              "col2": "11_2"
+            },
+            {
+              "col0": "12_0",
+              "col1": "12_1",
+              "col2": "12_2"
+            },
+            {
+              "col0": "13_0",
+              "col1": "13_1",
+              "col2": "13_2"
+            },
+            {
+              "col0": "14_0",
+              "col1": "14_1",
+              "col2": "14_2"
+            },
+            {
+              "col0": "15_0",
+              "col1": "15_1",
+              "col2": "15_2"
+            },
+            {
+              "col0": "16_0",
+              "col1": "16_1",
+              "col2": "16_2"
+            },
+            {
+              "col0": "17_0",
+              "col1": "17_1",
+              "col2": "17_2"
+            },
+            {
+              "col0": "18_0",
+              "col1": "18_1",
+              "col2": "18_2"
+            },
+            {
+              "col0": "19_0",
+              "col1": "19_1",
+              "col2": "19_2"
+            },
+            {
+              "col0": "20_0",
+              "col1": "20_1",
+              "col2": "20_2"
+            },
+            {
+              "col0": "21_0",
+              "col1": "21_1",
+              "col2": "21_2"
+            },
+            {
+              "col0": "22_0",
+              "col1": "22_1",
+              "col2": "22_2"
+            },
+            {
+              "col0": "23_0",
+              "col1": "23_1",
+              "col2": "23_2"
+            },
+            {
+              "col0": "24_0",
+              "col1": "24_1",
+              "col2": "24_2"
+            },
+            {
+              "col0": "25_0",
+              "col1": "25_1",
+              "col2": "25_2"
+            },
+            {
+              "col0": "26_0",
+              "col1": "26_1",
+              "col2": "26_2"
+            },
+            {
+              "col0": "27_0",
+              "col1": "27_1",
+              "col2": "27_2"
+            },
+            {
+              "col0": "28_0",
+              "col1": "28_1",
+              "col2": "28_2"
+            },
+            {
+              "col0": "29_0",
+              "col1": "29_1",
+              "col2": "29_2"
+            },
+            {
+              "col0": "30_0",
+              "col1": "30_1",
+              "col2": "30_2"
+            },
+            {
+              "col0": "31_0",
+              "col1": "31_1",
+              "col2": "31_2"
+            },
+            {
+              "col0": "32_0",
+              "col1": "32_1",
+              "col2": "32_2"
+            },
+            {
+              "col0": "33_0",
+              "col1": "33_1",
+              "col2": "33_2"
+            },
+            {
+              "col0": "34_0",
+              "col1": "34_1",
+              "col2": "34_2"
+            },
+            {
+              "col0": "35_0",
+              "col1": "35_1",
+              "col2": "35_2"
+            },
+            {
+              "col0": "36_0",
+              "col1": "36_1",
+              "col2": "36_2"
+            },
+            {
+              "col0": "37_0",
+              "col1": "37_1",
+              "col2": "37_2"
+            },
+            {
+              "col0": "38_0",
+              "col1": "38_1",
+              "col2": "38_2"
+            },
+            {
+              "col0": "39_0",
+              "col1": "39_1",
+              "col2": "39_2"
+            },
+            {
+              "col0": "40_0",
+              "col1": "40_1",
+              "col2": "40_2"
+            },
+            {
+              "col0": "41_0",
+              "col1": "41_1",
+              "col2": "41_2"
+            },
+            {
+              "col0": "42_0",
+              "col1": "42_1",
+              "col2": "42_2"
+            },
+            {
+              "col0": "43_0",
+              "col1": "43_1",
+              "col2": "43_2"
+            },
+            {
+              "col0": "44_0",
+              "col1": "44_1",
+              "col2": "44_2"
+            },
+            {
+              "col0": "45_0",
+              "col1": "45_1",
+              "col2": "45_2"
+            },
+            {
+              "col0": "46_0",
+              "col1": "46_1",
+              "col2": "46_2"
+            },
+            {
+              "col0": "47_0",
+              "col1": "47_1",
+              "col2": "47_2"
+            },
+            {
+              "col0": "48_0",
+              "col1": "48_1",
+              "col2": "48_2"
+            },
+            {
+              "col0": "49_0",
+              "col1": "49_1",
+              "col2": "49_2"
+            }
+          ],
+          "insights": []
+        }
+      },
+      "created_at": "2026-01-11T21:00:02.552594+00:00",
+      "updated_at": "2026-01-11T21:00:02.552594+00:00"
+    },
+    "93b3d167-d481-425d-8a40-4c5c858f1384": {
+      "id": "93b3d167-d481-425d-8a40-4c5c858f1384",
+      "filename": "table_1.csv",
+      "storage_bucket": "artifacts",
+      "storage_key": "datasets/93b3d167-d481-425d-8a40-4c5c858f1384/table_1.csv",
+      "content_type": "text/csv",
+      "size_bytes": 735,
+      "checksum": "d29bad3db968576c8ebbde284e05da89ad0e07aa5c8d79c5a8b8350980f4c833",
+      "status": "uploaded",
+      "metadata": {
+        "quick_extraction": {
+          "columns": [
+            {
+              "name": "col0",
+              "type": "string"
+            },
+            {
+              "name": "col1",
+              "type": "string"
+            },
+            {
+              "name": "col2",
+              "type": "string"
+            }
+          ],
+          "row_count": 50,
+          "sample_data": [
+            {
+              "col0": "0_0",
+              "col1": "0_1",
+              "col2": "0_2"
+            },
+            {
+              "col0": "1_0",
+              "col1": "1_1",
+              "col2": "1_2"
+            },
+            {
+              "col0": "2_0",
+              "col1": "2_1",
+              "col2": "2_2"
+            },
+            {
+              "col0": "3_0",
+              "col1": "3_1",
+              "col2": "3_2"
+            },
+            {
+              "col0": "4_0",
+              "col1": "4_1",
+              "col2": "4_2"
+            },
+            {
+              "col0": "5_0",
+              "col1": "5_1",
+              "col2": "5_2"
+            },
+            {
+              "col0": "6_0",
+              "col1": "6_1",
+              "col2": "6_2"
+            },
+            {
+              "col0": "7_0",
+              "col1": "7_1",
+              "col2": "7_2"
+            },
+            {
+              "col0": "8_0",
+              "col1": "8_1",
+              "col2": "8_2"
+            },
+            {
+              "col0": "9_0",
+              "col1": "9_1",
+              "col2": "9_2"
+            },
+            {
+              "col0": "10_0",
+              "col1": "10_1",
+              "col2": "10_2"
+            },
+            {
+              "col0": "11_0",
+              "col1": "11_1",
+              "col2": "11_2"
+            },
+            {
+              "col0": "12_0",
+              "col1": "12_1",
+              "col2": "12_2"
+            },
+            {
+              "col0": "13_0",
+              "col1": "13_1",
+              "col2": "13_2"
+            },
+            {
+              "col0": "14_0",
+              "col1": "14_1",
+              "col2": "14_2"
+            },
+            {
+              "col0": "15_0",
+              "col1": "15_1",
+              "col2": "15_2"
+            },
+            {
+              "col0": "16_0",
+              "col1": "16_1",
+              "col2": "16_2"
+            },
+            {
+              "col0": "17_0",
+              "col1": "17_1",
+              "col2": "17_2"
+            },
+            {
+              "col0": "18_0",
+              "col1": "18_1",
+              "col2": "18_2"
+            },
+            {
+              "col0": "19_0",
+              "col1": "19_1",
+              "col2": "19_2"
+            },
+            {
+              "col0": "20_0",
+              "col1": "20_1",
+              "col2": "20_2"
+            },
+            {
+              "col0": "21_0",
+              "col1": "21_1",
+              "col2": "21_2"
+            },
+            {
+              "col0": "22_0",
+              "col1": "22_1",
+              "col2": "22_2"
+            },
+            {
+              "col0": "23_0",
+              "col1": "23_1",
+              "col2": "23_2"
+            },
+            {
+              "col0": "24_0",
+              "col1": "24_1",
+              "col2": "24_2"
+            },
+            {
+              "col0": "25_0",
+              "col1": "25_1",
+              "col2": "25_2"
+            },
+            {
+              "col0": "26_0",
+              "col1": "26_1",
+              "col2": "26_2"
+            },
+            {
+              "col0": "27_0",
+              "col1": "27_1",
+              "col2": "27_2"
+            },
+            {
+              "col0": "28_0",
+              "col1": "28_1",
+              "col2": "28_2"
+            },
+            {
+              "col0": "29_0",
+              "col1": "29_1",
+              "col2": "29_2"
+            },
+            {
+              "col0": "30_0",
+              "col1": "30_1",
+              "col2": "30_2"
+            },
+            {
+              "col0": "31_0",
+              "col1": "31_1",
+              "col2": "31_2"
+            },
+            {
+              "col0": "32_0",
+              "col1": "32_1",
+              "col2": "32_2"
+            },
+            {
+              "col0": "33_0",
+              "col1": "33_1",
+              "col2": "33_2"
+            },
+            {
+              "col0": "34_0",
+              "col1": "34_1",
+              "col2": "34_2"
+            },
+            {
+              "col0": "35_0",
+              "col1": "35_1",
+              "col2": "35_2"
+            },
+            {
+              "col0": "36_0",
+              "col1": "36_1",
+              "col2": "36_2"
+            },
+            {
+              "col0": "37_0",
+              "col1": "37_1",
+              "col2": "37_2"
+            },
+            {
+              "col0": "38_0",
+              "col1": "38_1",
+              "col2": "38_2"
+            },
+            {
+              "col0": "39_0",
+              "col1": "39_1",
+              "col2": "39_2"
+            },
+            {
+              "col0": "40_0",
+              "col1": "40_1",
+              "col2": "40_2"
+            },
+            {
+              "col0": "41_0",
+              "col1": "41_1",
+              "col2": "41_2"
+            },
+            {
+              "col0": "42_0",
+              "col1": "42_1",
+              "col2": "42_2"
+            },
+            {
+              "col0": "43_0",
+              "col1": "43_1",
+              "col2": "43_2"
+            },
+            {
+              "col0": "44_0",
+              "col1": "44_1",
+              "col2": "44_2"
+            },
+            {
+              "col0": "45_0",
+              "col1": "45_1",
+              "col2": "45_2"
+            },
+            {
+              "col0": "46_0",
+              "col1": "46_1",
+              "col2": "46_2"
+            },
+            {
+              "col0": "47_0",
+              "col1": "47_1",
+              "col2": "47_2"
+            },
+            {
+              "col0": "48_0",
+              "col1": "48_1",
+              "col2": "48_2"
+            },
+            {
+              "col0": "49_0",
+              "col1": "49_1",
+              "col2": "49_2"
+            }
+          ],
+          "insights": []
+        }
+      },
+      "created_at": "2026-01-11T21:00:02.613215+00:00",
+      "updated_at": "2026-01-11T21:00:02.613215+00:00"
+    },
+    "4552967b-5a10-4e5f-938d-cf51681affdb": {
+      "id": "4552967b-5a10-4e5f-938d-cf51681affdb",
+      "filename": "table_2.csv",
+      "storage_bucket": "artifacts",
+      "storage_key": "datasets/4552967b-5a10-4e5f-938d-cf51681affdb/table_2.csv",
+      "content_type": "text/csv",
+      "size_bytes": 735,
+      "checksum": "d29bad3db968576c8ebbde284e05da89ad0e07aa5c8d79c5a8b8350980f4c833",
+      "status": "uploaded",
+      "metadata": {
+        "quick_extraction": {
+          "columns": [
+            {
+              "name": "col0",
+              "type": "string"
+            },
+            {
+              "name": "col1",
+              "type": "string"
+            },
+            {
+              "name": "col2",
+              "type": "string"
+            }
+          ],
+          "row_count": 50,
+          "sample_data": [
+            {
+              "col0": "0_0",
+              "col1": "0_1",
+              "col2": "0_2"
+            },
+            {
+              "col0": "1_0",
+              "col1": "1_1",
+              "col2": "1_2"
+            },
+            {
+              "col0": "2_0",
+              "col1": "2_1",
+              "col2": "2_2"
+            },
+            {
+              "col0": "3_0",
+              "col1": "3_1",
+              "col2": "3_2"
+            },
+            {
+              "col0": "4_0",
+              "col1": "4_1",
+              "col2": "4_2"
+            },
+            {
+              "col0": "5_0",
+              "col1": "5_1",
+              "col2": "5_2"
+            },
+            {
+              "col0": "6_0",
+              "col1": "6_1",
+              "col2": "6_2"
+            },
+            {
+              "col0": "7_0",
+              "col1": "7_1",
+              "col2": "7_2"
+            },
+            {
+              "col0": "8_0",
+              "col1": "8_1",
+              "col2": "8_2"
+            },
+            {
+              "col0": "9_0",
+              "col1": "9_1",
+              "col2": "9_2"
+            },
+            {
+              "col0": "10_0",
+              "col1": "10_1",
+              "col2": "10_2"
+            },
+            {
+              "col0": "11_0",
+              "col1": "11_1",
+              "col2": "11_2"
+            },
+            {
+              "col0": "12_0",
+              "col1": "12_1",
+              "col2": "12_2"
+            },
+            {
+              "col0": "13_0",
+              "col1": "13_1",
+              "col2": "13_2"
+            },
+            {
+              "col0": "14_0",
+              "col1": "14_1",
+              "col2": "14_2"
+            },
+            {
+              "col0": "15_0",
+              "col1": "15_1",
+              "col2": "15_2"
+            },
+            {
+              "col0": "16_0",
+              "col1": "16_1",
+              "col2": "16_2"
+            },
+            {
+              "col0": "17_0",
+              "col1": "17_1",
+              "col2": "17_2"
+            },
+            {
+              "col0": "18_0",
+              "col1": "18_1",
+              "col2": "18_2"
+            },
+            {
+              "col0": "19_0",
+              "col1": "19_1",
+              "col2": "19_2"
+            },
+            {
+              "col0": "20_0",
+              "col1": "20_1",
+              "col2": "20_2"
+            },
+            {
+              "col0": "21_0",
+              "col1": "21_1",
+              "col2": "21_2"
+            },
+            {
+              "col0": "22_0",
+              "col1": "22_1",
+              "col2": "22_2"
+            },
+            {
+              "col0": "23_0",
+              "col1": "23_1",
+              "col2": "23_2"
+            },
+            {
+              "col0": "24_0",
+              "col1": "24_1",
+              "col2": "24_2"
+            },
+            {
+              "col0": "25_0",
+              "col1": "25_1",
+              "col2": "25_2"
+            },
+            {
+              "col0": "26_0",
+              "col1": "26_1",
+              "col2": "26_2"
+            },
+            {
+              "col0": "27_0",
+              "col1": "27_1",
+              "col2": "27_2"
+            },
+            {
+              "col0": "28_0",
+              "col1": "28_1",
+              "col2": "28_2"
+            },
+            {
+              "col0": "29_0",
+              "col1": "29_1",
+              "col2": "29_2"
+            },
+            {
+              "col0": "30_0",
+              "col1": "30_1",
+              "col2": "30_2"
+            },
+            {
+              "col0": "31_0",
+              "col1": "31_1",
+              "col2": "31_2"
+            },
+            {
+              "col0": "32_0",
+              "col1": "32_1",
+              "col2": "32_2"
+            },
+            {
+              "col0": "33_0",
+              "col1": "33_1",
+              "col2": "33_2"
+            },
+            {
+              "col0": "34_0",
+              "col1": "34_1",
+              "col2": "34_2"
+            },
+            {
+              "col0": "35_0",
+              "col1": "35_1",
+              "col2": "35_2"
+            },
+            {
+              "col0": "36_0",
+              "col1": "36_1",
+              "col2": "36_2"
+            },
+            {
+              "col0": "37_0",
+              "col1": "37_1",
+              "col2": "37_2"
+            },
+            {
+              "col0": "38_0",
+              "col1": "38_1",
+              "col2": "38_2"
+            },
+            {
+              "col0": "39_0",
+              "col1": "39_1",
+              "col2": "39_2"
+            },
+            {
+              "col0": "40_0",
+              "col1": "40_1",
+              "col2": "40_2"
+            },
+            {
+              "col0": "41_0",
+              "col1": "41_1",
+              "col2": "41_2"
+            },
+            {
+              "col0": "42_0",
+              "col1": "42_1",
+              "col2": "42_2"
+            },
+            {
+              "col0": "43_0",
+              "col1": "43_1",
+              "col2": "43_2"
+            },
+            {
+              "col0": "44_0",
+              "col1": "44_1",
+              "col2": "44_2"
+            },
+            {
+              "col0": "45_0",
+              "col1": "45_1",
+              "col2": "45_2"
+            },
+            {
+              "col0": "46_0",
+              "col1": "46_1",
+              "col2": "46_2"
+            },
+            {
+              "col0": "47_0",
+              "col1": "47_1",
+              "col2": "47_2"
+            },
+            {
+              "col0": "48_0",
+              "col1": "48_1",
+              "col2": "48_2"
+            },
+            {
+              "col0": "49_0",
+              "col1": "49_1",
+              "col2": "49_2"
+            }
+          ],
+          "insights": []
+        }
+      },
+      "created_at": "2026-01-11T21:00:02.676003+00:00",
+      "updated_at": "2026-01-11T21:00:02.676003+00:00"
+    },
+    "32b5474b-1bd1-4f53-aab6-c08c751fd8f4": {
+      "id": "32b5474b-1bd1-4f53-aab6-c08c751fd8f4",
+      "filename": "crime_factors.csv",
+      "storage_bucket": "artifacts",
+      "storage_key": "datasets/32b5474b-1bd1-4f53-aab6-c08c751fd8f4/crime_factors.csv",
+      "content_type": "text/csv",
+      "size_bytes": 195,
+      "checksum": "1658c4f300e55eabcb2827c9d7af636aa3ea6e98765067206b2b0945a4f3327a",
+      "status": "uploaded",
+      "metadata": {
+        "quick_extraction": {
+          "columns": [
+            {
+              "name": "region",
+              "type": "string"
+            },
+            {
+              "name": "year",
+              "type": "number"
+            },
+            {
+              "name": "crime_rate",
+              "type": "number"
+            },
+            {
+              "name": "unemployment_rate",
+              "type": "number"
+            },
+            {
+              "name": "poverty_index",
+              "type": "number"
+            },
+            {
+              "name": "police_presence",
+              "type": "number"
+            }
+          ],
+          "row_count": 4,
+          "sample_data": [
+            {
+              "region": "Central",
+              "year": 2020,
+              "crime_rate": 12.5,
+              "unemployment_rate": 5.1,
+              "poverty_index": 18.4,
+              "police_presence": 220
+            },
+            {
+              "region": "Central",
+              "year": 2021,
+              "crime_rate": 13.9,
+              "unemployment_rate": 5.3,
+              "poverty_index": 18.9,
+              "police_presence": 215
+            },
+            {
+              "region": "Central",
+              "year": 2022,
+              "crime_rate": 15.8,
+              "unemployment_rate": 5.6,
+              "poverty_index": 19.5,
+              "police_presence": 208
+            },
+            {
+              "region": "Central",
+              "year": 2023,
+              "crime_rate": 16.7,
+              "unemployment_rate": 5.4,
+              "poverty_index": 19.8,
+              "police_presence": 200
+            }
+          ],
+          "insights": [
+            "Crime indicator 'crime_rate' increased by 4.20 between the first and last records.",
+            "Risk factor 'unemployment_rate' averages 5.35 across the dataset.",
+            "Risk factor 'poverty_index' averages 19.15 across the dataset.",
+            "Policing resource 'police_presence' decreased by 20.00 between the first and last records."
+          ]
+        }
+      },
+      "created_at": "2026-01-11T21:00:02.802162+00:00",
+      "updated_at": "2026-01-11T21:00:02.802162+00:00"
+    },
+    "465ace52-fc86-47f5-ac54-b75fe3d55b93": {
+      "id": "465ace52-fc86-47f5-ac54-b75fe3d55b93",
+      "filename": "cities.csv",
+      "storage_bucket": "artifacts",
+      "storage_key": "datasets/465ace52-fc86-47f5-ac54-b75fe3d55b93/cities.csv",
+      "content_type": "text/csv",
+      "size_bytes": 45,
+      "checksum": "700b1f126a6685a9fab856f3eec0a39112258b52d70a2d646ac1ef80718eb1e3",
+      "status": "uploaded",
+      "metadata": {
+        "quick_extraction": {
+          "columns": [
+            {
+              "name": "city",
+              "type": "string"
+            },
+            {
+              "name": "population",
+              "type": "number"
+            }
+          ],
+          "row_count": 2,
+          "sample_data": [
+            {
+              "city": "Paris",
+              "population": 2148327
+            },
+            {
+              "city": "Berlin",
+              "population": 3769495
+            }
+          ],
+          "insights": []
+        }
+      },
+      "created_at": "2026-01-11T21:00:58.199645+00:00",
+      "updated_at": "2026-01-11T21:00:58.199645+00:00"
+    },
+    "7453f8c5-eee7-4c03-ba0e-6ae86b22c8aa": {
+      "id": "7453f8c5-eee7-4c03-ba0e-6ae86b22c8aa",
+      "filename": "table_0.csv",
+      "storage_bucket": "artifacts",
+      "storage_key": "datasets/7453f8c5-eee7-4c03-ba0e-6ae86b22c8aa/table_0.csv",
+      "content_type": "text/csv",
+      "size_bytes": 735,
+      "checksum": "d29bad3db968576c8ebbde284e05da89ad0e07aa5c8d79c5a8b8350980f4c833",
+      "status": "uploaded",
+      "metadata": {
+        "quick_extraction": {
+          "columns": [
+            {
+              "name": "col0",
+              "type": "string"
+            },
+            {
+              "name": "col1",
+              "type": "string"
+            },
+            {
+              "name": "col2",
+              "type": "string"
+            }
+          ],
+          "row_count": 50,
+          "sample_data": [
+            {
+              "col0": "0_0",
+              "col1": "0_1",
+              "col2": "0_2"
+            },
+            {
+              "col0": "1_0",
+              "col1": "1_1",
+              "col2": "1_2"
+            },
+            {
+              "col0": "2_0",
+              "col1": "2_1",
+              "col2": "2_2"
+            },
+            {
+              "col0": "3_0",
+              "col1": "3_1",
+              "col2": "3_2"
+            },
+            {
+              "col0": "4_0",
+              "col1": "4_1",
+              "col2": "4_2"
+            },
+            {
+              "col0": "5_0",
+              "col1": "5_1",
+              "col2": "5_2"
+            },
+            {
+              "col0": "6_0",
+              "col1": "6_1",
+              "col2": "6_2"
+            },
+            {
+              "col0": "7_0",
+              "col1": "7_1",
+              "col2": "7_2"
+            },
+            {
+              "col0": "8_0",
+              "col1": "8_1",
+              "col2": "8_2"
+            },
+            {
+              "col0": "9_0",
+              "col1": "9_1",
+              "col2": "9_2"
+            },
+            {
+              "col0": "10_0",
+              "col1": "10_1",
+              "col2": "10_2"
+            },
+            {
+              "col0": "11_0",
+              "col1": "11_1",
+              "col2": "11_2"
+            },
+            {
+              "col0": "12_0",
+              "col1": "12_1",
+              "col2": "12_2"
+            },
+            {
+              "col0": "13_0",
+              "col1": "13_1",
+              "col2": "13_2"
+            },
+            {
+              "col0": "14_0",
+              "col1": "14_1",
+              "col2": "14_2"
+            },
+            {
+              "col0": "15_0",
+              "col1": "15_1",
+              "col2": "15_2"
+            },
+            {
+              "col0": "16_0",
+              "col1": "16_1",
+              "col2": "16_2"
+            },
+            {
+              "col0": "17_0",
+              "col1": "17_1",
+              "col2": "17_2"
+            },
+            {
+              "col0": "18_0",
+              "col1": "18_1",
+              "col2": "18_2"
+            },
+            {
+              "col0": "19_0",
+              "col1": "19_1",
+              "col2": "19_2"
+            },
+            {
+              "col0": "20_0",
+              "col1": "20_1",
+              "col2": "20_2"
+            },
+            {
+              "col0": "21_0",
+              "col1": "21_1",
+              "col2": "21_2"
+            },
+            {
+              "col0": "22_0",
+              "col1": "22_1",
+              "col2": "22_2"
+            },
+            {
+              "col0": "23_0",
+              "col1": "23_1",
+              "col2": "23_2"
+            },
+            {
+              "col0": "24_0",
+              "col1": "24_1",
+              "col2": "24_2"
+            },
+            {
+              "col0": "25_0",
+              "col1": "25_1",
+              "col2": "25_2"
+            },
+            {
+              "col0": "26_0",
+              "col1": "26_1",
+              "col2": "26_2"
+            },
+            {
+              "col0": "27_0",
+              "col1": "27_1",
+              "col2": "27_2"
+            },
+            {
+              "col0": "28_0",
+              "col1": "28_1",
+              "col2": "28_2"
+            },
+            {
+              "col0": "29_0",
+              "col1": "29_1",
+              "col2": "29_2"
+            },
+            {
+              "col0": "30_0",
+              "col1": "30_1",
+              "col2": "30_2"
+            },
+            {
+              "col0": "31_0",
+              "col1": "31_1",
+              "col2": "31_2"
+            },
+            {
+              "col0": "32_0",
+              "col1": "32_1",
+              "col2": "32_2"
+            },
+            {
+              "col0": "33_0",
+              "col1": "33_1",
+              "col2": "33_2"
+            },
+            {
+              "col0": "34_0",
+              "col1": "34_1",
+              "col2": "34_2"
+            },
+            {
+              "col0": "35_0",
+              "col1": "35_1",
+              "col2": "35_2"
+            },
+            {
+              "col0": "36_0",
+              "col1": "36_1",
+              "col2": "36_2"
+            },
+            {
+              "col0": "37_0",
+              "col1": "37_1",
+              "col2": "37_2"
+            },
+            {
+              "col0": "38_0",
+              "col1": "38_1",
+              "col2": "38_2"
+            },
+            {
+              "col0": "39_0",
+              "col1": "39_1",
+              "col2": "39_2"
+            },
+            {
+              "col0": "40_0",
+              "col1": "40_1",
+              "col2": "40_2"
+            },
+            {
+              "col0": "41_0",
+              "col1": "41_1",
+              "col2": "41_2"
+            },
+            {
+              "col0": "42_0",
+              "col1": "42_1",
+              "col2": "42_2"
+            },
+            {
+              "col0": "43_0",
+              "col1": "43_1",
+              "col2": "43_2"
+            },
+            {
+              "col0": "44_0",
+              "col1": "44_1",
+              "col2": "44_2"
+            },
+            {
+              "col0": "45_0",
+              "col1": "45_1",
+              "col2": "45_2"
+            },
+            {
+              "col0": "46_0",
+              "col1": "46_1",
+              "col2": "46_2"
+            },
+            {
+              "col0": "47_0",
+              "col1": "47_1",
+              "col2": "47_2"
+            },
+            {
+              "col0": "48_0",
+              "col1": "48_1",
+              "col2": "48_2"
+            },
+            {
+              "col0": "49_0",
+              "col1": "49_1",
+              "col2": "49_2"
+            }
+          ],
+          "insights": []
+        }
+      },
+      "created_at": "2026-01-11T21:00:58.479319+00:00",
+      "updated_at": "2026-01-11T21:00:58.479319+00:00"
+    },
+    "e5095820-0e65-4ef9-807c-85766beacc85": {
+      "id": "e5095820-0e65-4ef9-807c-85766beacc85",
+      "filename": "table_1.csv",
+      "storage_bucket": "artifacts",
+      "storage_key": "datasets/e5095820-0e65-4ef9-807c-85766beacc85/table_1.csv",
+      "content_type": "text/csv",
+      "size_bytes": 735,
+      "checksum": "d29bad3db968576c8ebbde284e05da89ad0e07aa5c8d79c5a8b8350980f4c833",
+      "status": "uploaded",
+      "metadata": {
+        "quick_extraction": {
+          "columns": [
+            {
+              "name": "col0",
+              "type": "string"
+            },
+            {
+              "name": "col1",
+              "type": "string"
+            },
+            {
+              "name": "col2",
+              "type": "string"
+            }
+          ],
+          "row_count": 50,
+          "sample_data": [
+            {
+              "col0": "0_0",
+              "col1": "0_1",
+              "col2": "0_2"
+            },
+            {
+              "col0": "1_0",
+              "col1": "1_1",
+              "col2": "1_2"
+            },
+            {
+              "col0": "2_0",
+              "col1": "2_1",
+              "col2": "2_2"
+            },
+            {
+              "col0": "3_0",
+              "col1": "3_1",
+              "col2": "3_2"
+            },
+            {
+              "col0": "4_0",
+              "col1": "4_1",
+              "col2": "4_2"
+            },
+            {
+              "col0": "5_0",
+              "col1": "5_1",
+              "col2": "5_2"
+            },
+            {
+              "col0": "6_0",
+              "col1": "6_1",
+              "col2": "6_2"
+            },
+            {
+              "col0": "7_0",
+              "col1": "7_1",
+              "col2": "7_2"
+            },
+            {
+              "col0": "8_0",
+              "col1": "8_1",
+              "col2": "8_2"
+            },
+            {
+              "col0": "9_0",
+              "col1": "9_1",
+              "col2": "9_2"
+            },
+            {
+              "col0": "10_0",
+              "col1": "10_1",
+              "col2": "10_2"
+            },
+            {
+              "col0": "11_0",
+              "col1": "11_1",
+              "col2": "11_2"
+            },
+            {
+              "col0": "12_0",
+              "col1": "12_1",
+              "col2": "12_2"
+            },
+            {
+              "col0": "13_0",
+              "col1": "13_1",
+              "col2": "13_2"
+            },
+            {
+              "col0": "14_0",
+              "col1": "14_1",
+              "col2": "14_2"
+            },
+            {
+              "col0": "15_0",
+              "col1": "15_1",
+              "col2": "15_2"
+            },
+            {
+              "col0": "16_0",
+              "col1": "16_1",
+              "col2": "16_2"
+            },
+            {
+              "col0": "17_0",
+              "col1": "17_1",
+              "col2": "17_2"
+            },
+            {
+              "col0": "18_0",
+              "col1": "18_1",
+              "col2": "18_2"
+            },
+            {
+              "col0": "19_0",
+              "col1": "19_1",
+              "col2": "19_2"
+            },
+            {
+              "col0": "20_0",
+              "col1": "20_1",
+              "col2": "20_2"
+            },
+            {
+              "col0": "21_0",
+              "col1": "21_1",
+              "col2": "21_2"
+            },
+            {
+              "col0": "22_0",
+              "col1": "22_1",
+              "col2": "22_2"
+            },
+            {
+              "col0": "23_0",
+              "col1": "23_1",
+              "col2": "23_2"
+            },
+            {
+              "col0": "24_0",
+              "col1": "24_1",
+              "col2": "24_2"
+            },
+            {
+              "col0": "25_0",
+              "col1": "25_1",
+              "col2": "25_2"
+            },
+            {
+              "col0": "26_0",
+              "col1": "26_1",
+              "col2": "26_2"
+            },
+            {
+              "col0": "27_0",
+              "col1": "27_1",
+              "col2": "27_2"
+            },
+            {
+              "col0": "28_0",
+              "col1": "28_1",
+              "col2": "28_2"
+            },
+            {
+              "col0": "29_0",
+              "col1": "29_1",
+              "col2": "29_2"
+            },
+            {
+              "col0": "30_0",
+              "col1": "30_1",
+              "col2": "30_2"
+            },
+            {
+              "col0": "31_0",
+              "col1": "31_1",
+              "col2": "31_2"
+            },
+            {
+              "col0": "32_0",
+              "col1": "32_1",
+              "col2": "32_2"
+            },
+            {
+              "col0": "33_0",
+              "col1": "33_1",
+              "col2": "33_2"
+            },
+            {
+              "col0": "34_0",
+              "col1": "34_1",
+              "col2": "34_2"
+            },
+            {
+              "col0": "35_0",
+              "col1": "35_1",
+              "col2": "35_2"
+            },
+            {
+              "col0": "36_0",
+              "col1": "36_1",
+              "col2": "36_2"
+            },
+            {
+              "col0": "37_0",
+              "col1": "37_1",
+              "col2": "37_2"
+            },
+            {
+              "col0": "38_0",
+              "col1": "38_1",
+              "col2": "38_2"
+            },
+            {
+              "col0": "39_0",
+              "col1": "39_1",
+              "col2": "39_2"
+            },
+            {
+              "col0": "40_0",
+              "col1": "40_1",
+              "col2": "40_2"
+            },
+            {
+              "col0": "41_0",
+              "col1": "41_1",
+              "col2": "41_2"
+            },
+            {
+              "col0": "42_0",
+              "col1": "42_1",
+              "col2": "42_2"
+            },
+            {
+              "col0": "43_0",
+              "col1": "43_1",
+              "col2": "43_2"
+            },
+            {
+              "col0": "44_0",
+              "col1": "44_1",
+              "col2": "44_2"
+            },
+            {
+              "col0": "45_0",
+              "col1": "45_1",
+              "col2": "45_2"
+            },
+            {
+              "col0": "46_0",
+              "col1": "46_1",
+              "col2": "46_2"
+            },
+            {
+              "col0": "47_0",
+              "col1": "47_1",
+              "col2": "47_2"
+            },
+            {
+              "col0": "48_0",
+              "col1": "48_1",
+              "col2": "48_2"
+            },
+            {
+              "col0": "49_0",
+              "col1": "49_1",
+              "col2": "49_2"
+            }
+          ],
+          "insights": []
+        }
+      },
+      "created_at": "2026-01-11T21:00:58.553319+00:00",
+      "updated_at": "2026-01-11T21:00:58.553319+00:00"
+    },
+    "44b72af5-9579-4039-be0a-ba34b60ed61c": {
+      "id": "44b72af5-9579-4039-be0a-ba34b60ed61c",
+      "filename": "table_2.csv",
+      "storage_bucket": "artifacts",
+      "storage_key": "datasets/44b72af5-9579-4039-be0a-ba34b60ed61c/table_2.csv",
+      "content_type": "text/csv",
+      "size_bytes": 735,
+      "checksum": "d29bad3db968576c8ebbde284e05da89ad0e07aa5c8d79c5a8b8350980f4c833",
+      "status": "uploaded",
+      "metadata": {
+        "quick_extraction": {
+          "columns": [
+            {
+              "name": "col0",
+              "type": "string"
+            },
+            {
+              "name": "col1",
+              "type": "string"
+            },
+            {
+              "name": "col2",
+              "type": "string"
+            }
+          ],
+          "row_count": 50,
+          "sample_data": [
+            {
+              "col0": "0_0",
+              "col1": "0_1",
+              "col2": "0_2"
+            },
+            {
+              "col0": "1_0",
+              "col1": "1_1",
+              "col2": "1_2"
+            },
+            {
+              "col0": "2_0",
+              "col1": "2_1",
+              "col2": "2_2"
+            },
+            {
+              "col0": "3_0",
+              "col1": "3_1",
+              "col2": "3_2"
+            },
+            {
+              "col0": "4_0",
+              "col1": "4_1",
+              "col2": "4_2"
+            },
+            {
+              "col0": "5_0",
+              "col1": "5_1",
+              "col2": "5_2"
+            },
+            {
+              "col0": "6_0",
+              "col1": "6_1",
+              "col2": "6_2"
+            },
+            {
+              "col0": "7_0",
+              "col1": "7_1",
+              "col2": "7_2"
+            },
+            {
+              "col0": "8_0",
+              "col1": "8_1",
+              "col2": "8_2"
+            },
+            {
+              "col0": "9_0",
+              "col1": "9_1",
+              "col2": "9_2"
+            },
+            {
+              "col0": "10_0",
+              "col1": "10_1",
+              "col2": "10_2"
+            },
+            {
+              "col0": "11_0",
+              "col1": "11_1",
+              "col2": "11_2"
+            },
+            {
+              "col0": "12_0",
+              "col1": "12_1",
+              "col2": "12_2"
+            },
+            {
+              "col0": "13_0",
+              "col1": "13_1",
+              "col2": "13_2"
+            },
+            {
+              "col0": "14_0",
+              "col1": "14_1",
+              "col2": "14_2"
+            },
+            {
+              "col0": "15_0",
+              "col1": "15_1",
+              "col2": "15_2"
+            },
+            {
+              "col0": "16_0",
+              "col1": "16_1",
+              "col2": "16_2"
+            },
+            {
+              "col0": "17_0",
+              "col1": "17_1",
+              "col2": "17_2"
+            },
+            {
+              "col0": "18_0",
+              "col1": "18_1",
+              "col2": "18_2"
+            },
+            {
+              "col0": "19_0",
+              "col1": "19_1",
+              "col2": "19_2"
+            },
+            {
+              "col0": "20_0",
+              "col1": "20_1",
+              "col2": "20_2"
+            },
+            {
+              "col0": "21_0",
+              "col1": "21_1",
+              "col2": "21_2"
+            },
+            {
+              "col0": "22_0",
+              "col1": "22_1",
+              "col2": "22_2"
+            },
+            {
+              "col0": "23_0",
+              "col1": "23_1",
+              "col2": "23_2"
+            },
+            {
+              "col0": "24_0",
+              "col1": "24_1",
+              "col2": "24_2"
+            },
+            {
+              "col0": "25_0",
+              "col1": "25_1",
+              "col2": "25_2"
+            },
+            {
+              "col0": "26_0",
+              "col1": "26_1",
+              "col2": "26_2"
+            },
+            {
+              "col0": "27_0",
+              "col1": "27_1",
+              "col2": "27_2"
+            },
+            {
+              "col0": "28_0",
+              "col1": "28_1",
+              "col2": "28_2"
+            },
+            {
+              "col0": "29_0",
+              "col1": "29_1",
+              "col2": "29_2"
+            },
+            {
+              "col0": "30_0",
+              "col1": "30_1",
+              "col2": "30_2"
+            },
+            {
+              "col0": "31_0",
+              "col1": "31_1",
+              "col2": "31_2"
+            },
+            {
+              "col0": "32_0",
+              "col1": "32_1",
+              "col2": "32_2"
+            },
+            {
+              "col0": "33_0",
+              "col1": "33_1",
+              "col2": "33_2"
+            },
+            {
+              "col0": "34_0",
+              "col1": "34_1",
+              "col2": "34_2"
+            },
+            {
+              "col0": "35_0",
+              "col1": "35_1",
+              "col2": "35_2"
+            },
+            {
+              "col0": "36_0",
+              "col1": "36_1",
+              "col2": "36_2"
+            },
+            {
+              "col0": "37_0",
+              "col1": "37_1",
+              "col2": "37_2"
+            },
+            {
+              "col0": "38_0",
+              "col1": "38_1",
+              "col2": "38_2"
+            },
+            {
+              "col0": "39_0",
+              "col1": "39_1",
+              "col2": "39_2"
+            },
+            {
+              "col0": "40_0",
+              "col1": "40_1",
+              "col2": "40_2"
+            },
+            {
+              "col0": "41_0",
+              "col1": "41_1",
+              "col2": "41_2"
+            },
+            {
+              "col0": "42_0",
+              "col1": "42_1",
+              "col2": "42_2"
+            },
+            {
+              "col0": "43_0",
+              "col1": "43_1",
+              "col2": "43_2"
+            },
+            {
+              "col0": "44_0",
+              "col1": "44_1",
+              "col2": "44_2"
+            },
+            {
+              "col0": "45_0",
+              "col1": "45_1",
+              "col2": "45_2"
+            },
+            {
+              "col0": "46_0",
+              "col1": "46_1",
+              "col2": "46_2"
+            },
+            {
+              "col0": "47_0",
+              "col1": "47_1",
+              "col2": "47_2"
+            },
+            {
+              "col0": "48_0",
+              "col1": "48_1",
+              "col2": "48_2"
+            },
+            {
+              "col0": "49_0",
+              "col1": "49_1",
+              "col2": "49_2"
+            }
+          ],
+          "insights": []
+        }
+      },
+      "created_at": "2026-01-11T21:00:58.629694+00:00",
+      "updated_at": "2026-01-11T21:00:58.629694+00:00"
+    },
+    "5a7c37d2-57ef-45b7-a0b4-2a9faf2a717e": {
+      "id": "5a7c37d2-57ef-45b7-a0b4-2a9faf2a717e",
+      "filename": "crime_factors.csv",
+      "storage_bucket": "artifacts",
+      "storage_key": "datasets/5a7c37d2-57ef-45b7-a0b4-2a9faf2a717e/crime_factors.csv",
+      "content_type": "text/csv",
+      "size_bytes": 195,
+      "checksum": "1658c4f300e55eabcb2827c9d7af636aa3ea6e98765067206b2b0945a4f3327a",
+      "status": "uploaded",
+      "metadata": {
+        "quick_extraction": {
+          "columns": [
+            {
+              "name": "region",
+              "type": "string"
+            },
+            {
+              "name": "year",
+              "type": "number"
+            },
+            {
+              "name": "crime_rate",
+              "type": "number"
+            },
+            {
+              "name": "unemployment_rate",
+              "type": "number"
+            },
+            {
+              "name": "poverty_index",
+              "type": "number"
+            },
+            {
+              "name": "police_presence",
+              "type": "number"
+            }
+          ],
+          "row_count": 4,
+          "sample_data": [
+            {
+              "region": "Central",
+              "year": 2020,
+              "crime_rate": 12.5,
+              "unemployment_rate": 5.1,
+              "poverty_index": 18.4,
+              "police_presence": 220
+            },
+            {
+              "region": "Central",
+              "year": 2021,
+              "crime_rate": 13.9,
+              "unemployment_rate": 5.3,
+              "poverty_index": 18.9,
+              "police_presence": 215
+            },
+            {
+              "region": "Central",
+              "year": 2022,
+              "crime_rate": 15.8,
+              "unemployment_rate": 5.6,
+              "poverty_index": 19.5,
+              "police_presence": 208
+            },
+            {
+              "region": "Central",
+              "year": 2023,
+              "crime_rate": 16.7,
+              "unemployment_rate": 5.4,
+              "poverty_index": 19.8,
+              "police_presence": 200
+            }
+          ],
+          "insights": [
+            "Crime indicator 'crime_rate' increased by 4.20 between the first and last records.",
+            "Risk factor 'unemployment_rate' averages 5.35 across the dataset.",
+            "Risk factor 'poverty_index' averages 19.15 across the dataset.",
+            "Policing resource 'police_presence' decreased by 20.00 between the first and last records."
+          ]
+        }
+      },
+      "created_at": "2026-01-11T21:00:58.767189+00:00",
+      "updated_at": "2026-01-11T21:00:58.767189+00:00"
+    },
+    "23d721ea-a41c-44f2-9206-76f4ee632a51": {
+      "id": "23d721ea-a41c-44f2-9206-76f4ee632a51",
+      "filename": "cities.csv",
+      "storage_bucket": "artifacts",
+      "storage_key": "datasets/23d721ea-a41c-44f2-9206-76f4ee632a51/cities.csv",
+      "content_type": "text/csv",
+      "size_bytes": 45,
+      "checksum": "700b1f126a6685a9fab856f3eec0a39112258b52d70a2d646ac1ef80718eb1e3",
+      "status": "uploaded",
+      "metadata": {
+        "quick_extraction": {
+          "columns": [
+            {
+              "name": "city",
+              "type": "string"
+            },
+            {
+              "name": "population",
+              "type": "number"
+            }
+          ],
+          "row_count": 2,
+          "sample_data": [
+            {
+              "city": "Paris",
+              "population": 2148327
+            },
+            {
+              "city": "Berlin",
+              "population": 3769495
+            }
+          ],
+          "insights": []
+        }
+      },
+      "created_at": "2026-01-11T21:01:29.110157+00:00",
+      "updated_at": "2026-01-11T21:01:29.110157+00:00"
+    },
+    "dfd49637-781a-4273-8e28-eb46068388b1": {
+      "id": "dfd49637-781a-4273-8e28-eb46068388b1",
+      "filename": "table_0.csv",
+      "storage_bucket": "artifacts",
+      "storage_key": "datasets/dfd49637-781a-4273-8e28-eb46068388b1/table_0.csv",
+      "content_type": "text/csv",
+      "size_bytes": 735,
+      "checksum": "d29bad3db968576c8ebbde284e05da89ad0e07aa5c8d79c5a8b8350980f4c833",
+      "status": "uploaded",
+      "metadata": {
+        "quick_extraction": {
+          "columns": [
+            {
+              "name": "col0",
+              "type": "string"
+            },
+            {
+              "name": "col1",
+              "type": "string"
+            },
+            {
+              "name": "col2",
+              "type": "string"
+            }
+          ],
+          "row_count": 50,
+          "sample_data": [
+            {
+              "col0": "0_0",
+              "col1": "0_1",
+              "col2": "0_2"
+            },
+            {
+              "col0": "1_0",
+              "col1": "1_1",
+              "col2": "1_2"
+            },
+            {
+              "col0": "2_0",
+              "col1": "2_1",
+              "col2": "2_2"
+            },
+            {
+              "col0": "3_0",
+              "col1": "3_1",
+              "col2": "3_2"
+            },
+            {
+              "col0": "4_0",
+              "col1": "4_1",
+              "col2": "4_2"
+            },
+            {
+              "col0": "5_0",
+              "col1": "5_1",
+              "col2": "5_2"
+            },
+            {
+              "col0": "6_0",
+              "col1": "6_1",
+              "col2": "6_2"
+            },
+            {
+              "col0": "7_0",
+              "col1": "7_1",
+              "col2": "7_2"
+            },
+            {
+              "col0": "8_0",
+              "col1": "8_1",
+              "col2": "8_2"
+            },
+            {
+              "col0": "9_0",
+              "col1": "9_1",
+              "col2": "9_2"
+            },
+            {
+              "col0": "10_0",
+              "col1": "10_1",
+              "col2": "10_2"
+            },
+            {
+              "col0": "11_0",
+              "col1": "11_1",
+              "col2": "11_2"
+            },
+            {
+              "col0": "12_0",
+              "col1": "12_1",
+              "col2": "12_2"
+            },
+            {
+              "col0": "13_0",
+              "col1": "13_1",
+              "col2": "13_2"
+            },
+            {
+              "col0": "14_0",
+              "col1": "14_1",
+              "col2": "14_2"
+            },
+            {
+              "col0": "15_0",
+              "col1": "15_1",
+              "col2": "15_2"
+            },
+            {
+              "col0": "16_0",
+              "col1": "16_1",
+              "col2": "16_2"
+            },
+            {
+              "col0": "17_0",
+              "col1": "17_1",
+              "col2": "17_2"
+            },
+            {
+              "col0": "18_0",
+              "col1": "18_1",
+              "col2": "18_2"
+            },
+            {
+              "col0": "19_0",
+              "col1": "19_1",
+              "col2": "19_2"
+            },
+            {
+              "col0": "20_0",
+              "col1": "20_1",
+              "col2": "20_2"
+            },
+            {
+              "col0": "21_0",
+              "col1": "21_1",
+              "col2": "21_2"
+            },
+            {
+              "col0": "22_0",
+              "col1": "22_1",
+              "col2": "22_2"
+            },
+            {
+              "col0": "23_0",
+              "col1": "23_1",
+              "col2": "23_2"
+            },
+            {
+              "col0": "24_0",
+              "col1": "24_1",
+              "col2": "24_2"
+            },
+            {
+              "col0": "25_0",
+              "col1": "25_1",
+              "col2": "25_2"
+            },
+            {
+              "col0": "26_0",
+              "col1": "26_1",
+              "col2": "26_2"
+            },
+            {
+              "col0": "27_0",
+              "col1": "27_1",
+              "col2": "27_2"
+            },
+            {
+              "col0": "28_0",
+              "col1": "28_1",
+              "col2": "28_2"
+            },
+            {
+              "col0": "29_0",
+              "col1": "29_1",
+              "col2": "29_2"
+            },
+            {
+              "col0": "30_0",
+              "col1": "30_1",
+              "col2": "30_2"
+            },
+            {
+              "col0": "31_0",
+              "col1": "31_1",
+              "col2": "31_2"
+            },
+            {
+              "col0": "32_0",
+              "col1": "32_1",
+              "col2": "32_2"
+            },
+            {
+              "col0": "33_0",
+              "col1": "33_1",
+              "col2": "33_2"
+            },
+            {
+              "col0": "34_0",
+              "col1": "34_1",
+              "col2": "34_2"
+            },
+            {
+              "col0": "35_0",
+              "col1": "35_1",
+              "col2": "35_2"
+            },
+            {
+              "col0": "36_0",
+              "col1": "36_1",
+              "col2": "36_2"
+            },
+            {
+              "col0": "37_0",
+              "col1": "37_1",
+              "col2": "37_2"
+            },
+            {
+              "col0": "38_0",
+              "col1": "38_1",
+              "col2": "38_2"
+            },
+            {
+              "col0": "39_0",
+              "col1": "39_1",
+              "col2": "39_2"
+            },
+            {
+              "col0": "40_0",
+              "col1": "40_1",
+              "col2": "40_2"
+            },
+            {
+              "col0": "41_0",
+              "col1": "41_1",
+              "col2": "41_2"
+            },
+            {
+              "col0": "42_0",
+              "col1": "42_1",
+              "col2": "42_2"
+            },
+            {
+              "col0": "43_0",
+              "col1": "43_1",
+              "col2": "43_2"
+            },
+            {
+              "col0": "44_0",
+              "col1": "44_1",
+              "col2": "44_2"
+            },
+            {
+              "col0": "45_0",
+              "col1": "45_1",
+              "col2": "45_2"
+            },
+            {
+              "col0": "46_0",
+              "col1": "46_1",
+              "col2": "46_2"
+            },
+            {
+              "col0": "47_0",
+              "col1": "47_1",
+              "col2": "47_2"
+            },
+            {
+              "col0": "48_0",
+              "col1": "48_1",
+              "col2": "48_2"
+            },
+            {
+              "col0": "49_0",
+              "col1": "49_1",
+              "col2": "49_2"
+            }
+          ],
+          "insights": []
+        }
+      },
+      "created_at": "2026-01-11T21:01:29.389284+00:00",
+      "updated_at": "2026-01-11T21:01:29.389284+00:00"
+    },
+    "cafeadf2-f828-412d-aabd-1093409fe6ae": {
+      "id": "cafeadf2-f828-412d-aabd-1093409fe6ae",
+      "filename": "table_1.csv",
+      "storage_bucket": "artifacts",
+      "storage_key": "datasets/cafeadf2-f828-412d-aabd-1093409fe6ae/table_1.csv",
+      "content_type": "text/csv",
+      "size_bytes": 735,
+      "checksum": "d29bad3db968576c8ebbde284e05da89ad0e07aa5c8d79c5a8b8350980f4c833",
+      "status": "uploaded",
+      "metadata": {
+        "quick_extraction": {
+          "columns": [
+            {
+              "name": "col0",
+              "type": "string"
+            },
+            {
+              "name": "col1",
+              "type": "string"
+            },
+            {
+              "name": "col2",
+              "type": "string"
+            }
+          ],
+          "row_count": 50,
+          "sample_data": [
+            {
+              "col0": "0_0",
+              "col1": "0_1",
+              "col2": "0_2"
+            },
+            {
+              "col0": "1_0",
+              "col1": "1_1",
+              "col2": "1_2"
+            },
+            {
+              "col0": "2_0",
+              "col1": "2_1",
+              "col2": "2_2"
+            },
+            {
+              "col0": "3_0",
+              "col1": "3_1",
+              "col2": "3_2"
+            },
+            {
+              "col0": "4_0",
+              "col1": "4_1",
+              "col2": "4_2"
+            },
+            {
+              "col0": "5_0",
+              "col1": "5_1",
+              "col2": "5_2"
+            },
+            {
+              "col0": "6_0",
+              "col1": "6_1",
+              "col2": "6_2"
+            },
+            {
+              "col0": "7_0",
+              "col1": "7_1",
+              "col2": "7_2"
+            },
+            {
+              "col0": "8_0",
+              "col1": "8_1",
+              "col2": "8_2"
+            },
+            {
+              "col0": "9_0",
+              "col1": "9_1",
+              "col2": "9_2"
+            },
+            {
+              "col0": "10_0",
+              "col1": "10_1",
+              "col2": "10_2"
+            },
+            {
+              "col0": "11_0",
+              "col1": "11_1",
+              "col2": "11_2"
+            },
+            {
+              "col0": "12_0",
+              "col1": "12_1",
+              "col2": "12_2"
+            },
+            {
+              "col0": "13_0",
+              "col1": "13_1",
+              "col2": "13_2"
+            },
+            {
+              "col0": "14_0",
+              "col1": "14_1",
+              "col2": "14_2"
+            },
+            {
+              "col0": "15_0",
+              "col1": "15_1",
+              "col2": "15_2"
+            },
+            {
+              "col0": "16_0",
+              "col1": "16_1",
+              "col2": "16_2"
+            },
+            {
+              "col0": "17_0",
+              "col1": "17_1",
+              "col2": "17_2"
+            },
+            {
+              "col0": "18_0",
+              "col1": "18_1",
+              "col2": "18_2"
+            },
+            {
+              "col0": "19_0",
+              "col1": "19_1",
+              "col2": "19_2"
+            },
+            {
+              "col0": "20_0",
+              "col1": "20_1",
+              "col2": "20_2"
+            },
+            {
+              "col0": "21_0",
+              "col1": "21_1",
+              "col2": "21_2"
+            },
+            {
+              "col0": "22_0",
+              "col1": "22_1",
+              "col2": "22_2"
+            },
+            {
+              "col0": "23_0",
+              "col1": "23_1",
+              "col2": "23_2"
+            },
+            {
+              "col0": "24_0",
+              "col1": "24_1",
+              "col2": "24_2"
+            },
+            {
+              "col0": "25_0",
+              "col1": "25_1",
+              "col2": "25_2"
+            },
+            {
+              "col0": "26_0",
+              "col1": "26_1",
+              "col2": "26_2"
+            },
+            {
+              "col0": "27_0",
+              "col1": "27_1",
+              "col2": "27_2"
+            },
+            {
+              "col0": "28_0",
+              "col1": "28_1",
+              "col2": "28_2"
+            },
+            {
+              "col0": "29_0",
+              "col1": "29_1",
+              "col2": "29_2"
+            },
+            {
+              "col0": "30_0",
+              "col1": "30_1",
+              "col2": "30_2"
+            },
+            {
+              "col0": "31_0",
+              "col1": "31_1",
+              "col2": "31_2"
+            },
+            {
+              "col0": "32_0",
+              "col1": "32_1",
+              "col2": "32_2"
+            },
+            {
+              "col0": "33_0",
+              "col1": "33_1",
+              "col2": "33_2"
+            },
+            {
+              "col0": "34_0",
+              "col1": "34_1",
+              "col2": "34_2"
+            },
+            {
+              "col0": "35_0",
+              "col1": "35_1",
+              "col2": "35_2"
+            },
+            {
+              "col0": "36_0",
+              "col1": "36_1",
+              "col2": "36_2"
+            },
+            {
+              "col0": "37_0",
+              "col1": "37_1",
+              "col2": "37_2"
+            },
+            {
+              "col0": "38_0",
+              "col1": "38_1",
+              "col2": "38_2"
+            },
+            {
+              "col0": "39_0",
+              "col1": "39_1",
+              "col2": "39_2"
+            },
+            {
+              "col0": "40_0",
+              "col1": "40_1",
+              "col2": "40_2"
+            },
+            {
+              "col0": "41_0",
+              "col1": "41_1",
+              "col2": "41_2"
+            },
+            {
+              "col0": "42_0",
+              "col1": "42_1",
+              "col2": "42_2"
+            },
+            {
+              "col0": "43_0",
+              "col1": "43_1",
+              "col2": "43_2"
+            },
+            {
+              "col0": "44_0",
+              "col1": "44_1",
+              "col2": "44_2"
+            },
+            {
+              "col0": "45_0",
+              "col1": "45_1",
+              "col2": "45_2"
+            },
+            {
+              "col0": "46_0",
+              "col1": "46_1",
+              "col2": "46_2"
+            },
+            {
+              "col0": "47_0",
+              "col1": "47_1",
+              "col2": "47_2"
+            },
+            {
+              "col0": "48_0",
+              "col1": "48_1",
+              "col2": "48_2"
+            },
+            {
+              "col0": "49_0",
+              "col1": "49_1",
+              "col2": "49_2"
+            }
+          ],
+          "insights": []
+        }
+      },
+      "created_at": "2026-01-11T21:01:29.473970+00:00",
+      "updated_at": "2026-01-11T21:01:29.473970+00:00"
+    },
+    "0f1cd1d3-d6e0-4c0d-8fc6-63378ff15e99": {
+      "id": "0f1cd1d3-d6e0-4c0d-8fc6-63378ff15e99",
+      "filename": "table_2.csv",
+      "storage_bucket": "artifacts",
+      "storage_key": "datasets/0f1cd1d3-d6e0-4c0d-8fc6-63378ff15e99/table_2.csv",
+      "content_type": "text/csv",
+      "size_bytes": 735,
+      "checksum": "d29bad3db968576c8ebbde284e05da89ad0e07aa5c8d79c5a8b8350980f4c833",
+      "status": "uploaded",
+      "metadata": {
+        "quick_extraction": {
+          "columns": [
+            {
+              "name": "col0",
+              "type": "string"
+            },
+            {
+              "name": "col1",
+              "type": "string"
+            },
+            {
+              "name": "col2",
+              "type": "string"
+            }
+          ],
+          "row_count": 50,
+          "sample_data": [
+            {
+              "col0": "0_0",
+              "col1": "0_1",
+              "col2": "0_2"
+            },
+            {
+              "col0": "1_0",
+              "col1": "1_1",
+              "col2": "1_2"
+            },
+            {
+              "col0": "2_0",
+              "col1": "2_1",
+              "col2": "2_2"
+            },
+            {
+              "col0": "3_0",
+              "col1": "3_1",
+              "col2": "3_2"
+            },
+            {
+              "col0": "4_0",
+              "col1": "4_1",
+              "col2": "4_2"
+            },
+            {
+              "col0": "5_0",
+              "col1": "5_1",
+              "col2": "5_2"
+            },
+            {
+              "col0": "6_0",
+              "col1": "6_1",
+              "col2": "6_2"
+            },
+            {
+              "col0": "7_0",
+              "col1": "7_1",
+              "col2": "7_2"
+            },
+            {
+              "col0": "8_0",
+              "col1": "8_1",
+              "col2": "8_2"
+            },
+            {
+              "col0": "9_0",
+              "col1": "9_1",
+              "col2": "9_2"
+            },
+            {
+              "col0": "10_0",
+              "col1": "10_1",
+              "col2": "10_2"
+            },
+            {
+              "col0": "11_0",
+              "col1": "11_1",
+              "col2": "11_2"
+            },
+            {
+              "col0": "12_0",
+              "col1": "12_1",
+              "col2": "12_2"
+            },
+            {
+              "col0": "13_0",
+              "col1": "13_1",
+              "col2": "13_2"
+            },
+            {
+              "col0": "14_0",
+              "col1": "14_1",
+              "col2": "14_2"
+            },
+            {
+              "col0": "15_0",
+              "col1": "15_1",
+              "col2": "15_2"
+            },
+            {
+              "col0": "16_0",
+              "col1": "16_1",
+              "col2": "16_2"
+            },
+            {
+              "col0": "17_0",
+              "col1": "17_1",
+              "col2": "17_2"
+            },
+            {
+              "col0": "18_0",
+              "col1": "18_1",
+              "col2": "18_2"
+            },
+            {
+              "col0": "19_0",
+              "col1": "19_1",
+              "col2": "19_2"
+            },
+            {
+              "col0": "20_0",
+              "col1": "20_1",
+              "col2": "20_2"
+            },
+            {
+              "col0": "21_0",
+              "col1": "21_1",
+              "col2": "21_2"
+            },
+            {
+              "col0": "22_0",
+              "col1": "22_1",
+              "col2": "22_2"
+            },
+            {
+              "col0": "23_0",
+              "col1": "23_1",
+              "col2": "23_2"
+            },
+            {
+              "col0": "24_0",
+              "col1": "24_1",
+              "col2": "24_2"
+            },
+            {
+              "col0": "25_0",
+              "col1": "25_1",
+              "col2": "25_2"
+            },
+            {
+              "col0": "26_0",
+              "col1": "26_1",
+              "col2": "26_2"
+            },
+            {
+              "col0": "27_0",
+              "col1": "27_1",
+              "col2": "27_2"
+            },
+            {
+              "col0": "28_0",
+              "col1": "28_1",
+              "col2": "28_2"
+            },
+            {
+              "col0": "29_0",
+              "col1": "29_1",
+              "col2": "29_2"
+            },
+            {
+              "col0": "30_0",
+              "col1": "30_1",
+              "col2": "30_2"
+            },
+            {
+              "col0": "31_0",
+              "col1": "31_1",
+              "col2": "31_2"
+            },
+            {
+              "col0": "32_0",
+              "col1": "32_1",
+              "col2": "32_2"
+            },
+            {
+              "col0": "33_0",
+              "col1": "33_1",
+              "col2": "33_2"
+            },
+            {
+              "col0": "34_0",
+              "col1": "34_1",
+              "col2": "34_2"
+            },
+            {
+              "col0": "35_0",
+              "col1": "35_1",
+              "col2": "35_2"
+            },
+            {
+              "col0": "36_0",
+              "col1": "36_1",
+              "col2": "36_2"
+            },
+            {
+              "col0": "37_0",
+              "col1": "37_1",
+              "col2": "37_2"
+            },
+            {
+              "col0": "38_0",
+              "col1": "38_1",
+              "col2": "38_2"
+            },
+            {
+              "col0": "39_0",
+              "col1": "39_1",
+              "col2": "39_2"
+            },
+            {
+              "col0": "40_0",
+              "col1": "40_1",
+              "col2": "40_2"
+            },
+            {
+              "col0": "41_0",
+              "col1": "41_1",
+              "col2": "41_2"
+            },
+            {
+              "col0": "42_0",
+              "col1": "42_1",
+              "col2": "42_2"
+            },
+            {
+              "col0": "43_0",
+              "col1": "43_1",
+              "col2": "43_2"
+            },
+            {
+              "col0": "44_0",
+              "col1": "44_1",
+              "col2": "44_2"
+            },
+            {
+              "col0": "45_0",
+              "col1": "45_1",
+              "col2": "45_2"
+            },
+            {
+              "col0": "46_0",
+              "col1": "46_1",
+              "col2": "46_2"
+            },
+            {
+              "col0": "47_0",
+              "col1": "47_1",
+              "col2": "47_2"
+            },
+            {
+              "col0": "48_0",
+              "col1": "48_1",
+              "col2": "48_2"
+            },
+            {
+              "col0": "49_0",
+              "col1": "49_1",
+              "col2": "49_2"
+            }
+          ],
+          "insights": []
+        }
+      },
+      "created_at": "2026-01-11T21:01:29.564474+00:00",
+      "updated_at": "2026-01-11T21:01:29.564474+00:00"
+    },
+    "b6b5d450-28fb-4b45-98a3-a351b405556e": {
+      "id": "b6b5d450-28fb-4b45-98a3-a351b405556e",
+      "filename": "crime_factors.csv",
+      "storage_bucket": "artifacts",
+      "storage_key": "datasets/b6b5d450-28fb-4b45-98a3-a351b405556e/crime_factors.csv",
+      "content_type": "text/csv",
+      "size_bytes": 195,
+      "checksum": "1658c4f300e55eabcb2827c9d7af636aa3ea6e98765067206b2b0945a4f3327a",
+      "status": "uploaded",
+      "metadata": {
+        "quick_extraction": {
+          "columns": [
+            {
+              "name": "region",
+              "type": "string"
+            },
+            {
+              "name": "year",
+              "type": "number"
+            },
+            {
+              "name": "crime_rate",
+              "type": "number"
+            },
+            {
+              "name": "unemployment_rate",
+              "type": "number"
+            },
+            {
+              "name": "poverty_index",
+              "type": "number"
+            },
+            {
+              "name": "police_presence",
+              "type": "number"
+            }
+          ],
+          "row_count": 4,
+          "sample_data": [
+            {
+              "region": "Central",
+              "year": 2020,
+              "crime_rate": 12.5,
+              "unemployment_rate": 5.1,
+              "poverty_index": 18.4,
+              "police_presence": 220
+            },
+            {
+              "region": "Central",
+              "year": 2021,
+              "crime_rate": 13.9,
+              "unemployment_rate": 5.3,
+              "poverty_index": 18.9,
+              "police_presence": 215
+            },
+            {
+              "region": "Central",
+              "year": 2022,
+              "crime_rate": 15.8,
+              "unemployment_rate": 5.6,
+              "poverty_index": 19.5,
+              "police_presence": 208
+            },
+            {
+              "region": "Central",
+              "year": 2023,
+              "crime_rate": 16.7,
+              "unemployment_rate": 5.4,
+              "poverty_index": 19.8,
+              "police_presence": 200
+            }
+          ],
+          "insights": [
+            "Crime indicator 'crime_rate' increased by 4.20 between the first and last records.",
+            "Risk factor 'unemployment_rate' averages 5.35 across the dataset.",
+            "Risk factor 'poverty_index' averages 19.15 across the dataset.",
+            "Policing resource 'police_presence' decreased by 20.00 between the first and last records."
+          ]
+        }
+      },
+      "created_at": "2026-01-11T21:01:29.715620+00:00",
+      "updated_at": "2026-01-11T21:01:29.715620+00:00"
+    },
+    "118264bf-9f03-4690-a28a-ad9a6bb43af1": {
+      "id": "118264bf-9f03-4690-a28a-ad9a6bb43af1",
+      "filename": "cities.csv",
+      "storage_bucket": "artifacts",
+      "storage_key": "datasets/118264bf-9f03-4690-a28a-ad9a6bb43af1/cities.csv",
+      "content_type": "text/csv",
+      "size_bytes": 45,
+      "checksum": "700b1f126a6685a9fab856f3eec0a39112258b52d70a2d646ac1ef80718eb1e3",
+      "status": "uploaded",
+      "metadata": {
+        "quick_extraction": {
+          "columns": [
+            {
+              "name": "city",
+              "type": "string"
+            },
+            {
+              "name": "population",
+              "type": "number"
+            }
+          ],
+          "row_count": 2,
+          "sample_data": [
+            {
+              "city": "Paris",
+              "population": 2148327
+            },
+            {
+              "city": "Berlin",
+              "population": 3769495
+            }
+          ],
+          "insights": []
+        }
+      },
+      "created_at": "2026-01-11T21:01:53.828264+00:00",
+      "updated_at": "2026-01-11T21:01:53.828264+00:00"
+    },
+    "319c9f66-73a2-464b-8879-cd460e86860d": {
+      "id": "319c9f66-73a2-464b-8879-cd460e86860d",
+      "filename": "table_0.csv",
+      "storage_bucket": "artifacts",
+      "storage_key": "datasets/319c9f66-73a2-464b-8879-cd460e86860d/table_0.csv",
+      "content_type": "text/csv",
+      "size_bytes": 735,
+      "checksum": "d29bad3db968576c8ebbde284e05da89ad0e07aa5c8d79c5a8b8350980f4c833",
+      "status": "uploaded",
+      "metadata": {
+        "quick_extraction": {
+          "columns": [
+            {
+              "name": "col0",
+              "type": "string"
+            },
+            {
+              "name": "col1",
+              "type": "string"
+            },
+            {
+              "name": "col2",
+              "type": "string"
+            }
+          ],
+          "row_count": 50,
+          "sample_data": [
+            {
+              "col0": "0_0",
+              "col1": "0_1",
+              "col2": "0_2"
+            },
+            {
+              "col0": "1_0",
+              "col1": "1_1",
+              "col2": "1_2"
+            },
+            {
+              "col0": "2_0",
+              "col1": "2_1",
+              "col2": "2_2"
+            },
+            {
+              "col0": "3_0",
+              "col1": "3_1",
+              "col2": "3_2"
+            },
+            {
+              "col0": "4_0",
+              "col1": "4_1",
+              "col2": "4_2"
+            },
+            {
+              "col0": "5_0",
+              "col1": "5_1",
+              "col2": "5_2"
+            },
+            {
+              "col0": "6_0",
+              "col1": "6_1",
+              "col2": "6_2"
+            },
+            {
+              "col0": "7_0",
+              "col1": "7_1",
+              "col2": "7_2"
+            },
+            {
+              "col0": "8_0",
+              "col1": "8_1",
+              "col2": "8_2"
+            },
+            {
+              "col0": "9_0",
+              "col1": "9_1",
+              "col2": "9_2"
+            },
+            {
+              "col0": "10_0",
+              "col1": "10_1",
+              "col2": "10_2"
+            },
+            {
+              "col0": "11_0",
+              "col1": "11_1",
+              "col2": "11_2"
+            },
+            {
+              "col0": "12_0",
+              "col1": "12_1",
+              "col2": "12_2"
+            },
+            {
+              "col0": "13_0",
+              "col1": "13_1",
+              "col2": "13_2"
+            },
+            {
+              "col0": "14_0",
+              "col1": "14_1",
+              "col2": "14_2"
+            },
+            {
+              "col0": "15_0",
+              "col1": "15_1",
+              "col2": "15_2"
+            },
+            {
+              "col0": "16_0",
+              "col1": "16_1",
+              "col2": "16_2"
+            },
+            {
+              "col0": "17_0",
+              "col1": "17_1",
+              "col2": "17_2"
+            },
+            {
+              "col0": "18_0",
+              "col1": "18_1",
+              "col2": "18_2"
+            },
+            {
+              "col0": "19_0",
+              "col1": "19_1",
+              "col2": "19_2"
+            },
+            {
+              "col0": "20_0",
+              "col1": "20_1",
+              "col2": "20_2"
+            },
+            {
+              "col0": "21_0",
+              "col1": "21_1",
+              "col2": "21_2"
+            },
+            {
+              "col0": "22_0",
+              "col1": "22_1",
+              "col2": "22_2"
+            },
+            {
+              "col0": "23_0",
+              "col1": "23_1",
+              "col2": "23_2"
+            },
+            {
+              "col0": "24_0",
+              "col1": "24_1",
+              "col2": "24_2"
+            },
+            {
+              "col0": "25_0",
+              "col1": "25_1",
+              "col2": "25_2"
+            },
+            {
+              "col0": "26_0",
+              "col1": "26_1",
+              "col2": "26_2"
+            },
+            {
+              "col0": "27_0",
+              "col1": "27_1",
+              "col2": "27_2"
+            },
+            {
+              "col0": "28_0",
+              "col1": "28_1",
+              "col2": "28_2"
+            },
+            {
+              "col0": "29_0",
+              "col1": "29_1",
+              "col2": "29_2"
+            },
+            {
+              "col0": "30_0",
+              "col1": "30_1",
+              "col2": "30_2"
+            },
+            {
+              "col0": "31_0",
+              "col1": "31_1",
+              "col2": "31_2"
+            },
+            {
+              "col0": "32_0",
+              "col1": "32_1",
+              "col2": "32_2"
+            },
+            {
+              "col0": "33_0",
+              "col1": "33_1",
+              "col2": "33_2"
+            },
+            {
+              "col0": "34_0",
+              "col1": "34_1",
+              "col2": "34_2"
+            },
+            {
+              "col0": "35_0",
+              "col1": "35_1",
+              "col2": "35_2"
+            },
+            {
+              "col0": "36_0",
+              "col1": "36_1",
+              "col2": "36_2"
+            },
+            {
+              "col0": "37_0",
+              "col1": "37_1",
+              "col2": "37_2"
+            },
+            {
+              "col0": "38_0",
+              "col1": "38_1",
+              "col2": "38_2"
+            },
+            {
+              "col0": "39_0",
+              "col1": "39_1",
+              "col2": "39_2"
+            },
+            {
+              "col0": "40_0",
+              "col1": "40_1",
+              "col2": "40_2"
+            },
+            {
+              "col0": "41_0",
+              "col1": "41_1",
+              "col2": "41_2"
+            },
+            {
+              "col0": "42_0",
+              "col1": "42_1",
+              "col2": "42_2"
+            },
+            {
+              "col0": "43_0",
+              "col1": "43_1",
+              "col2": "43_2"
+            },
+            {
+              "col0": "44_0",
+              "col1": "44_1",
+              "col2": "44_2"
+            },
+            {
+              "col0": "45_0",
+              "col1": "45_1",
+              "col2": "45_2"
+            },
+            {
+              "col0": "46_0",
+              "col1": "46_1",
+              "col2": "46_2"
+            },
+            {
+              "col0": "47_0",
+              "col1": "47_1",
+              "col2": "47_2"
+            },
+            {
+              "col0": "48_0",
+              "col1": "48_1",
+              "col2": "48_2"
+            },
+            {
+              "col0": "49_0",
+              "col1": "49_1",
+              "col2": "49_2"
+            }
+          ],
+          "insights": []
+        }
+      },
+      "created_at": "2026-01-11T21:01:54.110377+00:00",
+      "updated_at": "2026-01-11T21:01:54.110377+00:00"
+    },
+    "8a574f37-6f8f-440e-a98d-ade2fbe3eae6": {
+      "id": "8a574f37-6f8f-440e-a98d-ade2fbe3eae6",
+      "filename": "table_1.csv",
+      "storage_bucket": "artifacts",
+      "storage_key": "datasets/8a574f37-6f8f-440e-a98d-ade2fbe3eae6/table_1.csv",
+      "content_type": "text/csv",
+      "size_bytes": 735,
+      "checksum": "d29bad3db968576c8ebbde284e05da89ad0e07aa5c8d79c5a8b8350980f4c833",
+      "status": "uploaded",
+      "metadata": {
+        "quick_extraction": {
+          "columns": [
+            {
+              "name": "col0",
+              "type": "string"
+            },
+            {
+              "name": "col1",
+              "type": "string"
+            },
+            {
+              "name": "col2",
+              "type": "string"
+            }
+          ],
+          "row_count": 50,
+          "sample_data": [
+            {
+              "col0": "0_0",
+              "col1": "0_1",
+              "col2": "0_2"
+            },
+            {
+              "col0": "1_0",
+              "col1": "1_1",
+              "col2": "1_2"
+            },
+            {
+              "col0": "2_0",
+              "col1": "2_1",
+              "col2": "2_2"
+            },
+            {
+              "col0": "3_0",
+              "col1": "3_1",
+              "col2": "3_2"
+            },
+            {
+              "col0": "4_0",
+              "col1": "4_1",
+              "col2": "4_2"
+            },
+            {
+              "col0": "5_0",
+              "col1": "5_1",
+              "col2": "5_2"
+            },
+            {
+              "col0": "6_0",
+              "col1": "6_1",
+              "col2": "6_2"
+            },
+            {
+              "col0": "7_0",
+              "col1": "7_1",
+              "col2": "7_2"
+            },
+            {
+              "col0": "8_0",
+              "col1": "8_1",
+              "col2": "8_2"
+            },
+            {
+              "col0": "9_0",
+              "col1": "9_1",
+              "col2": "9_2"
+            },
+            {
+              "col0": "10_0",
+              "col1": "10_1",
+              "col2": "10_2"
+            },
+            {
+              "col0": "11_0",
+              "col1": "11_1",
+              "col2": "11_2"
+            },
+            {
+              "col0": "12_0",
+              "col1": "12_1",
+              "col2": "12_2"
+            },
+            {
+              "col0": "13_0",
+              "col1": "13_1",
+              "col2": "13_2"
+            },
+            {
+              "col0": "14_0",
+              "col1": "14_1",
+              "col2": "14_2"
+            },
+            {
+              "col0": "15_0",
+              "col1": "15_1",
+              "col2": "15_2"
+            },
+            {
+              "col0": "16_0",
+              "col1": "16_1",
+              "col2": "16_2"
+            },
+            {
+              "col0": "17_0",
+              "col1": "17_1",
+              "col2": "17_2"
+            },
+            {
+              "col0": "18_0",
+              "col1": "18_1",
+              "col2": "18_2"
+            },
+            {
+              "col0": "19_0",
+              "col1": "19_1",
+              "col2": "19_2"
+            },
+            {
+              "col0": "20_0",
+              "col1": "20_1",
+              "col2": "20_2"
+            },
+            {
+              "col0": "21_0",
+              "col1": "21_1",
+              "col2": "21_2"
+            },
+            {
+              "col0": "22_0",
+              "col1": "22_1",
+              "col2": "22_2"
+            },
+            {
+              "col0": "23_0",
+              "col1": "23_1",
+              "col2": "23_2"
+            },
+            {
+              "col0": "24_0",
+              "col1": "24_1",
+              "col2": "24_2"
+            },
+            {
+              "col0": "25_0",
+              "col1": "25_1",
+              "col2": "25_2"
+            },
+            {
+              "col0": "26_0",
+              "col1": "26_1",
+              "col2": "26_2"
+            },
+            {
+              "col0": "27_0",
+              "col1": "27_1",
+              "col2": "27_2"
+            },
+            {
+              "col0": "28_0",
+              "col1": "28_1",
+              "col2": "28_2"
+            },
+            {
+              "col0": "29_0",
+              "col1": "29_1",
+              "col2": "29_2"
+            },
+            {
+              "col0": "30_0",
+              "col1": "30_1",
+              "col2": "30_2"
+            },
+            {
+              "col0": "31_0",
+              "col1": "31_1",
+              "col2": "31_2"
+            },
+            {
+              "col0": "32_0",
+              "col1": "32_1",
+              "col2": "32_2"
+            },
+            {
+              "col0": "33_0",
+              "col1": "33_1",
+              "col2": "33_2"
+            },
+            {
+              "col0": "34_0",
+              "col1": "34_1",
+              "col2": "34_2"
+            },
+            {
+              "col0": "35_0",
+              "col1": "35_1",
+              "col2": "35_2"
+            },
+            {
+              "col0": "36_0",
+              "col1": "36_1",
+              "col2": "36_2"
+            },
+            {
+              "col0": "37_0",
+              "col1": "37_1",
+              "col2": "37_2"
+            },
+            {
+              "col0": "38_0",
+              "col1": "38_1",
+              "col2": "38_2"
+            },
+            {
+              "col0": "39_0",
+              "col1": "39_1",
+              "col2": "39_2"
+            },
+            {
+              "col0": "40_0",
+              "col1": "40_1",
+              "col2": "40_2"
+            },
+            {
+              "col0": "41_0",
+              "col1": "41_1",
+              "col2": "41_2"
+            },
+            {
+              "col0": "42_0",
+              "col1": "42_1",
+              "col2": "42_2"
+            },
+            {
+              "col0": "43_0",
+              "col1": "43_1",
+              "col2": "43_2"
+            },
+            {
+              "col0": "44_0",
+              "col1": "44_1",
+              "col2": "44_2"
+            },
+            {
+              "col0": "45_0",
+              "col1": "45_1",
+              "col2": "45_2"
+            },
+            {
+              "col0": "46_0",
+              "col1": "46_1",
+              "col2": "46_2"
+            },
+            {
+              "col0": "47_0",
+              "col1": "47_1",
+              "col2": "47_2"
+            },
+            {
+              "col0": "48_0",
+              "col1": "48_1",
+              "col2": "48_2"
+            },
+            {
+              "col0": "49_0",
+              "col1": "49_1",
+              "col2": "49_2"
+            }
+          ],
+          "insights": []
+        }
+      },
+      "created_at": "2026-01-11T21:01:54.206366+00:00",
+      "updated_at": "2026-01-11T21:01:54.206366+00:00"
+    },
+    "167cff18-c344-43fd-92d8-a5b82a3529d9": {
+      "id": "167cff18-c344-43fd-92d8-a5b82a3529d9",
+      "filename": "table_2.csv",
+      "storage_bucket": "artifacts",
+      "storage_key": "datasets/167cff18-c344-43fd-92d8-a5b82a3529d9/table_2.csv",
+      "content_type": "text/csv",
+      "size_bytes": 735,
+      "checksum": "d29bad3db968576c8ebbde284e05da89ad0e07aa5c8d79c5a8b8350980f4c833",
+      "status": "uploaded",
+      "metadata": {
+        "quick_extraction": {
+          "columns": [
+            {
+              "name": "col0",
+              "type": "string"
+            },
+            {
+              "name": "col1",
+              "type": "string"
+            },
+            {
+              "name": "col2",
+              "type": "string"
+            }
+          ],
+          "row_count": 50,
+          "sample_data": [
+            {
+              "col0": "0_0",
+              "col1": "0_1",
+              "col2": "0_2"
+            },
+            {
+              "col0": "1_0",
+              "col1": "1_1",
+              "col2": "1_2"
+            },
+            {
+              "col0": "2_0",
+              "col1": "2_1",
+              "col2": "2_2"
+            },
+            {
+              "col0": "3_0",
+              "col1": "3_1",
+              "col2": "3_2"
+            },
+            {
+              "col0": "4_0",
+              "col1": "4_1",
+              "col2": "4_2"
+            },
+            {
+              "col0": "5_0",
+              "col1": "5_1",
+              "col2": "5_2"
+            },
+            {
+              "col0": "6_0",
+              "col1": "6_1",
+              "col2": "6_2"
+            },
+            {
+              "col0": "7_0",
+              "col1": "7_1",
+              "col2": "7_2"
+            },
+            {
+              "col0": "8_0",
+              "col1": "8_1",
+              "col2": "8_2"
+            },
+            {
+              "col0": "9_0",
+              "col1": "9_1",
+              "col2": "9_2"
+            },
+            {
+              "col0": "10_0",
+              "col1": "10_1",
+              "col2": "10_2"
+            },
+            {
+              "col0": "11_0",
+              "col1": "11_1",
+              "col2": "11_2"
+            },
+            {
+              "col0": "12_0",
+              "col1": "12_1",
+              "col2": "12_2"
+            },
+            {
+              "col0": "13_0",
+              "col1": "13_1",
+              "col2": "13_2"
+            },
+            {
+              "col0": "14_0",
+              "col1": "14_1",
+              "col2": "14_2"
+            },
+            {
+              "col0": "15_0",
+              "col1": "15_1",
+              "col2": "15_2"
+            },
+            {
+              "col0": "16_0",
+              "col1": "16_1",
+              "col2": "16_2"
+            },
+            {
+              "col0": "17_0",
+              "col1": "17_1",
+              "col2": "17_2"
+            },
+            {
+              "col0": "18_0",
+              "col1": "18_1",
+              "col2": "18_2"
+            },
+            {
+              "col0": "19_0",
+              "col1": "19_1",
+              "col2": "19_2"
+            },
+            {
+              "col0": "20_0",
+              "col1": "20_1",
+              "col2": "20_2"
+            },
+            {
+              "col0": "21_0",
+              "col1": "21_1",
+              "col2": "21_2"
+            },
+            {
+              "col0": "22_0",
+              "col1": "22_1",
+              "col2": "22_2"
+            },
+            {
+              "col0": "23_0",
+              "col1": "23_1",
+              "col2": "23_2"
+            },
+            {
+              "col0": "24_0",
+              "col1": "24_1",
+              "col2": "24_2"
+            },
+            {
+              "col0": "25_0",
+              "col1": "25_1",
+              "col2": "25_2"
+            },
+            {
+              "col0": "26_0",
+              "col1": "26_1",
+              "col2": "26_2"
+            },
+            {
+              "col0": "27_0",
+              "col1": "27_1",
+              "col2": "27_2"
+            },
+            {
+              "col0": "28_0",
+              "col1": "28_1",
+              "col2": "28_2"
+            },
+            {
+              "col0": "29_0",
+              "col1": "29_1",
+              "col2": "29_2"
+            },
+            {
+              "col0": "30_0",
+              "col1": "30_1",
+              "col2": "30_2"
+            },
+            {
+              "col0": "31_0",
+              "col1": "31_1",
+              "col2": "31_2"
+            },
+            {
+              "col0": "32_0",
+              "col1": "32_1",
+              "col2": "32_2"
+            },
+            {
+              "col0": "33_0",
+              "col1": "33_1",
+              "col2": "33_2"
+            },
+            {
+              "col0": "34_0",
+              "col1": "34_1",
+              "col2": "34_2"
+            },
+            {
+              "col0": "35_0",
+              "col1": "35_1",
+              "col2": "35_2"
+            },
+            {
+              "col0": "36_0",
+              "col1": "36_1",
+              "col2": "36_2"
+            },
+            {
+              "col0": "37_0",
+              "col1": "37_1",
+              "col2": "37_2"
+            },
+            {
+              "col0": "38_0",
+              "col1": "38_1",
+              "col2": "38_2"
+            },
+            {
+              "col0": "39_0",
+              "col1": "39_1",
+              "col2": "39_2"
+            },
+            {
+              "col0": "40_0",
+              "col1": "40_1",
+              "col2": "40_2"
+            },
+            {
+              "col0": "41_0",
+              "col1": "41_1",
+              "col2": "41_2"
+            },
+            {
+              "col0": "42_0",
+              "col1": "42_1",
+              "col2": "42_2"
+            },
+            {
+              "col0": "43_0",
+              "col1": "43_1",
+              "col2": "43_2"
+            },
+            {
+              "col0": "44_0",
+              "col1": "44_1",
+              "col2": "44_2"
+            },
+            {
+              "col0": "45_0",
+              "col1": "45_1",
+              "col2": "45_2"
+            },
+            {
+              "col0": "46_0",
+              "col1": "46_1",
+              "col2": "46_2"
+            },
+            {
+              "col0": "47_0",
+              "col1": "47_1",
+              "col2": "47_2"
+            },
+            {
+              "col0": "48_0",
+              "col1": "48_1",
+              "col2": "48_2"
+            },
+            {
+              "col0": "49_0",
+              "col1": "49_1",
+              "col2": "49_2"
+            }
+          ],
+          "insights": []
+        }
+      },
+      "created_at": "2026-01-11T21:01:54.322714+00:00",
+      "updated_at": "2026-01-11T21:01:54.322714+00:00"
+    },
+    "1e568a87-5d9a-433b-812a-bddd348c444e": {
+      "id": "1e568a87-5d9a-433b-812a-bddd348c444e",
+      "filename": "crime_factors.csv",
+      "storage_bucket": "artifacts",
+      "storage_key": "datasets/1e568a87-5d9a-433b-812a-bddd348c444e/crime_factors.csv",
+      "content_type": "text/csv",
+      "size_bytes": 195,
+      "checksum": "1658c4f300e55eabcb2827c9d7af636aa3ea6e98765067206b2b0945a4f3327a",
+      "status": "uploaded",
+      "metadata": {
+        "quick_extraction": {
+          "columns": [
+            {
+              "name": "region",
+              "type": "string"
+            },
+            {
+              "name": "year",
+              "type": "number"
+            },
+            {
+              "name": "crime_rate",
+              "type": "number"
+            },
+            {
+              "name": "unemployment_rate",
+              "type": "number"
+            },
+            {
+              "name": "poverty_index",
+              "type": "number"
+            },
+            {
+              "name": "police_presence",
+              "type": "number"
+            }
+          ],
+          "row_count": 4,
+          "sample_data": [
+            {
+              "region": "Central",
+              "year": 2020,
+              "crime_rate": 12.5,
+              "unemployment_rate": 5.1,
+              "poverty_index": 18.4,
+              "police_presence": 220
+            },
+            {
+              "region": "Central",
+              "year": 2021,
+              "crime_rate": 13.9,
+              "unemployment_rate": 5.3,
+              "poverty_index": 18.9,
+              "police_presence": 215
+            },
+            {
+              "region": "Central",
+              "year": 2022,
+              "crime_rate": 15.8,
+              "unemployment_rate": 5.6,
+              "poverty_index": 19.5,
+              "police_presence": 208
+            },
+            {
+              "region": "Central",
+              "year": 2023,
+              "crime_rate": 16.7,
+              "unemployment_rate": 5.4,
+              "poverty_index": 19.8,
+              "police_presence": 200
+            }
+          ],
+          "insights": [
+            "Crime indicator 'crime_rate' increased by 4.20 between the first and last records.",
+            "Risk factor 'unemployment_rate' averages 5.35 across the dataset.",
+            "Risk factor 'poverty_index' averages 19.15 across the dataset.",
+            "Policing resource 'police_presence' decreased by 20.00 between the first and last records."
+          ]
+        }
+      },
+      "created_at": "2026-01-11T21:01:54.487941+00:00",
+      "updated_at": "2026-01-11T21:01:54.487941+00:00"
+    },
+    "3f9fe688-c193-4dc9-8d3e-488cc95d72dc": {
+      "id": "3f9fe688-c193-4dc9-8d3e-488cc95d72dc",
+      "filename": "cities.csv",
+      "storage_bucket": "artifacts",
+      "storage_key": "datasets/3f9fe688-c193-4dc9-8d3e-488cc95d72dc/cities.csv",
+      "content_type": "text/csv",
+      "size_bytes": 45,
+      "checksum": "700b1f126a6685a9fab856f3eec0a39112258b52d70a2d646ac1ef80718eb1e3",
+      "status": "uploaded",
+      "metadata": {
+        "quick_extraction": {
+          "columns": [
+            {
+              "name": "city",
+              "type": "string"
+            },
+            {
+              "name": "population",
+              "type": "number"
+            }
+          ],
+          "row_count": 2,
+          "sample_data": [
+            {
+              "city": "Paris",
+              "population": 2148327
+            },
+            {
+              "city": "Berlin",
+              "population": 3769495
+            }
+          ],
+          "insights": []
+        }
+      },
+      "created_at": "2026-01-11T21:02:26.632639+00:00",
+      "updated_at": "2026-01-11T21:02:26.632639+00:00"
+    },
+    "894e90fa-241e-4bec-920d-86898b35de3f": {
+      "id": "894e90fa-241e-4bec-920d-86898b35de3f",
+      "filename": "table_0.csv",
+      "storage_bucket": "artifacts",
+      "storage_key": "datasets/894e90fa-241e-4bec-920d-86898b35de3f/table_0.csv",
+      "content_type": "text/csv",
+      "size_bytes": 735,
+      "checksum": "d29bad3db968576c8ebbde284e05da89ad0e07aa5c8d79c5a8b8350980f4c833",
+      "status": "uploaded",
+      "metadata": {
+        "quick_extraction": {
+          "columns": [
+            {
+              "name": "col0",
+              "type": "string"
+            },
+            {
+              "name": "col1",
+              "type": "string"
+            },
+            {
+              "name": "col2",
+              "type": "string"
+            }
+          ],
+          "row_count": 50,
+          "sample_data": [
+            {
+              "col0": "0_0",
+              "col1": "0_1",
+              "col2": "0_2"
+            },
+            {
+              "col0": "1_0",
+              "col1": "1_1",
+              "col2": "1_2"
+            },
+            {
+              "col0": "2_0",
+              "col1": "2_1",
+              "col2": "2_2"
+            },
+            {
+              "col0": "3_0",
+              "col1": "3_1",
+              "col2": "3_2"
+            },
+            {
+              "col0": "4_0",
+              "col1": "4_1",
+              "col2": "4_2"
+            },
+            {
+              "col0": "5_0",
+              "col1": "5_1",
+              "col2": "5_2"
+            },
+            {
+              "col0": "6_0",
+              "col1": "6_1",
+              "col2": "6_2"
+            },
+            {
+              "col0": "7_0",
+              "col1": "7_1",
+              "col2": "7_2"
+            },
+            {
+              "col0": "8_0",
+              "col1": "8_1",
+              "col2": "8_2"
+            },
+            {
+              "col0": "9_0",
+              "col1": "9_1",
+              "col2": "9_2"
+            },
+            {
+              "col0": "10_0",
+              "col1": "10_1",
+              "col2": "10_2"
+            },
+            {
+              "col0": "11_0",
+              "col1": "11_1",
+              "col2": "11_2"
+            },
+            {
+              "col0": "12_0",
+              "col1": "12_1",
+              "col2": "12_2"
+            },
+            {
+              "col0": "13_0",
+              "col1": "13_1",
+              "col2": "13_2"
+            },
+            {
+              "col0": "14_0",
+              "col1": "14_1",
+              "col2": "14_2"
+            },
+            {
+              "col0": "15_0",
+              "col1": "15_1",
+              "col2": "15_2"
+            },
+            {
+              "col0": "16_0",
+              "col1": "16_1",
+              "col2": "16_2"
+            },
+            {
+              "col0": "17_0",
+              "col1": "17_1",
+              "col2": "17_2"
+            },
+            {
+              "col0": "18_0",
+              "col1": "18_1",
+              "col2": "18_2"
+            },
+            {
+              "col0": "19_0",
+              "col1": "19_1",
+              "col2": "19_2"
+            },
+            {
+              "col0": "20_0",
+              "col1": "20_1",
+              "col2": "20_2"
+            },
+            {
+              "col0": "21_0",
+              "col1": "21_1",
+              "col2": "21_2"
+            },
+            {
+              "col0": "22_0",
+              "col1": "22_1",
+              "col2": "22_2"
+            },
+            {
+              "col0": "23_0",
+              "col1": "23_1",
+              "col2": "23_2"
+            },
+            {
+              "col0": "24_0",
+              "col1": "24_1",
+              "col2": "24_2"
+            },
+            {
+              "col0": "25_0",
+              "col1": "25_1",
+              "col2": "25_2"
+            },
+            {
+              "col0": "26_0",
+              "col1": "26_1",
+              "col2": "26_2"
+            },
+            {
+              "col0": "27_0",
+              "col1": "27_1",
+              "col2": "27_2"
+            },
+            {
+              "col0": "28_0",
+              "col1": "28_1",
+              "col2": "28_2"
+            },
+            {
+              "col0": "29_0",
+              "col1": "29_1",
+              "col2": "29_2"
+            },
+            {
+              "col0": "30_0",
+              "col1": "30_1",
+              "col2": "30_2"
+            },
+            {
+              "col0": "31_0",
+              "col1": "31_1",
+              "col2": "31_2"
+            },
+            {
+              "col0": "32_0",
+              "col1": "32_1",
+              "col2": "32_2"
+            },
+            {
+              "col0": "33_0",
+              "col1": "33_1",
+              "col2": "33_2"
+            },
+            {
+              "col0": "34_0",
+              "col1": "34_1",
+              "col2": "34_2"
+            },
+            {
+              "col0": "35_0",
+              "col1": "35_1",
+              "col2": "35_2"
+            },
+            {
+              "col0": "36_0",
+              "col1": "36_1",
+              "col2": "36_2"
+            },
+            {
+              "col0": "37_0",
+              "col1": "37_1",
+              "col2": "37_2"
+            },
+            {
+              "col0": "38_0",
+              "col1": "38_1",
+              "col2": "38_2"
+            },
+            {
+              "col0": "39_0",
+              "col1": "39_1",
+              "col2": "39_2"
+            },
+            {
+              "col0": "40_0",
+              "col1": "40_1",
+              "col2": "40_2"
+            },
+            {
+              "col0": "41_0",
+              "col1": "41_1",
+              "col2": "41_2"
+            },
+            {
+              "col0": "42_0",
+              "col1": "42_1",
+              "col2": "42_2"
+            },
+            {
+              "col0": "43_0",
+              "col1": "43_1",
+              "col2": "43_2"
+            },
+            {
+              "col0": "44_0",
+              "col1": "44_1",
+              "col2": "44_2"
+            },
+            {
+              "col0": "45_0",
+              "col1": "45_1",
+              "col2": "45_2"
+            },
+            {
+              "col0": "46_0",
+              "col1": "46_1",
+              "col2": "46_2"
+            },
+            {
+              "col0": "47_0",
+              "col1": "47_1",
+              "col2": "47_2"
+            },
+            {
+              "col0": "48_0",
+              "col1": "48_1",
+              "col2": "48_2"
+            },
+            {
+              "col0": "49_0",
+              "col1": "49_1",
+              "col2": "49_2"
+            }
+          ],
+          "insights": []
+        }
+      },
+      "created_at": "2026-01-11T21:02:26.954328+00:00",
+      "updated_at": "2026-01-11T21:02:26.954328+00:00"
+    },
+    "6d0f70f6-01e0-4a2b-8371-028edfba3d2a": {
+      "id": "6d0f70f6-01e0-4a2b-8371-028edfba3d2a",
+      "filename": "table_1.csv",
+      "storage_bucket": "artifacts",
+      "storage_key": "datasets/6d0f70f6-01e0-4a2b-8371-028edfba3d2a/table_1.csv",
+      "content_type": "text/csv",
+      "size_bytes": 735,
+      "checksum": "d29bad3db968576c8ebbde284e05da89ad0e07aa5c8d79c5a8b8350980f4c833",
+      "status": "uploaded",
+      "metadata": {
+        "quick_extraction": {
+          "columns": [
+            {
+              "name": "col0",
+              "type": "string"
+            },
+            {
+              "name": "col1",
+              "type": "string"
+            },
+            {
+              "name": "col2",
+              "type": "string"
+            }
+          ],
+          "row_count": 50,
+          "sample_data": [
+            {
+              "col0": "0_0",
+              "col1": "0_1",
+              "col2": "0_2"
+            },
+            {
+              "col0": "1_0",
+              "col1": "1_1",
+              "col2": "1_2"
+            },
+            {
+              "col0": "2_0",
+              "col1": "2_1",
+              "col2": "2_2"
+            },
+            {
+              "col0": "3_0",
+              "col1": "3_1",
+              "col2": "3_2"
+            },
+            {
+              "col0": "4_0",
+              "col1": "4_1",
+              "col2": "4_2"
+            },
+            {
+              "col0": "5_0",
+              "col1": "5_1",
+              "col2": "5_2"
+            },
+            {
+              "col0": "6_0",
+              "col1": "6_1",
+              "col2": "6_2"
+            },
+            {
+              "col0": "7_0",
+              "col1": "7_1",
+              "col2": "7_2"
+            },
+            {
+              "col0": "8_0",
+              "col1": "8_1",
+              "col2": "8_2"
+            },
+            {
+              "col0": "9_0",
+              "col1": "9_1",
+              "col2": "9_2"
+            },
+            {
+              "col0": "10_0",
+              "col1": "10_1",
+              "col2": "10_2"
+            },
+            {
+              "col0": "11_0",
+              "col1": "11_1",
+              "col2": "11_2"
+            },
+            {
+              "col0": "12_0",
+              "col1": "12_1",
+              "col2": "12_2"
+            },
+            {
+              "col0": "13_0",
+              "col1": "13_1",
+              "col2": "13_2"
+            },
+            {
+              "col0": "14_0",
+              "col1": "14_1",
+              "col2": "14_2"
+            },
+            {
+              "col0": "15_0",
+              "col1": "15_1",
+              "col2": "15_2"
+            },
+            {
+              "col0": "16_0",
+              "col1": "16_1",
+              "col2": "16_2"
+            },
+            {
+              "col0": "17_0",
+              "col1": "17_1",
+              "col2": "17_2"
+            },
+            {
+              "col0": "18_0",
+              "col1": "18_1",
+              "col2": "18_2"
+            },
+            {
+              "col0": "19_0",
+              "col1": "19_1",
+              "col2": "19_2"
+            },
+            {
+              "col0": "20_0",
+              "col1": "20_1",
+              "col2": "20_2"
+            },
+            {
+              "col0": "21_0",
+              "col1": "21_1",
+              "col2": "21_2"
+            },
+            {
+              "col0": "22_0",
+              "col1": "22_1",
+              "col2": "22_2"
+            },
+            {
+              "col0": "23_0",
+              "col1": "23_1",
+              "col2": "23_2"
+            },
+            {
+              "col0": "24_0",
+              "col1": "24_1",
+              "col2": "24_2"
+            },
+            {
+              "col0": "25_0",
+              "col1": "25_1",
+              "col2": "25_2"
+            },
+            {
+              "col0": "26_0",
+              "col1": "26_1",
+              "col2": "26_2"
+            },
+            {
+              "col0": "27_0",
+              "col1": "27_1",
+              "col2": "27_2"
+            },
+            {
+              "col0": "28_0",
+              "col1": "28_1",
+              "col2": "28_2"
+            },
+            {
+              "col0": "29_0",
+              "col1": "29_1",
+              "col2": "29_2"
+            },
+            {
+              "col0": "30_0",
+              "col1": "30_1",
+              "col2": "30_2"
+            },
+            {
+              "col0": "31_0",
+              "col1": "31_1",
+              "col2": "31_2"
+            },
+            {
+              "col0": "32_0",
+              "col1": "32_1",
+              "col2": "32_2"
+            },
+            {
+              "col0": "33_0",
+              "col1": "33_1",
+              "col2": "33_2"
+            },
+            {
+              "col0": "34_0",
+              "col1": "34_1",
+              "col2": "34_2"
+            },
+            {
+              "col0": "35_0",
+              "col1": "35_1",
+              "col2": "35_2"
+            },
+            {
+              "col0": "36_0",
+              "col1": "36_1",
+              "col2": "36_2"
+            },
+            {
+              "col0": "37_0",
+              "col1": "37_1",
+              "col2": "37_2"
+            },
+            {
+              "col0": "38_0",
+              "col1": "38_1",
+              "col2": "38_2"
+            },
+            {
+              "col0": "39_0",
+              "col1": "39_1",
+              "col2": "39_2"
+            },
+            {
+              "col0": "40_0",
+              "col1": "40_1",
+              "col2": "40_2"
+            },
+            {
+              "col0": "41_0",
+              "col1": "41_1",
+              "col2": "41_2"
+            },
+            {
+              "col0": "42_0",
+              "col1": "42_1",
+              "col2": "42_2"
+            },
+            {
+              "col0": "43_0",
+              "col1": "43_1",
+              "col2": "43_2"
+            },
+            {
+              "col0": "44_0",
+              "col1": "44_1",
+              "col2": "44_2"
+            },
+            {
+              "col0": "45_0",
+              "col1": "45_1",
+              "col2": "45_2"
+            },
+            {
+              "col0": "46_0",
+              "col1": "46_1",
+              "col2": "46_2"
+            },
+            {
+              "col0": "47_0",
+              "col1": "47_1",
+              "col2": "47_2"
+            },
+            {
+              "col0": "48_0",
+              "col1": "48_1",
+              "col2": "48_2"
+            },
+            {
+              "col0": "49_0",
+              "col1": "49_1",
+              "col2": "49_2"
+            }
+          ],
+          "insights": []
+        }
+      },
+      "created_at": "2026-01-11T21:02:27.064978+00:00",
+      "updated_at": "2026-01-11T21:02:27.064978+00:00"
+    },
+    "4f940c7d-3d1c-4f15-a925-86e9c10e43f2": {
+      "id": "4f940c7d-3d1c-4f15-a925-86e9c10e43f2",
+      "filename": "table_2.csv",
+      "storage_bucket": "artifacts",
+      "storage_key": "datasets/4f940c7d-3d1c-4f15-a925-86e9c10e43f2/table_2.csv",
+      "content_type": "text/csv",
+      "size_bytes": 735,
+      "checksum": "d29bad3db968576c8ebbde284e05da89ad0e07aa5c8d79c5a8b8350980f4c833",
+      "status": "uploaded",
+      "metadata": {
+        "quick_extraction": {
+          "columns": [
+            {
+              "name": "col0",
+              "type": "string"
+            },
+            {
+              "name": "col1",
+              "type": "string"
+            },
+            {
+              "name": "col2",
+              "type": "string"
+            }
+          ],
+          "row_count": 50,
+          "sample_data": [
+            {
+              "col0": "0_0",
+              "col1": "0_1",
+              "col2": "0_2"
+            },
+            {
+              "col0": "1_0",
+              "col1": "1_1",
+              "col2": "1_2"
+            },
+            {
+              "col0": "2_0",
+              "col1": "2_1",
+              "col2": "2_2"
+            },
+            {
+              "col0": "3_0",
+              "col1": "3_1",
+              "col2": "3_2"
+            },
+            {
+              "col0": "4_0",
+              "col1": "4_1",
+              "col2": "4_2"
+            },
+            {
+              "col0": "5_0",
+              "col1": "5_1",
+              "col2": "5_2"
+            },
+            {
+              "col0": "6_0",
+              "col1": "6_1",
+              "col2": "6_2"
+            },
+            {
+              "col0": "7_0",
+              "col1": "7_1",
+              "col2": "7_2"
+            },
+            {
+              "col0": "8_0",
+              "col1": "8_1",
+              "col2": "8_2"
+            },
+            {
+              "col0": "9_0",
+              "col1": "9_1",
+              "col2": "9_2"
+            },
+            {
+              "col0": "10_0",
+              "col1": "10_1",
+              "col2": "10_2"
+            },
+            {
+              "col0": "11_0",
+              "col1": "11_1",
+              "col2": "11_2"
+            },
+            {
+              "col0": "12_0",
+              "col1": "12_1",
+              "col2": "12_2"
+            },
+            {
+              "col0": "13_0",
+              "col1": "13_1",
+              "col2": "13_2"
+            },
+            {
+              "col0": "14_0",
+              "col1": "14_1",
+              "col2": "14_2"
+            },
+            {
+              "col0": "15_0",
+              "col1": "15_1",
+              "col2": "15_2"
+            },
+            {
+              "col0": "16_0",
+              "col1": "16_1",
+              "col2": "16_2"
+            },
+            {
+              "col0": "17_0",
+              "col1": "17_1",
+              "col2": "17_2"
+            },
+            {
+              "col0": "18_0",
+              "col1": "18_1",
+              "col2": "18_2"
+            },
+            {
+              "col0": "19_0",
+              "col1": "19_1",
+              "col2": "19_2"
+            },
+            {
+              "col0": "20_0",
+              "col1": "20_1",
+              "col2": "20_2"
+            },
+            {
+              "col0": "21_0",
+              "col1": "21_1",
+              "col2": "21_2"
+            },
+            {
+              "col0": "22_0",
+              "col1": "22_1",
+              "col2": "22_2"
+            },
+            {
+              "col0": "23_0",
+              "col1": "23_1",
+              "col2": "23_2"
+            },
+            {
+              "col0": "24_0",
+              "col1": "24_1",
+              "col2": "24_2"
+            },
+            {
+              "col0": "25_0",
+              "col1": "25_1",
+              "col2": "25_2"
+            },
+            {
+              "col0": "26_0",
+              "col1": "26_1",
+              "col2": "26_2"
+            },
+            {
+              "col0": "27_0",
+              "col1": "27_1",
+              "col2": "27_2"
+            },
+            {
+              "col0": "28_0",
+              "col1": "28_1",
+              "col2": "28_2"
+            },
+            {
+              "col0": "29_0",
+              "col1": "29_1",
+              "col2": "29_2"
+            },
+            {
+              "col0": "30_0",
+              "col1": "30_1",
+              "col2": "30_2"
+            },
+            {
+              "col0": "31_0",
+              "col1": "31_1",
+              "col2": "31_2"
+            },
+            {
+              "col0": "32_0",
+              "col1": "32_1",
+              "col2": "32_2"
+            },
+            {
+              "col0": "33_0",
+              "col1": "33_1",
+              "col2": "33_2"
+            },
+            {
+              "col0": "34_0",
+              "col1": "34_1",
+              "col2": "34_2"
+            },
+            {
+              "col0": "35_0",
+              "col1": "35_1",
+              "col2": "35_2"
+            },
+            {
+              "col0": "36_0",
+              "col1": "36_1",
+              "col2": "36_2"
+            },
+            {
+              "col0": "37_0",
+              "col1": "37_1",
+              "col2": "37_2"
+            },
+            {
+              "col0": "38_0",
+              "col1": "38_1",
+              "col2": "38_2"
+            },
+            {
+              "col0": "39_0",
+              "col1": "39_1",
+              "col2": "39_2"
+            },
+            {
+              "col0": "40_0",
+              "col1": "40_1",
+              "col2": "40_2"
+            },
+            {
+              "col0": "41_0",
+              "col1": "41_1",
+              "col2": "41_2"
+            },
+            {
+              "col0": "42_0",
+              "col1": "42_1",
+              "col2": "42_2"
+            },
+            {
+              "col0": "43_0",
+              "col1": "43_1",
+              "col2": "43_2"
+            },
+            {
+              "col0": "44_0",
+              "col1": "44_1",
+              "col2": "44_2"
+            },
+            {
+              "col0": "45_0",
+              "col1": "45_1",
+              "col2": "45_2"
+            },
+            {
+              "col0": "46_0",
+              "col1": "46_1",
+              "col2": "46_2"
+            },
+            {
+              "col0": "47_0",
+              "col1": "47_1",
+              "col2": "47_2"
+            },
+            {
+              "col0": "48_0",
+              "col1": "48_1",
+              "col2": "48_2"
+            },
+            {
+              "col0": "49_0",
+              "col1": "49_1",
+              "col2": "49_2"
+            }
+          ],
+          "insights": []
+        }
+      },
+      "created_at": "2026-01-11T21:02:27.177770+00:00",
+      "updated_at": "2026-01-11T21:02:27.177770+00:00"
+    },
+    "48725263-cdae-4fea-b261-bde0090dcf00": {
+      "id": "48725263-cdae-4fea-b261-bde0090dcf00",
+      "filename": "crime_factors.csv",
+      "storage_bucket": "artifacts",
+      "storage_key": "datasets/48725263-cdae-4fea-b261-bde0090dcf00/crime_factors.csv",
+      "content_type": "text/csv",
+      "size_bytes": 195,
+      "checksum": "1658c4f300e55eabcb2827c9d7af636aa3ea6e98765067206b2b0945a4f3327a",
+      "status": "uploaded",
+      "metadata": {
+        "quick_extraction": {
+          "columns": [
+            {
+              "name": "region",
+              "type": "string"
+            },
+            {
+              "name": "year",
+              "type": "number"
+            },
+            {
+              "name": "crime_rate",
+              "type": "number"
+            },
+            {
+              "name": "unemployment_rate",
+              "type": "number"
+            },
+            {
+              "name": "poverty_index",
+              "type": "number"
+            },
+            {
+              "name": "police_presence",
+              "type": "number"
+            }
+          ],
+          "row_count": 4,
+          "sample_data": [
+            {
+              "region": "Central",
+              "year": 2020,
+              "crime_rate": 12.5,
+              "unemployment_rate": 5.1,
+              "poverty_index": 18.4,
+              "police_presence": 220
+            },
+            {
+              "region": "Central",
+              "year": 2021,
+              "crime_rate": 13.9,
+              "unemployment_rate": 5.3,
+              "poverty_index": 18.9,
+              "police_presence": 215
+            },
+            {
+              "region": "Central",
+              "year": 2022,
+              "crime_rate": 15.8,
+              "unemployment_rate": 5.6,
+              "poverty_index": 19.5,
+              "police_presence": 208
+            },
+            {
+              "region": "Central",
+              "year": 2023,
+              "crime_rate": 16.7,
+              "unemployment_rate": 5.4,
+              "poverty_index": 19.8,
+              "police_presence": 200
+            }
+          ],
+          "insights": [
+            "Crime indicator 'crime_rate' increased by 4.20 between the first and last records.",
+            "Risk factor 'unemployment_rate' averages 5.35 across the dataset.",
+            "Risk factor 'poverty_index' averages 19.15 across the dataset.",
+            "Policing resource 'police_presence' decreased by 20.00 between the first and last records."
+          ]
+        }
+      },
+      "created_at": "2026-01-11T21:02:27.351450+00:00",
+      "updated_at": "2026-01-11T21:02:27.351450+00:00"
+    }
+  },
+  "jobs": {}
+}

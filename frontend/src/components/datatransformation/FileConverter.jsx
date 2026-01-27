@@ -14,19 +14,16 @@ import {
   CheckCircle2,
   AlertTriangle,
   Sparkles,
-  Zap,
-  Target,
   Download,
   Info
 } from "lucide-react";
 import { detectFileIcon, generateCSV } from "@/utils/dataTransformation";
 
-export default function FileConverter({ supportedFormats, onConversionComplete, onDatasetCreated }) {
+export default function FileConverter({ onConversionComplete, onDatasetCreated }) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [isConverting, setIsConverting] = useState(false);
   const [conversionProgress, setConversionProgress] = useState(0);
   const [conversionResult, setConversionResult] = useState(null);
-  const [validationResult, setValidationResult] = useState(null);
   const [outputFormat, setOutputFormat] = useState('csv');
   const [dragActive, setDragActive] = useState(false);
   const [downloadableContent, setDownloadableContent] = useState(null);
@@ -66,7 +63,6 @@ export default function FileConverter({ supportedFormats, onConversionComplete, 
     setIsConverting(true);
     setConversionProgress(0);
     setConversionResult(null);
-    setValidationResult(null);
     setDownloadableContent(null);
 
     try {
@@ -451,4 +447,3 @@ export default function FileConverter({ supportedFormats, onConversionComplete, 
     </div>
   );
 }
-

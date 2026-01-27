@@ -1,0 +1,703 @@
+agency_full,#_of_agencies,population,crime_type,YTD,PrevYTD,Percent_Change,YTD_Range,Last Updated
+"Chicago, Illinois",1,2628298,"Murders",366,506,-27.67%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"New York City, New York",1,8184044,"Murders",262,318,-17.61%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Houston, Texas",1,2304406,"Murders",227,272,-16.54%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Los Angeles, California",1,3786018,"Murders",194,239,-18.83%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Philadelphia, Pennsylvania",1,1550843,"Murders",184,218,-15.60%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Memphis, Tennessee",1,616061,"Murders",161,201,-19.90%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Detroit, Michigan",1,615501,"Murders",145,173,-16.18%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"St Louis, Missouri",1,280108,"Murders",121,124,-2.42%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Kansas City, Missouri",1,509855,"Murders",119,125,-4.80%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Los Angeles County, California",1,1008018,"Murders",118,139,-15.11%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Washington, District of Columbia",1,678972,"Murders",117,162,-27.78%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Milwaukee, Wisconsin",1,558698,"Murders",115,111,3.60%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Dallas, Texas",1,1304989,"Murders",112,152,-26.32%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Indianapolis, Indiana",1,887131,"Murders",111,147,-24.49%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Baltimore, Maryland",1,565192,"Murders",108,164,-34.15%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"New Orleans, Louisiana",1,364197,"Murders",98,106,-7.55%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Louisville, Kentucky",1,669468,"Murders",97,136,-28.68%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Cleveland, Ohio",1,358146,"Murders",89,92,-3.26%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"San Antonio, Texas",1,1490047,"Murders",88,110,-20.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Harris County, Texas",1,2057899,"Murders",82,99,-17.17%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Charlotte, North Carolina",1,979304,"Murders",77,86,-10.47%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Phoenix, Arizona",1,1660686,"Murders",74,98,-24.49%,"Jan - Aug 2025",2025-12-16 15:08:46 EST
+"Las Vegas, Nevada",1,1670226,"Murders",68,93,-26.88%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Birmingham, Alabama",1,195224,"Murders",67,123,-45.53%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Fort Worth, Texas",1,973722,"Murders",66,61,8.20%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Atlanta, Georgia",1,500212,"Murders",65,97,-32.99%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Jacksonville, Florida",1,983663,"Murders",61,52,17.31%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Albuquerque, New Mexico",1,559094,"Murders",58,83,-30.12%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Cincinnati, Ohio",1,309484,"Murders",55,62,-11.29%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Minneapolis, Minnesota",1,422341,"Murders",52,66,-21.21%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Oklahoma City, Oklahoma",1,700764,"Murders",49,67,-26.87%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Nashville, Tennessee",1,690495,"Murders",48,84,-42.86%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Richmond, Virginia",1,230789,"Murders",47,47,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Austin, Texas",1,978816,"Murders",44,45,-2.22%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Tucson, Arizona",1,548544,"Murders",42,54,-22.22%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Columbus, Ohio",1,908834,"Murders",41,91,-54.95%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Denver, Colorado",1,712222,"Murders",39,66,-40.91%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Portland, Oregon",1,626146,"Murders",39,61,-36.07%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Sacramento, California",1,529172,"Murders",38,39,-2.56%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Little Rock, Arkansas",1,202986,"Murders",37,35,5.71%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Mobile, Alabama",1,237469,"Murders",34,30,13.33%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Stockton, California",1,322220,"Murders",33,43,-23.26%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Prince George's County, Maryland",1,725229,"Murders",32,57,-43.86%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Durham, North Carolina",1,295788,"Murders",31,29,6.90%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Shreveport, Louisiana",1,176906,"Murders",31,40,-22.50%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Bakersfield, California",1,413409,"Murders",29,23,26.09%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Fort Wayne, Indiana",1,269728,"Murders",29,24,20.83%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Rochester, New York",1,208452,"Murders",29,36,-19.44%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Aurora, Colorado",1,396976,"Murders",28,34,-17.65%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Pittsburgh, Pennsylvania",1,304825,"Murders",28,33,-15.15%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"San Diego, California",1,1378349,"Murders",28,29,-3.45%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Seattle, Washington",1,753786,"Murders",28,48,-41.67%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Baton Rouge, Louisiana",1,219086,"Murders",27,35,-22.86%,"Jan - Apr 2025",2025-12-16 15:08:46 EST
+"Buffalo, New York",1,275922,"Murders",26,37,-29.73%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Fayetteville, North Carolina",1,209262,"Murders",26,14,85.71%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Greensboro, North Carolina",1,303237,"Murders",26,27,-3.70%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Miami, Florida",1,452929,"Murders",26,23,13.04%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Tulsa, Oklahoma",1,411002,"Murders",26,35,-25.71%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Baltimore County, Maryland",1,845222,"Murders",25,17,47.06%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Dayton, Ohio",1,135181,"Murders",25,29,-13.79%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Newark, New Jersey",1,303827,"Murders",25,34,-26.47%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Colorado Springs, Colorado",1,489254,"Murders",24,36,-33.33%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"San Francisco, California",1,782846,"Murders",24,30,-20.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"St Louis County, Missouri",1,398969,"Murders",23,27,-14.81%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Winston-Salem, North Carolina",1,252132,"Murders",23,20,15.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Akron, Ohio",1,187705,"Murders",22,17,29.41%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Boston, Massachusetts",1,642823,"Murders",22,20,10.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Hampton, Virginia",1,138533,"Murders",22,10,120.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Long Beach, California",1,444415,"Murders",22,33,-33.33%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Raleigh, North Carolina",1,482842,"Murders",22,22,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"San Jose, California",1,952530,"Murders",22,22,0.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Fresno, California",1,547134,"Murders",20,28,-28.57%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Omaha, Nebraska",1,481471,"Murders",20,16,25.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"El Paso, Texas",1,676665,"Murders",19,17,11.76%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Norfolk, Virginia",1,230849,"Murders",19,27,-29.63%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"North Las Vegas, Nevada",1,290751,"Murders",18,30,-40.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Jefferson Parish, Louisiana",1,321980,"Murders",17,17,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Montgomery County, Maryland",1,896963,"Murders",17,17,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"East Baton Rouge Parish, Louisiana",1,197853,"Murders",16,34,-52.94%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Greenville County, South Carolina",1,379428,"Murders",16,18,-11.11%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Mesa, Arizona",1,515848,"Murders",16,12,33.33%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Portsmouth, Virginia",1,96649,"Murders",15,31,-51.61%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Tacoma, Washington",1,222828,"Murders",15,19,-21.05%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Vallejo, California",1,122419,"Murders",15,20,-25.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Albany, Georgia",1,66281,"Murders",14,16,-12.50%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Chattanooga, Tennessee",1,185370,"Murders",14,22,-36.36%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Johnston County, North Carolina",1,177923,"Murders",14,2,600.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Killeen, Texas",1,161968,"Murders",14,19,-26.32%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Lake Charles, Louisiana",1,76393,"Murders",14,10,40.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"New Haven, Connecticut",1,141481,"Murders",14,9,55.56%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Reno, Nevada",1,277792,"Murders",14,18,-22.22%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Springfield, Massachusetts",1,154218,"Murders",14,16,-12.50%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Chesterfield County, Virginia",1,385204,"Murders",13,11,18.18%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Clarksville, Tennessee",1,181916,"Murders",13,8,62.50%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Corpus Christi, Texas",1,315340,"Murders",13,25,-48.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Lexington, Kentucky",1,319994,"Murders",13,16,-18.75%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Paterson, New Jersey",1,155991,"Murders",13,8,62.50%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Sacramento County, California",1,604738,"Murders",13,19,-31.58%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Arlington, Texas",1,394799,"Murders",12,12,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Fontana, California",1,214429,"Murders",12,2,500.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Hartford, Connecticut",1,120710,"Murders",12,16,-25.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Horry County, South Carolina",1,302018,"Murders",12,7,71.43%,"Jan - Aug 2025",2025-12-16 15:08:46 EST
+"Jackson, Tennessee",1,68470,"Murders",12,15,-20.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Knoxville, Tennessee",1,198132,"Murders",12,20,-40.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Mesquite, Texas",1,147926,"Murders",12,5,140.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Toledo, Ohio",1,264341,"Murders",12,18,-33.33%,"Jan - Jul 2025",2025-12-16 15:08:46 EST
+"Berkeley County, South Carolina",1,142756,"Murders",11,8,37.50%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"El Paso County, Colorado",1,207095,"Murders",11,7,57.14%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Grand Rapids, Michigan",1,196019,"Murders",11,11,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Jersey City, New Jersey",1,285117,"Murders",11,6,83.33%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Newport News, Virginia",1,183600,"Murders",11,17,-35.29%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Roanoke, Virginia",1,96925,"Murders",11,7,57.14%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"San Diego County, California",1,519218,"Murders",11,25,-56.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"St. Paul, Minnesota",1,300368,"Murders",11,22,-50.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Virginia Beach, Virginia",1,453991,"Murders",11,12,-8.33%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Lubbock, Texas",1,266960,"Murders",10,11,-9.09%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Riverside, California",1,323473,"Murders",10,11,-9.09%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Rocky Mount, North Carolina",1,53865,"Murders",10,2,400.00%,"Jan - Aug 2025",2025-12-16 15:08:46 EST
+"Albany, New York",1,101930,"Murders",9,9,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Anaheim, California",1,343147,"Murders",9,10,-10.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Anderson County, South Carolina",1,164574,"Murders",9,7,28.57%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Chesapeake, Virginia",1,254051,"Murders",9,9,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Greeley, Colorado",1,109183,"Murders",9,4,125.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Harrisburg, Pennsylvania",1,50229,"Murders",9,12,-25.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Hidalgo County, Texas",1,260352,"Murders",9,8,12.50%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Montgomery County, Texas",1,565355,"Murders",9,9,0.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"North Charleston, South Carolina",1,120162,"Murders",9,13,-30.77%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Reading, Pennsylvania",1,97790,"Murders",9,7,28.57%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Rockford, Illinois",1,145873,"Murders",9,17,-47.06%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Springfield, Illinois",1,112781,"Murders",9,9,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Springfield, Ohio",1,57866,"Murders",9,4,125.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Beaumont, Texas",1,110671,"Murders",8,12,-33.33%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Charleston, South Carolina",1,155159,"Murders",8,7,14.29%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Glendale, Arizona",1,253768,"Murders",8,14,-42.86%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"San Bernardino, California",1,219483,"Murders",8,8,0.00%,"Jan - May 2025",2025-12-16 15:08:46 EST
+"Santa Fe, New Mexico",1,89657,"Murders",8,4,100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Shelby County, Tennessee",1,136188,"Murders",8,6,33.33%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Waterbury, Connecticut",1,115380,"Murders",8,8,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Yuma, Arizona",1,99610,"Murders",8,2,300.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Amarillo, Texas",1,201684,"Murders",7,10,-30.00%,"Jan - Aug 2025",2025-12-16 15:08:46 EST
+"Brockton, Massachusetts",1,108938,"Murders",7,7,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"El Paso County, Texas",1,116599,"Murders",7,7,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Gilbert, Arizona",1,278495,"Murders",7,1,600.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Greenville, North Carolina",1,90048,"Murders",7,8,-12.50%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Gresham, Oregon",1,110225,"Murders",7,5,40.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Hayward, California",1,153914,"Murders",7,11,-36.36%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Honolulu, Hawaii",1,987546,"Murders",7,24,-70.83%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Independence, Missouri",1,120326,"Murders",7,8,-12.50%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Lynchburg, Virginia",1,79509,"Murders",7,9,-22.22%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Mckinney, Texas",1,212716,"Murders",7,2,250.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Pomona, California",1,143578,"Murders",7,11,-36.36%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"South Bend, Indiana",1,102999,"Murders",7,8,-12.50%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Spokane, Washington",1,230648,"Murders",7,14,-50.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Springfield, Missouri",1,170521,"Murders",7,8,-12.50%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Victoria, Texas",1,65298,"Murders",7,1,600.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Waco, Texas",1,145741,"Murders",7,8,-12.50%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Warner Robins, Georgia",1,82991,"Murders",7,4,75.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Williamson County, Texas",1,202897,"Murders",7,3,133.33%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Wilmington, North Carolina",1,122675,"Murders",7,6,16.67%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Yakima, Washington",1,96991,"Murders",7,11,-36.36%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Aiken County, South Carolina",1,110756,"Murders",6,6,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Baytown, Texas",1,83809,"Murders",6,5,20.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Bexar County, Texas",1,438152,"Murders",6,13,-53.85%,"Jan - Jul 2025",2025-12-16 15:08:46 EST
+"Brazoria County, Texas",1,132229,"Murders",6,3,100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Champaign, Illinois",1,89687,"Murders",6,3,100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Corona, California",1,160590,"Murders",6,1,500.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Decatur, Illinois",1,68301,"Murders",6,5,20.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Denton, Texas",1,155215,"Murders",6,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"El Cajon, California",1,103569,"Murders",6,2,200.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Fort Bend County, Texas",1,578695,"Murders",6,15,-60.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Galveston, Texas",1,52810,"Murders",6,3,100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Garland, Texas",1,240051,"Murders",6,10,-40.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Georgetown, Texas",1,87871,"Murders",6,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Jacksonville, North Carolina",1,69340,"Murders",6,2,200.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Lakewood, Colorado",1,156065,"Murders",6,3,100.00%,"Jan - Aug 2025",2025-12-16 15:08:46 EST
+"Laredo, Texas",1,256542,"Murders",6,5,20.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Lewisville, Texas",1,133694,"Murders",6,4,50.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Madera, California",1,68862,"Murders",6,1,500.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Monterey County, California",1,103695,"Murders",6,1,500.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"North Little Rock, Arkansas",1,64612,"Murders",6,12,-50.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"North Richland Hills, Texas",1,70853,"Murders",6,2,200.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Prince William County, Virginia",1,480467,"Murders",6,15,-60.00%,"Jan - Aug 2025",2025-12-16 15:08:46 EST
+"Salt Lake City, Utah",1,206692,"Murders",6,9,-33.33%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Santa Rosa, California",1,176855,"Murders",6,2,200.00%,"Jan - Aug 2025",2025-12-16 15:08:46 EST
+"Sarasota County, Florida",1,294526,"Murders",6,5,20.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Tyler, Texas",1,110824,"Murders",6,6,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"West Valley, Utah",1,135023,"Murders",6,5,20.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Albemarle County, Virginia",1,115659,"Murders",5,2,150.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Antioch, California",1,115271,"Murders",5,14,-64.29%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Colerain Township, Ohio",1,58268,"Murders",5,1,400.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Columbia, Missouri",1,129602,"Murders",5,12,-58.33%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Elk Grove, California",1,177976,"Murders",5,3,66.67%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Evansville, Indiana",1,114950,"Murders",5,11,-54.55%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Fairfax County, Virginia",1,1094031,"Murders",5,11,-54.55%,"Jan - Jul 2025",2025-12-16 15:08:46 EST
+"Fairfield, California",1,119071,"Murders",5,1,400.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Fort Smith, Arkansas",1,90417,"Murders",5,0,NaN%,"Jan - Aug 2025",2025-12-16 15:08:46 EST
+"Gastonia, North Carolina",1,83739,"Murders",5,3,66.67%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Greenwood, Indiana",1,66131,"Murders",5,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Hamilton County, Ohio",1,122218,"Murders",5,6,-16.67%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"High Point, North Carolina",1,115490,"Murders",5,2,150.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Lincoln, Nebraska",1,293155,"Murders",5,6,-16.67%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Merced, California",1,94125,"Murders",5,7,-28.57%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"New Hanover County, North Carolina",1,105363,"Murders",5,5,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Oceanside, California",1,171348,"Murders",5,2,150.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Santa Maria, California",1,110317,"Murders",5,2,150.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Scottsdale, Arizona",1,243644,"Murders",5,1,400.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Sioux Falls, South Dakota",1,206559,"Murders",5,11,-54.55%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Spotsylvania County, Virginia",1,149957,"Murders",5,5,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Tempe, Arizona",1,188144,"Murders",5,4,25.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Visalia, California",1,145031,"Murders",5,7,-28.57%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Wake County, North Carolina",1,198748,"Murders",5,3,66.67%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Abilene, Texas",1,128387,"Murders",4,7,-42.86%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Beaufort County, South Carolina",1,132948,"Murders",4,10,-60.00%,"Jan - Aug 2025",2025-12-16 15:08:46 EST
+"Billings, Montana",1,121365,"Murders",4,9,-55.56%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Buncombe County, North Carolina",1,158547,"Murders",4,2,100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Carlsbad, California",1,113796,"Murders",4,1,300.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Cedar Rapids, Iowa",1,135777,"Murders",4,1,300.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Chandler, Arizona",1,282419,"Murders",4,2,100.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Collin County, Texas",1,95286,"Murders",4,2,100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Conway, Arkansas",1,69315,"Murders",4,2,100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Davenport, Iowa",1,99911,"Murders",4,8,-50.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Duluth, Minnesota",1,86570,"Murders",4,3,33.33%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Fargo, North Dakota",1,134268,"Murders",4,5,-20.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Forsyth County, North Carolina",1,111773,"Murders",4,5,-20.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Guilford County, North Carolina",1,130423,"Murders",4,6,-33.33%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Henderson, Nevada",1,337794,"Murders",4,8,-50.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Howard County, Maryland",1,337780,"Murders",4,6,-33.33%,"Jan - Jun 2025",2025-12-16 15:08:46 EST
+"Janesville, Wisconsin",1,66033,"Murders",4,1,300.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Jefferson County, Missouri",1,167018,"Murders",4,4,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Kaufman County, Texas",1,111179,"Murders",4,2,100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Lancaster County, South Carolina",1,100080,"Murders",4,3,33.33%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Lee's Summit, Missouri",1,104402,"Murders",4,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Lenexa, Kansas",1,59161,"Murders",4,2,100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Longview, Texas",1,82981,"Murders",4,9,-55.56%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Midwest City, Oklahoma",1,57696,"Murders",4,3,33.33%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Nassau County, New York",1,1077192,"Murders",4,1,300.00%,"Jan - Apr 2025",2025-12-16 15:08:46 EST
+"National City, California",1,55270,"Murders",4,2,100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"New Bedford, Massachusetts",1,100876,"Murders",4,7,-42.86%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Norman, Oklahoma",1,130366,"Murders",4,1,300.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Peoria, Arizona",1,200886,"Murders",4,1,300.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Pima County, Arizona",1,365222,"Murders",4,9,-55.56%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Pontiac, Michigan",1,61871,"Murders",4,12,-66.67%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Port Arthur, Texas",1,55371,"Murders",4,5,-20.00%,"Jan - Aug 2025",2025-12-16 15:08:46 EST
+"Schenectady, New York",1,69035,"Murders",4,7,-42.86%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"St. Cloud, Minnesota",1,69922,"Murders",4,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"St. George, Utah",1,105930,"Murders",4,1,300.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Travis County, Texas",1,277111,"Murders",4,5,-20.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"West Jordan, Utah",1,116485,"Murders",4,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Youngstown, Ohio",1,58773,"Murders",4,5,-20.00%,"Jan - May 2025",2025-12-16 15:08:46 EST
+"Bellevue, Nebraska",1,62372,"Murders",3,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Boulder, Colorado",1,104232,"Murders",3,0,NaN%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Bridgeport, Connecticut",1,148483,"Murders",3,11,-72.73%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Burlington, North Carolina",1,60156,"Murders",3,4,-25.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Canton Township, Michigan",1,98915,"Murders",3,3,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Chula Vista, California",1,280748,"Murders",3,4,-25.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Clovis, California",1,126552,"Murders",3,2,50.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Denton County, Texas",1,160587,"Murders",3,1,200.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Erie, Pennsylvania",1,92920,"Murders",3,4,-25.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Escondido, California",1,149837,"Murders",3,2,50.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Fall River, Massachusetts",1,93879,"Murders",3,4,-25.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Forsyth County, Georgia",1,267417,"Murders",3,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Fort Collins, Colorado",1,168886,"Murders",3,3,0.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Frisco, Texas",1,228527,"Murders",3,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Grand Prairie, Texas",1,205487,"Murders",3,4,-25.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Hall County, Georgia",1,148922,"Murders",3,1,200.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Hammond, Indiana",1,75990,"Murders",3,2,50.00%,"Jan - Feb 2025",2025-12-16 15:08:46 EST
+"Henrico County, Virginia",1,334046,"Murders",3,16,-81.25%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Henry County, Georgia",1,172407,"Murders",3,4,-25.00%,"Jan - Aug 2025",2025-12-16 15:08:46 EST
+"Johns Creek, Georgia",1,82646,"Murders",3,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Jonesboro, Arkansas",1,80395,"Murders",3,3,0.00%,"Jan - Jul 2025",2025-12-16 15:08:46 EST
+"Kalamazoo County, Michigan",1,108458,"Murders",3,3,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Kannapolis, North Carolina",1,56479,"Murders",3,4,-25.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Lafayette, Louisiana",1,121361,"Murders",3,9,-66.67%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Lexington County, South Carolina",1,232613,"Murders",3,5,-40.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Livingston Parish, Louisiana",1,134038,"Murders",3,7,-57.14%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Loudoun County, Virginia",1,378299,"Murders",3,5,-40.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Lynn, Massachusetts",1,101144,"Murders",3,3,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Madison, Wisconsin",1,274234,"Murders",3,4,-25.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Odessa, Texas",1,111922,"Murders",3,4,-25.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Owensboro, Kentucky",1,59937,"Murders",3,1,200.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Oxnard, California",1,199508,"Murders",3,5,-40.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Parker County, Texas",1,114776,"Murders",3,2,50.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Pasadena, Texas",1,145850,"Murders",3,5,-40.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Pawtucket, Rhode Island",1,75100,"Murders",3,3,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Pharr, Texas",1,80359,"Murders",3,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Rapid City, South Dakota",1,80850,"Murders",3,5,-40.00%,"Jan - Jul 2025",2025-12-16 15:08:46 EST
+"Rock Hill, South Carolina",1,75681,"Murders",3,4,-25.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Royal Oak, Michigan",1,57233,"Murders",3,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Salem, Oregon",1,178276,"Murders",3,6,-50.00%,"Jan - Aug 2025",2025-12-16 15:08:46 EST
+"San Marcos, Texas",1,71413,"Murders",3,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Smith County, Texas",1,111489,"Murders",3,5,-40.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Sonoma County, California",1,131522,"Murders",3,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Southfield, Michigan",1,74960,"Murders",3,1,200.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Sparks, Nevada",1,109403,"Murders",3,4,-25.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"St Charles, Missouri",1,71408,"Murders",3,2,50.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Taylor, Michigan",1,61781,"Murders",3,3,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Tulare County, California",1,135511,"Murders",3,9,-66.67%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Walnut Creek, California",1,68441,"Murders",3,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Waterloo, Iowa",1,66211,"Murders",3,2,50.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Westminster, Colorado",1,113660,"Murders",3,5,-40.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Wichita Falls, Texas",1,102740,"Murders",3,9,-66.67%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Adams County, Colorado",1,100798,"Murders",2,4,-50.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Alameda County, California",1,148466,"Murders",2,8,-75.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Alhambra, California",1,79087,"Murders",2,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Allentown, Pennsylvania",1,124782,"Murders",2,4,-50.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Asheville, North Carolina",1,93471,"Murders",2,9,-77.78%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Baldwin Park, California",1,68230,"Murders",2,3,-33.33%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Barnstable, Massachusetts",1,50034,"Murders",2,1,100.00%,"Jan - Aug 2025",2025-12-16 15:08:46 EST
+"Battle Creek, Michigan",1,60969,"Murders",2,5,-60.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Beaumont, California",1,57819,"Murders",2,0,NaN%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Bellingham, Washington",1,94968,"Murders",2,5,-60.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Boise, Idaho",1,236949,"Murders",2,1,100.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Bossier City, Louisiana",1,62602,"Murders",2,7,-71.43%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Bowling Green, Kentucky",1,76194,"Murders",2,1,100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Broken Arrow, Oklahoma",1,119959,"Murders",2,4,-50.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Brookhaven, Georgia",1,58507,"Murders",2,4,-50.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Brownsville, Texas",1,190590,"Murders",2,3,-33.33%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Burnsville, Minnesota",1,63650,"Murders",2,5,-60.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Cheyenne, Wyoming",1,64307,"Murders",2,2,0.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Chicopee, Massachusetts",1,55043,"Murders",2,3,-33.33%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Citrus Heights, California",1,85894,"Murders",2,3,-33.33%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Clackamas County, Oregon",1,243311,"Murders",2,3,-33.33%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Commerce City, Colorado",1,67851,"Murders",2,5,-60.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Concord, North Carolina",1,111915,"Murders",2,5,-60.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Council Bluffs, Iowa",1,62214,"Murders",2,2,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Dearborn Heights, Michigan",1,61420,"Murders",2,1,100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Dearborn, Michigan",1,106747,"Murders",2,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Des Moines, Iowa",1,209658,"Murders",2,9,-77.78%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Douglas County, Colorado",1,219477,"Murders",2,3,-33.33%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Eau Claire, Wisconsin",1,69859,"Murders",2,1,100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Edmond, Oklahoma",1,97063,"Murders",2,2,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"El Dorado County, California",1,162436,"Murders",2,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"El Monte, California",1,103463,"Murders",2,6,-66.67%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Elkhart, Indiana",1,53773,"Murders",2,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Enid, Oklahoma",1,50168,"Murders",2,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Eugene, Oregon",1,178191,"Murders",2,2,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Fayetteville, Arkansas",1,101624,"Murders",2,8,-75.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Folsom, California",1,84559,"Murders",2,4,-50.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Franklin, Tennessee",1,88315,"Murders",2,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Goodyear, Arizona",1,109929,"Murders",2,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Green Bay, Wisconsin",1,105521,"Murders",2,2,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Greenville, South Carolina",1,72961,"Murders",2,7,-71.43%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Hamilton Township, New Jersey",1,120098,"Murders",2,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Hillsboro, Oregon",1,107459,"Murders",2,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Iowa City, Iowa",1,75396,"Murders",2,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Irving, Texas",1,255203,"Murders",2,18,-88.89%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Kent County, Michigan",1,267237,"Murders",2,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Knox County, Tennessee",1,304331,"Murders",2,2,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Kokomo, Indiana",1,59720,"Murders",2,2,0.00%,"Jan - Aug 2025",2025-12-16 15:08:46 EST
+"La Mesa, California",1,60008,"Murders",2,2,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Lansing, Michigan",1,112529,"Murders",2,3,-33.33%,"Jan - Apr 2025",2025-12-16 15:08:46 EST
+"Lawrence, Massachusetts",1,87806,"Murders",2,7,-71.43%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"League City, Texas",1,115791,"Murders",2,4,-50.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Leander, Texas",1,82228,"Murders",2,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Little Elm, Texas",1,59954,"Murders",2,2,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Manchester, New Hampshire",1,114963,"Murders",2,2,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Medford, Oregon",1,85352,"Murders",2,2,0.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Midland, Texas",1,135253,"Murders",2,7,-71.43%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Mission Viejo, California",1,90944,"Murders",2,0,NaN%,"Jan - Aug 2025",2025-12-16 15:08:46 EST
+"Missouri City, Texas",1,77560,"Murders",2,1,100.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Murfreesboro, Tennessee",1,166916,"Murders",2,5,-60.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Napa, California",1,77956,"Murders",2,4,-50.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"New Britain, Connecticut",1,74609,"Murders",2,3,-33.33%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"New Rochelle, New York",1,83357,"Murders",2,0,NaN%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Ogden, Utah",1,86593,"Murders",2,1,100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Onslow County, North Carolina",1,125993,"Murders",2,5,-60.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Paulding County, Georgia",1,162740,"Murders",2,3,-33.33%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Pearland, Texas",1,127433,"Murders",2,3,-33.33%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Pflugerville, Texas",1,65599,"Murders",2,1,100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Plano, Texas",1,291140,"Murders",2,3,-33.33%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Pleasanton, California",1,75238,"Murders",2,1,100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Providence, Rhode Island",1,189590,"Murders",2,11,-81.82%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Racine, Wisconsin",1,75858,"Murders",2,3,-33.33%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Richardson, Texas",1,119008,"Murders",2,2,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Richmond, California",1,113282,"Murders",2,11,-81.82%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Roseville, California",1,158084,"Murders",2,2,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Round Rock, Texas",1,129898,"Murders",2,2,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Rutherford County, Tennessee",1,104616,"Murders",2,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"San Angelo, Texas",1,98642,"Murders",2,4,-50.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"San Mateo County, California",1,127963,"Murders",2,1,100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Santa Monica, California",1,88552,"Murders",2,2,0.00%,"Jan - Jun 2025",2025-12-16 15:08:46 EST
+"Shelby Township, Michigan",1,79545,"Murders",2,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Southaven, Mississippi",1,57135,"Murders",2,1,100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Spring Hill, Tennessee",1,58200,"Murders",2,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"St. Mary's County, Maryland",1,115684,"Murders",2,1,100.00%,"Jan - Aug 2025",2025-12-16 15:08:46 EST
+"Stafford County, Virginia",1,166413,"Murders",2,1,100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Suffolk, Virginia",1,100598,"Murders",2,10,-80.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Terre Haute, Indiana",1,58309,"Murders",2,2,0.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Texas City, Texas",1,57448,"Murders",2,5,-60.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Thornton, Colorado",1,143838,"Murders",2,2,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Thousand Oaks, California",1,123032,"Murders",2,2,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Thurston County, Washington",1,145385,"Murders",2,2,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Torrance, California",1,138472,"Murders",2,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Tulare, California",1,71428,"Murders",2,5,-60.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Tustin, California",1,77690,"Murders",2,0,NaN%,"Jan - Aug 2025",2025-12-16 15:08:46 EST
+"Upper Darby, Pennsylvania",1,84468,"Murders",2,3,-33.33%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Utica, New York",1,63548,"Murders",2,5,-60.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Warren, Michigan",1,136121,"Murders",2,4,-50.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Waterford Township, Michigan",1,69153,"Murders",2,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"West Covina, California",1,103014,"Murders",2,3,-33.33%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Westland, Michigan",1,83463,"Murders",2,3,-33.33%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Westminster, California",1,88710,"Murders",2,3,-33.33%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Abington, Pennsylvania",1,58433,"Murders",1,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Ada County, Idaho",1,138487,"Murders",1,2,-50.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Allen, Texas",1,114696,"Murders",1,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Ames, Iowa",1,67186,"Murders",1,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Ann Arbor, Michigan",1,118072,"Murders",1,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Apple Valley, Minnesota",1,54995,"Murders",1,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Arapahoe County, Colorado",1,104204,"Murders",1,2,-50.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Arcadia, California",1,54071,"Murders",1,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Arlington County, Virginia",1,231844,"Murders",1,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Arvada, Colorado",1,120200,"Murders",1,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Avondale, Arizona",1,92661,"Murders",1,3,-66.67%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Beaverton, Oregon",1,96840,"Murders",1,1,0.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Bend, Oregon",1,105099,"Murders",1,3,-66.67%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Bensalem, Pennsylvania",1,62595,"Murders",1,0,NaN%,"Jan - Mar 2025",2025-12-16 15:08:46 EST
+"Bentonville, Arkansas",1,59465,"Murders",1,3,-66.67%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Berkeley, California",1,116595,"Murders",1,6,-83.33%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Bloomington, Minnesota",1,86793,"Murders",1,1,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Bolingbrook, Illinois",1,74138,"Murders",1,1,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Bowie, Maryland",1,56678,"Murders",1,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Bozeman, Montana",1,57424,"Murders",1,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Brooklyn Park, Minnesota",1,81920,"Murders",1,3,-66.67%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Burleson, Texas",1,56307,"Murders",1,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Burlington, Vermont",1,44522,"Murders",1,1,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Caldwell, Idaho",1,68731,"Murders",1,1,0.00%,"Jan - Aug 2025",2025-12-16 15:08:46 EST
+"Camarillo, California",1,70010,"Murders",1,1,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Cambridge, Massachusetts",1,118960,"Murders",1,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Cameron County, Texas",1,95894,"Murders",1,3,-66.67%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Carrollton, Texas",1,134261,"Murders",1,1,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Cary, North Carolina",1,182878,"Murders",1,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Cedar Park, Texas",1,77464,"Murders",1,3,-66.67%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Centennial, Colorado",1,104724,"Murders",1,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Chico, California",1,100896,"Murders",1,2,-50.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Chino, California",1,94162,"Murders",1,3,-66.67%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Clinton Township, Michigan",1,99012,"Murders",1,3,-66.67%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Coeur D Alene, Idaho",1,57653,"Murders",1,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"College Station, Texas",1,126136,"Murders",1,3,-66.67%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Concord, California",1,121331,"Murders",1,2,-50.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Conroe, Texas",1,106904,"Murders",1,1,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Cranston, Rhode Island",1,82484,"Murders",1,1,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Cuyahoga Falls, Ohio",1,50459,"Murders",1,1,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Danbury, Connecticut",1,87327,"Murders",1,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Delaware County, Ohio",1,104939,"Murders",1,2,-50.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Desoto, Texas",1,56257,"Murders",1,1,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Douglas County, Nebraska",1,94490,"Murders",1,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Edina, Minnesota",1,51980,"Murders",1,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Elizabeth, New Jersey",1,133578,"Murders",1,4,-75.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Elyria, Ohio",1,53024,"Murders",1,2,-50.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Euclid, Ohio",1,48170,"Murders",1,5,-80.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Euless, Texas",1,59722,"Murders",1,1,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Gardena, California",1,57853,"Murders",1,3,-66.67%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Glendale, California",1,185923,"Murders",1,3,-66.67%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Great Falls, Montana",1,60358,"Murders",1,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Hamilton County, Tennessee",1,124372,"Murders",1,2,-50.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Hamilton, Ohio",1,62705,"Murders",1,1,0.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Harlingen, Texas",1,71581,"Murders",1,1,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Hendersonville, Tennessee",1,63291,"Murders",1,2,-50.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Hoboken, New Jersey",1,56832,"Murders",1,1,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Huntersville, North Carolina",1,63781,"Murders",1,1,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Jeffersonville, Indiana",1,51780,"Murders",1,0,NaN%,"Jan - Mar 2025",2025-12-16 15:08:46 EST
+"Johnson City, Tennessee",1,73225,"Murders",1,4,-75.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Joplin, Missouri",1,52881,"Murders",1,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Kenosha, Wisconsin",1,97786,"Murders",1,3,-66.67%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"La Crosse, Wisconsin",1,50759,"Murders",1,1,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Livingston County, Michigan",1,129813,"Murders",1,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Logan, Utah",1,55645,"Murders",1,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Lorain, Ohio",1,65436,"Murders",1,2,-50.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Loveland, Colorado",1,78656,"Murders",1,1,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Lowell, Massachusetts",1,113124,"Murders",1,4,-75.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Lower Paxton, Pennsylvania",1,55204,"Murders",1,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Manchester, Connecticut",1,59408,"Murders",1,1,0.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Mansfield, Texas",1,78788,"Murders",1,2,-50.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Manteca, California",1,88518,"Murders",1,1,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Marietta, Georgia",1,63407,"Murders",1,2,-50.00%,"Jan - Aug 2025",2025-12-16 15:08:46 EST
+"Miami Beach, Florida",1,78824,"Murders",1,3,-66.67%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Milford, Connecticut",1,53011,"Murders",1,1,0.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Millcreek, Pennsylvania",1,53119,"Murders",1,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Mission, Texas",1,87031,"Murders",1,4,-75.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Mountain View, California",1,80382,"Murders",1,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Nampa, Idaho",1,116116,"Murders",1,2,-50.00%,"Jan - Aug 2025",2025-12-16 15:08:46 EST
+"New Braunfels, Texas",1,111942,"Murders",1,2,-50.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"O'Fallon, Missouri",1,94702,"Murders",1,0,NaN%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Oshkosh, Wisconsin",1,65548,"Murders",1,4,-75.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Palatine, Illinois",1,64407,"Murders",1,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Parker, Colorado",1,62431,"Murders",1,2,-50.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Parma, Ohio",1,78913,"Murders",1,0,NaN%,"Jan - Aug 2025",2025-12-16 15:08:46 EST
+"Pasadena, California",1,132210,"Murders",1,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Placer County, California",1,125007,"Murders",1,3,-66.67%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Provo, Utah",1,112743,"Murders",1,0,NaN%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Redwood City, California",1,78765,"Murders",1,1,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Rochester Hills, Michigan",1,75845,"Murders",1,1,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Roswell, Georgia",1,93241,"Murders",1,1,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Rowlett, Texas",1,66671,"Murders",1,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Santa Cruz County, California",1,128246,"Murders",1,3,-66.67%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Saratoga County, New York",1,183036,"Murders",1,2,-50.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Schaumburg, Illinois",1,75140,"Murders",1,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Scranton, Pennsylvania",1,75687,"Murders",1,6,-83.33%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Simi Valley, California",1,123443,"Murders",1,3,-66.67%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Sioux City, Iowa",1,85365,"Murders",1,3,-66.67%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Spokane Valley, Washington",1,109278,"Murders",1,1,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"St Charles County, Missouri",1,119176,"Murders",1,1,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"St Joseph County, Indiana",1,109381,"Murders",1,0,NaN%,"Jan - Mar 2025",2025-12-16 15:08:46 EST
+"St Joseph, Missouri",1,69925,"Murders",1,2,-50.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"St. Clair Shores, Michigan",1,57257,"Murders",1,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Stark County, Ohio",1,117590,"Murders",1,3,-66.67%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Sterling Heights, Michigan",1,131801,"Murders",1,1,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Sugar Land, Texas",1,108718,"Murders",1,1,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Sunnyvale, California",1,152031,"Murders",1,1,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Tracy, California",1,99347,"Murders",1,3,-66.67%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Troy, Michigan",1,87265,"Murders",1,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Union County, North Carolina",1,170556,"Murders",1,2,-50.00%,"Jan - Jun 2025",2025-12-16 15:08:46 EST
+"Vacaville, California",1,101975,"Murders",1,1,0.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Ventura, California",1,109035,"Murders",1,2,-50.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Warren County, Ohio",1,102918,"Murders",1,2,-50.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Washington County, Maryland",1,104179,"Murders",1,1,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"West Allis, Wisconsin",1,58505,"Murders",1,0,NaN%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Wyoming, Michigan",1,76712,"Murders",1,3,-66.67%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Alameda, California",1,75061,"Murders",0,6,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Alexandria, Virginia",1,153897,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Aliso Viejo, California",1,50736,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Alpharetta, Georgia",1,68139,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Anderson, Indiana",1,55275,"Murders",0,2,-100.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Ankeny, Iowa",1,74233,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Appleton, Wisconsin",1,73921,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Arlington Heights, Illinois",1,74094,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Bartlett, Tennessee",1,56324,"Murders",0,0,0.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Bethlehem, Pennsylvania",1,78606,"Murders",0,2,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Bismarck, North Dakota",1,74802,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Blaine, Minnesota",1,72384,"Murders",0,2,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Bloomfield, New Jersey",1,53181,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Blue Springs, Missouri",1,59896,"Murders",0,3,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Boone County, Kentucky",1,107867,"Murders",0,5,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Brentwood, California",1,66976,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Bristol, Connecticut",1,61609,"Murders",0,2,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Brookline, Massachusetts",1,62639,"Murders",0,0,0.00%,"Jan - Feb 2025",2025-12-16 15:08:46 EST
+"Broomfield, Colorado",1,77072,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Buckeye, Arizona",1,112048,"Murders",0,2,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Buena Park, California",1,81753,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Burbank, California",1,102345,"Murders",0,2,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Canton, Ohio",1,69164,"Murders",0,2,-100.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Carmel, Indiana",1,103013,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Casa Grande, Arizona",1,63228,"Murders",0,3,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Castle Rock, Colorado",1,83546,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Chapel Hill, North Carolina",1,65066,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Cherry Hill Township, New Jersey",1,78082,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Cicero, Illinois",1,80455,"Murders",0,4,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Clifton, New Jersey",1,88361,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Collierville, Tennessee",1,51686,"Murders",0,0,0.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Colonie Town, New York",1,80724,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Comal County, Texas",1,94653,"Murders",0,2,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Coon Rapids, Minnesota",1,62391,"Murders",0,4,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Corvallis, Oregon",1,61474,"Murders",0,1,-100.00%,"Jan - Aug 2025",2025-12-16 15:08:46 EST
+"Daly City, California",1,97774,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Davis, California",1,67193,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Des Plaines, Illinois",1,57672,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Draper, Utah",1,50588,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Dublin, Ohio",1,48827,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Dubuque, Iowa",1,58492,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Dunwoody, Georgia",1,52505,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Eagan, Minnesota",1,66943,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"East Hartford, Connecticut",1,50625,"Murders",0,3,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Eden Prairie, Minnesota",1,61645,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Edinburg, Texas",1,106137,"Murders",0,2,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Evanston, Illinois",1,74413,"Murders",0,0,0.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Everett, Massachusetts",1,49740,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Fairfield, Connecticut",1,63588,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Farmington Hills, Michigan",1,82223,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Fishers, Indiana",1,103247,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Flagstaff, Arizona",1,75343,"Murders",0,2,-100.00%,"Jan - Feb 2025",2025-12-16 15:08:46 EST
+"Flower Mound, Texas",1,79513,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Fountain Valley, California",1,55419,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Framingham, Massachusetts",1,70624,"Murders",0,0,0.00%,"Jan - Jun 2025",2025-12-16 15:08:46 EST
+"Fremont, California",1,220775,"Murders",0,0,0.00%,"Jan - Jan 2025",2025-12-16 15:08:46 EST
+"Fullerton, California",1,139131,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Gilroy, California",1,57331,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Grand Forks, North Dakota",1,58470,"Murders",0,3,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Grand Island, Nebraska",1,52264,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Grand Junction, Colorado",1,69240,"Murders",0,3,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Grapevine, Texas",1,51458,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Green Township, Ohio",1,59277,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Greenwich, Connecticut",1,63777,"Murders",0,0,0.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Hamden, Connecticut",1,60691,"Murders",0,1,-100.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Hanover County, Virginia",1,106595,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Harrisonburg, Virginia",1,50928,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Haverford, Pennsylvania",1,50505,"Murders",0,0,0.00%,"Jan - Jun 2025",2025-12-16 15:08:46 EST
+"Haverhill, Massachusetts",1,67133,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Hays County, Texas",1,130433,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Hempstead Village, New York",1,58071,"Murders",0,2,-100.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Idaho Falls, Idaho",1,68662,"Murders",0,2,-100.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Iredell County, North Carolina",1,111895,"Murders",0,2,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Irvine, California",1,316132,"Murders",0,5,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Jefferson County, Colorado",1,194994,"Murders",0,2,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Kentwood, Michigan",1,53979,"Murders",0,1,-100.00%,"Jan - Feb 2025",2025-12-16 15:08:46 EST
+"Kettering, Ohio",1,56633,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Kingsport, Tennessee",1,56522,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Kyle, Texas",1,63931,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Laguna Niguel, California",1,63502,"Murders",0,0,0.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Lake Havasu City, Arizona",1,59720,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Lakeville, Minnesota",1,76929,"Murders",0,2,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Lakewood, Ohio",1,49304,"Murders",0,0,0.00%,"Jan - Aug 2025",2025-12-16 15:08:46 EST
+"Lancaster, Pennsylvania",1,57213,"Murders",0,2,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Layton, Utah",1,82887,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Lincoln, California",1,53950,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Livermore, California",1,83155,"Murders",0,2,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Livonia, Michigan",1,93042,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Longmont, Colorado",1,98444,"Murders",0,1,-100.00%,"Jan - Feb 2025",2025-12-16 15:08:46 EST
+"Lower Merion, Pennsylvania",1,64350,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Macomb County, Michigan",1,191695,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Malden, Massachusetts",1,64291,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Maple Grove, Minnesota",1,70729,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Marana, Arizona",1,57718,"Murders",0,2,-100.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Maricopa, Arizona",1,70355,"Murders",0,0,0.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"McAllen, Texas",1,145684,"Murders",0,4,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Medford, Massachusetts",1,68280,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Meriden, Connecticut",1,60054,"Murders",0,1,-100.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Meridian, Idaho",1,135239,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Methuen, Massachusetts",1,53558,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Middletown, Ohio",1,51328,"Murders",0,0,0.00%,"Jan - Jul 2025",2025-12-16 15:08:46 EST
+"Milpitas, California",1,76573,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Minnetonka, Minnesota",1,51791,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Missoula, Montana",1,78269,"Murders",0,1,-100.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Monterey Park, California",1,57419,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Moore, Oklahoma",1,63311,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Mooresville, North Carolina",1,53767,"Murders",0,2,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Mount Pleasant, South Carolina",1,96320,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Mount Prospect, Illinois",1,53932,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Mount Vernon, New York",1,70812,"Murders",0,3,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Murrieta, California",1,115037,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Nashua, New Hampshire",1,91145,"Murders",0,0,0.00%,"Jan - Jan 2025",2025-12-16 15:08:46 EST
+"Newark, Ohio",1,51147,"Murders",0,2,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Newport Beach, California",1,83392,"Murders",0,2,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Newton, Massachusetts",1,86996,"Murders",0,0,0.00%,"Jan - Jun 2025",2025-12-16 15:08:46 EST
+"Noblesville, Indiana",1,74211,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Normal, Illinois",1,52883,"Murders",0,1,-100.00%,"Jan - Aug 2025",2025-12-16 15:08:46 EST
+"North Bergen Township, New Jersey",1,59147,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Norwalk, Connecticut",1,91639,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Novato, California",1,51733,"Murders",0,0,0.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Novi, Michigan",1,66482,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Oak Lawn, Illinois",1,55368,"Murders",0,2,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Orem, Utah",1,94682,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Palo Alto, California",1,64855,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Peabody, Massachusetts",1,53841,"Murders",0,0,0.00%,"Jan - Jan 2025",2025-12-16 15:08:46 EST
+"Petaluma, California",1,58099,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Pinal County, Arizona",1,229832,"Murders",0,3,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Pittsfield, Massachusetts",1,43078,"Murders",0,1,-100.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Plymouth, Minnesota",1,77576,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Pocatello, Idaho",1,58390,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Porterville, California",1,63165,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Prescott Valley, Arizona",1,50166,"Murders",0,2,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Pueblo, Colorado",1,111240,"Murders",0,14,-100.00%,"Jan - Feb 2025",2025-12-16 15:08:46 EST
+"Quincy, Massachusetts",1,102465,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Redlands, California",1,74147,"Murders",0,2,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Redmond, Washington",1,78496,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Redondo Beach, California",1,67742,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Revere, Massachusetts",1,57132,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Richland, Washington",1,63816,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Rocklin, California",1,74876,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Rockwall, Texas",1,53433,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"San Mateo, California",1,98883,"Murders",0,5,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"San Rafael, California",1,59400,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Sandy, Utah",1,91132,"Murders",0,4,-100.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Santa Clara, California",1,126452,"Murders",0,2,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Santa Cruz, California",1,61754,"Murders",0,3,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Saratoga Springs, Utah",1,56039,"Murders",0,1,-100.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Sarpy County, Nebraska",1,98019,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Shawnee, Kansas",1,70098,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Skokie, Illinois",1,64417,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Smyrna, Tennessee",1,58096,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Somerville, Massachusetts",1,79513,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"South Jordan, Utah",1,86444,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"South San Francisco, California",1,62205,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"St Peters, Missouri",1,58937,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Stamford, Connecticut",1,136512,"Murders",0,0,0.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"State College, Pennsylvania",1,58532,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Stratford, Connecticut",1,52596,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Taunton, Massachusetts",1,60356,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Temple, Texas",1,93073,"Murders",0,0,0.00%,"Jan - Jan 2025",2025-12-16 15:08:46 EST
+"Tigard, Oregon",1,56142,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Tinley Park, Illinois",1,53528,"Murders",0,4,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Twin Falls, Idaho",1,55447,"Murders",0,2,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Wake Forest, North Carolina",1,52609,"Murders",0,2,-100.00%,"Jan - Aug 2025",2025-12-16 15:08:46 EST
+"Waltham, Massachusetts",1,63797,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Warwick, Rhode Island",1,83369,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Washington County, Oregon",1,239309,"Murders",0,2,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Washtenaw County, Michigan",1,161396,"Murders",0,7,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Waukesha, Wisconsin",1,70095,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Wayne Township, New Jersey",1,52317,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"West Bloomfield Township, Michigan",1,64904,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"West Chester Township, Ohio",1,62860,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"West Des Moines, Iowa",1,71674,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"West Hartford, Connecticut",1,64423,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"West Haven, Connecticut",1,54791,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"West New York, New Jersey",1,51884,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Westfield, Indiana",1,58858,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Weymouth, Massachusetts",1,57725,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Will County, Illinois",1,104475,"Murders",0,2,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Woodbury, Minnesota",1,80153,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Wright County, Minnesota",1,129359,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Wylie, Texas",1,62539,"Murders",0,3,-100.00%,"Jan - Sep 2025",2025-12-16 15:08:46 EST
+"Yavapai County, Arizona",1,97526,"Murders",0,1,-100.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST
+"Yorba Linda, California",1,66477,"Murders",0,0,0.00%,"Jan - Oct 2025",2025-12-16 15:08:46 EST

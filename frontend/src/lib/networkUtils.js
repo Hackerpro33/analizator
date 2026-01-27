@@ -1,3 +1,5 @@
+import { parseNumberLike } from "@/utils/numberUtils";
+
 const NODE_SIZE_MAP = {
   small: 15,
   medium: 25,
@@ -9,8 +11,7 @@ function toNumber(value) {
     return null;
   }
 
-  const numeric = Number(value);
-  return Number.isFinite(numeric) ? numeric : null;
+  return parseNumberLike(value);
 }
 
 export function computePearsonCorrelation(seriesA, seriesB) {
@@ -228,4 +229,3 @@ export const __TEST_ONLY__ = {
   NODE_SIZE_MAP,
   toNumber,
 };
-

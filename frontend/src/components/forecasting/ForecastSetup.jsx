@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { TrendingUp, BrainCircuit, Sparkles } from "lucide-react";
+import { BrainCircuit, Sparkles } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox"; // Added Checkbox import
 
 export default function ForecastSetup({ datasets, onGenerate, isLoading, isForecasting }) {

@@ -28,6 +28,7 @@ S3-совместимом хранилище (MinIO).
 - Очередь задач на Celery/RQ для асинхронной аналитики; брокер Redis, результаты в Postgres/MinIO.
 - Механизмы rate limiting с использованием Redis.
 - Логи в формате JSON, интеграция с OpenTelemetry и Sentry.
+- Маршруты `/api/cybersecurity/*` оценивают поверхность атаки, рекомендуют Zero Trust/Moving Target стратегии и публикуют каталог передовых технологий (PQC, FHE, deception grid). Логика вынесена в `services/cybersecurity.py`, чтобы её можно было повторно использовать в воркерах или автоматизации.
 
 ## Фронтенд
 

@@ -4,10 +4,10 @@ export async function fetchAssistantState(userId) {
   return jsonRequest(`/api/chat/state/${encodeURIComponent(userId)}`);
 }
 
-export async function sendChatMessage(userId, message) {
+export async function sendChatMessage(userId, message, analysisContext = null) {
   return jsonRequest('/api/chat/message', {
     method: 'POST',
-    body: JSON.stringify({ user_id: userId, message }),
+    body: JSON.stringify({ user_id: userId, message, analysis_context: analysisContext }),
   });
 }
 

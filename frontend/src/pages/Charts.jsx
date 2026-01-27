@@ -1,15 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Dataset, Visualization } from "@/api/entities";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import {
-  BarChart3,
-  LineChart,
-  ScatterChart,
-  TrendingUp,
-  Plus,
-  Filter
-} from "lucide-react";
 import PageContainer from "@/components/layout/PageContainer";
 
 import ChartBuilder from "../components/charts/ChartBuilder";

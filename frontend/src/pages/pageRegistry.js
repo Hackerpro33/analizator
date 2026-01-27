@@ -1,4 +1,5 @@
 import Dashboard from './Dashboard'
+import AdvancedAnalytics from './AdvancedAnalytics'
 import DataSources from './DataSources'
 import Charts from './Charts'
 import Maps from './Maps'
@@ -9,9 +10,14 @@ import Settings from './Settings'
 import DataTransformation from './DataTransformation'
 import Assistant from './Assistant'
 import Collaboration from './Collaboration'
+import AILab from './AILab'
+import CyberSecurity from './CyberSecurity'
+import Admin from './Admin'
+import Lineyka from './Lineyka'
 
 export const PAGES = {
   Dashboard,
+  AdvancedAnalytics,
   DataSources,
   Charts,
   Maps,
@@ -22,6 +28,10 @@ export const PAGES = {
   DataTransformation,
   Assistant,
   Collaboration,
+  AILab,
+  CyberSecurity,
+  Admin,
+  Lineyka,
 }
 
 export function getCurrentPage(url) {

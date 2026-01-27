@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Compass, Save, X, RefreshCw } from "lucide-react";
+import { parseNumberLike } from "@/utils/numberUtils";
 
 const LAT_KEYWORDS = ['lat', 'latitude', 'широт', 'широта', 'y_coord', 'y coordinate'];
 const LON_KEYWORDS = ['lon', 'lng', 'longitude', 'долгот', 'долгота', 'x_coord', 'x coordinate'];
@@ -37,18 +38,7 @@ const DEFAULT_CONFIG = {
   climate_risk_column: '',
 };
 
-const parseNumber = (value) => {
-  if (typeof value === 'number' && Number.isFinite(value)) {
-    return value;
-  }
-  if (typeof value === 'string') {
-    const normalized = value.replace(',', '.').trim();
-    if (!normalized) return null;
-    const parsed = Number(normalized);
-    return Number.isFinite(parsed) ? parsed : null;
-  }
-  return null;
-};
+const parseNumber = (value) => parseNumberLike(value);
 
 const isNumericType = (type) => {
   const normalized = (type || '').toLowerCase();

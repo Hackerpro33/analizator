@@ -1,26 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Dataset } from "@/api/entities";
-import { extractDataFromUploadedFile, uploadFile } from "@/api/integrations";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import PageContainer from "@/components/layout/PageContainer";
-import { 
-  RefreshCw, 
-  Upload, 
-  Download, 
-  FileText, 
-  Database, 
-  CheckCircle2, 
-  AlertTriangle,
+import {
+  RefreshCw,
+  Download,
+  FileText,
+  Database,
   Sparkles,
   FileImage,
   FileSpreadsheet,
   Globe,
   Code,
-  Zap
 } from "lucide-react";
 
 import FileConverter from "../components/datatransformation/FileConverter";
@@ -193,7 +186,6 @@ export default function DataTransformation() {
         {/* Tab Content */}
         {activeTab === 'convert' && (
           <FileConverter 
-            supportedFormats={supportedFormats}
             onConversionComplete={addToHistory}
             onDatasetCreated={loadDatasets}
           />
@@ -202,7 +194,6 @@ export default function DataTransformation() {
         {activeTab === 'export' && (
           <ExportCenter 
             datasets={datasets}
-            supportedFormats={supportedFormats}
             isLoading={isLoading}
           />
         )}
@@ -257,4 +248,3 @@ export default function DataTransformation() {
     </PageContainer>
   );
 }
-

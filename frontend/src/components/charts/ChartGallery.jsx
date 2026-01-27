@@ -92,7 +92,7 @@ export default function ChartGallery({ visualizations, datasets, isLoading, onEd
                     return itemDate >= fromDate && itemDate <= toDate;
                 }
                 return itemDate >= fromDate;
-            } catch (e) {
+            } catch (_error) {
                 return true;
             }
         });
@@ -114,7 +114,7 @@ export default function ChartGallery({ visualizations, datasets, isLoading, onEd
             <Bar dataKey={viz.y_axis} fill={viz.config?.color || "#10B981"} />
             <Tooltip 
               wrapperStyle={{ fontSize: '10px' }}
-              formatter={(value, name) => [value, viz.y_axis]}
+              formatter={(value, _name) => [value, viz.y_axis]}
               labelFormatter={(label) => `${viz.x_axis}: ${label}`}
             />
           </ReBarChart>
@@ -127,7 +127,7 @@ export default function ChartGallery({ visualizations, datasets, isLoading, onEd
             <Scatter data={chartData} fill={viz.config?.color || "#8B5CF6"} />
             <Tooltip 
               wrapperStyle={{ fontSize: '10px' }}
-              formatter={(value, name) => [value, name]}
+              formatter={(value, _name) => [value, _name]}
             />
           </ReScatterChart>
         );
@@ -143,7 +143,7 @@ export default function ChartGallery({ visualizations, datasets, isLoading, onEd
             />
             <Tooltip 
               wrapperStyle={{ fontSize: '10px' }}
-              formatter={(value, name) => [value, viz.y_axis]}
+              formatter={(value, _name) => [value, viz.y_axis]}
             />
           </ReAreaChart>
         );
@@ -166,7 +166,7 @@ export default function ChartGallery({ visualizations, datasets, isLoading, onEd
             />
             <Tooltip 
               wrapperStyle={{ fontSize: '10px' }}
-              formatter={(value, name) => [value, viz.y_axis]}
+              formatter={(value, _name) => [value, viz.y_axis]}
               labelFormatter={(label) => `${viz.x_axis}: ${label}`}
             />
           </ReLineChart>

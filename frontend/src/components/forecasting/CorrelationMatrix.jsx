@@ -17,6 +17,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { parseNumberLike } from "@/utils/numberUtils";
 
 const FEATURE_TYPE_LABELS = {
   base: "Базовые показатели",
@@ -60,19 +61,8 @@ const toNumericOrNull = (value) => {
   if (value === null || value === undefined) {
     return null;
   }
-  if (typeof value === "number") {
-    return Number.isFinite(value) ? value : null;
-  }
-  if (typeof value === "string") {
-    const normalized = value.replace(/,/g, ".").trim();
-    if (!normalized) return null;
-    const parsed = Number(normalized);
-    return Number.isFinite(parsed) ? parsed : null;
-  }
-  if (typeof value === "boolean") {
-    return value ? 1 : 0;
-  }
-  return null;
+  const parsed = parseNumberLike(value);
+  return parsed === null ? null : parsed;
 };
 
 const normalizeSeries = (values) => {
@@ -144,7 +134,7 @@ const isLikelyCategorical = (column, rows = []) => {
   return numericRatio < 0.3;
 };
 
-export default function CorrelationMatrix({ datasets, isLoading, onCorrelationCalculated }) {
+export default function CorrelationMatrix({ datasets, isLoading: _isLoading, onCorrelationCalculated }) {
     const [selectedDatasets, setSelectedDatasets] = useState([]);
     const [selectedFeatures, setSelectedFeatures] = useState([]);
     const [result, setResult] = useState(null);

@@ -1,0 +1,99 @@
+{
+  "d9eeb19b-291e-4827-a7a6-7da24cef87e5": {
+    "dataset_id": "d9eeb19b-291e-4827-a7a6-7da24cef87e5",
+    "generated_at": "2026-01-21T17:36:13.757497Z",
+    "date_column": "__lineyka_row_id",
+    "target_column": "population",
+    "sef_candidates": [
+      "__lineyka_row_id",
+      "#_of_agencies",
+      "YTD",
+      "PrevYTD"
+    ],
+    "completeness": [
+      {
+        "column": "__lineyka_row_id",
+        "missing_ratio": 0.0
+      },
+      {
+        "column": "agency_full",
+        "missing_ratio": 0.0
+      },
+      {
+        "column": "#_of_agencies",
+        "missing_ratio": 0.0
+      },
+      {
+        "column": "population",
+        "missing_ratio": 0.0
+      },
+      {
+        "column": "crime_type",
+        "missing_ratio": 0.0
+      },
+      {
+        "column": "YTD",
+        "missing_ratio": 0.0
+      },
+      {
+        "column": "PrevYTD",
+        "missing_ratio": 0.0
+      },
+      {
+        "column": "Percent_Change",
+        "missing_ratio": 0.0
+      },
+      {
+        "column": "YTD_Range",
+        "missing_ratio": 0.0
+      },
+      {
+        "column": "Last Updated",
+        "missing_ratio": 0.0
+      }
+    ],
+    "missing_by_month": [
+      {
+        "month": "1970-01-01",
+        "count": 683
+      }
+    ],
+    "duplicates": {
+      "count": 0,
+      "ratio": 0.0
+    },
+    "continuity": {
+      "status": "pass",
+      "missing_months": []
+    },
+    "outliers": [
+      {
+        "column": "population",
+        "count": 74,
+        "ratio": 0.10834553440702782,
+        "lower_bound": -65243.25,
+        "upper_bound": 285394.75
+      },
+      {
+        "column": "YTD",
+        "count": 79,
+        "ratio": 0.11566617862371889,
+        "lower_bound": -7.5,
+        "upper_bound": 12.5
+      },
+      {
+        "column": "PrevYTD",
+        "count": 88,
+        "ratio": 0.12884333821376281,
+        "lower_bound": -6.5,
+        "upper_bound": 13.5
+      }
+    ],
+    "type_issues": [],
+    "status": "warn",
+    "reasons": [
+      "Обнаружены выбросы в числовых столбцах."
+    ],
+    "stationarity": "weak-trend"
+  }
+}

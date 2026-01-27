@@ -85,12 +85,6 @@ export default function NetworkBuilder({ datasets, onSave, onCancel }) {
     setIsGenerating(true);
     setGeneratedGraph(null);
 
-    const prompts = {
-        general: `Постройте общий граф связей для столбцов: ${config.selectedColumns.join(', ')}. Проанализируйте корреляции и создайте узлы и связи.`,
-        social: `Проанализируйте данные как социальную сеть. Идентифицируйте ключевых акторов (узлы) и их взаимодействия (связи) на основе столбцов: ${config.selectedColumns.join(', ')}. Рассчитайте центральность узлов.`,
-        geo: `Создайте граф пространственных связей. Узлы - это локации, ребра - сила связи между ними (например, корреляция событий). Используйте столбцы: ${config.selectedColumns.join(', ')}.`
-    };
-
     const columnMetadata = selectedDataset?.columns || [];
     const previewRows = selectedDataset?.sample_data?.slice(0, 50) || [];
 

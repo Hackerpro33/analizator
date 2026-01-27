@@ -11,7 +11,6 @@ import {
   ScatterChart as ScatterChartIcon, TrendingUp, Play, Box
 } from "lucide-react";
 import { LineChart, Line, BarChart, Bar, ScatterChart, Scatter, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import DataRangeSelector from '../settings/DataRangeSelector';
 import Chart3D from './Chart3D';
 
 export default function ChartBuilder({ chartType, datasets, onClose, onSave, existingViz }) {
@@ -569,7 +568,7 @@ export default function ChartBuilder({ chartType, datasets, onClose, onSave, exi
                   <div className="h-full flex flex-col items-center justify-center text-slate-500 text-center p-4">
                     <BarChart3 className="w-16 h-16 opacity-30 mb-4" />
                     <h4 className="font-bold text-slate-700 mb-2">Предпросмотр графика</h4>
-                    <p className="text-sm mb-2">Заполните все поля и нажмите "Построить график"</p>
+                    <p className="text-sm mb-2">Заполните все поля и нажмите &quot;Построить график&quot;</p>
                     {canBuildChart && (<p className="text-xs text-emerald-600">✓ Все поля заполнены, можно построить график</p>)}
                   </div>
                 )}

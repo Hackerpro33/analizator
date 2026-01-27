@@ -6,7 +6,7 @@ import json
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, Iterable, List
+from typing import Any, Dict, Iterable, List, Optional
 
 import pandas as pd
 import pdfplumber
@@ -21,6 +21,24 @@ UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 _FILE_REGISTRY: Dict[str, str] = {}
+
+
+def _pick_first_file(path: Path) -> Optional[Path]:
+    """Return the first file inside ``path`` (or the path itself if it is a file)."""
+
+    if path.is_file():
+        return path.resolve()
+    if not path.is_dir():
+        return None
+
+    direct_files = sorted(candidate for candidate in path.iterdir() if candidate.is_file())
+    if direct_files:
+        return direct_files[0].resolve()
+
+    nested_files = sorted(candidate for candidate in path.rglob("*") if candidate.is_file())
+    if nested_files:
+        return nested_files[0].resolve()
+    return None
 
 
 def _normalize_table_rows(rows: Iterable[Iterable[str]]) -> List[List[str]]:
@@ -187,15 +205,44 @@ def resolve_file_path(identifier: str) -> Path:
     if identifier in _FILE_REGISTRY:
         path = Path(_FILE_REGISTRY[identifier])
         if path.exists():
-            return path
+            return path.resolve()
 
-    candidate = UPLOAD_DIR / safe_filename(identifier)
-    if candidate.exists():
+    raw_path = Path(identifier)
+    if raw_path.exists():
+        return raw_path.resolve()
+
+    uploads_root = UPLOAD_DIR.resolve()
+
+    def _resolve_within_uploads(relative: str) -> Optional[Path]:
+        if not relative:
+            return None
+        target = (uploads_root / relative).resolve()
+        try:
+            target.relative_to(uploads_root)
+        except ValueError:
+            return None
+        if target.exists():
+            found = _pick_first_file(target)
+            if found:
+                return found
+        return None
+
+    # Identifiers like "datasets/<uuid>/<file>.csv"
+    candidate = _resolve_within_uploads(identifier.lstrip("/"))
+    if candidate:
         return candidate
 
-    generic = Path(identifier)
-    if generic.exists():
-        return generic.resolve()
+    # Bare upload identifiers (UUIDs) are stored in uploads/datasets/<uuid>/<file>
+    dataset_candidate = _resolve_within_uploads(f"datasets/{safe_filename(identifier)}")
+    if dataset_candidate:
+        return dataset_candidate
+
+    # Legacy behaviour for sanitized single files stored directly in uploads/
+    sanitized_candidate = UPLOAD_DIR / safe_filename(identifier)
+    if sanitized_candidate.exists():
+        found = _pick_first_file(sanitized_candidate)
+        if found:
+            return found
 
     raise HTTPException(status_code=404, detail="File not found")
 

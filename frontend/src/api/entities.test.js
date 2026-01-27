@@ -28,7 +28,7 @@ describe("entities API client", () => {
     const response = await Dataset.list();
 
     expect(global.fetch).toHaveBeenCalledWith(
-      "/api/dataset/list?order_by=-created_at",
+      "/api/v1/dataset/list?order_by=-created_at",
       expect.objectContaining({
         headers: expect.objectContaining({ "Content-Type": "application/json" }),
       })
@@ -47,7 +47,7 @@ describe("entities API client", () => {
     await Dataset.create(payload);
 
     expect(global.fetch).toHaveBeenCalledWith(
-      "/api/dataset/create",
+      "/api/v1/dataset/create",
       expect.objectContaining({
         method: "POST",
         body: JSON.stringify(payload),
@@ -78,7 +78,7 @@ describe("entities API client", () => {
     await Visualization.filter(filters, "created_at");
 
     expect(global.fetch).toHaveBeenCalledWith(
-      "/api/visualization/filter",
+      "/api/v1/visualization/filter",
       expect.objectContaining({
         method: "POST",
         body: JSON.stringify({ filters, order_by: "created_at" }),
@@ -97,11 +97,11 @@ describe("entities API client", () => {
     await getVisualizations();
 
     expect(global.fetch).toHaveBeenCalledWith(
-      "/api/dataset/list?order_by=-created_at",
+      "/api/v1/dataset/list?order_by=-created_at",
       expect.any(Object)
     );
     expect(global.fetch).toHaveBeenCalledWith(
-      "/api/visualization/list?order_by=-created_at",
+      "/api/v1/visualization/list?order_by=-created_at",
       expect.any(Object)
     );
   });

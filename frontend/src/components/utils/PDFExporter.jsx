@@ -1,8 +1,8 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { FileText, Download } from "lucide-react";
+import { FileText } from "lucide-react";
 
-export default function PDFExporter({ title, elementId, data }) {
+export default function PDFExporter({ title, elementId: _elementId, data: _data }) {
   const handleExportPDF = async () => {
     // Поскольку библиотеки PDF требуют дополнительной установки,
     // мы создаем заглушку с уведомлением пользователя

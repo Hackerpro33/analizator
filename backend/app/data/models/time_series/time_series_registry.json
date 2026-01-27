@@ -1,0 +1,80 @@
+[
+  {
+    "id": "c733faad-aad7-4311-92f0-31e08a26f2ef",
+    "dataset_id": "ai-lab-monthly",
+    "dataset_name": "AI Lab — помесячные KPI",
+    "date_column": "month",
+    "value_column": "target_value",
+    "sef_columns": [],
+    "methods": [
+      "sarima",
+      "ets",
+      "linear_regression",
+      "lagged_regression",
+      "random_forest",
+      "gradient_boosting"
+    ],
+    "horizon": 12,
+    "trained_from": "2022-01-01",
+    "trained_to": "2024-12-01",
+    "score": null,
+    "metrics": {},
+    "status": "ready",
+    "is_active": false,
+    "artifact_dir": "/Users/azathamzin/Documents/GitHub/project/backend/app/data/models/time_series/c733faad-aad7-4311-92f0-31e08a26f2ef",
+    "ensemble_mode": "weighted",
+    "created_at": 1768262268,
+    "updated_at": 1768262268
+  },
+  {
+    "id": "c6fb853f-482f-48d9-ad18-f7b61c594a62",
+    "dataset_id": "ai-lab-monthly",
+    "dataset_name": "AI Lab — помесячные KPI",
+    "date_column": "month",
+    "value_column": "target_value",
+    "sef_columns": [],
+    "methods": [
+      "sarima",
+      "ets",
+      "linear_regression"
+    ],
+    "horizon": 12,
+    "trained_from": "2022-01-01",
+    "trained_to": "2024-12-01",
+    "score": null,
+    "metrics": {},
+    "status": "ready",
+    "is_active": true,
+    "artifact_dir": "/Users/azathamzin/Documents/GitHub/project/backend/app/data/models/time_series/c6fb853f-482f-48d9-ad18-f7b61c594a62",
+    "ensemble_mode": "weighted",
+    "created_at": 1768262323,
+    "updated_at": 1768262323
+  },
+  {
+    "id": "b31ee30d-3e1a-4a16-a079-072d432dac59",
+    "dataset_id": "433b8de1-2deb-4844-98a4-3f486baf5fc3",
+    "dataset_name": "MTA_NYCT_Safety_Data__Beginning_2019",
+    "date_column": "Month",
+    "value_column": "Value",
+    "sef_columns": [],
+    "methods": [
+      "sarima",
+      "ets",
+      "linear_regression",
+      "lagged_regression",
+      "random_forest",
+      "gradient_boosting"
+    ],
+    "horizon": 12,
+    "trained_from": "2019-04-01",
+    "trained_to": "2025-06-01",
+    "score": null,
+    "metrics": {},
+    "status": "ready",
+    "is_active": true,
+    "artifact_dir": "/Users/azathamzin/Documents/GitHub/project/backend/app/data/models/time_series/b31ee30d-3e1a-4a16-a079-072d432dac59",
+    "ensemble_mode": "weighted",
+    "created_at": 1768262999,
+    "updated_at": 1768262999
+  }
+]

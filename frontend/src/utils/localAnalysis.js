@@ -1,9 +1,8 @@
+import { parseNumberLike } from "./numberUtils";
+
 const toNumberArray = (values) =>
   (values || [])
-    .map((value) => {
-      const parsed = typeof value === "number" ? value : Number(value);
-      return Number.isFinite(parsed) ? parsed : null;
-    })
+    .map((value) => parseNumberLike(value))
     .filter((value) => value !== null);
 
 const sum = (values) => values.reduce((total, value) => total + value, 0);
@@ -17,16 +16,17 @@ const safeNumber = (value, fallback = 0) => {
   if (Array.isArray(value)) {
     return safeAverage(value);
   }
-  const parsed = typeof value === "number" ? value : Number(value);
-  return Number.isFinite(parsed) ? parsed : fallback;
+  const parsed = parseNumberLike(value);
+  return parsed === null ? fallback : parsed;
 };
 
 const safeDivide = (numerator, denominator, fallback = 0) => {
-  const divisor = Number(denominator);
-  if (!Number.isFinite(divisor) || Math.abs(divisor) < 1e-9) {
+  const dividend = parseNumberLike(numerator);
+  const divisor = parseNumberLike(denominator);
+  if (dividend === null || divisor === null || Math.abs(divisor) < 1e-9) {
     return fallback;
   }
-  return numerator / divisor;
+  return dividend / divisor;
 };
 
 const average = (values) => {
@@ -658,7 +658,7 @@ function buildAdjacencyMaps(nodes, links) {
       neighborMap.set(target, new Set());
     }
 
-    const value = Number.isFinite(link.value) ? link.value : Number(link.value) || 0;
+    const value = Number.isFinite(link.value) ? link.value : parseNumberLike(link.value) || 0;
     weightMap.get(source).set(target, value);
     weightMap.get(target).set(source, value);
     neighborMap.get(source).add(target);
@@ -896,9 +896,9 @@ function valuesAreEquivalent(a, b) {
     return false;
   }
 
-  const numberA = typeof a === "number" ? a : Number(a);
-  const numberB = typeof b === "number" ? b : Number(b);
-  if (!Number.isNaN(numberA) && !Number.isNaN(numberB)) {
+  const numberA = parseNumberLike(a);
+  const numberB = parseNumberLike(b);
+  if (numberA !== null && numberB !== null) {
     return numberA === numberB;
   }
 

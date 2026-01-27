@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils";
 import PageContainer from "@/components/layout/PageContainer";
 
 const STORAGE_KEY = "insight-assistant-user-id";
+const CONTEXT_STORAGE_KEY = "ai-lab-analysis-context";
 
 function generateLocalId() {
   if (typeof window !== "undefined" && window.crypto && typeof window.crypto.randomUUID === "function") {
@@ -85,7 +86,16 @@ export default function Assistant() {
     }
     setIsSending(true);
     try {
-      const nextState = await sendChatMessage(userId, message.trim());
+      let contextPayload = null;
+      if (typeof window !== "undefined") {
+        try {
+          const raw = window.localStorage.getItem(CONTEXT_STORAGE_KEY);
+          contextPayload = raw ? JSON.parse(raw) : null;
+        } catch (err) {
+          console.warn("Не удалось прочитать контекст анализа", err);
+        }
+      }
+      const nextState = await sendChatMessage(userId, message.trim(), contextPayload);
       setState(nextState);
       setMessage("");
     } catch (error) {
@@ -196,7 +206,7 @@ export default function Assistant() {
               className="min-h-[120px]"
             />
             <p className="text-xs text-slate-500">
-              Измените указания, чтобы скорректировать подход ИИ. Например: "Фокус на анализе аномалий в показателях безопасности районов".
+              Измените указания, чтобы скорректировать подход ИИ. Например: &quot;Фокус на анализе аномалий в показателях безопасности районов&quot;.
             </p>
           </div>
         </CardContent>

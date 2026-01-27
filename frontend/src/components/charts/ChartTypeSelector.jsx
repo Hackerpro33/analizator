@@ -30,7 +30,7 @@ import {
   LayoutDashboard,
   Map,
   Atom,
-  Infinity,
+  Infinity as InfinityIcon,
   PiSquare,
   Layers,
   Grid3X3,
@@ -174,7 +174,7 @@ export default function ChartTypeSelector({ onSelectType, datasets }) {
     {
       title: 'Дифференциальные уравнения и динамика',
       description: 'ODE/PDE решатели, численная интеграция, устойчивость систем и моделирование траекторий.',
-      icon: Infinity,
+      icon: InfinityIcon,
       accent: 'from-indigo-500 to-blue-700',
       tools: ['Runge-Kutta', 'Методы конечных разностей', 'PDE сетки', 'Стационарность', 'Ляпунов анализ']
     },

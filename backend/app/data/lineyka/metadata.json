@@ -1,0 +1,1484 @@
+{
+  "datasets": {
+    "712e98de-f2fe-44df-94e2-10f13905ac53": {
+      "dataset_id": "712e98de-f2fe-44df-94e2-10f13905ac53",
+      "dataset_name": "Demo",
+      "versions": [
+        {
+          "version_id": "v-d83c5660a9f04ae3b85e883528a6b505",
+          "parent_version_id": null,
+          "file_path": "/Users/azathamzin/Documents/GitHub/project/backend/app/data/lineyka/versions/712e98de-f2fe-44df-94e2-10f13905ac53/v-d83c5660a9f04ae3b85e883528a6b505.csv",
+          "row_count": 4,
+          "column_count": 1,
+          "created_at": "2026-01-13T01:50:12.933266+00:00",
+          "created_by": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+          "schema": [
+            {
+              "name": "a",
+              "type": "number"
+            }
+          ],
+          "summary": {
+            "row_count": 4,
+            "column_count": 1,
+            "missing": [
+              {
+                "column": "a",
+                "missing_ratio": 0.0
+              }
+            ],
+            "date_range": {
+              "start": "1970-01-01",
+              "end": "1970-01-01"
+            }
+          },
+          "operation": {
+            "type": "initial",
+            "params": {
+              "source": "samples/demo.csv"
+            }
+          },
+          "pipeline": []
+        }
+      ],
+      "audits": {}
+    },
+    "27a7875e-aa69-4082-aac9-70c83fb8ccac": {
+      "dataset_id": "27a7875e-aa69-4082-aac9-70c83fb8ccac",
+      "dataset_name": "Книга1",
+      "versions": [
+        {
+          "version_id": "v-d68045f68c22441188cec7e3c44e4a58",
+          "parent_version_id": null,
+          "file_path": "/Users/azathamzin/Documents/GitHub/project/backend/app/data/lineyka/versions/27a7875e-aa69-4082-aac9-70c83fb8ccac/v-d68045f68c22441188cec7e3c44e4a58.csv",
+          "row_count": 19,
+          "column_count": 6,
+          "created_at": "2026-01-13T01:50:12.940085+00:00",
+          "created_by": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+          "schema": [
+            {
+              "name": "Unnamed: 0",
+              "type": "number"
+            },
+            {
+              "name": "Преступность",
+              "type": "number"
+            },
+            {
+              "name": "Год ",
+              "type": "number"
+            },
+            {
+              "name": "Тяжесть",
+              "type": "string"
+            },
+            {
+              "name": "Координаты",
+              "type": "string"
+            },
+            {
+              "name": "Unnamed: 5",
+              "type": "number"
+            }
+          ],
+          "summary": {
+            "row_count": 19,
+            "column_count": 6,
+            "missing": [
+              {
+                "column": "Unnamed: 0",
+                "missing_ratio": 1.0
+              },
+              {
+                "column": "Преступность",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "Год ",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "Тяжесть",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "Координаты",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "Unnamed: 5",
+                "missing_ratio": 0.0
+              }
+            ],
+            "date_range": {
+              "start": "1970-01-01",
+              "end": "1970-01-01"
+            }
+          },
+          "operation": {
+            "type": "initial",
+            "params": {
+              "source": "samples/book1.csv"
+            }
+          },
+          "pipeline": []
+        }
+      ],
+      "audits": {}
+    },
+    "46363c0e-0163-4d9d-82a4-5d275b43d783": {
+      "dataset_id": "46363c0e-0163-4d9d-82a4-5d275b43d783",
+      "dataset_name": "AI — карта рисков",
+      "versions": [
+        {
+          "version_id": "v-b28edc156808401fa96c702722da7bd0",
+          "parent_version_id": null,
+          "file_path": "/Users/azathamzin/Documents/GitHub/project/backend/app/data/lineyka/versions/46363c0e-0163-4d9d-82a4-5d275b43d783/v-b28edc156808401fa96c702722da7bd0.csv",
+          "row_count": 160,
+          "column_count": 12,
+          "created_at": "2026-01-13T01:50:12.952853+00:00",
+          "created_by": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+          "schema": [
+            {
+              "name": "week_id",
+              "type": "number"
+            },
+            {
+              "name": "district",
+              "type": "string"
+            },
+            {
+              "name": "incident_reports",
+              "type": "number"
+            },
+            {
+              "name": "population_density",
+              "type": "number"
+            },
+            {
+              "name": "response_time_minutes",
+              "type": "number"
+            },
+            {
+              "name": "community_alerts",
+              "type": "number"
+            },
+            {
+              "name": "critical_infrastructure",
+              "type": "number"
+            },
+            {
+              "name": "intelligence_score",
+              "type": "number"
+            },
+            {
+              "name": "weather_index",
+              "type": "number"
+            },
+            {
+              "name": "public_sentiment",
+              "type": "number"
+            },
+            {
+              "name": "special_events",
+              "type": "number"
+            },
+            {
+              "name": "alert_level",
+              "type": "string"
+            }
+          ],
+          "summary": {
+            "row_count": 160,
+            "column_count": 12,
+            "missing": [
+              {
+                "column": "week_id",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "district",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "incident_reports",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "population_density",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "response_time_minutes",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "community_alerts",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "critical_infrastructure",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "intelligence_score",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "weather_index",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "public_sentiment",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "special_events",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "alert_level",
+                "missing_ratio": 0.0
+              }
+            ],
+            "date_range": {
+              "start": "1970-01-01",
+              "end": "1970-01-01"
+            }
+          },
+          "operation": {
+            "type": "initial",
+            "params": {
+              "source": "samples/ai_demo_incidents.csv"
+            }
+          },
+          "pipeline": []
+        },
+        {
+          "version_id": "v-49bbb176f5a94a958a60ed4a1695041e",
+          "parent_version_id": "v-b28edc156808401fa96c702722da7bd0",
+          "file_path": "/Users/azathamzin/Documents/GitHub/project/backend/app/data/lineyka/versions/46363c0e-0163-4d9d-82a4-5d275b43d783/v-49bbb176f5a94a958a60ed4a1695041e.csv",
+          "row_count": 160,
+          "column_count": 11,
+          "created_at": "2026-01-17T15:40:22.091674+00:00",
+          "created_by": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+          "schema": [
+            {
+              "name": "district",
+              "type": "string"
+            },
+            {
+              "name": "incident_reports",
+              "type": "number"
+            },
+            {
+              "name": "population_density",
+              "type": "number"
+            },
+            {
+              "name": "response_time_minutes",
+              "type": "number"
+            },
+            {
+              "name": "community_alerts",
+              "type": "number"
+            },
+            {
+              "name": "critical_infrastructure",
+              "type": "number"
+            },
+            {
+              "name": "intelligence_score",
+              "type": "number"
+            },
+            {
+              "name": "weather_index",
+              "type": "number"
+            },
+            {
+              "name": "public_sentiment",
+              "type": "number"
+            },
+            {
+              "name": "special_events",
+              "type": "number"
+            },
+            {
+              "name": "alert_level",
+              "type": "string"
+            }
+          ],
+          "summary": {
+            "row_count": 160,
+            "column_count": 11,
+            "missing": [
+              {
+                "column": "district",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "incident_reports",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "population_density",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "response_time_minutes",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "community_alerts",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "critical_infrastructure",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "intelligence_score",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "weather_index",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "public_sentiment",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "special_events",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "alert_level",
+                "missing_ratio": 0.0
+              }
+            ],
+            "date_range": {
+              "start": "1970-01-01",
+              "end": "1970-01-01"
+            }
+          },
+          "operation": {
+            "type": "delete_columns",
+            "params": {
+              "columns": [
+                "week_id"
+              ]
+            }
+          },
+          "pipeline": [
+            {
+              "id": "op-e3cb82a4031846b6a6fda6bae064ec7b",
+              "timestamp": "2026-01-17T15:40:22.079955+00:00",
+              "user_id": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+              "type": "delete_columns",
+              "params": {
+                "columns": [
+                  "week_id"
+                ]
+              },
+              "summary": null
+            }
+          ]
+        },
+        {
+          "version_id": "v-ece67f2ccdf5405798c620547423f352",
+          "parent_version_id": "v-49bbb176f5a94a958a60ed4a1695041e",
+          "file_path": "/Users/azathamzin/Documents/GitHub/project/backend/app/data/lineyka/versions/46363c0e-0163-4d9d-82a4-5d275b43d783/v-ece67f2ccdf5405798c620547423f352.csv",
+          "row_count": 160,
+          "column_count": 10,
+          "created_at": "2026-01-17T15:40:27.155531+00:00",
+          "created_by": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+          "schema": [
+            {
+              "name": "incident_reports",
+              "type": "number"
+            },
+            {
+              "name": "population_density",
+              "type": "number"
+            },
+            {
+              "name": "response_time_minutes",
+              "type": "number"
+            },
+            {
+              "name": "community_alerts",
+              "type": "number"
+            },
+            {
+              "name": "critical_infrastructure",
+              "type": "number"
+            },
+            {
+              "name": "intelligence_score",
+              "type": "number"
+            },
+            {
+              "name": "weather_index",
+              "type": "number"
+            },
+            {
+              "name": "public_sentiment",
+              "type": "number"
+            },
+            {
+              "name": "special_events",
+              "type": "number"
+            },
+            {
+              "name": "alert_level",
+              "type": "string"
+            }
+          ],
+          "summary": {
+            "row_count": 160,
+            "column_count": 10,
+            "missing": [
+              {
+                "column": "incident_reports",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "population_density",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "response_time_minutes",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "community_alerts",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "critical_infrastructure",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "intelligence_score",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "weather_index",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "public_sentiment",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "special_events",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "alert_level",
+                "missing_ratio": 0.0
+              }
+            ],
+            "date_range": {
+              "start": "1970-01-01",
+              "end": "1970-01-01"
+            }
+          },
+          "operation": {
+            "type": "delete_columns",
+            "params": {
+              "columns": [
+                "district"
+              ]
+            }
+          },
+          "pipeline": [
+            {
+              "id": "op-e3cb82a4031846b6a6fda6bae064ec7b",
+              "timestamp": "2026-01-17T15:40:22.079955+00:00",
+              "user_id": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+              "type": "delete_columns",
+              "params": {
+                "columns": [
+                  "week_id"
+                ]
+              },
+              "summary": null
+            },
+            {
+              "id": "op-e5944609f8934a44aad4e1c71aa84750",
+              "timestamp": "2026-01-17T15:40:27.151223+00:00",
+              "user_id": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+              "type": "delete_columns",
+              "params": {
+                "columns": [
+                  "district"
+                ]
+              },
+              "summary": null
+            }
+          ]
+        }
+      ],
+      "audits": {}
+    },
+    "ai-lab-monthly": {
+      "dataset_id": "ai-lab-monthly",
+      "dataset_name": "AI Lab — помесячные KPI",
+      "versions": [
+        {
+          "version_id": "v-2c71de1186404767af724117d55b96bd",
+          "parent_version_id": null,
+          "file_path": "/Users/azathamzin/Documents/GitHub/project/backend/app/data/lineyka/versions/ai-lab-monthly/v-2c71de1186404767af724117d55b96bd.csv",
+          "row_count": 36,
+          "column_count": 5,
+          "created_at": "2026-01-13T01:50:12.961742+00:00",
+          "created_by": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+          "schema": [
+            {
+              "name": "month",
+              "type": "string"
+            },
+            {
+              "name": "target_value",
+              "type": "number"
+            },
+            {
+              "name": "sef_budget",
+              "type": "number"
+            },
+            {
+              "name": "sef_campaigns",
+              "type": "number"
+            },
+            {
+              "name": "sef_index",
+              "type": "number"
+            }
+          ],
+          "summary": {
+            "row_count": 36,
+            "column_count": 5,
+            "missing": [
+              {
+                "column": "month",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "target_value",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "sef_budget",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "sef_campaigns",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "sef_index",
+                "missing_ratio": 0.0
+              }
+            ],
+            "date_range": {
+              "start": "2022-01-01",
+              "end": "2024-12-01"
+            }
+          },
+          "operation": {
+            "type": "initial",
+            "params": {
+              "source": "samples/ai_lab_monthly.csv"
+            }
+          },
+          "pipeline": []
+        }
+      ],
+      "audits": {}
+    },
+    "d9eeb19b-291e-4827-a7a6-7da24cef87e5": {
+      "dataset_id": "d9eeb19b-291e-4827-a7a6-7da24cef87e5",
+      "dataset_name": "Murders_Individual Agencies_YTD_Report",
+      "versions": [
+        {
+          "version_id": "v-b02b07f50d48464b93b21ef4ecfc0f1e",
+          "parent_version_id": null,
+          "file_path": "/Users/azathamzin/Documents/GitHub/project/backend/app/data/lineyka/versions/d9eeb19b-291e-4827-a7a6-7da24cef87e5/v-b02b07f50d48464b93b21ef4ecfc0f1e.csv",
+          "row_count": 702,
+          "column_count": 9,
+          "created_at": "2026-01-21T16:38:46.280233+00:00",
+          "created_by": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+          "schema": [
+            {
+              "name": "agency_full",
+              "type": "string"
+            },
+            {
+              "name": "#_of_agencies",
+              "type": "number"
+            },
+            {
+              "name": "population",
+              "type": "number"
+            },
+            {
+              "name": "crime_type",
+              "type": "string"
+            },
+            {
+              "name": "YTD",
+              "type": "number"
+            },
+            {
+              "name": "PrevYTD",
+              "type": "number"
+            },
+            {
+              "name": "Percent_Change",
+              "type": "string"
+            },
+            {
+              "name": "YTD_Range",
+              "type": "string"
+            },
+            {
+              "name": "Last Updated",
+              "type": "string"
+            }
+          ],
+          "summary": {
+            "row_count": 702,
+            "column_count": 9,
+            "missing": [
+              {
+                "column": "agency_full",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "#_of_agencies",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "population",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "crime_type",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "YTD",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "PrevYTD",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "Percent_Change",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "YTD_Range",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "Last Updated",
+                "missing_ratio": 0.0
+              }
+            ],
+            "date_range": {
+              "start": "1970-01-01",
+              "end": "1970-01-01"
+            }
+          },
+          "operation": {
+            "type": "initial",
+            "params": {
+              "source": "abdfe9c0-52bc-476e-9e7e-221a62589c80"
+            }
+          },
+          "pipeline": []
+        },
+        {
+          "version_id": "v-cc9d78c1b6e745928e625a46375e14c5",
+          "parent_version_id": "v-b02b07f50d48464b93b21ef4ecfc0f1e",
+          "file_path": "/Users/azathamzin/Documents/GitHub/project/backend/app/data/lineyka/versions/d9eeb19b-291e-4827-a7a6-7da24cef87e5/v-cc9d78c1b6e745928e625a46375e14c5.csv",
+          "row_count": 683,
+          "column_count": 9,
+          "created_at": "2026-01-21T16:42:31.410779+00:00",
+          "created_by": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+          "schema": [
+            {
+              "name": "agency_full",
+              "type": "string"
+            },
+            {
+              "name": "#_of_agencies",
+              "type": "number"
+            },
+            {
+              "name": "population",
+              "type": "number"
+            },
+            {
+              "name": "crime_type",
+              "type": "string"
+            },
+            {
+              "name": "YTD",
+              "type": "number"
+            },
+            {
+              "name": "PrevYTD",
+              "type": "number"
+            },
+            {
+              "name": "Percent_Change",
+              "type": "string"
+            },
+            {
+              "name": "YTD_Range",
+              "type": "string"
+            },
+            {
+              "name": "Last Updated",
+              "type": "string"
+            }
+          ],
+          "summary": {
+            "row_count": 683,
+            "column_count": 9,
+            "missing": [
+              {
+                "column": "agency_full",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "#_of_agencies",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "population",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "crime_type",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "YTD",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "PrevYTD",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "Percent_Change",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "YTD_Range",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "Last Updated",
+                "missing_ratio": 0.0
+              }
+            ],
+            "date_range": {
+              "start": "1970-01-01",
+              "end": "1970-01-01"
+            }
+          },
+          "operation": {
+            "type": "delete_rows",
+            "params": {
+              "row_ids": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                19
+              ],
+              "filters": []
+            },
+            "summary": {
+              "removed": 19
+            }
+          },
+          "pipeline": [
+            {
+              "id": "op-72e4184ef7a440f7b174e9cd027a49c7",
+              "timestamp": "2026-01-21T16:42:31.389345+00:00",
+              "user_id": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+              "type": "delete_rows",
+              "params": {
+                "row_ids": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13,
+                  14,
+                  15,
+                  16,
+                  17,
+                  18,
+                  19
+                ],
+                "filters": []
+              },
+              "summary": {
+                "removed": 19
+              }
+            }
+          ]
+        },
+        {
+          "version_id": "v-99a8184fbf2748eaad2f6e15f5d6e15d",
+          "parent_version_id": "v-cc9d78c1b6e745928e625a46375e14c5",
+          "file_path": "/Users/azathamzin/Documents/GitHub/project/backend/app/data/lineyka/versions/d9eeb19b-291e-4827-a7a6-7da24cef87e5/v-99a8184fbf2748eaad2f6e15f5d6e15d.csv",
+          "row_count": 683,
+          "column_count": 9,
+          "created_at": "2026-01-21T17:15:04.728081+00:00",
+          "created_by": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+          "schema": [
+            {
+              "name": "agency_full",
+              "type": "string"
+            },
+            {
+              "name": "#_of_agencies",
+              "type": "number"
+            },
+            {
+              "name": "population",
+              "type": "number"
+            },
+            {
+              "name": "crime_type",
+              "type": "string"
+            },
+            {
+              "name": "YTD",
+              "type": "number"
+            },
+            {
+              "name": "PrevYTD",
+              "type": "number"
+            },
+            {
+              "name": "Percent_Change",
+              "type": "string"
+            },
+            {
+              "name": "YTD_Range",
+              "type": "string"
+            },
+            {
+              "name": "Last Updated",
+              "type": "string"
+            }
+          ],
+          "summary": {
+            "row_count": 683,
+            "column_count": 9,
+            "missing": [
+              {
+                "column": "agency_full",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "#_of_agencies",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "population",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "crime_type",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "YTD",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "PrevYTD",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "Percent_Change",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "YTD_Range",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "Last Updated",
+                "missing_ratio": 0.0
+              }
+            ],
+            "date_range": {
+              "start": "1970-01-01",
+              "end": "1970-01-01"
+            }
+          },
+          "operation": {
+            "type": "update_cells",
+            "params": {
+              "updates": [
+                {
+                  "row_id": 21,
+                  "column": "Percent_Change",
+                  "value": "-10.47%"
+                }
+              ],
+              "columns": [
+                "Percent_Change"
+              ],
+              "changed": 1
+            }
+          },
+          "pipeline": [
+            {
+              "id": "op-72e4184ef7a440f7b174e9cd027a49c7",
+              "timestamp": "2026-01-21T16:42:31.389345+00:00",
+              "user_id": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+              "type": "delete_rows",
+              "params": {
+                "row_ids": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13,
+                  14,
+                  15,
+                  16,
+                  17,
+                  18,
+                  19
+                ],
+                "filters": []
+              },
+              "summary": {
+                "removed": 19
+              }
+            },
+            {
+              "id": "op-1db8c39d143f44ae9bbf994ac7e415c0",
+              "timestamp": "2026-01-21T17:15:04.700884+00:00",
+              "user_id": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+              "type": "update_cells",
+              "params": {
+                "updates": [
+                  {
+                    "row_id": 21,
+                    "column": "Percent_Change",
+                    "value": "-10.47%"
+                  }
+                ],
+                "columns": [
+                  "Percent_Change"
+                ],
+                "changed": 1
+              },
+              "summary": null
+            }
+          ]
+        },
+        {
+          "version_id": "v-74f66f5195dc4310a9b58d9917ba7936",
+          "parent_version_id": "v-99a8184fbf2748eaad2f6e15f5d6e15d",
+          "file_path": "/Users/azathamzin/Documents/GitHub/project/backend/app/data/lineyka/versions/d9eeb19b-291e-4827-a7a6-7da24cef87e5/v-74f66f5195dc4310a9b58d9917ba7936.csv",
+          "row_count": 683,
+          "column_count": 9,
+          "created_at": "2026-01-21T17:15:06.823591+00:00",
+          "created_by": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+          "schema": [
+            {
+              "name": "agency_full",
+              "type": "string"
+            },
+            {
+              "name": "#_of_agencies",
+              "type": "number"
+            },
+            {
+              "name": "population",
+              "type": "number"
+            },
+            {
+              "name": "crime_type",
+              "type": "string"
+            },
+            {
+              "name": "YTD",
+              "type": "number"
+            },
+            {
+              "name": "PrevYTD",
+              "type": "number"
+            },
+            {
+              "name": "Percent_Change",
+              "type": "string"
+            },
+            {
+              "name": "YTD_Range",
+              "type": "string"
+            },
+            {
+              "name": "Last Updated",
+              "type": "string"
+            }
+          ],
+          "summary": {
+            "row_count": 683,
+            "column_count": 9,
+            "missing": [
+              {
+                "column": "agency_full",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "#_of_agencies",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "population",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "crime_type",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "YTD",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "PrevYTD",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "Percent_Change",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "YTD_Range",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "Last Updated",
+                "missing_ratio": 0.0
+              }
+            ],
+            "date_range": {
+              "start": "1970-01-01",
+              "end": "1970-01-01"
+            }
+          },
+          "operation": {
+            "type": "update_cells",
+            "params": {
+              "updates": [
+                {
+                  "row_id": 22,
+                  "column": "YTD_Range",
+                  "value": "Jan - Aug 2025"
+                }
+              ],
+              "columns": [
+                "YTD_Range"
+              ],
+              "changed": 1
+            }
+          },
+          "pipeline": [
+            {
+              "id": "op-72e4184ef7a440f7b174e9cd027a49c7",
+              "timestamp": "2026-01-21T16:42:31.389345+00:00",
+              "user_id": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+              "type": "delete_rows",
+              "params": {
+                "row_ids": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13,
+                  14,
+                  15,
+                  16,
+                  17,
+                  18,
+                  19
+                ],
+                "filters": []
+              },
+              "summary": {
+                "removed": 19
+              }
+            },
+            {
+              "id": "op-1db8c39d143f44ae9bbf994ac7e415c0",
+              "timestamp": "2026-01-21T17:15:04.700884+00:00",
+              "user_id": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+              "type": "update_cells",
+              "params": {
+                "updates": [
+                  {
+                    "row_id": 21,
+                    "column": "Percent_Change",
+                    "value": "-10.47%"
+                  }
+                ],
+                "columns": [
+                  "Percent_Change"
+                ],
+                "changed": 1
+              },
+              "summary": null
+            },
+            {
+              "id": "op-5dc66a9b53094a3b9bbc0c6ac9b17971",
+              "timestamp": "2026-01-21T17:15:06.803553+00:00",
+              "user_id": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+              "type": "update_cells",
+              "params": {
+                "updates": [
+                  {
+                    "row_id": 22,
+                    "column": "YTD_Range",
+                    "value": "Jan - Aug 2025"
+                  }
+                ],
+                "columns": [
+                  "YTD_Range"
+                ],
+                "changed": 1
+              },
+              "summary": null
+            }
+          ]
+        }
+      ],
+      "audits": {
+        "v-74f66f5195dc4310a9b58d9917ba7936": {
+          "dataset_id": "d9eeb19b-291e-4827-a7a6-7da24cef87e5",
+          "generated_at": "2026-01-21T17:36:13.757497Z",
+          "date_column": "__lineyka_row_id",
+          "target_column": "population",
+          "sef_candidates": [
+            "__lineyka_row_id",
+            "#_of_agencies",
+            "YTD",
+            "PrevYTD"
+          ],
+          "completeness": [
+            {
+              "column": "__lineyka_row_id",
+              "missing_ratio": 0.0
+            },
+            {
+              "column": "agency_full",
+              "missing_ratio": 0.0
+            },
+            {
+              "column": "#_of_agencies",
+              "missing_ratio": 0.0
+            },
+            {
+              "column": "population",
+              "missing_ratio": 0.0
+            },
+            {
+              "column": "crime_type",
+              "missing_ratio": 0.0
+            },
+            {
+              "column": "YTD",
+              "missing_ratio": 0.0
+            },
+            {
+              "column": "PrevYTD",
+              "missing_ratio": 0.0
+            },
+            {
+              "column": "Percent_Change",
+              "missing_ratio": 0.0
+            },
+            {
+              "column": "YTD_Range",
+              "missing_ratio": 0.0
+            },
+            {
+              "column": "Last Updated",
+              "missing_ratio": 0.0
+            }
+          ],
+          "missing_by_month": [
+            {
+              "month": "1970-01-01",
+              "count": 683
+            }
+          ],
+          "duplicates": {
+            "count": 0,
+            "ratio": 0.0
+          },
+          "continuity": {
+            "status": "pass",
+            "missing_months": []
+          },
+          "outliers": [
+            {
+              "column": "population",
+              "count": 74,
+              "ratio": 0.10834553440702782,
+              "lower_bound": -65243.25,
+              "upper_bound": 285394.75
+            },
+            {
+              "column": "YTD",
+              "count": 79,
+              "ratio": 0.11566617862371889,
+              "lower_bound": -7.5,
+              "upper_bound": 12.5
+            },
+            {
+              "column": "PrevYTD",
+              "count": 88,
+              "ratio": 0.12884333821376281,
+              "lower_bound": -6.5,
+              "upper_bound": 13.5
+            }
+          ],
+          "type_issues": [],
+          "status": "warn",
+          "reasons": [
+            "Обнаружены выбросы в числовых столбцах."
+          ],
+          "stationarity": "weak-trend"
+        }
+      }
+    },
+    "7a93c505-5c5c-4333-a588-bb4a75e0c9d8": {
+      "dataset_id": "7a93c505-5c5c-4333-a588-bb4a75e0c9d8",
+      "dataset_name": "Full_Sample_Nationwide_overview",
+      "versions": [
+        {
+          "version_id": "v-ae0a7b40cd8b49758b7c7d2d2390931f",
+          "parent_version_id": null,
+          "file_path": "/Users/azathamzin/Documents/GitHub/project/backend/app/data/lineyka/versions/7a93c505-5c5c-4333-a588-bb4a75e0c9d8/v-ae0a7b40cd8b49758b7c7d2d2390931f.csv",
+          "row_count": 9,
+          "column_count": 9,
+          "created_at": "2026-01-21T16:39:08.459865+00:00",
+          "created_by": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+          "schema": [
+            {
+              "name": "Unnamed: 0",
+              "type": "string"
+            },
+            {
+              "name": "2025 (YTD)",
+              "type": "string"
+            },
+            {
+              "name": "2024 (YTD)",
+              "type": "string"
+            },
+            {
+              "name": "2023 (YTD)",
+              "type": "string"
+            },
+            {
+              "name": "% Change 2024-2025 (YTD)",
+              "type": "string"
+            },
+            {
+              "name": "% Change 2023-2025 (YTD)",
+              "type": "string"
+            },
+            {
+              "name": "2024 (Full Year)",
+              "type": "string"
+            },
+            {
+              "name": "2023 (Full Year)",
+              "type": "string"
+            },
+            {
+              "name": "% Change 2023-2024 (Full Year)",
+              "type": "string"
+            }
+          ],
+          "summary": {
+            "row_count": 9,
+            "column_count": 9,
+            "missing": [
+              {
+                "column": "Unnamed: 0",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "2025 (YTD)",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "2024 (YTD)",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "2023 (YTD)",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "% Change 2024-2025 (YTD)",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "% Change 2023-2025 (YTD)",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "2024 (Full Year)",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "2023 (Full Year)",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "% Change 2023-2024 (Full Year)",
+                "missing_ratio": 0.0
+              }
+            ],
+            "date_range": null
+          },
+          "operation": {
+            "type": "initial",
+            "params": {
+              "source": "84831a5b-4a6f-4c0d-853c-e2bb13fce235"
+            }
+          },
+          "pipeline": []
+        }
+      ],
+      "audits": {}
+    },
+    "433b8de1-2deb-4844-98a4-3f486baf5fc3": {
+      "dataset_id": "433b8de1-2deb-4844-98a4-3f486baf5fc3",
+      "dataset_name": "MTA_NYCT_Safety_Data__Beginning_2019",
+      "versions": [
+        {
+          "version_id": "v-54935e15a3014ca3a72d353c1aae60e5",
+          "parent_version_id": null,
+          "file_path": "/Users/azathamzin/Documents/GitHub/project/backend/app/data/lineyka/versions/433b8de1-2deb-4844-98a4-3f486baf5fc3/v-54935e15a3014ca3a72d353c1aae60e5.csv",
+          "row_count": 655,
+          "column_count": 4,
+          "created_at": "2026-01-21T16:39:11.005497+00:00",
+          "created_by": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+          "schema": [
+            {
+              "name": "Month",
+              "type": "string"
+            },
+            {
+              "name": "Department",
+              "type": "string"
+            },
+            {
+              "name": "Metric",
+              "type": "string"
+            },
+            {
+              "name": "Value",
+              "type": "number"
+            }
+          ],
+          "summary": {
+            "row_count": 655,
+            "column_count": 4,
+            "missing": [
+              {
+                "column": "Month",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "Department",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "Metric",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "Value",
+                "missing_ratio": 0.0
+              }
+            ],
+            "date_range": {
+              "start": "2019-04-01",
+              "end": "2025-06-01"
+            }
+          },
+          "operation": {
+            "type": "initial",
+            "params": {
+              "source": "9a86fb1c-1b4e-4cfb-95de-55cd7be51cf0"
+            }
+          },
+          "pipeline": []
+        }
+      ],
+      "audits": {}
+    }
+  }
+}

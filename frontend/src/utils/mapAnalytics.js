@@ -322,7 +322,7 @@ const summarizeSpatial = (points, config) => {
   };
 };
 
-const summarizeTrend = (points, config) => {
+const summarizeTrend = (points, _config) => {
   const entries = points.map((point) => ({
     name: point.name || findNameField(point.original) || 'Без названия',
     change: toNumber(getOriginalValue(point, null, ['trend_change', 'change_rate', 'growth_rate'])),

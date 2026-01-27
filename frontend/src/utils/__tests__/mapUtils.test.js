@@ -11,6 +11,7 @@ describe("parseCoordinate", () => {
   it("parses numeric and string inputs", () => {
     expect(parseCoordinate(55.75)).toBe(55.75);
     expect(parseCoordinate("40,123")).toBeCloseTo(40.123, 3);
+    expect(parseCoordinate("−12,75")).toBeCloseTo(-12.75, 2);
     expect(parseCoordinate(" ")).toBeNull();
     expect(parseCoordinate({})).toBeNull();
   });
@@ -21,6 +22,12 @@ describe("parseNumericValue", () => {
     expect(parseNumericValue("12,5")).toBeCloseTo(12.5);
     expect(parseNumericValue("abc")).toBeNull();
     expect(parseNumericValue(null)).toBeNull();
+  });
+
+  it("handles percentages and sign variations", () => {
+    expect(parseNumericValue("-10.2%")).toBeCloseTo(-10.2);
+    expect(parseNumericValue("−7,5 %")).toBeCloseTo(-7.5);
+    expect(parseNumericValue("(12,5%)")).toBeCloseTo(-12.5);
   });
 });
 
