@@ -1,0 +1,627 @@
+__lineyka_row_id,agency_full,population,Percent_Change,YTD_Range,Last Updated
+1,"Jefferson Parish, Louisiana",321980,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+2,"Montgomery County, Maryland",896963,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+3,"East Baton Rouge Parish, Louisiana",197853,-52.94%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+4,"Greenville County, South Carolina",379428,-11.11%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+5,"Mesa, Arizona",515848,33.33%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+6,"Portsmouth, Virginia",96649,-51.61%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+7,"Tacoma, Washington",222828,-21.05%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+8,"Vallejo, California",122419,-25.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+9,"Albany, Georgia",66281,-12.50%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+10,"Chattanooga, Tennessee",185370,-36.36%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+11,"Johnston County, North Carolina",177923,600.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+12,"Killeen, Texas",161968,-26.32%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+13,"Lake Charles, Louisiana",76393,40.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+14,"New Haven, Connecticut",141481,55.56%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+15,"Reno, Nevada",277792,-22.22%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+16,"Springfield, Massachusetts",154218,-12.50%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+17,"Chesterfield County, Virginia",385204,18.18%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+18,"Clarksville, Tennessee",181916,62.50%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+19,"Corpus Christi, Texas",315340,-48.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+20,"Lexington, Kentucky",319994,-18.75%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+21,"Paterson, New Jersey",155991,62.50%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+22,"Sacramento County, California",604738,-31.58%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+23,"Arlington, Texas",394799,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+24,"Fontana, California",214429,500.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+25,"Hartford, Connecticut",120710,-25.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+26,"Horry County, South Carolina",302018,71.43%,Jan - Aug 2025,2025-12-16 15:08:46 EST
+27,"Jackson, Tennessee",68470,-20.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+28,"Knoxville, Tennessee",198132,-40.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+29,"Mesquite, Texas",147926,140.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+30,"Toledo, Ohio",264341,-33.33%,Jan - Jul 2025,2025-12-16 15:08:46 EST
+31,"Berkeley County, South Carolina",142756,37.50%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+32,"El Paso County, Colorado",207095,57.14%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+33,"Grand Rapids, Michigan",196019,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+34,"Jersey City, New Jersey",285117,83.33%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+35,"Newport News, Virginia",183600,-35.29%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+36,"Roanoke, Virginia",96925,57.14%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+37,"San Diego County, California",519218,-56.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+38,"St. Paul, Minnesota",300368,-50.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+39,"Virginia Beach, Virginia",453991,-8.33%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+40,"Lubbock, Texas",266960,-9.09%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+41,"Riverside, California",323473,-9.09%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+42,"Rocky Mount, North Carolina",53865,400.00%,Jan - Aug 2025,2025-12-16 15:08:46 EST
+43,"Albany, New York",101930,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+44,"Anaheim, California",343147,-10.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+45,"Anderson County, South Carolina",164574,28.57%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+46,"Chesapeake, Virginia",254051,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+47,"Greeley, Colorado",109183,125.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+48,"Harrisburg, Pennsylvania",50229,-25.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+49,"Hidalgo County, Texas",260352,12.50%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+50,"Montgomery County, Texas",565355,0.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+51,"North Charleston, South Carolina",120162,-30.77%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+52,"Reading, Pennsylvania",97790,28.57%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+53,"Rockford, Illinois",145873,-47.06%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+54,"Springfield, Illinois",112781,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+55,"Springfield, Ohio",57866,125.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+56,"Beaumont, Texas",110671,-33.33%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+57,"Charleston, South Carolina",155159,14.29%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+58,"Glendale, Arizona",253768,-42.86%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+59,"San Bernardino, California",219483,0.00%,Jan - May 2025,2025-12-16 15:08:46 EST
+60,"Santa Fe, New Mexico",89657,100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+61,"Shelby County, Tennessee",136188,33.33%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+62,"Waterbury, Connecticut",115380,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+63,"Yuma, Arizona",99610,300.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+64,"Amarillo, Texas",201684,-30.00%,Jan - Aug 2025,2025-12-16 15:08:46 EST
+65,"Brockton, Massachusetts",108938,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+66,"El Paso County, Texas",116599,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+67,"Gilbert, Arizona",278495,600.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+68,"Greenville, North Carolina",90048,-12.50%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+69,"Gresham, Oregon",110225,40.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+70,"Hayward, California",153914,-36.36%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+71,"Honolulu, Hawaii",987546,-70.83%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+72,"Independence, Missouri",120326,-12.50%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+73,"Lynchburg, Virginia",79509,-22.22%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+74,"Mckinney, Texas",212716,250.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+75,"Pomona, California",143578,-36.36%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+76,"South Bend, Indiana",102999,-12.50%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+77,"Spokane, Washington",230648,-50.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+78,"Springfield, Missouri",170521,-12.50%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+79,"Victoria, Texas",65298,600.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+80,"Waco, Texas",145741,-12.50%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+81,"Warner Robins, Georgia",82991,75.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+82,"Williamson County, Texas",202897,133.33%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+83,"Wilmington, North Carolina",122675,16.67%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+84,"Yakima, Washington",96991,-36.36%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+85,"Aiken County, South Carolina",110756,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+86,"Baytown, Texas",83809,20.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+87,"Bexar County, Texas",438152,-53.85%,Jan - Jul 2025,2025-12-16 15:08:46 EST
+88,"Brazoria County, Texas",132229,100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+89,"Champaign, Illinois",89687,100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+90,"Corona, California",160590,500.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+91,"Decatur, Illinois",68301,20.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+92,"Denton, Texas",155215,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+93,"El Cajon, California",103569,200.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+94,"Fort Bend County, Texas",578695,-60.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+95,"Galveston, Texas",52810,100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+96,"Garland, Texas",240051,-40.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+97,"Georgetown, Texas",87871,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+98,"Jacksonville, North Carolina",69340,200.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+99,"Lakewood, Colorado",156065,100.00%,Jan - Aug 2025,2025-12-16 15:08:46 EST
+100,"Laredo, Texas",256542,20.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+101,"Lewisville, Texas",133694,50.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+102,"Madera, California",68862,500.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+103,"Monterey County, California",103695,500.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+104,"North Little Rock, Arkansas",64612,-50.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+105,"North Richland Hills, Texas",70853,200.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+106,"Prince William County, Virginia",480467,-60.00%,Jan - Aug 2025,2025-12-16 15:08:46 EST
+107,"Salt Lake City, Utah",206692,-33.33%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+108,"Santa Rosa, California",176855,200.00%,Jan - Aug 2025,2025-12-16 15:08:46 EST
+109,"Sarasota County, Florida",294526,20.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+110,"Tyler, Texas",110824,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+111,"West Valley, Utah",135023,20.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+112,"Albemarle County, Virginia",115659,150.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+113,"Antioch, California",115271,-64.29%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+114,"Colerain Township, Ohio",58268,400.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+115,"Columbia, Missouri",129602,-58.33%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+116,"Elk Grove, California",177976,66.67%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+117,"Evansville, Indiana",114950,-54.55%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+118,"Fairfax County, Virginia",1094031,-54.55%,Jan - Jul 2025,2025-12-16 15:08:46 EST
+119,"Fairfield, California",119071,400.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+120,"Fort Smith, Arkansas",90417,NaN%,Jan - Aug 2025,2025-12-16 15:08:46 EST
+121,"Gastonia, North Carolina",83739,66.67%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+122,"Greenwood, Indiana",66131,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+123,"Hamilton County, Ohio",122218,-16.67%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+124,"High Point, North Carolina",115490,150.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+125,"Lincoln, Nebraska",293155,-16.67%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+126,"Merced, California",94125,-28.57%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+127,"New Hanover County, North Carolina",105363,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+128,"Oceanside, California",171348,150.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+129,"Santa Maria, California",110317,150.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+130,"Scottsdale, Arizona",243644,400.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+131,"Sioux Falls, South Dakota",206559,-54.55%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+132,"Spotsylvania County, Virginia",149957,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+133,"Tempe, Arizona",188144,25.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+134,"Visalia, California",145031,-28.57%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+135,"Wake County, North Carolina",198748,66.67%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+136,"Abilene, Texas",128387,-42.86%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+137,"Beaufort County, South Carolina",132948,-60.00%,Jan - Aug 2025,2025-12-16 15:08:46 EST
+138,"Billings, Montana",121365,-55.56%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+139,"Buncombe County, North Carolina",158547,100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+140,"Carlsbad, California",113796,300.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+141,"Cedar Rapids, Iowa",135777,300.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+142,"Chandler, Arizona",282419,100.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+143,"Collin County, Texas",95286,100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+144,"Conway, Arkansas",69315,100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+145,"Davenport, Iowa",99911,-50.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+146,"Duluth, Minnesota",86570,33.33%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+147,"Fargo, North Dakota",134268,-20.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+148,"Forsyth County, North Carolina",111773,-20.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+149,"Guilford County, North Carolina",130423,-33.33%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+150,"Henderson, Nevada",337794,-50.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+151,"Howard County, Maryland",337780,-33.33%,Jan - Jun 2025,2025-12-16 15:08:46 EST
+152,"Janesville, Wisconsin",66033,300.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+153,"Jefferson County, Missouri",167018,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+154,"Kaufman County, Texas",111179,100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+155,"Lancaster County, South Carolina",100080,33.33%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+156,"Lee's Summit, Missouri",104402,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+157,"Lenexa, Kansas",59161,100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+158,"Longview, Texas",82981,-55.56%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+159,"Midwest City, Oklahoma",57696,33.33%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+160,"Nassau County, New York",1077192,300.00%,Jan - Apr 2025,2025-12-16 15:08:46 EST
+161,"National City, California",55270,100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+162,"New Bedford, Massachusetts",100876,-42.86%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+163,"Norman, Oklahoma",130366,300.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+164,"Peoria, Arizona",200886,300.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+165,"Pima County, Arizona",365222,-55.56%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+166,"Pontiac, Michigan",61871,-66.67%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+167,"Port Arthur, Texas",55371,-20.00%,Jan - Aug 2025,2025-12-16 15:08:46 EST
+168,"Schenectady, New York",69035,-42.86%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+169,"St. Cloud, Minnesota",69922,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+170,"St. George, Utah",105930,300.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+171,"Travis County, Texas",277111,-20.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+172,"West Jordan, Utah",116485,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+173,"Youngstown, Ohio",58773,-20.00%,Jan - May 2025,2025-12-16 15:08:46 EST
+174,"Bellevue, Nebraska",62372,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+175,"Boulder, Colorado",104232,NaN%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+176,"Bridgeport, Connecticut",148483,-72.73%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+177,"Burlington, North Carolina",60156,-25.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+178,"Canton Township, Michigan",98915,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+179,"Chula Vista, California",280748,-25.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+180,"Clovis, California",126552,50.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+181,"Denton County, Texas",160587,200.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+182,"Erie, Pennsylvania",92920,-25.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+183,"Escondido, California",149837,50.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+184,"Fall River, Massachusetts",93879,-25.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+185,"Forsyth County, Georgia",267417,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+186,"Fort Collins, Colorado",168886,0.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+187,"Frisco, Texas",228527,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+188,"Grand Prairie, Texas",205487,-25.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+189,"Hall County, Georgia",148922,200.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+190,"Hammond, Indiana",75990,50.00%,Jan - Feb 2025,2025-12-16 15:08:46 EST
+191,"Henrico County, Virginia",334046,-81.25%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+192,"Henry County, Georgia",172407,-25.00%,Jan - Aug 2025,2025-12-16 15:08:46 EST
+193,"Johns Creek, Georgia",82646,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+194,"Jonesboro, Arkansas",80395,0.00%,Jan - Jul 2025,2025-12-16 15:08:46 EST
+195,"Kalamazoo County, Michigan",108458,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+196,"Kannapolis, North Carolina",56479,-25.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+197,"Lafayette, Louisiana",121361,-66.67%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+198,"Lexington County, South Carolina",232613,-40.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+199,"Livingston Parish, Louisiana",134038,-57.14%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+200,"Loudoun County, Virginia",378299,-40.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+201,"Lynn, Massachusetts",101144,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+202,"Madison, Wisconsin",274234,-25.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+203,"Odessa, Texas",111922,-25.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+204,"Owensboro, Kentucky",59937,200.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+205,"Oxnard, California",199508,-40.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+206,"Parker County, Texas",114776,50.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+207,"Pasadena, Texas",145850,-40.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+208,"Pawtucket, Rhode Island",75100,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+209,"Pharr, Texas",80359,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+210,"Rapid City, South Dakota",80850,-40.00%,Jan - Jul 2025,2025-12-16 15:08:46 EST
+211,"Rock Hill, South Carolina",75681,-25.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+212,"Royal Oak, Michigan",57233,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+213,"Salem, Oregon",178276,-50.00%,Jan - Aug 2025,2025-12-16 15:08:46 EST
+214,"San Marcos, Texas",71413,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+215,"Smith County, Texas",111489,-40.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+216,"Sonoma County, California",131522,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+217,"Southfield, Michigan",74960,200.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+218,"Sparks, Nevada",109403,-25.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+219,"St Charles, Missouri",71408,50.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+220,"Taylor, Michigan",61781,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+221,"Tulare County, California",135511,-66.67%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+222,"Walnut Creek, California",68441,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+223,"Waterloo, Iowa",66211,50.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+224,"Westminster, Colorado",113660,-40.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+225,"Wichita Falls, Texas",102740,-66.67%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+226,"Adams County, Colorado",100798,-50.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+227,"Alameda County, California",148466,-75.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+228,"Alhambra, California",79087,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+229,"Allentown, Pennsylvania",124782,-50.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+230,"Asheville, North Carolina",93471,-77.78%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+231,"Baldwin Park, California",68230,-33.33%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+232,"Barnstable, Massachusetts",50034,100.00%,Jan - Aug 2025,2025-12-16 15:08:46 EST
+233,"Battle Creek, Michigan",60969,-60.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+234,"Beaumont, California",57819,NaN%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+235,"Bellingham, Washington",94968,-60.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+236,"Boise, Idaho",236949,100.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+237,"Bossier City, Louisiana",62602,-71.43%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+238,"Bowling Green, Kentucky",76194,100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+239,"Broken Arrow, Oklahoma",119959,-50.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+240,"Brookhaven, Georgia",58507,-50.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+241,"Brownsville, Texas",190590,-33.33%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+242,"Burnsville, Minnesota",63650,-60.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+243,"Cheyenne, Wyoming",64307,0.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+244,"Chicopee, Massachusetts",55043,-33.33%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+245,"Citrus Heights, California",85894,-33.33%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+246,"Clackamas County, Oregon",243311,-33.33%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+247,"Commerce City, Colorado",67851,-60.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+248,"Concord, North Carolina",111915,-60.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+249,"Council Bluffs, Iowa",62214,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+250,"Dearborn Heights, Michigan",61420,100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+251,"Dearborn, Michigan",106747,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+252,"Des Moines, Iowa",209658,-77.78%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+253,"Douglas County, Colorado",219477,-33.33%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+254,"Eau Claire, Wisconsin",69859,100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+255,"Edmond, Oklahoma",97063,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+256,"El Dorado County, California",162436,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+257,"El Monte, California",103463,-66.67%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+258,"Elkhart, Indiana",53773,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+259,"Enid, Oklahoma",50168,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+260,"Eugene, Oregon",178191,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+261,"Fayetteville, Arkansas",101624,-75.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+262,"Folsom, California",84559,-50.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+263,"Franklin, Tennessee",88315,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+264,"Goodyear, Arizona",109929,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+265,"Green Bay, Wisconsin",105521,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+266,"Greenville, South Carolina",72961,-71.43%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+267,"Hamilton Township, New Jersey",120098,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+268,"Hillsboro, Oregon",107459,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+269,"Iowa City, Iowa",75396,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+270,"Irving, Texas",255203,-88.89%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+271,"Kent County, Michigan",267237,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+272,"Knox County, Tennessee",304331,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+273,"Kokomo, Indiana",59720,0.00%,Jan - Aug 2025,2025-12-16 15:08:46 EST
+274,"La Mesa, California",60008,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+275,"Lansing, Michigan",112529,-33.33%,Jan - Apr 2025,2025-12-16 15:08:46 EST
+276,"Lawrence, Massachusetts",87806,-71.43%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+277,"League City, Texas",115791,-50.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+278,"Leander, Texas",82228,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+279,"Little Elm, Texas",59954,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+280,"Manchester, New Hampshire",114963,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+281,"Medford, Oregon",85352,0.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+282,"Midland, Texas",135253,-71.43%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+283,"Mission Viejo, California",90944,NaN%,Jan - Aug 2025,2025-12-16 15:08:46 EST
+284,"Missouri City, Texas",77560,100.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+285,"Murfreesboro, Tennessee",166916,-60.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+286,"Napa, California",77956,-50.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+287,"New Britain, Connecticut",74609,-33.33%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+288,"New Rochelle, New York",83357,NaN%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+289,"Ogden, Utah",86593,100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+290,"Onslow County, North Carolina",125993,-60.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+291,"Paulding County, Georgia",162740,-33.33%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+292,"Pearland, Texas",127433,-33.33%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+293,"Pflugerville, Texas",65599,100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+294,"Plano, Texas",291140,-33.33%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+295,"Pleasanton, California",75238,100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+296,"Providence, Rhode Island",189590,-81.82%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+297,"Racine, Wisconsin",75858,-33.33%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+298,"Richardson, Texas",119008,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+299,"Richmond, California",113282,-81.82%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+300,"Roseville, California",158084,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+301,"Round Rock, Texas",129898,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+302,"Rutherford County, Tennessee",104616,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+303,"San Angelo, Texas",98642,-50.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+304,"San Mateo County, California",127963,100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+305,"Santa Monica, California",88552,0.00%,Jan - Jun 2025,2025-12-16 15:08:46 EST
+306,"Shelby Township, Michigan",79545,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+307,"Southaven, Mississippi",57135,100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+308,"Spring Hill, Tennessee",58200,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+309,"St. Mary's County, Maryland",115684,100.00%,Jan - Aug 2025,2025-12-16 15:08:46 EST
+310,"Stafford County, Virginia",166413,100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+311,"Suffolk, Virginia",100598,-80.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+312,"Terre Haute, Indiana",58309,0.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+313,"Texas City, Texas",57448,-60.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+314,"Thornton, Colorado",143838,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+315,"Thousand Oaks, California",123032,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+316,"Thurston County, Washington",145385,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+317,"Torrance, California",138472,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+318,"Tulare, California",71428,-60.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+319,"Tustin, California",77690,NaN%,Jan - Aug 2025,2025-12-16 15:08:46 EST
+320,"Upper Darby, Pennsylvania",84468,-33.33%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+321,"Utica, New York",63548,-60.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+322,"Warren, Michigan",136121,-50.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+323,"Waterford Township, Michigan",69153,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+324,"West Covina, California",103014,-33.33%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+325,"Westland, Michigan",83463,-33.33%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+326,"Westminster, California",88710,-33.33%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+327,"Abington, Pennsylvania",58433,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+328,"Ada County, Idaho",138487,-50.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+329,"Allen, Texas",114696,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+330,"Ames, Iowa",67186,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+331,"Ann Arbor, Michigan",118072,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+332,"Apple Valley, Minnesota",54995,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+333,"Arapahoe County, Colorado",104204,-50.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+334,"Arcadia, California",54071,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+335,"Arlington County, Virginia",231844,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+336,"Arvada, Colorado",120200,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+337,"Avondale, Arizona",92661,-66.67%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+338,"Beaverton, Oregon",96840,0.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+339,"Bend, Oregon",105099,-66.67%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+340,"Bensalem, Pennsylvania",62595,NaN%,Jan - Mar 2025,2025-12-16 15:08:46 EST
+341,"Bentonville, Arkansas",59465,-66.67%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+342,"Berkeley, California",116595,-83.33%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+343,"Bloomington, Minnesota",86793,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+344,"Bolingbrook, Illinois",74138,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+345,"Bowie, Maryland",56678,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+346,"Bozeman, Montana",57424,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+347,"Brooklyn Park, Minnesota",81920,-66.67%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+348,"Burleson, Texas",56307,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+349,"Burlington, Vermont",44522,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+350,"Caldwell, Idaho",68731,0.00%,Jan - Aug 2025,2025-12-16 15:08:46 EST
+351,"Camarillo, California",70010,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+352,"Cambridge, Massachusetts",118960,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+353,"Cameron County, Texas",95894,-66.67%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+354,"Carrollton, Texas",134261,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+355,"Cary, North Carolina",182878,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+356,"Cedar Park, Texas",77464,-66.67%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+357,"Centennial, Colorado",104724,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+358,"Chico, California",100896,-50.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+359,"Chino, California",94162,-66.67%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+360,"Clinton Township, Michigan",99012,-66.67%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+361,"Coeur D Alene, Idaho",57653,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+362,"College Station, Texas",126136,-66.67%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+363,"Concord, California",121331,-50.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+364,"Conroe, Texas",106904,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+365,"Cranston, Rhode Island",82484,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+366,"Cuyahoga Falls, Ohio",50459,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+367,"Danbury, Connecticut",87327,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+368,"Delaware County, Ohio",104939,-50.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+369,"Desoto, Texas",56257,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+370,"Douglas County, Nebraska",94490,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+371,"Edina, Minnesota",51980,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+372,"Elizabeth, New Jersey",133578,-75.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+373,"Elyria, Ohio",53024,-50.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+374,"Euclid, Ohio",48170,-80.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+375,"Euless, Texas",59722,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+376,"Gardena, California",57853,-66.67%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+377,"Glendale, California",185923,-66.67%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+378,"Great Falls, Montana",60358,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+379,"Hamilton County, Tennessee",124372,-50.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+380,"Hamilton, Ohio",62705,0.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+381,"Harlingen, Texas",71581,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+382,"Hendersonville, Tennessee",63291,-50.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+383,"Hoboken, New Jersey",56832,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+384,"Huntersville, North Carolina",63781,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+385,"Jeffersonville, Indiana",51780,NaN%,Jan - Mar 2025,2025-12-16 15:08:46 EST
+386,"Johnson City, Tennessee",73225,-75.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+387,"Joplin, Missouri",52881,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+388,"Kenosha, Wisconsin",97786,-66.67%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+389,"La Crosse, Wisconsin",50759,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+390,"Livingston County, Michigan",129813,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+391,"Logan, Utah",55645,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+392,"Lorain, Ohio",65436,-50.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+393,"Loveland, Colorado",78656,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+394,"Lowell, Massachusetts",113124,-75.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+395,"Lower Paxton, Pennsylvania",55204,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+396,"Manchester, Connecticut",59408,0.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+397,"Mansfield, Texas",78788,-50.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+398,"Manteca, California",88518,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+399,"Marietta, Georgia",63407,-50.00%,Jan - Aug 2025,2025-12-16 15:08:46 EST
+400,"Miami Beach, Florida",78824,-66.67%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+401,"Milford, Connecticut",53011,0.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+402,"Millcreek, Pennsylvania",53119,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+403,"Mission, Texas",87031,-75.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+404,"Mountain View, California",80382,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+405,"Nampa, Idaho",116116,-50.00%,Jan - Aug 2025,2025-12-16 15:08:46 EST
+406,"New Braunfels, Texas",111942,-50.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+407,"O'Fallon, Missouri",94702,NaN%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+408,"Oshkosh, Wisconsin",65548,-75.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+409,"Palatine, Illinois",64407,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+410,"Parker, Colorado",62431,-50.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+411,"Parma, Ohio",78913,NaN%,Jan - Aug 2025,2025-12-16 15:08:46 EST
+412,"Pasadena, California",132210,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+413,"Placer County, California",125007,-66.67%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+414,"Provo, Utah",112743,NaN%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+415,"Redwood City, California",78765,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+416,"Rochester Hills, Michigan",75845,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+417,"Roswell, Georgia",93241,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+418,"Rowlett, Texas",66671,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+419,"Santa Cruz County, California",128246,-66.67%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+420,"Saratoga County, New York",183036,-50.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+421,"Schaumburg, Illinois",75140,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+422,"Scranton, Pennsylvania",75687,-83.33%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+423,"Simi Valley, California",123443,-66.67%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+424,"Sioux City, Iowa",85365,-66.67%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+425,"Spokane Valley, Washington",109278,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+426,"St Charles County, Missouri",119176,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+427,"St Joseph County, Indiana",109381,NaN%,Jan - Mar 2025,2025-12-16 15:08:46 EST
+428,"St Joseph, Missouri",69925,-50.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+429,"St. Clair Shores, Michigan",57257,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+430,"Stark County, Ohio",117590,-66.67%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+431,"Sterling Heights, Michigan",131801,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+432,"Sugar Land, Texas",108718,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+433,"Sunnyvale, California",152031,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+434,"Tracy, California",99347,-66.67%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+435,"Troy, Michigan",87265,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+436,"Union County, North Carolina",170556,-50.00%,Jan - Jun 2025,2025-12-16 15:08:46 EST
+437,"Vacaville, California",101975,0.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+438,"Ventura, California",109035,-50.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+439,"Warren County, Ohio",102918,-50.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+440,"Washington County, Maryland",104179,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+441,"West Allis, Wisconsin",58505,NaN%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+442,"Wyoming, Michigan",76712,-66.67%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+443,"Alameda, California",75061,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+444,"Alexandria, Virginia",153897,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+445,"Aliso Viejo, California",50736,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+446,"Alpharetta, Georgia",68139,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+447,"Anderson, Indiana",55275,-100.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+448,"Ankeny, Iowa",74233,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+449,"Appleton, Wisconsin",73921,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+450,"Arlington Heights, Illinois",74094,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+451,"Bartlett, Tennessee",56324,0.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+452,"Bethlehem, Pennsylvania",78606,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+453,"Bismarck, North Dakota",74802,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+454,"Blaine, Minnesota",72384,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+455,"Bloomfield, New Jersey",53181,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+456,"Blue Springs, Missouri",59896,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+457,"Boone County, Kentucky",107867,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+458,"Brentwood, California",66976,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+459,"Bristol, Connecticut",61609,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+460,"Brookline, Massachusetts",62639,0.00%,Jan - Feb 2025,2025-12-16 15:08:46 EST
+461,"Broomfield, Colorado",77072,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+462,"Buckeye, Arizona",112048,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+463,"Buena Park, California",81753,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+464,"Burbank, California",102345,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+465,"Canton, Ohio",69164,-100.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+466,"Carmel, Indiana",103013,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+467,"Casa Grande, Arizona",63228,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+468,"Castle Rock, Colorado",83546,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+469,"Chapel Hill, North Carolina",65066,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+470,"Cherry Hill Township, New Jersey",78082,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+471,"Cicero, Illinois",80455,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+472,"Clifton, New Jersey",88361,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+473,"Collierville, Tennessee",51686,0.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+474,"Colonie Town, New York",80724,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+475,"Comal County, Texas",94653,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+476,"Coon Rapids, Minnesota",62391,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+477,"Corvallis, Oregon",61474,-100.00%,Jan - Aug 2025,2025-12-16 15:08:46 EST
+478,"Daly City, California",97774,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+479,"Davis, California",67193,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+480,"Des Plaines, Illinois",57672,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+481,"Draper, Utah",50588,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+482,"Dublin, Ohio",48827,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+483,"Dubuque, Iowa",58492,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+484,"Dunwoody, Georgia",52505,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+485,"Eagan, Minnesota",66943,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+486,"East Hartford, Connecticut",50625,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+487,"Eden Prairie, Minnesota",61645,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+488,"Edinburg, Texas",106137,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+489,"Evanston, Illinois",74413,0.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+490,"Everett, Massachusetts",49740,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+491,"Fairfield, Connecticut",63588,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+492,"Farmington Hills, Michigan",82223,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+493,"Fishers, Indiana",103247,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+494,"Flagstaff, Arizona",75343,-100.00%,Jan - Feb 2025,2025-12-16 15:08:46 EST
+495,"Flower Mound, Texas",79513,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+496,"Fountain Valley, California",55419,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+497,"Framingham, Massachusetts",70624,0.00%,Jan - Jun 2025,2025-12-16 15:08:46 EST
+498,"Fremont, California",220775,0.00%,Jan - Jan 2025,2025-12-16 15:08:46 EST
+499,"Fullerton, California",139131,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+500,"Gilroy, California",57331,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+501,"Grand Forks, North Dakota",58470,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+502,"Grand Island, Nebraska",52264,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+503,"Grand Junction, Colorado",69240,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+504,"Grapevine, Texas",51458,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+505,"Green Township, Ohio",59277,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+506,"Greenwich, Connecticut",63777,0.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+507,"Hamden, Connecticut",60691,-100.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+508,"Hanover County, Virginia",106595,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+509,"Harrisonburg, Virginia",50928,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+510,"Haverford, Pennsylvania",50505,0.00%,Jan - Jun 2025,2025-12-16 15:08:46 EST
+511,"Haverhill, Massachusetts",67133,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+512,"Hays County, Texas",130433,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+513,"Hempstead Village, New York",58071,-100.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+514,"Idaho Falls, Idaho",68662,-100.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+515,"Iredell County, North Carolina",111895,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+516,"Irvine, California",316132,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+517,"Jefferson County, Colorado",194994,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+518,"Kentwood, Michigan",53979,-100.00%,Jan - Feb 2025,2025-12-16 15:08:46 EST
+519,"Kettering, Ohio",56633,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+520,"Kingsport, Tennessee",56522,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+521,"Kyle, Texas",63931,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+522,"Laguna Niguel, California",63502,0.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+523,"Lake Havasu City, Arizona",59720,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+524,"Lakeville, Minnesota",76929,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+525,"Lakewood, Ohio",49304,0.00%,Jan - Aug 2025,2025-12-16 15:08:46 EST
+526,"Lancaster, Pennsylvania",57213,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+527,"Layton, Utah",82887,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+528,"Lincoln, California",53950,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+529,"Livermore, California",83155,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+530,"Livonia, Michigan",93042,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+531,"Longmont, Colorado",98444,-100.00%,Jan - Feb 2025,2025-12-16 15:08:46 EST
+532,"Lower Merion, Pennsylvania",64350,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+533,"Macomb County, Michigan",191695,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+534,"Malden, Massachusetts",64291,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+535,"Maple Grove, Minnesota",70729,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+536,"Marana, Arizona",57718,-100.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+537,"Maricopa, Arizona",70355,0.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+538,"McAllen, Texas",145684,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+539,"Medford, Massachusetts",68280,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+540,"Meriden, Connecticut",60054,-100.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+541,"Meridian, Idaho",135239,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+542,"Methuen, Massachusetts",53558,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+543,"Middletown, Ohio",51328,0.00%,Jan - Jul 2025,2025-12-16 15:08:46 EST
+544,"Milpitas, California",76573,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+545,"Minnetonka, Minnesota",51791,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+546,"Missoula, Montana",78269,-100.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+547,"Monterey Park, California",57419,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+548,"Moore, Oklahoma",63311,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+549,"Mooresville, North Carolina",53767,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+550,"Mount Pleasant, South Carolina",96320,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+551,"Mount Prospect, Illinois",53932,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+552,"Mount Vernon, New York",70812,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+553,"Murrieta, California",115037,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+554,"Nashua, New Hampshire",91145,0.00%,Jan - Jan 2025,2025-12-16 15:08:46 EST
+555,"Newark, Ohio",51147,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+556,"Newport Beach, California",83392,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+557,"Newton, Massachusetts",86996,0.00%,Jan - Jun 2025,2025-12-16 15:08:46 EST
+558,"Noblesville, Indiana",74211,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+559,"Normal, Illinois",52883,-100.00%,Jan - Aug 2025,2025-12-16 15:08:46 EST
+560,"North Bergen Township, New Jersey",59147,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+561,"Norwalk, Connecticut",91639,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+562,"Novato, California",51733,0.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+563,"Novi, Michigan",66482,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+564,"Oak Lawn, Illinois",55368,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+565,"Orem, Utah",94682,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+566,"Palo Alto, California",64855,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+567,"Peabody, Massachusetts",53841,0.00%,Jan - Jan 2025,2025-12-16 15:08:46 EST
+568,"Petaluma, California",58099,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+569,"Pinal County, Arizona",229832,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+570,"Pittsfield, Massachusetts",43078,-100.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+571,"Plymouth, Minnesota",77576,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+572,"Pocatello, Idaho",58390,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+573,"Porterville, California",63165,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+574,"Prescott Valley, Arizona",50166,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+575,"Pueblo, Colorado",111240,-100.00%,Jan - Feb 2025,2025-12-16 15:08:46 EST
+576,"Quincy, Massachusetts",102465,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+577,"Redlands, California",74147,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+578,"Redmond, Washington",78496,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+579,"Redondo Beach, California",67742,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+580,"Revere, Massachusetts",57132,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+581,"Richland, Washington",63816,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+582,"Rocklin, California",74876,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+583,"Rockwall, Texas",53433,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+584,"San Mateo, California",98883,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+585,"San Rafael, California",59400,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+586,"Sandy, Utah",91132,-100.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+587,"Santa Clara, California",126452,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+588,"Santa Cruz, California",61754,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+589,"Saratoga Springs, Utah",56039,-100.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+590,"Sarpy County, Nebraska",98019,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+591,"Shawnee, Kansas",70098,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+592,"Skokie, Illinois",64417,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+593,"Smyrna, Tennessee",58096,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+594,"Somerville, Massachusetts",79513,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+595,"South Jordan, Utah",86444,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+596,"South San Francisco, California",62205,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+597,"St Peters, Missouri",58937,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+598,"Stamford, Connecticut",136512,0.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+599,"State College, Pennsylvania",58532,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+600,"Stratford, Connecticut",52596,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+601,"Taunton, Massachusetts",60356,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+602,"Temple, Texas",93073,0.00%,Jan - Jan 2025,2025-12-16 15:08:46 EST
+603,"Tigard, Oregon",56142,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+604,"Tinley Park, Illinois",53528,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+605,"Twin Falls, Idaho",55447,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+606,"Wake Forest, North Carolina",52609,-100.00%,Jan - Aug 2025,2025-12-16 15:08:46 EST
+607,"Waltham, Massachusetts",63797,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+608,"Warwick, Rhode Island",83369,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+609,"Washington County, Oregon",239309,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+610,"Washtenaw County, Michigan",161396,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+611,"Waukesha, Wisconsin",70095,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+612,"Wayne Township, New Jersey",52317,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+613,"West Bloomfield Township, Michigan",64904,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+614,"West Chester Township, Ohio",62860,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+615,"West Des Moines, Iowa",71674,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+616,"West Hartford, Connecticut",64423,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+617,"West Haven, Connecticut",54791,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+618,"West New York, New Jersey",51884,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+619,"Westfield, Indiana",58858,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+620,"Weymouth, Massachusetts",57725,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+621,"Will County, Illinois",104475,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+622,"Woodbury, Minnesota",80153,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+623,"Wright County, Minnesota",129359,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+624,"Wylie, Texas",62539,-100.00%,Jan - Sep 2025,2025-12-16 15:08:46 EST
+625,"Yavapai County, Arizona",97526,-100.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST
+626,"Yorba Linda, California",66477,0.00%,Jan - Oct 2025,2025-12-16 15:08:46 EST

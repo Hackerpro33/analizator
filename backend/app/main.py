@@ -33,7 +33,7 @@ from .schemas import (
     TaskStatusResponse,
 )
 from .services.extraction import build_extraction
-from .services.metadata_repository import get_metadata_repository
+from .services.metadata_repository import get_metadata_repository, get_model_tracking_repository
 from .services.object_storage import get_object_storage
 from .tasks import TaskQueueUnavailable, enqueue_extraction, get_task_status
 from .utils import files as files_utils
@@ -122,6 +122,34 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
         return response
 
 
+class AuditMiddleware(BaseHTTPMiddleware):
+    """Persist high-level request audit logs to the model tracking repository."""
+
+    def __init__(self, app: FastAPI) -> None:
+        super().__init__(app)
+        self._repository = get_model_tracking_repository()
+
+    async def dispatch(self, request, call_next):
+        response = await call_next(request)
+        repo = self._repository
+        try:
+            user_id = getattr(getattr(request.state, "user", None), "id", None) or request.headers.get("x-user-id")
+            repo.record_audit_event(
+                user_id=user_id,
+                action=request.method.upper(),
+                resource=request.url.path,
+                payload={"status_code": response.status_code},
+                ip_address=request.client.host if request.client else None,
+                request_id=getattr(request.state, "request_id", None),
+            )
+        except Exception:  # pragma: no cover - audit should never block responses
+            logger.exception(
+                "audit_log_failed",
+                extra={"event": "audit_log_failed", "path": request.url.path},
+            )
+        return response
+
+
 allow_origins = {str(settings.frontend_origin), "http://127.0.0.1:5173", "http://127.0.0.1:5174"}
 allow_origins.update(settings.additional_origins)
 
@@ -139,6 +167,7 @@ app.add_middleware(TrustedHostMiddleware, allowed_hosts=settings.allowed_host_li
 app.add_middleware(SecurityHeadersMiddleware)
 app.add_middleware(RequestIDMiddleware)
 app.add_middleware(RequestLoggingMiddleware)
+app.add_middleware(AuditMiddleware)
 
 EMAIL_LOG_PATH = DATA_DIR / "email_log.jsonl"
 FILE_REGISTRY = files_utils._FILE_REGISTRY

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Dict, List, Literal, Optional, Union
 
-from pydantic import BaseModel, Field, root_validator
+from pydantic import BaseModel, Field, model_validator
 
 
 class LineykaFilter(BaseModel):
@@ -101,9 +101,10 @@ LineykaOperation = Union[
 class LineykaTransformRequest(BaseModel):
     operations: List[LineykaOperation]
 
-    @root_validator(pre=True)
+    @model_validator(mode="before")
     def _ensure_operations(cls, values):
-        ops = values.get("operations") or []
+        data = dict(values or {})
+        ops = data.get("operations") or []
         if not ops:
             raise ValueError("operations не может быть пустым")
         return values

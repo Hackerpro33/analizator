@@ -2383,5 +2383,79 @@
     "id": "d9eeb19b-291e-4827-a7a6-7da24cef87e5",
     "created_at": 1768264206,
     "created_date": "2026-01-13T05:30:06"
+  },
+  {
+    "name": "Murders_Individual Agencies_YTD_Report (копия)",
+    "description": "Сохранено из Линейки (d9eeb19b-291e-4827-a7a6-7da24cef87e5)",
+    "tags": [],
+    "columns": [
+      {
+        "name": "agency_full",
+        "type": "string",
+        "selected": true
+      },
+      {
+        "name": "population",
+        "type": "number",
+        "selected": true
+      },
+      {
+        "name": "Percent_Change",
+        "type": "string",
+        "selected": true
+      },
+      {
+        "name": "YTD_Range",
+        "type": "string",
+        "selected": true
+      },
+      {
+        "name": "Last Updated",
+        "type": "string",
+        "selected": true
+      }
+    ],
+    "file_url": "/Users/azathamzin/Documents/GitHub/project/backend/app/data/lineyka_published/lineyka-c8526f7390354a1a8dd61db351e2f78c.csv",
+    "row_count": 626,
+    "sample_data": [
+      {
+        "agency_full": "Jefferson Parish, Louisiana",
+        "population": 321980,
+        "Percent_Change": "0.00%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Montgomery County, Maryland",
+        "population": 896963,
+        "Percent_Change": "0.00%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "East Baton Rouge Parish, Louisiana",
+        "population": 197853,
+        "Percent_Change": "-52.94%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Greenville County, South Carolina",
+        "population": 379428,
+        "Percent_Change": "-11.11%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      },
+      {
+        "agency_full": "Mesa, Arizona",
+        "population": 515848,
+        "Percent_Change": "33.33%",
+        "YTD_Range": "Jan - Oct 2025",
+        "Last Updated": "2025-12-16 15:08:46 EST"
+      }
+    ],
+    "id": "f4acc61b-8280-419f-aa9f-20f69b8cf31b",
+    "created_at": 1770690295,
+    "created_date": "2026-02-10T07:24:55"
   }
 ]

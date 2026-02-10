@@ -171,6 +171,10 @@ def generate_invite_code(length: int = 32) -> str:
 
 
 @lru_cache()
+def _user_store_for_path(path: str) -> UserStore:
+    return UserStore(Path(path))
+
+
 def get_user_store() -> UserStore:
     settings = get_settings()
-    return UserStore(Path(settings.user_store_path))
+    return _user_store_for_path(str(settings.user_store_path))

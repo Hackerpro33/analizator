@@ -35,6 +35,7 @@ def test_metrics_endpoint_returns_current_readings(tmp_path, monkeypatch):
     assert "memory_percent" in payload
     assert "network" in payload and "download_mbps" in payload["network"]
     assert payload["system"]["version"]
+    assert "model_alerts" in payload
 
 
 def test_system_logs_require_privileged_access(tmp_path, monkeypatch):

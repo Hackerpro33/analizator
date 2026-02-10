@@ -19,6 +19,8 @@ croniter
 scikit-learn
 joblib
 statsmodels
+prophet
+linearmodels
 passlib[bcrypt]
 python-jose[cryptography]
 email-validator

@@ -4,7 +4,7 @@ import json
 import platform
 import time
 from collections import deque
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Deque, Dict, List, Optional
 
@@ -13,6 +13,7 @@ from fastapi.responses import FileResponse
 
 from .config import get_settings
 from .security import get_current_user, require_roles
+from .services.metadata_repository import get_model_tracking_repository
 from .services.user_store import UserRecord
 from .version import __version__
 
@@ -28,10 +29,20 @@ router = APIRouter(
     dependencies=[Depends(get_current_user)],
 )
 
+def _initial_net_counters():
+    if not psutil:
+        return None
+    try:
+        return psutil.net_io_counters()
+    except (psutil.Error, OSError, PermissionError):
+        return None
+
+
+_INITIAL_COUNTERS = _initial_net_counters()
 _NETWORK_SAMPLE = {
     "timestamp": time.time(),
-    "bytes_sent": (psutil.net_io_counters().bytes_sent if psutil and psutil.net_io_counters() else 0),
-    "bytes_recv": (psutil.net_io_counters().bytes_recv if psutil and psutil.net_io_counters() else 0),
+    "bytes_sent": getattr(_INITIAL_COUNTERS, "bytes_sent", 0),
+    "bytes_recv": getattr(_INITIAL_COUNTERS, "bytes_recv", 0),
 }
 
 
@@ -42,7 +53,10 @@ def _log_path() -> Path:
 def _sample_network() -> Dict[str, float]:
     if not psutil:
         return {"download_mbps": 0.0, "upload_mbps": 0.0}
-    counters = psutil.net_io_counters()
+    try:
+        counters = psutil.net_io_counters()
+    except (psutil.Error, OSError, PermissionError):
+        counters = None
     if not counters:
         return {"download_mbps": 0.0, "upload_mbps": 0.0}
     now = time.time()
@@ -87,8 +101,30 @@ def _database_info() -> Dict[str, Optional[float]]:
     return info
 
 
+def _recent_model_alerts(limit: int = 5) -> List[Dict[str, Any]]:
+    repo = get_model_tracking_repository()
+    try:
+        alerts = repo.list_alerts(limit=limit)
+    except Exception:
+        return []
+    payload = []
+    for alert in alerts:
+        payload.append(
+            {
+                "id": alert.id,
+                "run_id": alert.run_id,
+                "alert_type": alert.alert_type,
+                "severity": alert.severity,
+                "message": alert.message,
+                "created_at": alert.created_at.isoformat() if alert.created_at else None,
+            }
+        )
+    return payload
+
+
 @router.get("/metrics")
 def metrics() -> Dict[str, object]:
+    alerts = _recent_model_alerts()
     if not psutil:
         return {
             "psutil_available": False,
@@ -107,27 +143,46 @@ def metrics() -> Dict[str, object]:
             },
             "database": _database_info(),
             "timestamp": time.time(),
+            "model_alerts": alerts,
         }
 
-    vm = psutil.virtual_memory()
-    cpu_percent = psutil.cpu_percent(interval=None)
-    disk_percent = psutil.disk_usage(get_settings().object_storage_local_root).percent
+    try:
+        vm = psutil.virtual_memory()
+        memory_percent = vm.percent
+    except (psutil.Error, OSError, PermissionError):
+        vm = None
+        memory_percent = None
+    try:
+        cpu_percent = psutil.cpu_percent(interval=None)
+    except (psutil.Error, OSError, PermissionError):
+        cpu_percent = None
+    try:
+        disk_percent = psutil.disk_usage(get_settings().object_storage_local_root).percent
+    except (psutil.Error, OSError, PermissionError, FileNotFoundError):
+        disk_percent = None
     try:
         connections = len(psutil.net_connections(kind="inet"))
-    except (psutil.AccessDenied, psutil.Error):
+    except (psutil.AccessDenied, psutil.Error, OSError, PermissionError):
         connections = None
+    try:
+        process_count = len(psutil.pids())
+    except (psutil.Error, OSError, PermissionError):
+        process_count = None
     network = _sample_network()
-    uptime_seconds = max(time.time() - psutil.boot_time(), 0.0)
+    try:
+        uptime_seconds = max(time.time() - psutil.boot_time(), 0.0)
+    except (psutil.Error, OSError, PermissionError):
+        uptime_seconds = None
 
     return {
         "psutil_available": True,
         "cpu_percent": cpu_percent,
-        "memory_percent": vm.percent,
+        "memory_percent": memory_percent,
         "disk_percent": disk_percent,
         "uptime_seconds": uptime_seconds,
         "active_connections": connections,
         "network": network,
-        "process_count": len(psutil.pids()),
+        "process_count": process_count,
         "system": {
             "version": __version__,
             "platform": platform.platform(),
@@ -136,6 +191,7 @@ def metrics() -> Dict[str, object]:
         },
         "database": _database_info(),
         "timestamp": time.time(),
+        "model_alerts": alerts,
     }
 
 
@@ -201,5 +257,6 @@ def download_logs(
     path = _log_path()
     if not path.exists():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Log file not found")
-    filename = f"system_logs_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.log"
+    now = datetime.now(timezone.utc)
+    filename = f"system_logs_{now.strftime('%Y%m%d_%H%M%S')}.log"
     return FileResponse(path, media_type="text/plain", filename=filename)

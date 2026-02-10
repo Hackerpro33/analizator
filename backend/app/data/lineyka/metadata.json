@@ -1207,6 +1207,1059 @@
               "summary": null
             }
           ]
+        },
+        {
+          "version_id": "v-3bfbe5b5742c47fb94c0505309d2f277",
+          "parent_version_id": "v-74f66f5195dc4310a9b58d9917ba7936",
+          "file_path": "/Users/azathamzin/Documents/GitHub/project/backend/app/data/lineyka/versions/d9eeb19b-291e-4827-a7a6-7da24cef87e5/v-3bfbe5b5742c47fb94c0505309d2f277.csv",
+          "row_count": 664,
+          "column_count": 9,
+          "created_at": "2026-02-10T02:24:04.007069+00:00",
+          "created_by": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+          "schema": [
+            {
+              "name": "agency_full",
+              "type": "string"
+            },
+            {
+              "name": "#_of_agencies",
+              "type": "number"
+            },
+            {
+              "name": "population",
+              "type": "number"
+            },
+            {
+              "name": "crime_type",
+              "type": "string"
+            },
+            {
+              "name": "YTD",
+              "type": "number"
+            },
+            {
+              "name": "PrevYTD",
+              "type": "number"
+            },
+            {
+              "name": "Percent_Change",
+              "type": "string"
+            },
+            {
+              "name": "YTD_Range",
+              "type": "string"
+            },
+            {
+              "name": "Last Updated",
+              "type": "string"
+            }
+          ],
+          "summary": {
+            "row_count": 664,
+            "column_count": 9,
+            "missing": [
+              {
+                "column": "agency_full",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "#_of_agencies",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "population",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "crime_type",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "YTD",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "PrevYTD",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "Percent_Change",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "YTD_Range",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "Last Updated",
+                "missing_ratio": 0.0
+              }
+            ],
+            "date_range": {
+              "start": "1970-01-01",
+              "end": "1970-01-01"
+            }
+          },
+          "operation": {
+            "type": "delete_rows",
+            "params": {
+              "row_ids": [
+                20,
+                21,
+                22,
+                23,
+                24,
+                25,
+                26,
+                27,
+                28,
+                29,
+                30,
+                31,
+                32,
+                33,
+                34,
+                35,
+                36,
+                37,
+                38
+              ],
+              "filters": []
+            },
+            "summary": {
+              "removed": 19
+            }
+          },
+          "pipeline": [
+            {
+              "id": "op-72e4184ef7a440f7b174e9cd027a49c7",
+              "timestamp": "2026-01-21T16:42:31.389345+00:00",
+              "user_id": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+              "type": "delete_rows",
+              "params": {
+                "row_ids": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13,
+                  14,
+                  15,
+                  16,
+                  17,
+                  18,
+                  19
+                ],
+                "filters": []
+              },
+              "summary": {
+                "removed": 19
+              }
+            },
+            {
+              "id": "op-1db8c39d143f44ae9bbf994ac7e415c0",
+              "timestamp": "2026-01-21T17:15:04.700884+00:00",
+              "user_id": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+              "type": "update_cells",
+              "params": {
+                "updates": [
+                  {
+                    "row_id": 21,
+                    "column": "Percent_Change",
+                    "value": "-10.47%"
+                  }
+                ],
+                "columns": [
+                  "Percent_Change"
+                ],
+                "changed": 1
+              },
+              "summary": null
+            },
+            {
+              "id": "op-5dc66a9b53094a3b9bbc0c6ac9b17971",
+              "timestamp": "2026-01-21T17:15:06.803553+00:00",
+              "user_id": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+              "type": "update_cells",
+              "params": {
+                "updates": [
+                  {
+                    "row_id": 22,
+                    "column": "YTD_Range",
+                    "value": "Jan - Aug 2025"
+                  }
+                ],
+                "columns": [
+                  "YTD_Range"
+                ],
+                "changed": 1
+              },
+              "summary": null
+            },
+            {
+              "id": "op-3fa78f02f1c647589092ac10494ed921",
+              "timestamp": "2026-02-10T02:24:03.984769+00:00",
+              "user_id": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+              "type": "delete_rows",
+              "params": {
+                "row_ids": [
+                  20,
+                  21,
+                  22,
+                  23,
+                  24,
+                  25,
+                  26,
+                  27,
+                  28,
+                  29,
+                  30,
+                  31,
+                  32,
+                  33,
+                  34,
+                  35,
+                  36,
+                  37,
+                  38
+                ],
+                "filters": []
+              },
+              "summary": {
+                "removed": 19
+              }
+            }
+          ]
+        },
+        {
+          "version_id": "v-5ee0caa7fd2541cdaf9458245b9dbbc8",
+          "parent_version_id": "v-3bfbe5b5742c47fb94c0505309d2f277",
+          "file_path": "/Users/azathamzin/Documents/GitHub/project/backend/app/data/lineyka/versions/d9eeb19b-291e-4827-a7a6-7da24cef87e5/v-5ee0caa7fd2541cdaf9458245b9dbbc8.csv",
+          "row_count": 645,
+          "column_count": 9,
+          "created_at": "2026-02-10T02:24:08.281495+00:00",
+          "created_by": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+          "schema": [
+            {
+              "name": "agency_full",
+              "type": "string"
+            },
+            {
+              "name": "#_of_agencies",
+              "type": "number"
+            },
+            {
+              "name": "population",
+              "type": "number"
+            },
+            {
+              "name": "crime_type",
+              "type": "string"
+            },
+            {
+              "name": "YTD",
+              "type": "number"
+            },
+            {
+              "name": "PrevYTD",
+              "type": "number"
+            },
+            {
+              "name": "Percent_Change",
+              "type": "string"
+            },
+            {
+              "name": "YTD_Range",
+              "type": "string"
+            },
+            {
+              "name": "Last Updated",
+              "type": "string"
+            }
+          ],
+          "summary": {
+            "row_count": 645,
+            "column_count": 9,
+            "missing": [
+              {
+                "column": "agency_full",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "#_of_agencies",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "population",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "crime_type",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "YTD",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "PrevYTD",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "Percent_Change",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "YTD_Range",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "Last Updated",
+                "missing_ratio": 0.0
+              }
+            ],
+            "date_range": {
+              "start": "1970-01-01",
+              "end": "1970-01-01"
+            }
+          },
+          "operation": {
+            "type": "delete_rows",
+            "params": {
+              "row_ids": [
+                39,
+                40,
+                41,
+                42,
+                43,
+                44,
+                45,
+                46,
+                47,
+                48,
+                49,
+                50,
+                51,
+                52,
+                53,
+                54,
+                55,
+                56,
+                57
+              ],
+              "filters": []
+            },
+            "summary": {
+              "removed": 19
+            }
+          },
+          "pipeline": [
+            {
+              "id": "op-72e4184ef7a440f7b174e9cd027a49c7",
+              "timestamp": "2026-01-21T16:42:31.389345+00:00",
+              "user_id": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+              "type": "delete_rows",
+              "params": {
+                "row_ids": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13,
+                  14,
+                  15,
+                  16,
+                  17,
+                  18,
+                  19
+                ],
+                "filters": []
+              },
+              "summary": {
+                "removed": 19
+              }
+            },
+            {
+              "id": "op-1db8c39d143f44ae9bbf994ac7e415c0",
+              "timestamp": "2026-01-21T17:15:04.700884+00:00",
+              "user_id": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+              "type": "update_cells",
+              "params": {
+                "updates": [
+                  {
+                    "row_id": 21,
+                    "column": "Percent_Change",
+                    "value": "-10.47%"
+                  }
+                ],
+                "columns": [
+                  "Percent_Change"
+                ],
+                "changed": 1
+              },
+              "summary": null
+            },
+            {
+              "id": "op-5dc66a9b53094a3b9bbc0c6ac9b17971",
+              "timestamp": "2026-01-21T17:15:06.803553+00:00",
+              "user_id": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+              "type": "update_cells",
+              "params": {
+                "updates": [
+                  {
+                    "row_id": 22,
+                    "column": "YTD_Range",
+                    "value": "Jan - Aug 2025"
+                  }
+                ],
+                "columns": [
+                  "YTD_Range"
+                ],
+                "changed": 1
+              },
+              "summary": null
+            },
+            {
+              "id": "op-3fa78f02f1c647589092ac10494ed921",
+              "timestamp": "2026-02-10T02:24:03.984769+00:00",
+              "user_id": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+              "type": "delete_rows",
+              "params": {
+                "row_ids": [
+                  20,
+                  21,
+                  22,
+                  23,
+                  24,
+                  25,
+                  26,
+                  27,
+                  28,
+                  29,
+                  30,
+                  31,
+                  32,
+                  33,
+                  34,
+                  35,
+                  36,
+                  37,
+                  38
+                ],
+                "filters": []
+              },
+              "summary": {
+                "removed": 19
+              }
+            },
+            {
+              "id": "op-4e8391b562164a8d838b55155fbca4cc",
+              "timestamp": "2026-02-10T02:24:08.260127+00:00",
+              "user_id": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+              "type": "delete_rows",
+              "params": {
+                "row_ids": [
+                  39,
+                  40,
+                  41,
+                  42,
+                  43,
+                  44,
+                  45,
+                  46,
+                  47,
+                  48,
+                  49,
+                  50,
+                  51,
+                  52,
+                  53,
+                  54,
+                  55,
+                  56,
+                  57
+                ],
+                "filters": []
+              },
+              "summary": {
+                "removed": 19
+              }
+            }
+          ]
+        },
+        {
+          "version_id": "v-24fd59df973e4b919ab04a7307e661c4",
+          "parent_version_id": "v-5ee0caa7fd2541cdaf9458245b9dbbc8",
+          "file_path": "/Users/azathamzin/Documents/GitHub/project/backend/app/data/lineyka/versions/d9eeb19b-291e-4827-a7a6-7da24cef87e5/v-24fd59df973e4b919ab04a7307e661c4.csv",
+          "row_count": 626,
+          "column_count": 9,
+          "created_at": "2026-02-10T02:24:12.911877+00:00",
+          "created_by": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+          "schema": [
+            {
+              "name": "agency_full",
+              "type": "string"
+            },
+            {
+              "name": "#_of_agencies",
+              "type": "number"
+            },
+            {
+              "name": "population",
+              "type": "number"
+            },
+            {
+              "name": "crime_type",
+              "type": "string"
+            },
+            {
+              "name": "YTD",
+              "type": "number"
+            },
+            {
+              "name": "PrevYTD",
+              "type": "number"
+            },
+            {
+              "name": "Percent_Change",
+              "type": "string"
+            },
+            {
+              "name": "YTD_Range",
+              "type": "string"
+            },
+            {
+              "name": "Last Updated",
+              "type": "string"
+            }
+          ],
+          "summary": {
+            "row_count": 626,
+            "column_count": 9,
+            "missing": [
+              {
+                "column": "agency_full",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "#_of_agencies",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "population",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "crime_type",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "YTD",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "PrevYTD",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "Percent_Change",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "YTD_Range",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "Last Updated",
+                "missing_ratio": 0.0
+              }
+            ],
+            "date_range": {
+              "start": "1970-01-01",
+              "end": "1970-01-01"
+            }
+          },
+          "operation": {
+            "type": "delete_rows",
+            "params": {
+              "row_ids": [
+                58,
+                59,
+                60,
+                61,
+                62,
+                63,
+                64,
+                65,
+                66,
+                67,
+                68,
+                69,
+                70,
+                71,
+                72,
+                73,
+                74,
+                75,
+                76
+              ],
+              "filters": []
+            },
+            "summary": {
+              "removed": 19
+            }
+          },
+          "pipeline": [
+            {
+              "id": "op-72e4184ef7a440f7b174e9cd027a49c7",
+              "timestamp": "2026-01-21T16:42:31.389345+00:00",
+              "user_id": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+              "type": "delete_rows",
+              "params": {
+                "row_ids": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13,
+                  14,
+                  15,
+                  16,
+                  17,
+                  18,
+                  19
+                ],
+                "filters": []
+              },
+              "summary": {
+                "removed": 19
+              }
+            },
+            {
+              "id": "op-1db8c39d143f44ae9bbf994ac7e415c0",
+              "timestamp": "2026-01-21T17:15:04.700884+00:00",
+              "user_id": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+              "type": "update_cells",
+              "params": {
+                "updates": [
+                  {
+                    "row_id": 21,
+                    "column": "Percent_Change",
+                    "value": "-10.47%"
+                  }
+                ],
+                "columns": [
+                  "Percent_Change"
+                ],
+                "changed": 1
+              },
+              "summary": null
+            },
+            {
+              "id": "op-5dc66a9b53094a3b9bbc0c6ac9b17971",
+              "timestamp": "2026-01-21T17:15:06.803553+00:00",
+              "user_id": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+              "type": "update_cells",
+              "params": {
+                "updates": [
+                  {
+                    "row_id": 22,
+                    "column": "YTD_Range",
+                    "value": "Jan - Aug 2025"
+                  }
+                ],
+                "columns": [
+                  "YTD_Range"
+                ],
+                "changed": 1
+              },
+              "summary": null
+            },
+            {
+              "id": "op-3fa78f02f1c647589092ac10494ed921",
+              "timestamp": "2026-02-10T02:24:03.984769+00:00",
+              "user_id": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+              "type": "delete_rows",
+              "params": {
+                "row_ids": [
+                  20,
+                  21,
+                  22,
+                  23,
+                  24,
+                  25,
+                  26,
+                  27,
+                  28,
+                  29,
+                  30,
+                  31,
+                  32,
+                  33,
+                  34,
+                  35,
+                  36,
+                  37,
+                  38
+                ],
+                "filters": []
+              },
+              "summary": {
+                "removed": 19
+              }
+            },
+            {
+              "id": "op-4e8391b562164a8d838b55155fbca4cc",
+              "timestamp": "2026-02-10T02:24:08.260127+00:00",
+              "user_id": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+              "type": "delete_rows",
+              "params": {
+                "row_ids": [
+                  39,
+                  40,
+                  41,
+                  42,
+                  43,
+                  44,
+                  45,
+                  46,
+                  47,
+                  48,
+                  49,
+                  50,
+                  51,
+                  52,
+                  53,
+                  54,
+                  55,
+                  56,
+                  57
+                ],
+                "filters": []
+              },
+              "summary": {
+                "removed": 19
+              }
+            },
+            {
+              "id": "op-c462ec8b8dab40c698d3ae3971b5a6b0",
+              "timestamp": "2026-02-10T02:24:12.894370+00:00",
+              "user_id": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+              "type": "delete_rows",
+              "params": {
+                "row_ids": [
+                  58,
+                  59,
+                  60,
+                  61,
+                  62,
+                  63,
+                  64,
+                  65,
+                  66,
+                  67,
+                  68,
+                  69,
+                  70,
+                  71,
+                  72,
+                  73,
+                  74,
+                  75,
+                  76
+                ],
+                "filters": []
+              },
+              "summary": {
+                "removed": 19
+              }
+            }
+          ]
+        },
+        {
+          "version_id": "v-e0d6e25483394843ae7d8633007e1b19",
+          "parent_version_id": "v-24fd59df973e4b919ab04a7307e661c4",
+          "file_path": "/Users/azathamzin/Documents/GitHub/project/backend/app/data/lineyka/versions/d9eeb19b-291e-4827-a7a6-7da24cef87e5/v-e0d6e25483394843ae7d8633007e1b19.csv",
+          "row_count": 626,
+          "column_count": 5,
+          "created_at": "2026-02-10T02:24:37.135267+00:00",
+          "created_by": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+          "schema": [
+            {
+              "name": "agency_full",
+              "type": "string"
+            },
+            {
+              "name": "population",
+              "type": "number"
+            },
+            {
+              "name": "Percent_Change",
+              "type": "string"
+            },
+            {
+              "name": "YTD_Range",
+              "type": "string"
+            },
+            {
+              "name": "Last Updated",
+              "type": "string"
+            }
+          ],
+          "summary": {
+            "row_count": 626,
+            "column_count": 5,
+            "missing": [
+              {
+                "column": "agency_full",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "population",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "Percent_Change",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "YTD_Range",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "Last Updated",
+                "missing_ratio": 0.0
+              }
+            ],
+            "date_range": {
+              "start": "1970-01-01",
+              "end": "1970-01-01"
+            }
+          },
+          "operation": {
+            "type": "delete_columns",
+            "params": {
+              "columns": [
+                "#_of_agencies",
+                "crime_type",
+                "YTD",
+                "PrevYTD"
+              ]
+            }
+          },
+          "pipeline": [
+            {
+              "id": "op-72e4184ef7a440f7b174e9cd027a49c7",
+              "timestamp": "2026-01-21T16:42:31.389345+00:00",
+              "user_id": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+              "type": "delete_rows",
+              "params": {
+                "row_ids": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13,
+                  14,
+                  15,
+                  16,
+                  17,
+                  18,
+                  19
+                ],
+                "filters": []
+              },
+              "summary": {
+                "removed": 19
+              }
+            },
+            {
+              "id": "op-1db8c39d143f44ae9bbf994ac7e415c0",
+              "timestamp": "2026-01-21T17:15:04.700884+00:00",
+              "user_id": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+              "type": "update_cells",
+              "params": {
+                "updates": [
+                  {
+                    "row_id": 21,
+                    "column": "Percent_Change",
+                    "value": "-10.47%"
+                  }
+                ],
+                "columns": [
+                  "Percent_Change"
+                ],
+                "changed": 1
+              },
+              "summary": null
+            },
+            {
+              "id": "op-5dc66a9b53094a3b9bbc0c6ac9b17971",
+              "timestamp": "2026-01-21T17:15:06.803553+00:00",
+              "user_id": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+              "type": "update_cells",
+              "params": {
+                "updates": [
+                  {
+                    "row_id": 22,
+                    "column": "YTD_Range",
+                    "value": "Jan - Aug 2025"
+                  }
+                ],
+                "columns": [
+                  "YTD_Range"
+                ],
+                "changed": 1
+              },
+              "summary": null
+            },
+            {
+              "id": "op-3fa78f02f1c647589092ac10494ed921",
+              "timestamp": "2026-02-10T02:24:03.984769+00:00",
+              "user_id": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+              "type": "delete_rows",
+              "params": {
+                "row_ids": [
+                  20,
+                  21,
+                  22,
+                  23,
+                  24,
+                  25,
+                  26,
+                  27,
+                  28,
+                  29,
+                  30,
+                  31,
+                  32,
+                  33,
+                  34,
+                  35,
+                  36,
+                  37,
+                  38
+                ],
+                "filters": []
+              },
+              "summary": {
+                "removed": 19
+              }
+            },
+            {
+              "id": "op-4e8391b562164a8d838b55155fbca4cc",
+              "timestamp": "2026-02-10T02:24:08.260127+00:00",
+              "user_id": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+              "type": "delete_rows",
+              "params": {
+                "row_ids": [
+                  39,
+                  40,
+                  41,
+                  42,
+                  43,
+                  44,
+                  45,
+                  46,
+                  47,
+                  48,
+                  49,
+                  50,
+                  51,
+                  52,
+                  53,
+                  54,
+                  55,
+                  56,
+                  57
+                ],
+                "filters": []
+              },
+              "summary": {
+                "removed": 19
+              }
+            },
+            {
+              "id": "op-c462ec8b8dab40c698d3ae3971b5a6b0",
+              "timestamp": "2026-02-10T02:24:12.894370+00:00",
+              "user_id": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+              "type": "delete_rows",
+              "params": {
+                "row_ids": [
+                  58,
+                  59,
+                  60,
+                  61,
+                  62,
+                  63,
+                  64,
+                  65,
+                  66,
+                  67,
+                  68,
+                  69,
+                  70,
+                  71,
+                  72,
+                  73,
+                  74,
+                  75,
+                  76
+                ],
+                "filters": []
+              },
+              "summary": {
+                "removed": 19
+              }
+            },
+            {
+              "id": "op-fafdec269f5a470a9bcfedc85c7ab69d",
+              "timestamp": "2026-02-10T02:24:37.120786+00:00",
+              "user_id": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+              "type": "delete_columns",
+              "params": {
+                "columns": [
+                  "#_of_agencies",
+                  "crime_type",
+                  "YTD",
+                  "PrevYTD"
+                ]
+              },
+              "summary": null
+            }
+          ]
         }
       ],
       "audits": {
@@ -1473,6 +2526,81 @@
             "type": "initial",
             "params": {
               "source": "9a86fb1c-1b4e-4cfb-95de-55cd7be51cf0"
+            }
+          },
+          "pipeline": []
+        }
+      ],
+      "audits": {}
+    },
+    "f4acc61b-8280-419f-aa9f-20f69b8cf31b": {
+      "dataset_id": "f4acc61b-8280-419f-aa9f-20f69b8cf31b",
+      "dataset_name": "Murders_Individual Agencies_YTD_Report (копия)",
+      "versions": [
+        {
+          "version_id": "v-0d7ae2002d614c47a6c4f180fef8b4de",
+          "parent_version_id": null,
+          "file_path": "/Users/azathamzin/Documents/GitHub/project/backend/app/data/lineyka/versions/f4acc61b-8280-419f-aa9f-20f69b8cf31b/v-0d7ae2002d614c47a6c4f180fef8b4de.csv",
+          "row_count": 626,
+          "column_count": 5,
+          "created_at": "2026-02-10T02:26:49.040362+00:00",
+          "created_by": "f2876b93-563b-4dc6-9909-99147d74f9d0",
+          "schema": [
+            {
+              "name": "agency_full",
+              "type": "string"
+            },
+            {
+              "name": "population",
+              "type": "number"
+            },
+            {
+              "name": "Percent_Change",
+              "type": "string"
+            },
+            {
+              "name": "YTD_Range",
+              "type": "string"
+            },
+            {
+              "name": "Last Updated",
+              "type": "string"
+            }
+          ],
+          "summary": {
+            "row_count": 626,
+            "column_count": 5,
+            "missing": [
+              {
+                "column": "agency_full",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "population",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "Percent_Change",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "YTD_Range",
+                "missing_ratio": 0.0
+              },
+              {
+                "column": "Last Updated",
+                "missing_ratio": 0.0
+              }
+            ],
+            "date_range": {
+              "start": "1970-01-01",
+              "end": "1970-01-01"
+            }
+          },
+          "operation": {
+            "type": "initial",
+            "params": {
+              "source": "/Users/azathamzin/Documents/GitHub/project/backend/app/data/lineyka_published/lineyka-c8526f7390354a1a8dd61db351e2f78c.csv"
             }
           },
           "pipeline": []

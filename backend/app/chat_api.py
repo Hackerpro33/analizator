@@ -15,6 +15,7 @@ import pandas as pd
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
+from .models.neural import get_local_agent
 from .utils import dictionaries as dictionary_store
 from .utils import files as file_utils
 
@@ -38,6 +39,9 @@ def _ensure_store_dir() -> Path:
 STORE_DIR = _ensure_store_dir()
 CHAT_JSON = STORE_DIR / "chat_sessions.json"
 MAX_HINTS = 8
+MAX_FOLLOWUP_QUESTIONS = 4
+
+local_agent = get_local_agent()
 
 
 def _atomic_write_json(path: Path, data: Any):
@@ -75,8 +79,9 @@ def _save_store(store: Dict[str, Any]):
 
 
 DEFAULT_INSTRUCTIONS = (
-    "Ты аналитический помощник. Помогай формулировать вопросы к данным, предлагай шаги анализа и "
-    "подсказки по визуализации. Уточняй детали, если информации недостаточно."
+    "Ты аналитический помощник по моделям и данным. Помогай формулировать вопросы к данным, предлагая шаги "
+    "статистического анализа, построения моделей и визуализации. Избегай советов по кибербезопасности — "
+    "фокусируйся на регрессиях, временных рядах, панельных моделях и качественных визуализациях."
 )
 DEFAULT_GREETING = (
     "Готов помочь с анализом. Расскажите, какие данные или гипотезы вас интересуют — я подскажу, как лучше "
@@ -408,7 +413,7 @@ def _derive_followup_questions(text: str) -> List[str]:
         if item not in unique_questions:
             unique_questions.append(item)
 
-    return unique_questions[:4]
+    return unique_questions[:MAX_FOLLOWUP_QUESTIONS]
 
 
 def _local_capabilities(message: str) -> List[str]:
@@ -581,11 +586,37 @@ def _analysis_context_block(context: Optional[Dict[str, Any]]) -> str:
     return "\n\nКонтекст анализа:\n" + "\n".join(lines)
 
 
+def _context_block_from_lines(lines: List[str]) -> str:
+    if not lines:
+        return ""
+    return "\n\nКонтекст анализа:\n" + "\n".join(f"• {line}" for line in lines)
+
+
+def _merge_sections(primary: Optional[List[str]], fallback: List[str], limit: int) -> List[str]:
+    merged: List[str] = []
+    seen: set[str] = set()
+    for source in (primary or []) + list(fallback):
+        if not source:
+            continue
+        normalized = source.strip()
+        if not normalized or normalized in seen:
+            continue
+        merged.append(normalized)
+        seen.add(normalized)
+        if len(merged) >= limit:
+            break
+    return merged
+
+
 def _generate_reply(instructions: str, user_message: str, context: Optional[Dict[str, Any]]) -> str:
     instructions = instructions.strip() or DEFAULT_INSTRUCTIONS
-    focus_points = _derive_focus_points(user_message)
-    followups = _derive_followup_questions(user_message)
-    capabilities = _local_capabilities(user_message)
+    agent_sections = local_agent.generate(user_message, context)
+    heuristic_focus = _derive_focus_points(user_message)
+    heuristic_followups = _derive_followup_questions(user_message)
+    heuristic_capabilities = _local_capabilities(user_message)
+    focus_points = _merge_sections(agent_sections.focus_points, heuristic_focus, MAX_FOCUS_POINTS)
+    followups = _merge_sections(agent_sections.followup_questions, heuristic_followups, MAX_FOLLOWUP_QUESTIONS)
+    capabilities = _merge_sections(agent_sections.capabilities, heuristic_capabilities, MAX_FOCUS_POINTS)
 
     focus_text = "\n".join(f"• {point}" for point in focus_points)
     followup_text = "\n".join(f"• {question}" for question in followups)
@@ -606,8 +637,10 @@ def _generate_reply(instructions: str, user_message: str, context: Optional[Dict
             "\n\nПодсказка: добавьте к запросу `file:report.csv` или `анализируй sales.csv`, "
             "чтобы я провёл локальный анализ загруженного файла без внешних сервисов."
         )
-    reasoning_text = "\n\n" + _rich_reasoning(user_message)
-    context_text = _analysis_context_block(context)
+    reasoning_text = "\n\n" + agent_sections.reasoning_block
+    context_text = _context_block_from_lines(agent_sections.context_lines)
+    if not context_text:
+        context_text = _analysis_context_block(context)
 
     return (
         "Локальный ИИ активирован: обработка и генерация ответов выполняются без внешних вызовов.\n"
