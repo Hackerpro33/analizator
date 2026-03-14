@@ -292,4 +292,3 @@ def downgrade() -> None:
     op.drop_table("attack_scenarios")
     op.drop_table("architecture_versions")
     op.drop_table("datasets")
-*** End Patch
