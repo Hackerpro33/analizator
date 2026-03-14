@@ -1,0 +1,9 @@
+{
+  "method": "ensemble",
+  "trained_range": {
+    "from": "2022-01-01",
+    "to": "2024-12-01"
+  },
+  "generated_at": 1772451804.6417458,
+  "horizon": 12
+}

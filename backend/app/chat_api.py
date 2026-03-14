@@ -15,6 +15,7 @@ import pandas as pd
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
+from .models.general import get_general_responder
 from .models.neural import get_local_agent
 from .utils import dictionaries as dictionary_store
 from .utils import files as file_utils
@@ -42,6 +43,7 @@ MAX_HINTS = 8
 MAX_FOLLOWUP_QUESTIONS = 4
 
 local_agent = get_local_agent()
+general_responder = get_general_responder()
 
 
 def _atomic_write_json(path: Path, data: Any):
@@ -79,13 +81,12 @@ def _save_store(store: Dict[str, Any]):
 
 
 DEFAULT_INSTRUCTIONS = (
-    "Ты аналитический помощник по моделям и данным. Помогай формулировать вопросы к данным, предлагая шаги "
-    "статистического анализа, построения моделей и визуализации. Избегай советов по кибербезопасности — "
-    "фокусируйся на регрессиях, временных рядах, панельных моделях и качественных визуализациях."
+    "Ты универсальный ИИ-помощник. Когда вопрос касается данных и моделей — предлагай шаги статистического "
+    "анализа, визуализаций и гипотез. Если пользователь задаёт любой другой вопрос, дай содержательный ответ, "
+    "приводи факты и практические советы."
 )
 DEFAULT_GREETING = (
-    "Готов помочь с анализом. Расскажите, какие данные или гипотезы вас интересуют — я подскажу, как лучше "
-    "подготовить исследование."
+    "Готов помочь: могу анализировать данные или обсудить любой другой вопрос. Опишите задачу — продолжу диалог."
 )
 
 
@@ -152,6 +153,31 @@ def _format_response(state: Dict[str, Any]) -> AssistantState:
 
 
 MAX_FOCUS_POINTS = 6
+ANALYTICS_KEYWORDS = [
+    "данн",
+    "dataset",
+    "таблиц",
+    "csv",
+    "xls",
+    "модель",
+    "регресс",
+    "kpi",
+    "гипотез",
+    "сегмент",
+    "кластер",
+    "visual",
+    "график",
+    "dashboard",
+    "forecast",
+    "прогноз",
+    "map",
+    "карта",
+]
+
+
+def _looks_like_analytics_query(message: str) -> bool:
+    lowered = message.lower()
+    return any(keyword in lowered for keyword in ANALYTICS_KEYWORDS)
 
 
 def _derive_focus_points(text: str) -> List[str]:
@@ -608,8 +634,19 @@ def _merge_sections(primary: Optional[List[str]], fallback: List[str], limit: in
     return merged
 
 
+def _generate_general_reply(instructions: str, user_message: str) -> str:
+    answer = general_responder.answer(user_message)
+    return (
+        "Универсальный ИИ активирован: могу отвечать не только про аналитику.\n"
+        f"Следую вашим инструкциям: {instructions}\n\n"
+        f"{answer.text}"
+    )
+
+
 def _generate_reply(instructions: str, user_message: str, context: Optional[Dict[str, Any]]) -> str:
     instructions = instructions.strip() or DEFAULT_INSTRUCTIONS
+    if not _looks_like_analytics_query(user_message):
+        return _generate_general_reply(instructions, user_message)
     agent_sections = local_agent.generate(user_message, context)
     heuristic_focus = _derive_focus_points(user_message)
     heuristic_followups = _derive_followup_questions(user_message)

@@ -178,3 +178,28 @@ def test_dataset_analysis_summary_is_included(client, tmp_path, monkeypatch):
     assert "Локальный разбор файла" in assistant_message
     assert "sales.csv" in assistant_message
     assert "строк" in assistant_message
+
+
+def test_general_question_switches_mode(client):
+    response = client.post(
+        "/api/v1/chat/message",
+        json={"user_id": "general", "message": "Почему небо голубое?"},
+        headers=HEADERS,
+    )
+    assert response.status_code == 200
+    assistant_message = response.json()["messages"][-1]["content"]
+    assert "Универсальный ИИ активирован" in assistant_message
+    assert "не только про аналитику" in assistant_message
+    assert "почему" in assistant_message.lower()
+
+
+def test_math_question_gets_evaluated(client):
+    response = client.post(
+        "/api/v1/chat/message",
+        json={"user_id": "math", "message": "Сколько будет 2+2?"},
+        headers=HEADERS,
+    )
+    assert response.status_code == 200
+    assistant_message = response.json()["messages"][-1]["content"]
+    assert "Быстрый расчёт" in assistant_message
+    assert "Ответ: 4" in assistant_message

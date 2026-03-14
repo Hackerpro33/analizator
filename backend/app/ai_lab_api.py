@@ -143,6 +143,15 @@ def activate_model(model_id: str):
     return {"status": "activated", "model": record}
 
 
+@router.post("/models/{model_id}/deactivate")
+def deactivate_model(model_id: str):
+    record = registry.deactivate(model_id)
+    if not record:
+        raise HTTPException(status_code=404, detail="Model not found")
+    provider.invalidate_dataset(record.get("dataset_id"))
+    return {"status": "deactivated", "model": record}
+
+
 def _run_background_training(payload: ForecastRequest, logger, mode: str, base_model_id: Optional[str]) -> Dict[str, Any]:
     config = ForecastConfig(
         dataset_id=payload.dataset_id,
