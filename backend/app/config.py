@@ -75,6 +75,16 @@ class Settings(BaseSettings):
         alias="ALLOWED_UPLOAD_EXTENSIONS",
         description="List of file extensions allowed for upload.",
     )
+    lab_mode: str = Field(
+        "PRIVATE_LAB",
+        alias="LAB_MODE",
+        description="Variant C guard: PUBLIC_VIEW (dashboards only) or PRIVATE_LAB (full access).",
+    )
+    lab_ip_allowlist: str = Field(
+        "",
+        alias="LAB_IP_ALLOWLIST",
+        description="Optional comma separated IPs allowed to access lab endpoints, enforced by reverse proxy per README.",
+    )
     clamav_scan_url: Optional[AnyHttpUrl] = Field(
         None,
         alias="CLAMAV_SCAN_URL",
@@ -219,22 +229,6 @@ class Settings(BaseSettings):
         description="Use path-style addressing when talking to the object storage (required for MinIO).",
     )
 
-    @field_validator("allowed_upload_extensions", mode="before")
-    @classmethod
-    def _split_extensions(cls, value: Any) -> Any:
-        if isinstance(value, str):
-            return [item.strip() for item in value.split(",") if item.strip()]
-        return value
-    lab_mode: str = Field(
-        "PRIVATE_LAB",
-        alias="LAB_MODE",
-        description="Variant C guard: PUBLIC_VIEW (dashboards only) or PRIVATE_LAB (full access).",
-    )
-    lab_ip_allowlist: str = Field(
-        "",
-        alias="LAB_IP_ALLOWLIST",
-        description="Optional comma separated IPs allowed to access lab endpoints, enforced by reverse proxy per README.",
-    )
     host_agent_token: Optional[str] = Field(
         None,
         alias="HOST_AGENT_TOKEN",
@@ -308,7 +302,7 @@ class Settings(BaseSettings):
             return [ext.strip() for ext in value.split(",") if ext.strip()]
         return value
 
-    @field_validator("clamav_scan_url", mode="before")
+    @field_validator("clamav_scan_url", "alert_webhook_url", mode="before")
     def _empty_string_to_none(cls, value):
         if isinstance(value, str) and not value.strip():
             return None
