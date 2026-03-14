@@ -13,11 +13,23 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 ENV_FILE = Path(__file__).resolve().parent.parent / ".env"
 
 
-def _safe_json_loads(value: str) -> Any:
-    try:
-        return json.loads(value)
-    except (ValueError, TypeError):
-        return value
+def _make_source_lenient(source: Any) -> Any:
+    if not source or not hasattr(source, "decode_complex_value"):
+        return source
+    original = source.decode_complex_value
+
+    def _safe_decode(*args: Any, **kwargs: Any) -> Any:
+        try:
+            return original(*args, **kwargs)
+        except (json.JSONDecodeError, ValueError, TypeError):
+            if "value" in kwargs:
+                return kwargs["value"]
+            if len(args) >= 3:
+                return args[2]
+            return None
+
+    source.decode_complex_value = _safe_decode
+    return source
 
 
 class Settings(BaseSettings):
@@ -281,7 +293,6 @@ class Settings(BaseSettings):
         env_file_encoding="utf-8",
         case_sensitive=False,
         extra="ignore",
-        json_loads=_safe_json_loads,
     )
 
     @field_validator("api_prefix", mode="before")
@@ -335,6 +346,21 @@ class Settings(BaseSettings):
     @property
     def max_upload_size(self) -> int:
         return int(self.max_upload_size_mb) * 1024 * 1024
+
+    @classmethod
+    def settings_customise_sources(
+        cls,
+        init_settings,
+        env_settings,
+        dotenv_settings,
+        file_secret_settings,
+    ):
+        return (
+            init_settings,
+            _make_source_lenient(env_settings),
+            _make_source_lenient(dotenv_settings),
+            file_secret_settings,
+        )
 
 
 @lru_cache()
