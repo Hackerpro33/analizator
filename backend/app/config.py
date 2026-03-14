@@ -1,6 +1,7 @@
 """Application configuration powered by environment variables."""
 from __future__ import annotations
 
+import json
 from functools import lru_cache
 from pathlib import Path
 from typing import Any, List, Optional
@@ -10,6 +11,13 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 ENV_FILE = Path(__file__).resolve().parent.parent / ".env"
+
+
+def _safe_json_loads(value: str) -> Any:
+    try:
+        return json.loads(value)
+    except (ValueError, TypeError):
+        return value
 
 
 class Settings(BaseSettings):
@@ -273,6 +281,7 @@ class Settings(BaseSettings):
         env_file_encoding="utf-8",
         case_sensitive=False,
         extra="ignore",
+        json_loads=_safe_json_loads,
     )
 
     @field_validator("api_prefix", mode="before")
@@ -305,6 +314,7 @@ class Settings(BaseSettings):
         if isinstance(value, str) and not value.strip():
             return None
         return value
+
     @property
     def additional_origins(self) -> List[str]:
         return [origin.strip() for origin in self.additional_cors_origins.split(",") if origin.strip()]
