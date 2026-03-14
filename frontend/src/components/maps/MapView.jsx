@@ -175,7 +175,7 @@ const getCategoryColor = (category) => {
 
 const buildSquareIcon = (color, size) =>
   L.divIcon({
-    html: `<div style="width:${size}px;height:${size}px;background:${color};border:2px solid rgba(15,23,42,0.15);box-shadow:0 8px 16px rgba(15,23,42,0.25);border-radius:8px;"></div>`,
+    html: `<div style="width:${size}px;height:${size}px;background:${color};border:2px solid rgba(15,23,42,0.25);box-shadow:0 10px 18px rgba(15,23,42,0.35);border-radius:10px;"></div>`,
     className: 'map-square-icon',
     iconSize: [size, size],
     iconAnchor: [size / 2, size / 2],
@@ -198,13 +198,15 @@ function LocalTileLayer() {
       }
 
       const gradient = ctx.createLinearGradient(0, 0, 256, 256);
-      gradient.addColorStop(0, '#f0f6ff');
-      gradient.addColorStop(1, '#e0e9f9');
+      gradient.addColorStop(0, '#01122a');
+      gradient.addColorStop(0.6, '#032349');
+      gradient.addColorStop(1, '#041637');
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, 256, 256);
 
-      ctx.strokeStyle = '#c7d2fe';
-      ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(59, 130, 246, 0.14)';
+      ctx.lineWidth = 0.5;
+
       for (let i = 0; i <= 256; i += 64) {
         ctx.beginPath();
         ctx.moveTo(i, 0);
@@ -216,6 +218,22 @@ function LocalTileLayer() {
         ctx.lineTo(256, i);
         ctx.stroke();
       }
+
+      const glowCenters = [
+        { x: 48, y: 70, r: 95, color: 'rgba(59,130,246,0.22)' },
+        { x: 210, y: 190, r: 90, color: 'rgba(14,165,233,0.18)' },
+        { x: 110, y: 210, r: 110, color: 'rgba(16,185,129,0.15)' },
+      ];
+
+      glowCenters.forEach(({ x, y, r, color }) => {
+        const radial = ctx.createRadialGradient(x, y, 0, x, y, r);
+        radial.addColorStop(0, color);
+        radial.addColorStop(1, 'transparent');
+        ctx.fillStyle = radial;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+      });
 
       return tile;
     };
@@ -230,7 +248,13 @@ function LocalTileLayer() {
   return null;
 }
 
-export default function MapView({ data, config }) {
+export default function MapView({
+  data,
+  config,
+  height = 'clamp(720px, 78vh, 960px)',
+  overlayInfo,
+  analyticsOverlay,
+}) {
   const timeComparisonActive = useMemo(() => {
     return Boolean(
       config?.time_column &&
@@ -526,13 +550,23 @@ export default function MapView({ data, config }) {
     return baseRadius + ((value || 0) / 100);
   };
 
+  const resolvedHeight = typeof height === 'number' ? `${height}px` : height;
+
   return (
-    <div className="relative h-[70vh] w-full">
+    <div
+      className="relative w-full overflow-hidden rounded-[28px] border border-white/70 bg-slate-950/95 shadow-[0_30px_70px_rgba(15,23,42,0.22)]"
+      style={{ height: resolvedHeight, minHeight: resolvedHeight }}
+    >
       <MapContainer
         center={mapCenter}
         zoom={pointsToRender.length > 0 ? 5 : 4}
         scrollWheelZoom={true}
-        style={{ height: '100%', width: '100%', borderRadius: '0.75rem' }}
+        className="map-neon-theme"
+        attributionControl={false}
+        style={{
+          height: '100%',
+          width: '100%',
+        }}
       >
         <LocalTileLayer />
         {timeComparisonActive && comparisonPoints.length > 0
@@ -690,6 +724,109 @@ export default function MapView({ data, config }) {
               );
             })}
       </MapContainer>
+      {(overlayInfo || analyticsOverlay) && (
+        <div className="pointer-events-none absolute inset-0 z-30 flex h-full flex-col justify-between px-8 py-8">
+          {overlayInfo && (
+            <div className="flex w-[min(380px,calc(100%-64px))] flex-col gap-4 text-white">
+              <div className="rounded-3xl border border-white/25 bg-slate-900/65 p-4 shadow-[0_25px_60px_rgba(2,6,23,0.6)] backdrop-blur-xl">
+                <p className="text-[11px] uppercase tracking-[0.4em] text-white/70">Источник</p>
+                <p className="mt-2 text-2xl font-semibold">{overlayInfo.highlights?.[0]?.value || '—'}</p>
+              </div>
+              <div className="rounded-3xl border border-white/25 bg-slate-900/60 p-4 text-sm shadow-[0_25px_60px_rgba(2,6,23,0.55)] backdrop-blur-xl">
+                <div className="grid grid-cols-2 gap-3">
+                  {overlayInfo.highlights?.slice(1).map((item) => (
+                    <div key={item.label} className="rounded-2xl border border-white/20 bg-white/10 p-3">
+                      <p className="text-[11px] uppercase tracking-widest text-white/70">{item.label}</p>
+                      <p className="mt-1 text-base font-semibold text-white">{item.value}</p>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-4 rounded-2xl border border-white/15 bg-white/10 p-3 text-xs">
+                  <p className="mb-2 text-[11px] uppercase tracking-widest text-white/70">Параметры карты</p>
+                  <div className="space-y-1 text-white/90">
+                    {overlayInfo.settings?.map((item) => (
+                      <div key={item.label} className="flex items-center justify-between">
+                        <span>{item.label}</span>
+                        <span className="font-semibold">{item.value}</span>
+                      </div>
+                    ))}
+                  </div>
+                  {overlayInfo.tip && (
+                    <div className="mt-3 rounded-xl border border-white/10 bg-gradient-to-r from-indigo-500/50 via-blue-500/40 to-cyan-500/35 px-3 py-2 text-xs">
+                      <p className="font-semibold uppercase tracking-widest text-white/90">{overlayInfo.tip.title}</p>
+                      <p className="text-white/85">{overlayInfo.tip.text}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {analyticsOverlay && (
+            <div className="flex w-full justify-center">
+              <div className="w-full max-w-5xl rounded-[32px] border border-white/25 bg-slate-950/70 p-6 text-white shadow-[0_40px_90px_rgba(2,6,23,0.65)] backdrop-blur-2xl">
+                <div className="flex flex-col gap-6 lg:flex-row">
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between text-xs uppercase tracking-[0.4em] text-white/70">
+                      <span>Аналитика карты</span>
+                      <span>{analyticsOverlay.datasetLabel}</span>
+                    </div>
+                    <div className="mt-4 grid gap-4 md:grid-cols-3">
+                      {analyticsOverlay.stats?.map((stat) => (
+                        <div key={stat.label} className="rounded-2xl border border-white/20 bg-white/10 p-4">
+                          <p className="text-[11px] uppercase tracking-widest text-white/70">{stat.label}</p>
+                          <p className="mt-2 text-2xl font-semibold text-white">{stat.value}</p>
+                          {stat.subLabel && (
+                            <p className="text-xs text-emerald-300">{stat.subLabel}</p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                    {analyticsOverlay.risk && (
+                      <div className="mt-4 grid gap-4 md:grid-cols-3 text-sm">
+                        <div className="rounded-2xl border border-rose-300/25 bg-white/10 p-4">
+                          <p className="text-[11px] uppercase tracking-widest text-white/70">Риск</p>
+                          <p className="mt-2 text-lg font-semibold text-rose-200">
+                            {analyticsOverlay.risk.highRisk}
+                          </p>
+                          <p className="text-xs text-white/60">Высокий уровень</p>
+                        </div>
+                        <div className="rounded-2xl border border-amber-200/25 bg-white/10 p-4">
+                          <p className="text-[11px] uppercase tracking-widest text-white/70">Индекс давления</p>
+                          <p className="mt-2 text-lg font-semibold text-amber-200">
+                            {analyticsOverlay.risk.pressure}
+                          </p>
+                        </div>
+                        {analyticsOverlay.risk.hotspot && (
+                          <div className="rounded-2xl border border-emerald-200/25 bg-white/10 p-4">
+                            <p className="text-[11px] uppercase tracking-widest text-white/70">Горячая точка</p>
+                            <p className="mt-2 text-lg font-semibold text-emerald-200">
+                              {analyticsOverlay.risk.hotspot.name}
+                            </p>
+                            <p className="text-xs text-white/70">
+                              {formatValue(analyticsOverlay.risk.hotspot.value)}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  {analyticsOverlay.features?.length ? (
+                    <div className="rounded-3xl border border-white/20 bg-white/10 p-5 text-sm text-white/80">
+                      <p className="text-xs uppercase tracking-widest text-white/60">Возможности карты</p>
+                      <ul className="mt-3 space-y-1">
+                        {analyticsOverlay.features.map((feature) => (
+                          <li key={feature}>• {feature}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ) : null}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
       {shouldShowEmptyState && (
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
           <div className="rounded-xl bg-white/80 px-4 py-2 text-sm text-slate-600 shadow-md">

@@ -35,6 +35,7 @@ import {
   runAiForecast,
   listAiModels,
   activateAiModel,
+  deactivateAiModel,
   submitTrainingJob,
   fetchTrainingJob,
   fetchAuditSuggestions,
@@ -45,6 +46,7 @@ import SliceBuilder from "@/components/ai-lab/SliceBuilder";
 import MethodPicker from "@/components/ai-lab/MethodPicker";
 import { Switch } from "@/components/ui/switch";
 import { updateSelection } from "@/components/ai-lab/utils";
+import { clampName, MAX_NAME_LENGTH } from "@/lib/validation";
 
 /**
  * Предположения по архитектуре (обновлено в рамках расширения ИИ-лаборатории):
@@ -646,18 +648,26 @@ useEffect(() => {
     }
   }
 
-  async function handleActivateModel(modelId) {
+  async function handleToggleTimeSeriesModel(modelId, isActive) {
     try {
-      await activateAiModel(modelId);
-      toast({
-        title: "Модель активирована",
-        description: "Новый прогноз будет использовать эту версию.",
-      });
+      if (isActive) {
+        await deactivateAiModel(modelId);
+        toast({
+          title: "Модель деактивирована",
+          description: "Прогнозы не будут использовать эту версию.",
+        });
+      } else {
+        await activateAiModel(modelId);
+        toast({
+          title: "Модель активирована",
+          description: "Новый прогноз будет использовать эту версию.",
+        });
+      }
       await Promise.all([loadTimeSeriesModels(), loadSeries()]);
     } catch (error) {
-      console.error("Не удалось активировать модель", error);
+      console.error("Не удалось обновить состояние модели", error);
       toast({
-        title: "Ошибка активации",
+        title: "Ошибка обновления",
         description: error?.message || "Попробуйте позже.",
         variant: "destructive",
       });
@@ -846,7 +856,11 @@ useEffect(() => {
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
                   <label className="text-xs font-medium uppercase text-muted-foreground">Название модели</label>
-                  <Input value={modelName} onChange={(event) => setModelName(event.target.value)} />
+                  <Input
+                    value={modelName}
+                    maxLength={MAX_NAME_LENGTH}
+                    onChange={(event) => setModelName(clampName(event.target.value))}
+                  />
                   <p className="text-xs text-muted-foreground">
                     Дайте понятное имя, по которому позже найдёте модель в списке (например, «Риски по районам»).
                   </p>
@@ -1185,24 +1199,44 @@ useEffect(() => {
         <div className="space-y-6">
           <Card>
             <CardHeader className="space-y-3">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-wrap items-center gap-3 justify-between">
                 <CardTitle className="flex items-center gap-2 text-base font-semibold">
                   <Rocket className="w-4 h-4 text-pink-600" />
                   Модели временных рядов
                 </CardTitle>
-                <Button variant="ghost" size="sm" onClick={loadTimeSeriesModels}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={loadTimeSeriesModels}
+                  className="whitespace-normal leading-tight"
+                >
                   <RefreshCcw className="w-4 h-4 mr-2" />
                   Обновить
                 </Button>
               </div>
-              <div className="flex flex-wrap gap-2">
-                <Button variant="outline" size="sm" onClick={() => handleTrainingJob("finetune")}>
+              <div className="flex flex-wrap gap-2 w-full">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleTrainingJob("finetune")}
+                  className="flex-1 min-w-[140px] whitespace-normal leading-tight text-center"
+                >
                   Дообучить
                 </Button>
-                <Button variant="outline" size="sm" onClick={() => handleTrainingJob("retrain")}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleTrainingJob("retrain")}
+                  className="flex-1 min-w-[140px] whitespace-normal leading-tight text-center"
+                >
                   Переобучить
                 </Button>
-                <Button variant="outline" size="sm" onClick={() => handleTrainingJob("evaluate")}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleTrainingJob("evaluate")}
+                  className="flex-1 min-w-[140px] whitespace-normal leading-tight text-center"
+                >
                   Оценить
                 </Button>
               </div>
@@ -1217,15 +1251,22 @@ useEffect(() => {
                     key={model.id}
                     className={`rounded-lg border px-3 py-2 ${model.is_active ? "border-violet-400 bg-violet-50" : "border-slate-200 bg-white"}`}
                   >
-                    <div className="flex items-center justify-between text-sm">
-                      <div>
-                        <p className="font-medium">{model.dataset_name || model.dataset_id}</p>
+                    <div className="flex flex-wrap items-center justify-between gap-3 text-sm">
+                      <div className="min-w-0 flex-1">
+                        <p className="font-medium break-words">
+                          {model.dataset_name || model.dataset_id}
+                        </p>
                         <p className="text-xs text-muted-foreground">
                           {model.method || model.methods?.join(", ")} • MAE {model.score ? model.score.toFixed(2) : "—"}
                         </p>
                       </div>
-                      <Button variant="ghost" size="sm" onClick={() => handleActivateModel(model.id)}>
-                        {model.is_active ? "Активна" : "Сделать активной"}
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="shrink-0 whitespace-normal leading-tight text-center"
+                        onClick={() => handleToggleTimeSeriesModel(model.id, model.is_active)}
+                      >
+                        {model.is_active ? "Деактивировать" : "Сделать активной"}
                       </Button>
                     </div>
                   </div>

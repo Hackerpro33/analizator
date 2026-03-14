@@ -173,7 +173,7 @@ export default function Assistant() {
             <div>
               <CardTitle className="text-2xl font-semibold">Аналитический ассистент</CardTitle>
               <CardDescription>
-                Каждый пользователь получает собственного ИИ, настройки которого можно менять прямо в процессе диалога.
+                Каждый пользователь получает собственного ИИ: он умеет анализировать данные и отвечать на любые вопросы, настройки можно менять прямо в процессе диалога.
               </CardDescription>
             </div>
           </div>
@@ -218,7 +218,7 @@ export default function Assistant() {
             <Bot className="w-5 h-5 text-violet-500" />
             Диалог
           </CardTitle>
-          <CardDescription>Обсуждайте шаги анализа, задавайте уточняющие вопросы и сразу же корректируйте указания.</CardDescription>
+          <CardDescription>Обсуждайте анализ, просите советы или задавайте общие вопросы — ассистент переключится автоматически.</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="h-[420px] border rounded-xl bg-white shadow-inner">
@@ -266,7 +266,7 @@ export default function Assistant() {
             <Textarea
               value={message}
               onChange={(event) => setMessage(event.target.value)}
-              placeholder="Опишите задачу, гипотезу или данные для анализа"
+              placeholder="Опишите задачу, гипотезу, общую ситуацию или любой вопрос"
               className="min-h-[120px]"
             />
             <div className="flex justify-end">

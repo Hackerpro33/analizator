@@ -46,3 +46,35 @@ export function runInference(modelId, payload) {
 export function getInsights() {
   return request('/api/ml/insights');
 }
+
+export function startModelRun(payload) {
+  return request('/api/ml/model-runs', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
+export function listModelRuns(limit = 50) {
+  return request(`/api/ml/model-runs?limit=${limit}`);
+}
+
+export function getModelRun(runId) {
+  if (!runId) {
+    throw new Error('runId is required');
+  }
+  return request(`/api/ml/model-runs/${runId}`);
+}
+
+export function getModelRunResults(runId) {
+  if (!runId) {
+    throw new Error('runId is required');
+  }
+  return request(`/api/ml/model-runs/${runId}/results`);
+}
+
+export function getModelRunAlerts(runId) {
+  if (!runId) {
+    throw new Error('runId is required');
+  }
+  return request(`/api/ml/model-runs/${runId}/alerts`);
+}

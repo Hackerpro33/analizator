@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
-import { Edit, Map, Calendar, Globe } from 'lucide-react';
+import { Edit, Map as MapIcon, Calendar, Globe } from 'lucide-react';
 import { Skeleton } from "@/components/ui/skeleton";
 
 const overlayLabels = {
@@ -30,7 +30,7 @@ export default function MapGallery({ visualizations, isLoading, onEdit }) {
           </div>
         ) : visualizations.length === 0 ? (
           <div className="text-center py-12">
-            <Map className="w-16 h-16 mx-auto text-slate-400 mb-4" />
+            <MapIcon className="w-16 h-16 mx-auto text-slate-400 mb-4" />
             <h3 className="text-lg font-semibold text-slate-700 mb-2">Карты еще не созданы</h3>
             <p className="text-slate-500">Создайте свою первую карту для визуализации географических данных</p>
           </div>
@@ -42,7 +42,7 @@ export default function MapGallery({ visualizations, isLoading, onEdit }) {
                 className="group flex h-full flex-col overflow-hidden border-0 bg-white/70 backdrop-blur-sm shadow-lg transition-all hover:-translate-y-1 hover:shadow-2xl"
               >
                 <div className="flex h-28 items-center justify-center bg-gradient-to-br from-purple-100 via-indigo-100 to-blue-100">
-                  <Map className="h-10 w-10 text-purple-500 transition-transform duration-300 group-hover:scale-110" />
+                  <MapIcon className="h-10 w-10 text-purple-500 transition-transform duration-300 group-hover:scale-110" />
                 </div>
                 <CardContent className="flex flex-1 flex-col p-5">
                   <div className="flex-1 space-y-3">

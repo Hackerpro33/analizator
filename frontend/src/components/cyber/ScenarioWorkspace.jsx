@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/components/ui/use-toast";
 import { fetchSimulationRuns, runScenario, saveScenario } from "@/api/cybersecurity";
+import { clampName, MAX_NAME_LENGTH } from "@/lib/validation";
 
 const PHASES = [
   "recon",
@@ -41,6 +42,11 @@ const BLANK_SCENARIO = {
   tags: [],
 };
 
+const sanitizeScenario = (scenario = {}) => ({
+  ...scenario,
+  name: clampName(scenario.name || ""),
+});
+
 export default function ScenarioWorkspace({
   scenarios,
   refreshScenarios,
@@ -50,7 +56,7 @@ export default function ScenarioWorkspace({
 }) {
   const { toast } = useToast();
   const [selectedScenarioId, setSelectedScenarioId] = useState(() => scenarios[0]?.id || "");
-  const [draft, setDraft] = useState(() => ({ ...(scenarios[0] || BLANK_SCENARIO) }));
+  const [draft, setDraft] = useState(() => sanitizeScenario(scenarios[0] || BLANK_SCENARIO));
   const [newStage, setNewStage] = useState({
     phase: "initial_access",
     technique_category: "auth_abuse_label",
@@ -66,12 +72,12 @@ export default function ScenarioWorkspace({
   useEffect(() => {
     const scenario = scenarios.find((item) => item.id === selectedScenarioId);
     if (scenario) {
-      setDraft(scenario);
+      setDraft(sanitizeScenario(scenario));
     } else if (scenarios.length) {
-      setDraft(scenarios[0]);
+      setDraft(sanitizeScenario(scenarios[0]));
       setSelectedScenarioId(scenarios[0].id);
     } else {
-      setDraft(BLANK_SCENARIO);
+      setDraft(sanitizeScenario(BLANK_SCENARIO));
     }
   }, [scenarios, selectedScenarioId]);
 
@@ -168,7 +174,8 @@ export default function ScenarioWorkspace({
           <CardTitle className="text-slate-700">Конструктор сценариев</CardTitle>
           <Input
             value={draft.name}
-            onChange={(event) => setDraft((prev) => ({ ...prev, name: event.target.value }))}
+            maxLength={MAX_NAME_LENGTH}
+            onChange={(event) => setDraft((prev) => ({ ...prev, name: clampName(event.target.value) }))}
             placeholder="Название"
           />
           <Textarea

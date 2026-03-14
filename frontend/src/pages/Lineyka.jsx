@@ -43,6 +43,8 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import MethodPicker from "@/components/ai-lab/MethodPicker";
 import { Dataset } from "@/api/entities";
+import TimeWindowSelector from "@/components/common/TimeWindowSelector";
+import { clampName, MAX_NAME_LENGTH } from "@/lib/validation";
 import {
   listLineykaVersions,
   queryLineykaData,
@@ -141,6 +143,7 @@ export default function Lineyka() {
   const [isTableLoading, setIsTableLoading] = useState(false);
   const [isAppending, setIsAppending] = useState(false);
   const [filters, setFilters] = useState([]);
+  const [timeWindow, setTimeWindow] = useState({ column: "", start: "", end: "" });
   const [searchValue, setSearchValue] = useState("");
   const [sorting, setSorting] = useState([]);
   const [columnOrder, setColumnOrder] = useState([]);
@@ -214,7 +217,34 @@ export default function Lineyka() {
   const paddingTop = startIndex * ROW_HEIGHT;
   const paddingBottom = totalHeight - paddingTop - visibleSlice.length * ROW_HEIGHT;
 
-  const activeFilters = useMemo(() => filters.filter((filter) => filter && filter.column), [filters]);
+  const baseFilters = useMemo(() => filters.filter((filter) => filter && filter.column), [filters]);
+  const timeWindowFilter = useMemo(() => {
+    if (!timeWindow.column || (!timeWindow.start && !timeWindow.end)) {
+      return null;
+    }
+    const filter = {
+      column: timeWindow.column,
+      kind: "date",
+    };
+    if (timeWindow.start && timeWindow.end) {
+      filter.operator = "between";
+      filter.value = timeWindow.start;
+      filter.value_to = timeWindow.end;
+    } else if (timeWindow.start) {
+      filter.operator = "after";
+      filter.value = timeWindow.start;
+    } else if (timeWindow.end) {
+      filter.operator = "before";
+      filter.value = timeWindow.end;
+    }
+    return { ...filter, _isTimeWindow: true };
+  }, [timeWindow]);
+  const activeFilters = useMemo(() => {
+    if (!timeWindowFilter) {
+      return baseFilters;
+    }
+    return [...baseFilters, timeWindowFilter];
+  }, [baseFilters, timeWindowFilter]);
 
   const numericColumns = useMemo(
     () =>
@@ -247,6 +277,10 @@ export default function Lineyka() {
       return;
     }
     loadVersions(selectedDataset);
+  }, [selectedDataset]);
+
+  useEffect(() => {
+    setTimeWindow({ column: "", start: "", end: "" });
   }, [selectedDataset]);
 
   useEffect(() => {
@@ -488,6 +522,7 @@ export default function Lineyka() {
   const handleResetFilters = () => {
     setFilters([]);
     setSearchValue("");
+    setTimeWindow({ column: "", start: "", end: "" });
   };
 
   const handleToggleColumnSelection = (column, checked) => {
@@ -597,7 +632,7 @@ export default function Lineyka() {
 
   const openRenameDialog = () => {
     if (!currentDataset) return;
-    setRenameValue(currentDataset.name || "");
+    setRenameValue(clampName(currentDataset.name || ""));
     setRenameDialogOpen(true);
   };
 
@@ -870,7 +905,7 @@ export default function Lineyka() {
   const isVersionSelected = Boolean(selectedVersion);
 
   return (
-    <PageContainer className="space-y-8">
+    <PageContainer className="space-y-6">
       <div className="space-y-3 text-center">
         <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-900 via-blue-900 to-purple-900 bg-clip-text text-transparent">
           Линейка
@@ -883,7 +918,7 @@ export default function Lineyka() {
 
       <Card className="border-0 bg-white/70 backdrop-blur-xl shadow-lg">
         <CardContent className="p-6 space-y-4">
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-1">
               <Label>Набор данных</Label>
               <div className="flex flex-col gap-2 md:flex-row md:items-center">
@@ -920,20 +955,30 @@ export default function Lineyka() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="flex items-end gap-2">
-              <Button variant="outline" onClick={() => handleExport("csv")} disabled={!isVersionSelected}>
+            <div className="grid w-full gap-2 sm:grid-cols-2 lg:grid-cols-4 md:col-span-2">
+              <Button
+                className="w-full"
+                variant="outline"
+                onClick={() => handleExport("csv")}
+                disabled={!isVersionSelected}
+              >
                 <Download className="w-4 h-4 mr-2" />
                 Экспорт CSV
               </Button>
-              <Button variant="outline" onClick={() => handleExport("xlsx")} disabled={!isVersionSelected}>
+              <Button
+                className="w-full"
+                variant="outline"
+                onClick={() => handleExport("xlsx")}
+                disabled={!isVersionSelected}
+              >
                 <Upload className="w-4 h-4 mr-2" />
                 Excel
               </Button>
-              <Button variant="outline" onClick={handleExportHistory} disabled={!isDatasetSelected}>
+              <Button className="w-full" variant="outline" onClick={handleExportHistory} disabled={!isDatasetSelected}>
                 <History className="w-4 h-4 mr-2" />
                 История
               </Button>
-              <Button onClick={openPublishDialog} disabled={!isVersionSelected}>
+              <Button className="w-full" onClick={openPublishDialog} disabled={!isVersionSelected}>
                 <Save className="w-4 h-4 mr-2" />
                 Сохранить
               </Button>
@@ -963,7 +1008,7 @@ export default function Lineyka() {
         </CardContent>
       </Card>
 
-      <div className="grid gap-6 lg:grid-cols-[3fr_1.15fr]">
+      <div className="space-y-6">
         <Card className="border-0 bg-white/70 backdrop-blur-xl shadow-xl">
           <CardHeader className="space-y-2">
             <CardTitle className="flex items-center gap-2 text-slate-900">
@@ -976,6 +1021,14 @@ export default function Lineyka() {
                 onChange={(event) => setSearchValue(event.target.value)}
                 className="max-w-xs"
               />
+              <div className="w-full max-w-xs">
+                <TimeWindowSelector
+                  columns={tableColumns}
+                  value={timeWindow}
+                  onChange={setTimeWindow}
+                  label="Интервал по колонке"
+                />
+              </div>
               <Button variant="outline" onClick={handleResetFilters} disabled={!filters.length && !searchValue}>
                 Сбросить фильтры
               </Button>
@@ -1054,7 +1107,11 @@ export default function Lineyka() {
               <div className="flex flex-wrap gap-2">
                 {activeFilters.map((filter) => (
                   <Badge
-                    key={`${filter.column}-${filter.operator}-${filter.value}-${filter.value_to}`}
+                    key={
+                      filter._isTimeWindow
+                        ? `time-window-${filter.column}`
+                        : `${filter.column}-${filter.operator}-${filter.value}-${filter.value_to}`
+                    }
                     variant="secondary"
                     className="flex items-center gap-2"
                   >
@@ -1065,7 +1122,11 @@ export default function Lineyka() {
                     <button
                       type="button"
                       className="text-slate-500 hover:text-slate-900"
-                      onClick={() => handleApplyFilter(filter.column, null)}
+                      onClick={() =>
+                        filter._isTimeWindow
+                          ? setTimeWindow({ column: "", start: "", end: "" })
+                          : handleApplyFilter(filter.column, null)
+                      }
                     >
                       ×
                     </button>
@@ -1272,7 +1333,7 @@ export default function Lineyka() {
           </CardContent>
         </Card>
 
-        <div className="space-y-6">
+        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           <Card className="border-0 bg-white/70 backdrop-blur-xl shadow-lg">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-slate-900">
@@ -1771,7 +1832,10 @@ export default function Lineyka() {
                 <Label>Название</Label>
                 <Input
                   value={publishForm.name}
-                  onChange={(event) => setPublishForm((prev) => ({ ...prev, name: event.target.value }))}
+                  maxLength={MAX_NAME_LENGTH}
+                  onChange={(event) =>
+                    setPublishForm((prev) => ({ ...prev, name: clampName(event.target.value) }))
+                  }
                   placeholder={'Например, "Версия для прогноза"'}
                 />
               </div>
@@ -1807,7 +1871,10 @@ export default function Lineyka() {
                 <Label>Новое название (опционально)</Label>
                 <Input
                   value={publishForm.name}
-                  onChange={(event) => setPublishForm((prev) => ({ ...prev, name: event.target.value }))}
+                  maxLength={MAX_NAME_LENGTH}
+                  onChange={(event) =>
+                    setPublishForm((prev) => ({ ...prev, name: clampName(event.target.value) }))
+                  }
                   placeholder="Оставьте пустым, чтобы сохранить текущее"
                 />
               </div>
@@ -1848,7 +1915,12 @@ export default function Lineyka() {
           </DialogHeader>
           <div className="space-y-2">
             <Label>Название</Label>
-            <Input value={renameValue} onChange={(event) => setRenameValue(event.target.value)} placeholder="Новое имя" />
+            <Input
+              value={renameValue}
+              maxLength={MAX_NAME_LENGTH}
+              onChange={(event) => setRenameValue(clampName(event.target.value))}
+              placeholder="Новое имя"
+            />
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setRenameDialogOpen(false)}>

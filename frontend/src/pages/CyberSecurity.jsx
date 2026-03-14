@@ -192,7 +192,7 @@ function CyberSecurityContent() {
 export default function CyberSecurity() {
   return (
     <CyberProvider>
-      <PageContainer className="space-y-8">
+      <PageContainer className="space-y-6">
         <CyberSecurityContent />
       </PageContainer>
     </CyberProvider>

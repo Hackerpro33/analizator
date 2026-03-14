@@ -11,6 +11,7 @@ import { Separator } from "@/components/ui/separator";
 import { BarChart3, Sparkles } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { analyzeCorrelation } from "@/utils/localAnalysis";
+import { Visualization } from "@/api/entities";
 import {
   Tooltip,
   TooltipContent,
@@ -134,7 +135,7 @@ const isLikelyCategorical = (column, rows = []) => {
   return numericRatio < 0.3;
 };
 
-export default function CorrelationMatrix({ datasets, isLoading: _isLoading, onCorrelationCalculated }) {
+export default function CorrelationMatrix({ datasets, isLoading: _isLoading, onCorrelationCalculated, onResultSaved }) {
     const [selectedDatasets, setSelectedDatasets] = useState([]);
     const [selectedFeatures, setSelectedFeatures] = useState([]);
     const [result, setResult] = useState(null);
@@ -426,6 +427,27 @@ export default function CorrelationMatrix({ datasets, isLoading: _isLoading, onC
             setResult(enrichedResponse);
             if (onCorrelationCalculated) {
               onCorrelationCalculated(enrichedResponse);
+            }
+
+            try {
+              await Visualization.create({
+                title: `Матрица корреляций (${new Date().toLocaleDateString('ru-RU')})`,
+                type: 'correlation',
+                dataset_id: selectedDatasets[0] || null,
+                config: {
+                  correlation_result: enrichedResponse,
+                  selected_datasets: selectedDatasets,
+                  selected_features: selectedFeatures,
+                  options: advancedOptions,
+                },
+                summary: enrichedResponse.insights?.slice(0, 3) || enrichedResponse.strongest_correlations,
+                tags: ['correlation'],
+              });
+              if (typeof onResultSaved === 'function') {
+                onResultSaved();
+              }
+            } catch (saveError) {
+              console.error("Не удалось сохранить матрицу корреляций:", saveError);
             }
         } catch (error) {
             console.error("Ошибка расчета корреляции:", error);

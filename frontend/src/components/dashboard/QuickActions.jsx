@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Upload, BarChart3, Map, TrendingUp, Sparkles } from "lucide-react";
+import { Upload, BarChart3, Map as MapIcon, TrendingUp, Sparkles } from "lucide-react";
 
 export default function QuickActions() {
   const actions = [
@@ -31,7 +31,7 @@ export default function QuickActions() {
     {
       title: "Визуализация на карте",
       description: "Исследовать геоданные",
-      icon: Map,
+      icon: MapIcon,
       href: createPageUrl("Maps"),
       gradient: "from-purple-500 to-indigo-600",
       hoverGradient: "hover:from-purple-600 hover:to-indigo-700",

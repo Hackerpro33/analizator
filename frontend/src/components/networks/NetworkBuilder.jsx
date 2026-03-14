@@ -18,6 +18,7 @@ import {
 import { Network, Save, ArrowLeft, Sparkles } from "lucide-react";
 import NetworkVisualization from "./NetworkVisualization";
 import { buildNetworkGraph } from "@/utils/localAnalysis";
+import { clampName, MAX_NAME_LENGTH } from "@/lib/validation";
 
 export default function NetworkBuilder({ datasets, onSave, onCancel }) {
   const [config, setConfig] = useState({
@@ -136,7 +137,8 @@ export default function NetworkBuilder({ datasets, onSave, onCancel }) {
               id="title"
               placeholder="Например: Корреляции продаж"
               value={config.title}
-              onChange={(e) => setConfig(prev => ({ ...prev, title: e.target.value }))}
+              maxLength={MAX_NAME_LENGTH}
+              onChange={(e) => setConfig(prev => ({ ...prev, title: clampName(e.target.value) }))}
               className="elegant-text"
             />
           </div>

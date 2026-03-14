@@ -259,7 +259,7 @@ export default function Dashboard() {
   ];
 
   return (
-    <PageContainer className="space-y-8">
+    <PageContainer className="space-y-6">
       {/* Hero Section */}
       <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900 p-8 text-white">
           <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 via-purple-600/20 to-pink-600/20" />

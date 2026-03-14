@@ -155,4 +155,26 @@ button:focus-visible {
   body {
     @apply bg-background text-foreground;
   }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  .heading-text {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    hyphens: auto;
+  }
+}
+
+@layer utilities {
+  .text-safe-wrap {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    word-break: break-all;
+    hyphens: auto;
+    min-width: 0;
+  }
 }

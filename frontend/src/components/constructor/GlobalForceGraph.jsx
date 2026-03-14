@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
-import { X, Sparkles, BrainCircuit, Share2, BarChart3, Map, TrendingUp, Network, Database } from 'lucide-react';
+import { X, Sparkles, BrainCircuit, Share2, BarChart3, Map as MapIcon, TrendingUp, Network, Database } from 'lucide-react';
 import { summarizeProjectStructure } from "@/utils/localAnalysis";
 
 export default function GlobalForceGraph({ onClose }) {
@@ -60,7 +60,7 @@ export default function GlobalForceGraph({ onClose }) {
             bar: <BarChart3 className="w-4 h-4" />,
             scatter: <BarChart3 className="w-4 h-4" />,
             area: <BarChart3 className="w-4 h-4" />,
-            map: <Map className="w-4 h-4" />,
+            map: <MapIcon className="w-4 h-4" />,
             forecast: <TrendingUp className="w-4 h-4" />,
             network: <Network className="w-4 h-4" />,
             correlation: <Share2 className="w-4 h-4" />,

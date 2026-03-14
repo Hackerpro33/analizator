@@ -87,7 +87,7 @@ export default function Settings() {
   }, [activeTab, visibleTabs]);
 
   return (
-    <PageContainer className="space-y-8">
+    <PageContainer className="space-y-6">
       {/* Header */}
       <div className="text-center space-y-4">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-900 via-blue-900 to-purple-900 bg-clip-text text-transparent heading-text">

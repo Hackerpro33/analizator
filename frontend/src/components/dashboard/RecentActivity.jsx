@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
-import { Clock, Database, BarChart3, Map, TrendingUp } from "lucide-react";
+import { Clock, Database, BarChart3, Map as MapIcon, TrendingUp } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function RecentActivity({ datasets, visualizations, isLoading }) {
@@ -14,7 +14,7 @@ export default function RecentActivity({ datasets, visualizations, isLoading }) 
       bar: BarChart3,
       scatter: BarChart3,
       area: BarChart3,
-      map: Map,
+      map: MapIcon,
       forecast: TrendingUp
     };
     return icons[type] || BarChart3;

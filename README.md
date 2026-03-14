@@ -388,6 +388,8 @@ server {
    # при использовании Postgres применяем миграции
    alembic upgrade head
 
+   Alembic настроен в каталоге `backend/` и использует переменную `DATABASE_URL` из `.env`, поэтому команды миграций выполняйте из этого каталога.
+
    # убедитесь, что uvicorn именно из .venv
    which uvicorn               # ~/.venv/bin/uvicorn
    python -m pip show uvicorn  # убеждаемся, что пакет установлен в .venv

@@ -27,12 +27,12 @@ export default function DatasetCard({ dataset, onPreview }) {
     <Card className="group border-0 bg-white/70 backdrop-blur-xl shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105">
       <CardHeader className="pb-4">
         <div className="flex items-start justify-between">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 min-w-0">
             <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-600 rounded-xl flex items-center justify-center shadow-lg">
               <Database className="w-6 h-6 text-white" />
             </div>
-            <div>
-              <CardTitle className="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors break-words">
+            <div className="min-w-0">
+              <CardTitle className="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors text-safe-wrap">
                 {dataset.name}
               </CardTitle>
               <div className="flex items-center gap-2 text-sm text-slate-500">

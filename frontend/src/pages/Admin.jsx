@@ -75,7 +75,7 @@ export default function Admin() {
   const activeUsers = users.filter((item) => item.is_active).length;
 
   return (
-    <PageContainer className="space-y-8">
+    <PageContainer className="space-y-6">
       <div className="text-center space-y-3">
         <h1 className="text-4xl font-bold heading-text text-slate-900">Администрирование и роли</h1>
         <p className="text-slate-600 max-w-2xl mx-auto">

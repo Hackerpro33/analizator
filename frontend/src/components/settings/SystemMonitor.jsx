@@ -128,6 +128,7 @@ export default function SystemMonitor() {
   }, [metrics, psutilAvailable]);
 
   const databaseInfo = metrics?.database;
+  const modelAlerts = metrics?.model_alerts || [];
   const networkLabel =
     metrics?.network && metrics.network.download_mbps !== undefined
       ? `${metrics.network.download_mbps.toFixed(1)} ↓ / ${metrics.network.upload_mbps.toFixed(1)} ↑ Mbps`
@@ -349,6 +350,35 @@ export default function SystemMonitor() {
           </CardContent>
         </Card>
       </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <AlertTriangle className="w-5 h-5 text-amber-500" />
+            Аналитические алерты
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {modelAlerts.length === 0 ? (
+            <p className="text-sm text-slate-600">Последние расчёты моделей не создавали алертов.</p>
+          ) : (
+            <ul className="space-y-2 text-sm">
+              {modelAlerts.map((alert) => (
+                <li key={alert.id} className="rounded border border-amber-200 bg-amber-50/70 p-3">
+                  <div className="flex items-center justify-between text-xs uppercase text-amber-600">
+                    <span>{alert.alert_type}</span>
+                    <span>{alert.severity}</span>
+                  </div>
+                  <div className="text-slate-800">{alert.message}</div>
+                  <div className="text-xs text-slate-500 mt-1">
+                    {alert.created_at ? new Date(alert.created_at).toLocaleString("ru-RU") : "—"} · run {alert.run_id || "—"}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>

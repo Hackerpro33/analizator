@@ -16,6 +16,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { FileCheck2, X, AlertTriangle } from 'lucide-react';
+import { clampName, MAX_NAME_LENGTH } from "@/lib/validation";
 
 
 function buildInitialTags(datasetInfo) {
@@ -27,7 +28,7 @@ function buildInitialTags(datasetInfo) {
 
 export default function DataImportPreview({ datasetInfo, onConfirmImport, onCancel }) {
   const safeInfo = datasetInfo || {};
-  const [name, setName] = useState(safeInfo.name || 'Новый набор данных');
+  const [name, setName] = useState(clampName(safeInfo.name || 'Новый набор данных'));
   const [description, setDescription] = useState(safeInfo.description || '');
   const [selectedColumns, setSelectedColumns] = useState(safeInfo.columns || []);
   const [tags, setTags] = useState(buildInitialTags(safeInfo));
@@ -115,7 +116,8 @@ export default function DataImportPreview({ datasetInfo, onConfirmImport, onCanc
               <Input
                 id="dataset-name"
                 value={name}
-                onChange={(event) => setName(event.target.value)}
+                maxLength={MAX_NAME_LENGTH}
+                onChange={(event) => setName(clampName(event.target.value))}
                 placeholder="Например: Продажи 2024"
               />
             </div>

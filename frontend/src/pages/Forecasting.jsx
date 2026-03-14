@@ -1,10 +1,11 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Dataset, Visualization } from "@/api/entities";
 import { SendEmail } from "@/api/integrations";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { TrendingUp, BarChart3, Map } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { TrendingUp, BarChart3, Map as MapIcon } from "lucide-react";
 import ForecastSetup from "../components/forecasting/ForecastSetup";
 import ForecastResult from "../components/forecasting/ForecastResult";
 import CorrelationMatrix from "../components/forecasting/CorrelationMatrix";
@@ -23,6 +24,8 @@ export default function Forecasting() {
   const [historicalData, setHistoricalData] = useState([]);
   const [correlationResult, setCorrelationResult] = useState(null);
   const [activeTab, setActiveTab] = useState('forecast');
+  const [savedForecasts, setSavedForecasts] = useState([]);
+  const [savedCorrelations, setSavedCorrelations] = useState([]);
   const defaultMapConfig = {
     title: 'Анализ на карте',
     dataset_id: '',
@@ -42,8 +45,14 @@ export default function Forecasting() {
     refresh: refreshAi,
   } = useAIInsights({ autoRefresh: true });
 
+  const datasetMap = useMemo(() => {
+    const safeDatasets = Array.isArray(datasets) ? datasets : [];
+    return new Map(safeDatasets.map((dataset) => [dataset.id, dataset]));
+  }, [datasets]);
+
   useEffect(() => {
     loadDatasets();
+    loadArtifacts();
   }, []);
 
   useEffect(() => {
@@ -65,6 +74,21 @@ export default function Forecasting() {
       console.error('Ошибка загрузки наборов данных:', error);
     }
     setIsLoading(false);
+  };
+
+  const loadArtifacts = async () => {
+    try {
+      const [forecastItems, correlationItems] = await Promise.all([
+        Visualization.filter({ type: 'forecast' }, '-created_date'),
+        Visualization.filter({ type: 'correlation' }, '-created_date'),
+      ]);
+      setSavedForecasts(Array.isArray(forecastItems) ? forecastItems : []);
+      setSavedCorrelations(Array.isArray(correlationItems) ? correlationItems : []);
+    } catch (error) {
+      console.error('Ошибка загрузки сохранённых прогнозов и корреляций:', error);
+      setSavedForecasts([]);
+      setSavedCorrelations([]);
+    }
   };
   
   const handleSendSummary = async () => {
@@ -103,6 +127,100 @@ export default function Forecasting() {
       alert("Не удалось отправить отчет.");
     }
   }
+
+  const extractSummarySnippet = (summary) => {
+    if (!summary) return '';
+    if (Array.isArray(summary)) {
+      return summary[0];
+    }
+    if (typeof summary === 'string') {
+      return summary;
+    }
+    if (Array.isArray(summary?.key_insights) && summary.key_insights.length) {
+      return summary.key_insights[0];
+    }
+    if (Array.isArray(summary?.insights) && summary.insights.length) {
+      return summary.insights[0];
+    }
+    return '';
+  };
+
+  const renderSavedForecastsSection = () => (
+    <Card className="border-0 bg-white/50 backdrop-blur-xl shadow-lg">
+      <CardHeader>
+        <CardTitle className="text-slate-900">Сохранённые прогнозы</CardTitle>
+      </CardHeader>
+      <CardContent>
+        {Array.isArray(savedForecasts) && savedForecasts.length ? (
+          <div className="grid gap-4 md:grid-cols-2">
+            {savedForecasts.map((item, index) => {
+              const datasetName = datasetMap.get(item.dataset_id)?.name || 'Без источника';
+              return (
+                <div key={`${item.id || index}-forecast`} className="rounded-2xl border border-slate-200 bg-white/80 p-4 space-y-2 shadow-sm">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="font-semibold text-slate-900">{item.title}</p>
+                      <p className="text-xs text-slate-500">{datasetName}</p>
+                    </div>
+                    <Badge variant="secondary" className="bg-indigo-50 text-indigo-700 border-indigo-100">
+                      Прогноз
+                    </Badge>
+                  </div>
+                  <p className="text-sm text-slate-600">
+                    {extractSummarySnippet(item.summary) || 'Нет описания'}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <p className="text-sm text-slate-500">
+            Сохранённых прогнозов пока нет. Сформируйте прогноз выше, чтобы он появился в этом списке.
+          </p>
+        )}
+      </CardContent>
+    </Card>
+  );
+
+  const renderSavedCorrelationsSection = () => (
+    <Card className="border-0 bg-white/50 backdrop-blur-xl shadow-lg">
+      <CardHeader>
+        <CardTitle className="text-slate-900">Сохранённые матрицы корреляций</CardTitle>
+      </CardHeader>
+      <CardContent>
+        {Array.isArray(savedCorrelations) && savedCorrelations.length ? (
+          <div className="grid gap-4 md:grid-cols-2">
+            {savedCorrelations.map((item, index) => {
+              const datasetName = datasetMap.get(item.dataset_id)?.name || 'Несколько источников';
+              const strongest = item.config?.correlation_result?.strongest_correlations?.[0];
+              return (
+                <div key={`${item.id || index}-corr`} className="rounded-2xl border border-slate-200 bg-white/80 p-4 space-y-2 shadow-sm">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="font-semibold text-slate-900">{item.title}</p>
+                      <p className="text-xs text-slate-500">{datasetName}</p>
+                    </div>
+                    <Badge variant="secondary" className="bg-blue-50 text-blue-700 border-blue-100">
+                      Корреляции
+                    </Badge>
+                  </div>
+                  <p className="text-sm text-slate-600">
+                    {strongest
+                      ? `${strongest.feature1} ↔ ${strongest.feature2}: ${strongest.correlation.toFixed(2)}`
+                      : extractSummarySnippet(item.summary) || 'Нет описания'}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <p className="text-sm text-slate-500">
+            Матрицы корреляций ещё не сохранены. Выполните расчёт, чтобы закрепить результат.
+          </p>
+        )}
+      </CardContent>
+    </Card>
+  );
 
   const handleGenerateForecast = async (config) => {
     setIsForecasting(true);
@@ -169,10 +287,15 @@ export default function Forecasting() {
         config: {
           ...config,
           date_column: timeColumn,
+          historical_series: mockHistorical,
+          forecast_result: result,
         },
+        summary: result.summary,
         x_axis: timeColumn,
-        y_axis: config.value_column
+        y_axis: config.value_column,
+        tags: ['forecast'],
       });
+      await loadArtifacts();
       
       setForecastResult(result);
 
@@ -195,7 +318,7 @@ export default function Forecasting() {
   };
 
   return (
-    <PageContainer className="space-y-8">
+    <PageContainer className="space-y-6">
       <div className="text-center space-y-4">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-900 via-blue-900 to-purple-900 bg-clip-text text-transparent">
             Прогнозирование и анализ
@@ -223,7 +346,7 @@ export default function Forecasting() {
                 variant={activeTab === 'map' ? 'default' : 'ghost'} 
                 className="gap-2"
               >
-                <Map className="w-4 h-4" />
+                <MapIcon className="w-4 h-4" />
                 Анализ на карте
               </Button>
             </div>
@@ -231,29 +354,36 @@ export default function Forecasting() {
         </Card>
 
         {activeTab === 'forecast' && (
-          forecastResult ? (
-            <ForecastResult 
-              result={forecastResult} 
-              historicalData={historicalData}
-              onReset={() => setForecastResult(null)} 
-              onSendSummary={handleSendSummary}
-            />
-          ) : (
-            <ForecastSetup 
-              datasets={datasets}
-              onGenerate={handleGenerateForecast}
-              isLoading={isLoading}
-              isForecasting={isForecasting}
-            />
-          )
+          <>
+            {forecastResult ? (
+              <ForecastResult 
+                result={forecastResult} 
+                historicalData={historicalData}
+                onReset={() => setForecastResult(null)} 
+                onSendSummary={handleSendSummary}
+              />
+            ) : (
+              <ForecastSetup 
+                datasets={datasets}
+                onGenerate={handleGenerateForecast}
+                isLoading={isLoading}
+                isForecasting={isForecasting}
+              />
+            )}
+            {renderSavedForecastsSection()}
+          </>
         )}
         
         {activeTab === 'correlation' && (
-          <CorrelationMatrix 
-            datasets={datasets} 
-            isLoading={isLoading}
-            onCorrelationCalculated={handleCorrelationCalculated}
-          />
+          <>
+            <CorrelationMatrix 
+              datasets={datasets} 
+              isLoading={isLoading}
+              onCorrelationCalculated={handleCorrelationCalculated}
+              onResultSaved={loadArtifacts}
+            />
+            {renderSavedCorrelationsSection()}
+          </>
         )}
 
       {activeTab === 'map' && (

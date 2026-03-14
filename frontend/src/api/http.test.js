@@ -24,4 +24,16 @@ describe('buildApiUrl', () => {
       'https://backend.local/api/v1/chat/state/user'
     );
   });
+
+  it('removes redundant /api suffixes on the base before appending the versioned path', () => {
+    expect(buildApiUrl('/api/chat/state', 'https://backend.local/api')).toBe(
+      'https://backend.local/api/v1/chat/state'
+    );
+  });
+
+  it('handles custom API versions on the base when they already include /api/v1', () => {
+    expect(buildApiUrl('/api/chat/state', 'https://backend.local/api/v1/')).toBe(
+      'https://backend.local/api/v1/chat/state'
+    );
+  });
 });

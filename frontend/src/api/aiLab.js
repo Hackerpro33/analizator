@@ -33,6 +33,12 @@ export function activateAiModel(modelId) {
   });
 }
 
+export function deactivateAiModel(modelId) {
+  return jsonRequest(`/api/ai-lab/models/${modelId}/deactivate`, {
+    method: 'POST',
+  });
+}
+
 export function submitTrainingJob(payload) {
   return jsonRequest('/api/ai-lab/models/train', {
     method: 'POST',

@@ -17,7 +17,6 @@ import {
   RefreshCw, // Added RefreshCw icon for Data Transformation
   MessageSquare,
   ShieldCheck,
-  Users,
   Brain,
   Shield,
   UserCog,
@@ -133,13 +132,6 @@ const navigationItems = [
     requireAuth: true
   },
   {
-    title: "Совместная работа",
-    url: createPageUrl("Collaboration"),
-    icon: Users,
-    gradient: "from-sky-500 to-blue-600",
-    requireAuth: true
-  },
-  {
     title: "Настройки",
     url: createPageUrl("Settings"),
     icon: SettingsIcon,
@@ -217,8 +209,8 @@ export default function Layout({ children }) {
         }
       `}</style>
       
-      <div className="min-h-screen flex w-full bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-        <Sidebar className="border-none bg-slate-900/95 backdrop-blur-xl">
+      <div className="min-h-screen flex w-full bg-slate-100 text-slate-900">
+        <Sidebar className="border-none bg-slate-900/95 backdrop-blur-xl shadow-2xl shadow-slate-900/20">
           <SidebarHeader className="border-b border-slate-700/50 p-6">
             <div className="flex items-center gap-3">
               <div className="relative">
@@ -297,7 +289,7 @@ export default function Layout({ children }) {
           </SidebarContent>
         </Sidebar>
 
-        <main className="flex-1 flex flex-col">
+        <main className="flex-1 flex flex-col bg-slate-100/80">
           <header className="bg-white/70 backdrop-blur-xl border-b border-white/20 px-6 py-4 md:hidden">
             <div className="flex items-center gap-4 justify-between">
               <SidebarTrigger className="hover:bg-slate-100 p-2 rounded-lg transition-colors duration-200" />

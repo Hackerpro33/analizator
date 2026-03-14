@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { LineChart, Line, BarChart, Bar, ScatterChart, Scatter, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import Chart3D from './Chart3D';
+import { clampName, MAX_NAME_LENGTH } from "@/lib/validation";
 
 export default function ChartBuilder({ chartType, datasets, onClose, onSave, existingViz }) {
   const [config, setConfig] = useState({
@@ -408,7 +409,13 @@ export default function ChartBuilder({ chartType, datasets, onClose, onSave, exi
         <CardContent className="space-y-6 p-6">
           <div className="space-y-2">
             <Label htmlFor="title">Название графика</Label>
-            <Input id="title" placeholder="Введите название графика" value={config.title} onChange={(e) => setConfig(prev => ({ ...prev, title: e.target.value }))} />
+            <Input
+              id="title"
+              placeholder="Введите название графика"
+              value={config.title}
+              maxLength={MAX_NAME_LENGTH}
+              onChange={(e) => setConfig((prev) => ({ ...prev, title: clampName(e.target.value) }))}
+            />
           </div>
 
           {/* Cross-dataset checkbox */}

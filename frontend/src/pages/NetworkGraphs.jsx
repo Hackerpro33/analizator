@@ -7,6 +7,7 @@ import PageContainer from "@/components/layout/PageContainer";
 
 import NetworkBuilder from "../components/networks/NetworkBuilder";
 import NetworkGallery from "../components/networks/NetworkGallery";
+import UnifiedNetworkWorkspace from "../components/networks/UnifiedNetworkWorkspace";
 
 export default function NetworkGraphs() {
   const [datasets, setDatasets] = useState([]);
@@ -49,7 +50,7 @@ export default function NetworkGraphs() {
   };
 
   return (
-    <PageContainer className="space-y-8">
+    <PageContainer className="space-y-6">
       {/* Header */}
       <div className="text-center space-y-4">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-900 via-blue-900 to-purple-900 bg-clip-text text-transparent heading-text">
@@ -94,6 +95,8 @@ export default function NetworkGraphs() {
             </CardContent>
           </Card>
         </div>
+
+        <UnifiedNetworkWorkspace datasets={datasets} />
 
         {showBuilder ? (
           <NetworkBuilder

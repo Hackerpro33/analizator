@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Compass, Save, X, RefreshCw } from "lucide-react";
 import { parseNumberLike } from "@/utils/numberUtils";
+import { clampName, MAX_NAME_LENGTH } from "@/lib/validation";
 
 const LAT_KEYWORDS = ['lat', 'latitude', 'широт', 'широта', 'y_coord', 'y coordinate'];
 const LON_KEYWORDS = ['lon', 'lng', 'longitude', 'долгот', 'долгота', 'x_coord', 'x coordinate'];
@@ -447,7 +448,10 @@ export default function MapConfigurator({
   };
 
   const handleInputChange = (field, value) => {
-    const normalizedValue = value === '__none__' ? '' : value;
+    let normalizedValue = value === '__none__' ? '' : value;
+    if (field === 'title') {
+      normalizedValue = clampName(normalizedValue);
+    }
     const updatedConfig = {
       ...config,
       [field]: normalizedValue,
@@ -478,6 +482,7 @@ export default function MapConfigurator({
             id="map-title"
             placeholder="например, Расположение магазинов"
             value={config.title}
+            maxLength={MAX_NAME_LENGTH}
             onChange={(e) => handleInputChange('title', e.target.value)}
             className="elegant-text"
           />

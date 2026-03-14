@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Database, BarChart3, Map, TrendingUp, Activity } from "lucide-react";
+import { Database, BarChart3, Map as MapIcon, TrendingUp, Activity } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const CHANGE_STYLE = {
@@ -36,7 +36,7 @@ export default function StatsGrid({ datasets, visualizations, isLoading, changes
       key: "map",
       title: "Просмотры карт",
       value: visualizations.filter((v) => v.type === "map").length,
-      icon: Map,
+      icon: MapIcon,
       gradient: "from-purple-500 to-indigo-600",
       description: "Географические данные",
     },

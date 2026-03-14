@@ -38,6 +38,7 @@ import {
   ShieldCheck,
   Trash2
 } from "lucide-react";
+import { clampName, MAX_NAME_LENGTH } from "@/lib/validation";
 
 const FREQUENCY_OPTIONS = [
   { value: "weekly", label: "Еженедельно", description: "Регулярная проверка каждую неделю." },
@@ -542,7 +543,10 @@ export default function BiasAuditCenter() {
               <Input
                 placeholder="Регулярный аудит"
                 value={form.scheduleName}
-                onChange={(event) => setForm((prev) => ({ ...prev, scheduleName: event.target.value }))}
+                maxLength={MAX_NAME_LENGTH}
+                onChange={(event) =>
+                  setForm((prev) => ({ ...prev, scheduleName: clampName(event.target.value) }))
+                }
               />
             </div>
             <div className="space-y-3">

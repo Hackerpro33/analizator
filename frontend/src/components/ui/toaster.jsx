@@ -9,25 +9,29 @@ import {
 } from "@/components/ui/toast";
 
 export function Toaster() {
-  const { toasts } = useToast();
+  const { currentToast, dismiss } = useToast({ subscribe: true });
 
   return (
     <ToastProvider>
-      {toasts.map(function ({ id, title, description, action, ...props }) {
-        return (
-          <Toast key={id} {...props}>
-            <div className="grid gap-1">
-              {title && <ToastTitle>{title}</ToastTitle>}
-              {description && (
-                <ToastDescription>{description}</ToastDescription>
-              )}
-            </div>
-            {action}
-            <ToastClose />
-          </Toast>
-        );
-      })}
+      {currentToast && (
+        <Toast key={currentToast.id} {...currentToast}>
+          <div className="grid gap-1">
+            {currentToast.title && <ToastTitle>{currentToast.title}</ToastTitle>}
+            {currentToast.description && (
+              <ToastDescription>{currentToast.description}</ToastDescription>
+            )}
+          </div>
+          {currentToast.action}
+          <ToastClose
+            onClick={(event) => {
+              event.stopPropagation();
+              event.preventDefault();
+              dismiss(currentToast.id);
+            }}
+          />
+        </Toast>
+      )}
       <ToastViewport />
     </ToastProvider>
   );
-} 
+}
