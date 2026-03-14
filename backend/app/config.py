@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from functools import lru_cache
 from pathlib import Path
-from typing import List, Optional
+from typing import Any, List, Optional
 
 from pydantic import AliasChoices, AnyHttpUrl, AnyUrl, EmailStr, Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -198,6 +198,13 @@ class Settings(BaseSettings):
         alias="OBJECT_STORAGE_PATH_STYLE",
         description="Use path-style addressing when talking to the object storage (required for MinIO).",
     )
+
+    @field_validator("allowed_upload_extensions", mode="before")
+    @classmethod
+    def _split_extensions(cls, value: Any) -> Any:
+        if isinstance(value, str):
+            return [item.strip() for item in value.split(",") if item.strip()]
+        return value
     lab_mode: str = Field(
         "PRIVATE_LAB",
         alias="LAB_MODE",
