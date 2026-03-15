@@ -364,6 +364,25 @@ class Settings(BaseSettings):
     def max_upload_size(self) -> int:
         return int(self.max_upload_size_mb) * 1024 * 1024
 
+    @property
+    def api_prefix_variants(self) -> List[str]:
+        """Return API prefixes including compatibility aliases."""
+        prefixes: List[str] = []
+        normalized = self.api_prefix.strip() or "/api"
+        if not normalized.startswith("/"):
+            normalized = f"/{normalized}"
+        normalized = normalized.rstrip("/") or "/"
+        prefixes.append(normalized)
+        if normalized.startswith("/api"):
+            stripped = normalized[len("/api") :]
+            alias = stripped or "/"
+            if not alias.startswith("/"):
+                alias = f"/{alias}"
+            alias = alias.rstrip("/") or "/"
+            if alias not in prefixes:
+                prefixes.append(alias)
+        return prefixes
+
     @classmethod
     def settings_customise_sources(
         cls,

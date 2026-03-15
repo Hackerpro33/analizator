@@ -243,7 +243,7 @@ def legacy_health() -> Dict[str, str]:
     return {"status": "ok"}
 
 
-api_v1_router = APIRouter(prefix=settings.api_prefix, tags=["core"])
+api_v1_router = APIRouter(tags=["core"])
 
 
 @api_v1_router.post(
@@ -431,9 +431,6 @@ async def api_send_email(payload: EmailRequest) -> EmailResponse:
     return EmailResponse(status="queued", logged=True)
 
 
-app.include_router(api_v1_router)
-
-
 if __package__ in {None, ""}:
     current_dir = os.path.dirname(os.path.abspath(__file__))
     if current_dir not in sys.path:
@@ -492,23 +489,48 @@ cyber_host_router = cyber_host_router_module.router
 users_router = users_router_module.router
 system_router = system_router_module.router
 
-app.include_router(datasets_router, prefix=f"{settings.api_prefix}/dataset")
-app.include_router(dictionary_router, prefix=f"{settings.api_prefix}/dictionary")
-app.include_router(visualizations_router, prefix=f"{settings.api_prefix}/visualization")
-app.include_router(chat_router, prefix=f"{settings.api_prefix}/chat")
-app.include_router(audit_router, prefix=f"{settings.api_prefix}/audit")
-app.include_router(collaboration_router, prefix=settings.api_prefix)
-app.include_router(ml_router, prefix=settings.api_prefix)
-app.include_router(ai_lab_router, prefix=settings.api_prefix)
-app.include_router(lineyka_router, prefix=settings.api_prefix)
-app.include_router(cybersecurity_router, prefix=settings.api_prefix)
-app.include_router(cyber_events_router, prefix=settings.api_prefix)
-app.include_router(cyber_architecture_router, prefix=settings.api_prefix)
-app.include_router(cyber_host_router, prefix=settings.api_prefix)
-app.include_router(admin_router, prefix=settings.api_prefix)
-app.include_router(auth_router, prefix=settings.api_prefix)
-app.include_router(users_router, prefix=settings.api_prefix)
-app.include_router(system_router, prefix=settings.api_prefix)
+def _compose_prefix(base: str, extra: str = "") -> str:
+    normalized_base = base or "/"
+    normalized_base = normalized_base.rstrip("/") or "/"
+    if not extra:
+        return "" if normalized_base == "/" else normalized_base
+    normalized_extra = extra if extra.startswith("/") else f"/{extra}"
+    if normalized_base == "/":
+        return normalized_extra
+    return f"{normalized_base}{normalized_extra}"
+
+
+def _include_router(router: APIRouter, extra_prefix: str = "") -> None:
+    seen: set[str] = set()
+    for base in settings.api_prefix_variants:
+        prefix = _compose_prefix(base, extra_prefix)
+        if prefix in seen:
+            continue
+        seen.add(prefix)
+        if not prefix:
+            app.include_router(router)
+        else:
+            app.include_router(router, prefix=prefix)
+
+
+_include_router(api_v1_router)
+_include_router(datasets_router, "/dataset")
+_include_router(dictionary_router, "/dictionary")
+_include_router(visualizations_router, "/visualization")
+_include_router(chat_router, "/chat")
+_include_router(audit_router, "/audit")
+_include_router(collaboration_router)
+_include_router(ml_router)
+_include_router(ai_lab_router)
+_include_router(lineyka_router)
+_include_router(cybersecurity_router)
+_include_router(cyber_events_router)
+_include_router(cyber_architecture_router)
+_include_router(cyber_host_router)
+_include_router(admin_router)
+_include_router(auth_router)
+_include_router(users_router)
+_include_router(system_router)
 
 
 if __name__ == "__main__":
