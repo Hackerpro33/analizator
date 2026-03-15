@@ -39,6 +39,7 @@ def _now() -> datetime:
 SEVERITY_ORDER: Dict[str, int] = {"low": 0, "medium": 1, "high": 2, "critical": 3}
 SEVERITY_BY_RANK = {rank: name for name, rank in SEVERITY_ORDER.items()}
 DEFAULT_SEVERITY = tuple(SEVERITY_ORDER.keys())
+INCIDENT_MIN_SEVERITY_RANK = SEVERITY_ORDER["medium"]
 
 
 security_events_table = Table(
@@ -297,33 +298,36 @@ class SecurityEventStore:
     def ingest_event(self, payload: Dict[str, Any]) -> SecurityEvent:
         event = self.normalize_event(payload)
         with self._engine.begin() as connection:
-            connection.execute(insert(security_events_table).values(
-                id=event.id,
-                ts=event.ts,
-                source=event.source,
-                severity=event.severity,
-                segment=event.segment,
-                event_type=event.event_type,
-                src_ip=event.src_ip,
-                dst_ip=event.dst_ip,
-                dst_host=event.dst_host,
-            dst_service=event.dst_service,
-            user=event.user,
-            action=event.action,
-            technique_category=event.technique_category,
-            attack_phase=event.attack_phase,
-            message=event.message,
-            src_geo_json=event.src_geo,
-            dst_geo_json=event.dst_geo,
-            iocs_json=event.iocs,
-            scenario_id=event.scenario_id,
-            run_id=event.run_id,
-            architecture_version_id=event.architecture_version_id,
-            explanation_json=event.explanation,
-            raw_json=event.raw,
-            ingested_at=_now(),
-        ))
+            connection.execute(
+                insert(security_events_table).values(
+                    id=event.id,
+                    ts=event.ts,
+                    source=event.source,
+                    severity=event.severity,
+                    segment=event.segment,
+                    event_type=event.event_type,
+                    src_ip=event.src_ip,
+                    dst_ip=event.dst_ip,
+                    dst_host=event.dst_host,
+                    dst_service=event.dst_service,
+                    user=event.user,
+                    action=event.action,
+                    technique_category=event.technique_category,
+                    attack_phase=event.attack_phase,
+                    message=event.message,
+                    src_geo_json=event.src_geo,
+                    dst_geo_json=event.dst_geo,
+                    iocs_json=event.iocs,
+                    scenario_id=event.scenario_id,
+                    run_id=event.run_id,
+                    architecture_version_id=event.architecture_version_id,
+                    explanation_json=event.explanation,
+                    raw_json=event.raw,
+                    ingested_at=_now(),
+                )
+            )
             self._upsert_entities(connection, event)
+            self._maybe_record_incident(connection, event)
         return event
 
     def bulk_ingest(self, events: Sequence[Dict[str, Any]]) -> List[SecurityEvent]:
@@ -363,6 +367,7 @@ class SecurityEventStore:
             connection.execute(insert(security_events_table), rows)
             for event in normalized:
                 self._upsert_entities(connection, event)
+                self._maybe_record_incident(connection, event)
         return normalized
 
     def get_event(self, event_id: str) -> Optional[Dict[str, Any]]:
@@ -833,6 +838,53 @@ class SecurityEventStore:
         if user_id and dst_id:
             self._touch_edge(connection, bucket, user_id, dst_id, "auth", event.severity)
 
+    def _maybe_record_incident(self, connection, event: SecurityEvent) -> None:
+        if not self._should_create_incident(event):
+            return
+        payload = self._incident_payload_from_event(event)
+        if not payload:
+            return
+        connection.execute(insert(security_incidents_table).values(**payload))
+
+    def _should_create_incident(self, event: Optional[SecurityEvent]) -> bool:
+        if not event:
+            return False
+        severity_rank = SEVERITY_ORDER.get(event.severity or "", 0)
+        if severity_rank < INCIDENT_MIN_SEVERITY_RANK:
+            return False
+        if event.attack_phase and event.attack_phase.lower() == "recon":
+            return False
+        return True
+
+    def _incident_payload_from_event(self, event: SecurityEvent) -> Optional[Dict[str, Any]]:
+        detection_delay, resolution_delay = _incident_delays(event)
+        detected_at = event.ts
+        created_at = detected_at - detection_delay
+        resolved_at = detected_at + resolution_delay
+        title = _incident_title(event)
+        if not title:
+            return None
+        summary = {
+            "segment": event.segment,
+            "dst_host": event.dst_host or event.dst_ip,
+            "source": event.source,
+            "fingerprint": _incident_fingerprint(event),
+            "source_event_id": event.id,
+            "attack_phase": event.attack_phase,
+        }
+        return {
+            "id": uuid.uuid4().hex,
+            "created_at": created_at,
+            "updated_at": _now(),
+            "title": title,
+            "severity": event.severity,
+            "status": "resolved",
+            "related_entities_json": _incident_related_entities(event),
+            "summary_json": summary,
+            "detected_at": detected_at,
+            "resolved_at": resolved_at,
+        }
+
     def _touch_edge(
         self,
         connection,
@@ -877,6 +929,54 @@ class SecurityEventStore:
                 severity_max=severity,
             )
         )
+
+
+def _incident_delays(event: SecurityEvent) -> Tuple[timedelta, timedelta]:
+    severity = (event.severity or "medium").lower()
+    detection_base = {"low": 9, "medium": 6, "high": 4, "critical": 2}.get(severity, 6)
+    resolution_base = {"low": 40, "medium": 28, "high": 20, "critical": 12}.get(severity, 24)
+    jitter_seed = _incident_seed(event.id)
+    detection_minutes = max(1, detection_base + (jitter_seed % 3) - 1)
+    resolution_minutes = max(detection_minutes + 5, resolution_base + ((jitter_seed // 3) % 5) - 2)
+    return timedelta(minutes=detection_minutes), timedelta(minutes=resolution_minutes)
+
+
+def _incident_seed(identifier: Optional[str]) -> int:
+    if not identifier:
+        return 0
+    safe = identifier.replace("-", "")
+    try:
+        return int(safe[:8], 16)
+    except ValueError:
+        return sum(ord(char) for char in safe)
+
+
+def _incident_title(event: SecurityEvent) -> str:
+    phase = (event.attack_phase or event.event_type or "activity").replace("_", " ").strip().title()
+    target = event.dst_host or event.dst_ip or event.segment or "environment"
+    return f"{phase} на {target}"
+
+
+def _incident_related_entities(event: SecurityEvent) -> List[Dict[str, str]]:
+    related: List[Dict[str, str]] = []
+    if event.dst_host or event.dst_ip:
+        related.append({"type": "host", "value": event.dst_host or event.dst_ip})
+    if event.segment:
+        related.append({"type": "segment", "value": event.segment})
+    if event.user:
+        related.append({"type": "user", "value": event.user})
+    return related
+
+
+def _incident_fingerprint(event: SecurityEvent) -> str:
+    parts = [
+        event.run_id,
+        event.scenario_id,
+        event.segment,
+        event.dst_host or event.dst_ip,
+        event.attack_phase,
+    ]
+    return "|".join(part for part in parts if part)
 
 
 @lru_cache()

@@ -65,6 +65,10 @@ def test_cyber_endpoints_and_roles(tmp_path, monkeypatch):
     assert summary.status_code == 200
     summary_data = summary.json()
     assert "eps" in summary_data and summary_data["eps"]["trend"]
+    incidents = summary_data.get("incidents") or {}
+    assert incidents.get("count", 0) > 0
+    assert incidents.get("mttd") is not None
+    assert incidents.get("mttr") is not None
 
     events = client.get("/api/v1/cyber/events?range=24h&pageSize=5")
     assert events.status_code == 200
