@@ -351,7 +351,7 @@ describe("summarizeProjectStructure", () => {
   it("detects key and unused datasets", () => {
     const datasets = [
       { id: "d1", name: "Sales" },
-      { id: "d2", name: "Marketing" },
+      { id: "d2", name: "Operations" },
     ];
     const visualizations = [
       { id: "v1", dataset_id: "d1" },
@@ -361,7 +361,7 @@ describe("summarizeProjectStructure", () => {
     const summary = summarizeProjectStructure({ datasets, visualizations });
 
     expect(summary.key_datasets).toContain("Sales — 2 визуализаций");
-    expect(summary.unused_datasets).toContain("Marketing");
+    expect(summary.unused_datasets).toContain("Operations");
     expect(summary.insights[0]).toContain("визуализаций");
   });
 });

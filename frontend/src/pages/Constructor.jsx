@@ -952,7 +952,7 @@ export default function Constructor() {
                       <div className="space-y-2">
                         <label className="text-sm font-medium text-foreground/80">Название</label>
                         <Input
-                          placeholder="Например, Маркетинг"
+                          placeholder="Например, Аналитика"
                           value={workspaceForm.name}
                           onChange={handleWorkspaceFormChange("name")}
                           maxLength={MAX_NAME_LENGTH}
