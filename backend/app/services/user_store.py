@@ -7,11 +7,16 @@ import uuid
 from datetime import datetime, timezone
 from functools import lru_cache
 from pathlib import Path
+import logging
 from typing import Any, Dict, List, Optional
 
 from pydantic import EmailStr
 
 from ..config import get_settings
+
+logger = logging.getLogger(__name__)
+
+DEFAULT_USER_STORE_PATH = Path(__file__).resolve().parent.parent / "data" / "users.json"
 
 
 UserRecord = Dict[str, Any]
@@ -172,7 +177,22 @@ def generate_invite_code(length: int = 32) -> str:
 
 @lru_cache()
 def _user_store_for_path(path: str) -> UserStore:
-    return UserStore(Path(path))
+    candidate = Path(path)
+    try:
+        return UserStore(candidate)
+    except OSError as exc:
+        fallback = DEFAULT_USER_STORE_PATH
+        fallback.parent.mkdir(parents=True, exist_ok=True)
+        logger.warning(
+            "user_store_path_unavailable_fallback",
+            extra={
+                "event": "user_store_fallback",
+                "requested": str(candidate),
+                "fallback": str(fallback),
+                "error": str(exc),
+            },
+        )
+        return UserStore(fallback)
 
 
 def get_user_store() -> UserStore:
