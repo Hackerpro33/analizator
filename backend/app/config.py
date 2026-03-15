@@ -130,6 +130,7 @@ class Settings(BaseSettings):
     jwt_secret_key: str = Field(
         "change-me",
         alias="AUTH_JWT_SECRET",
+        validation_alias=AliasChoices("AUTH_JWT_SECRET", "SECRET_KEY"),
         description="Secret key used for signing JWT tokens.",
     )
     jwt_algorithm: str = Field(
@@ -299,8 +300,30 @@ class Settings(BaseSettings):
     @field_validator("allowed_upload_extensions", mode="before")
     def _split_allowed_extensions(cls, value):
         if isinstance(value, str):
-            return [ext.strip() for ext in value.split(",") if ext.strip()]
+            candidate = value.strip()
+            if candidate.startswith("["):
+                try:
+                    parsed = json.loads(candidate)
+                except (json.JSONDecodeError, ValueError):
+                    parsed = None
+                if isinstance(parsed, list):
+                    return parsed
+            return [ext.strip() for ext in candidate.split(",") if ext.strip()]
         return value
+
+    @field_validator("allowed_upload_extensions", mode="after")
+    def _normalize_extensions(cls, value):
+        if not value:
+            return value
+        normalized: List[str] = []
+        for ext in value:
+            cleaned = str(ext or "").strip().lower()
+            if not cleaned:
+                continue
+            if not cleaned.startswith("."):
+                cleaned = f".{cleaned}"
+            normalized.append(cleaned)
+        return normalized
 
     @field_validator("clamav_scan_url", "alert_webhook_url", mode="before")
     def _empty_string_to_none(cls, value):
