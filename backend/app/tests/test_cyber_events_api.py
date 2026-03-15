@@ -122,3 +122,22 @@ def test_summary_handles_incident_failures(tmp_path, monkeypatch):
     assert summary.status_code == 200
     incidents = summary.json().get("incidents") or {}
     assert incidents.get("count") == 0
+
+
+def test_redis_cache_handles_non_string_url(monkeypatch):
+    from app.services import security_event_store as module
+
+    class DummyUrl:
+        def __str__(self):
+            return "redis://invalid"
+
+    class BrokenRedis:
+        @classmethod
+        def from_url(cls, url, decode_responses=True):
+            raise RuntimeError("boom")
+
+    monkeypatch.setattr(module, "Redis", BrokenRedis)
+
+    cache = module._RedisCache(DummyUrl())
+    assert cache.get("missing") is None
+    assert cache._disabled is True

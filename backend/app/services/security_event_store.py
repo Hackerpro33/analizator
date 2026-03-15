@@ -187,8 +187,14 @@ def _normalize_geo(value: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
 
 
 class _RedisCache:
-    def __init__(self, url: Optional[str]) -> None:
-        self._url = url
+    def __init__(self, url: Optional[Any]) -> None:
+        normalized_url: Optional[str] = None
+        if url:
+            try:
+                normalized_url = str(url).strip()
+            except Exception:  # pragma: no cover - defensive
+                normalized_url = None
+        self._url = normalized_url or None
         self._client: Optional[Redis] = None
         self._disabled = False
 
@@ -200,8 +206,8 @@ class _RedisCache:
         try:
             self._client = Redis.from_url(self._url, decode_responses=True)
         except Exception as exc:  # pragma: no cover - network specific
-            logger.warning("redis_connect_failed", error=str(exc))
             self._disabled = True
+            logger.warning("redis_connect_failed: %s", exc)
             return None
         return self._client
 
@@ -212,7 +218,7 @@ class _RedisCache:
         try:
             raw = client.get(key)
         except RedisError as exc:  # pragma: no cover - infra
-            logger.warning("redis_read_failed", error=str(exc))
+            logger.warning("redis_read_failed: %s", exc)
             self._disabled = True
             return None
         if not raw:
@@ -229,7 +235,7 @@ class _RedisCache:
         try:
             client.setex(key, ttl, json.dumps(value, default=str))
         except RedisError as exc:  # pragma: no cover - infra
-            logger.warning("redis_write_failed", error=str(exc))
+            logger.warning("redis_write_failed: %s", exc)
             self._disabled = True
 
 
