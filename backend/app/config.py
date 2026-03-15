@@ -366,21 +366,30 @@ class Settings(BaseSettings):
 
     @property
     def api_prefix_variants(self) -> List[str]:
-        """Return API prefixes including compatibility aliases."""
+        """Return API prefixes including compatibility fallbacks."""
+
+        def _normalize(candidate: str) -> str:
+            if not candidate:
+                return "/"
+            value = candidate.strip()
+            if not value.startswith("/"):
+                value = f"/{value}"
+            return value.rstrip("/") or "/"
+
         prefixes: List[str] = []
-        normalized = self.api_prefix.strip() or "/api"
-        if not normalized.startswith("/"):
-            normalized = f"/{normalized}"
-        normalized = normalized.rstrip("/") or "/"
-        prefixes.append(normalized)
+        normalized = _normalize(self.api_prefix or "/api")
+
+        def _add(candidate: str) -> None:
+            normalized_candidate = _normalize(candidate)
+            if normalized_candidate not in prefixes:
+                prefixes.append(normalized_candidate)
+
+        _add(normalized)
         if normalized.startswith("/api"):
-            stripped = normalized[len("/api") :]
-            alias = stripped or "/"
-            if not alias.startswith("/"):
-                alias = f"/{alias}"
-            alias = alias.rstrip("/") or "/"
-            if alias not in prefixes:
-                prefixes.append(alias)
+            remainder = normalized[len("/api") :]
+            _add("/api")
+            _add(remainder or "/")
+        _add("/")
         return prefixes
 
     @classmethod
