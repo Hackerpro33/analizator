@@ -465,7 +465,7 @@ class SecurityEventStore:
                 try:
                     incidents_payload = self._compute_incident_metrics(connection, filters)
                 except Exception as exc:  # pragma: no cover - defensive
-                    logger.warning("incident_metrics_failed", error=str(exc))
+                    logger.warning("incident_metrics_failed: %s", exc)
 
             payload = {
                 "range": {"from": filters.time_from.isoformat(), "to": filters.time_to.isoformat()},
@@ -990,7 +990,7 @@ def _incident_fingerprint(event: SecurityEvent) -> str:
 def _format_duration_minutes(value: Optional[float]) -> Optional[Dict[str, Any]]:
     if value is None:
         return None
-    minutes = value / 60.0
+    minutes = float(value) / 60.0
     return {"minutes": round(minutes, 2)}
 
 

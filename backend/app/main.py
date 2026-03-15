@@ -301,7 +301,7 @@ async def api_upload(
             quick_extraction=quick.model_dump() if quick else None,
         )
     except Exception as exc:  # pragma: no cover - defensive logging
-        logger.warning("metadata_persistence_failed", error=str(exc))
+        logger.warning("metadata_persistence_failed: %s", exc)
 
     payload = FileUploadResponse(
         status="success",
@@ -365,7 +365,7 @@ def api_extract_async(req: ExtractRequest) -> TaskEnqueueResponse:
             status="queued",
         )
     except Exception as exc:  # pragma: no cover
-        logger.warning("job_record_failed", error=str(exc))
+        logger.warning("job_record_failed: %s", exc)
     return TaskEnqueueResponse(task_id=task_id, status="queued", queue=settings.task_queue_name)
 
 
@@ -398,7 +398,7 @@ def api_task_status(task_id: str) -> TaskStatusResponse:
             error=status_payload.get("error"),
         )
     except Exception as exc:  # pragma: no cover
-        logger.warning("job_record_failed", error=str(exc))
+        logger.warning("job_record_failed: %s", exc)
     return TaskStatusResponse(
         task_id=status_payload["task_id"],
         status=status_payload["status"],
