@@ -92,3 +92,34 @@ def test_storage_and_metadata_repositories(tmp_path):
     state = json.loads((tmp_path / "metadata.json").read_text(encoding="utf-8"))
     assert "datasets" in state and "ds1" in state["datasets"]
     assert state["jobs"]["job1"]["status"] == "finished"
+
+
+def test_storage_falls_back_when_local_root_is_not_writable(tmp_path, monkeypatch):
+    from app.services import object_storage
+
+    requested_root = tmp_path / "restricted"
+    fallback_root = tmp_path / "fallback"
+    monkeypatch.setattr(object_storage, "DEFAULT_LOCAL_ROOT", fallback_root)
+
+    original_mkdir = object_storage.Path.mkdir
+
+    def fake_mkdir(self, *args, **kwargs):
+        if self == requested_root:
+            raise PermissionError("denied")
+        return original_mkdir(self, *args, **kwargs)
+
+    monkeypatch.setattr(object_storage.Path, "mkdir", fake_mkdir)
+
+    client = object_storage.ObjectStorageClient(
+        bucket="tests",
+        endpoint_url=None,
+        access_key=None,
+        secret_key=None,
+        region_name=None,
+        force_path_style=True,
+        use_ssl=False,
+        local_root=requested_root,
+    )
+
+    assert client.local_root == fallback_root
+    assert fallback_root.exists()

@@ -22,6 +22,7 @@ from ..config import get_settings
 
 
 logger = logging.getLogger(__name__)
+DEFAULT_LOCAL_ROOT = Path(__file__).resolve().parent.parent / "uploads"
 
 
 @dataclass
@@ -32,6 +33,30 @@ class ObjectLocation:
     checksum: Optional[str] = None
     content_type: Optional[str] = None
     size: Optional[int] = None
+
+
+def _prepare_local_root(candidate: Path) -> Path:
+    """Ensure ``candidate`` exists, falling back to ``DEFAULT_LOCAL_ROOT`` if needed."""
+    try:
+        candidate.mkdir(parents=True, exist_ok=True)
+        return candidate
+    except OSError as exc:
+        fallback = DEFAULT_LOCAL_ROOT
+        try:
+            fallback.mkdir(parents=True, exist_ok=True)
+        except OSError as fallback_exc:
+            raise RuntimeError(
+                f"Unable to create object storage directory at {candidate} or fallback {fallback}"
+            ) from fallback_exc
+        logger.warning(
+            "object_storage_local_root_unavailable",
+            extra={
+                "requested": str(candidate),
+                "fallback": str(fallback),
+                "error": str(exc),
+            },
+        )
+        return fallback
 
 
 class ObjectStorageClient:
@@ -50,8 +75,7 @@ class ObjectStorageClient:
         local_root: Path,
     ) -> None:
         self.bucket = bucket
-        self.local_root = Path(local_root)
-        self.local_root.mkdir(parents=True, exist_ok=True)
+        self.local_root = _prepare_local_root(Path(local_root))
         self._s3_client = None
 
         if (

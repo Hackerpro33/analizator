@@ -2,8 +2,9 @@ from __future__ import annotations
 
 import random
 from datetime import datetime, timedelta, timezone
-from typing import List
+from typing import List, Tuple
 
+from .services.host_protection import HostProtectionService, get_host_protection_service
 from .services.security_event_store import SecurityEventStore, get_security_event_store
 
 SEGMENTS = ["dmz", "internal", "prod", "office", "cloud"]
@@ -32,6 +33,44 @@ TARGETS = [
     ("k8s-api", "10.43.0.1"),
     ("analytics-warehouse", "10.88.12.5"),
     ("sso-prod", "10.64.0.10"),
+]
+
+HOST_STATUS_PRESETS = [
+    {
+        "tool": "aide",
+        "status": "ok",
+        "details": {"drift": 0, "last_scan": "15m ago"},
+        "message": "AIDE baseline intact on critical paths",
+        "severity": "low",
+    },
+    {
+        "tool": "auditd",
+        "status": "alert",
+        "details": {"suspicious_files": 1, "policy": "immutable-core"},
+        "message": "Auditd flagged unauthorized system binary modification",
+        "severity": "high",
+    },
+    {
+        "tool": "usbguard",
+        "status": "ok",
+        "details": {"blocked_devices": 3, "last_event": "usb:vendor=0x090c"},
+        "message": "Usbguard rejected untrusted removable media",
+        "severity": "medium",
+    },
+    {
+        "tool": "clamav",
+        "status": "ok",
+        "details": {"last_update": "freshclam 3h ago", "quarantine": 0},
+        "message": None,
+        "severity": "low",
+    },
+    {
+        "tool": "fail2ban",
+        "status": "drift",
+        "details": {"banned_ips": 4, "jails": ["sshd", "nginx-http-auth"]},
+        "message": "Fail2ban banned repeated SSH brute force source",
+        "severity": "medium",
+    },
 ]
 
 
@@ -75,6 +114,28 @@ def seed_security_events(store: SecurityEventStore | None = None, total: int = 5
     return len(events)
 
 
+def seed_host_protection(service: HostProtectionService | None = None) -> Tuple[int, int]:
+    """Populate Host Protection status cards and telemetry without requiring an agent."""
+    target_service = service or get_host_protection_service()
+    statuses_written = 0
+    telemetry_written = 0
+    for preset in HOST_STATUS_PRESETS:
+        target_service.upsert_status(tool=preset["tool"], status=preset["status"], details=preset.get("details"))
+        statuses_written += 1
+        if preset.get("message"):
+            target_service.ingest_event(
+                tool=preset["tool"],
+                message=preset["message"],
+                severity=preset["severity"],
+                details=preset.get("details"),
+            )
+            telemetry_written += 1
+    return statuses_written, telemetry_written
+
+
 if __name__ == "__main__":
     created = seed_security_events()
-    print(f"Seeded {created} security events.")
+    status_count, telemetry_count = seed_host_protection()
+    print(
+        f"Seeded {created} security events, {status_count} host protection statuses and {telemetry_count} telemetry events."
+    )
