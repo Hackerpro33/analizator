@@ -455,49 +455,11 @@ class SecurityEventStore:
                 )
                 top_targets = connection.execute(targets_stmt).all()
 
-                incident_stmt = (
-                    select(func.count())
-                    .select_from(security_incidents_table)
-                    .where(
-                        and_(
-                            security_incidents_table.c.created_at >= filters.time_from,
-                            security_incidents_table.c.created_at <= filters.time_to,
-                        )
-                    )
-                )
-                incidents_total = connection.execute(incident_stmt).scalar_one()
-
-                mttr_stmt = (
-                    select(
-                        func.avg(
-                            func.extract("epoch", security_incidents_table.c.resolved_at)
-                            - func.extract("epoch", security_incidents_table.c.detected_at)
-                        )
-                    )
-                    .where(
-                        and_(
-                            security_incidents_table.c.detected_at.is_not(None),
-                            security_incidents_table.c.resolved_at.is_not(None),
-                        )
-                    )
-                )
-                mttd_stmt = (
-                    select(
-                        func.avg(
-                            func.extract("epoch", security_incidents_table.c.detected_at)
-                            - func.extract("epoch", security_incidents_table.c.created_at)
-                        )
-                    )
-                    .where(security_incidents_table.c.detected_at.is_not(None))
-                )
-                mttr = connection.execute(mttr_stmt).scalar()
-                mttd = connection.execute(mttd_stmt).scalar()
-
-            def _format_duration(value: Optional[float]) -> Optional[Dict[str, Any]]:
-                if value is None:
-                    return None
-                minutes = value / 60.0
-                return {"minutes": round(minutes, 2)}
+                incidents_payload = {"count": 0, "mttd": None, "mttr": None}
+                try:
+                    incidents_payload = self._compute_incident_metrics(connection, filters)
+                except Exception as exc:  # pragma: no cover - defensive
+                    logger.warning("incident_metrics_failed", error=str(exc))
 
             payload = {
                 "range": {"from": filters.time_from.isoformat(), "to": filters.time_to.isoformat()},
@@ -518,11 +480,7 @@ class SecurityEventStore:
                 "top_targets": [
                     {"label": row.dst_host or "unknown", "count": row.count} for row in top_targets
                 ],
-                "incidents": {
-                    "count": incidents_total,
-                    "mttd": _format_duration(mttd),
-                    "mttr": _format_duration(mttr),
-                },
+                "incidents": incidents_payload,
             }
             return payload
 
@@ -846,6 +804,50 @@ class SecurityEventStore:
             return
         connection.execute(insert(security_incidents_table).values(**payload))
 
+    def _compute_incident_metrics(self, connection, filters: EventFilters) -> Dict[str, Any]:
+        incident_stmt = (
+            select(func.count())
+            .select_from(security_incidents_table)
+            .where(
+                and_(
+                    security_incidents_table.c.created_at >= filters.time_from,
+                    security_incidents_table.c.created_at <= filters.time_to,
+                )
+            )
+        )
+        incidents_total = connection.execute(incident_stmt).scalar_one()
+
+        mttr_stmt = (
+            select(
+                func.avg(
+                    func.extract("epoch", security_incidents_table.c.resolved_at)
+                    - func.extract("epoch", security_incidents_table.c.detected_at)
+                )
+            )
+            .where(
+                and_(
+                    security_incidents_table.c.detected_at.is_not(None),
+                    security_incidents_table.c.resolved_at.is_not(None),
+                )
+            )
+        )
+        mttd_stmt = (
+            select(
+                func.avg(
+                    func.extract("epoch", security_incidents_table.c.detected_at)
+                    - func.extract("epoch", security_incidents_table.c.created_at)
+                )
+            )
+            .where(security_incidents_table.c.detected_at.is_not(None))
+        )
+        mttr = connection.execute(mttr_stmt).scalar()
+        mttd = connection.execute(mttd_stmt).scalar()
+        return {
+            "count": incidents_total,
+            "mttd": _format_duration_minutes(mttd),
+            "mttr": _format_duration_minutes(mttr),
+        }
+
     def _should_create_incident(self, event: Optional[SecurityEvent]) -> bool:
         if not event:
             return False
@@ -977,6 +979,13 @@ def _incident_fingerprint(event: SecurityEvent) -> str:
         event.attack_phase,
     ]
     return "|".join(part for part in parts if part)
+
+
+def _format_duration_minutes(value: Optional[float]) -> Optional[Dict[str, Any]]:
+    if value is None:
+        return None
+    minutes = value / 60.0
+    return {"minutes": round(minutes, 2)}
 
 
 @lru_cache()

@@ -106,3 +106,19 @@ def test_cyber_endpoints_and_roles(tmp_path, monkeypatch):
     assert login_viewer.status_code == 200
     viewer_summary = client.get("/api/v1/cyber/summary?range=24h")
     assert viewer_summary.status_code == 200
+
+
+def test_summary_handles_incident_failures(tmp_path, monkeypatch):
+    client = _build_client(tmp_path, monkeypatch)
+    admin_payload = {"email": "chief@example.com", "password": "StrongPass!1", "full_name": "Chief Sec"}
+    client.post("/api/v1/auth/register", json=admin_payload)
+    _seed_events()
+
+    def boom(self, connection, filters):
+        raise RuntimeError("boom")
+
+    monkeypatch.setattr("app.services.security_event_store.SecurityEventStore._compute_incident_metrics", boom)
+    summary = client.get("/api/v1/cyber/summary?range=24h")
+    assert summary.status_code == 200
+    incidents = summary.json().get("incidents") or {}
+    assert incidents.get("count") == 0
