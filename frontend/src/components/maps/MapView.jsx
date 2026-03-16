@@ -606,6 +606,15 @@ export default function MapView({
       className="relative w-full overflow-hidden rounded-[28px] border border-white/70 bg-slate-950/95 shadow-[0_30px_70px_rgba(15,23,42,0.22)]"
       style={{ height: resolvedHeight, minHeight: resolvedHeight }}
     >
+      <div className="absolute inset-x-4 bottom-4 z-[2000] rounded-xl border border-slate-200 bg-white/95 px-3 py-2 font-mono text-[11px] text-slate-700 shadow-lg">
+        <div>mapReady: {mapReady ? 'yes' : 'no'}</div>
+        <div>provider: {tileProvider.name}</div>
+        <div>loading: {tileDebug.loading}</div>
+        <div>tileloadstart: {tileDebug.start}</div>
+        <div>tileload: {tileDebug.loaded}</div>
+        <div>load: {tileDebug.load}</div>
+        <div>tileerror: {tileDebug.error}</div>
+      </div>
       <MapContainer
         center={mapCenter}
         zoom={pointsToRender.length > 0 ? 5 : 4}
@@ -913,15 +922,6 @@ export default function MapView({
           </div>
         </div>
       )}
-      <div className="pointer-events-none absolute bottom-20 left-4 z-[1200] rounded-xl border border-slate-200 bg-white/95 px-3 py-2 font-mono text-[11px] text-slate-700 shadow-md">
-        <div>mapReady: {mapReady ? 'yes' : 'no'}</div>
-        <div>provider: {tileProvider.name}</div>
-        <div>loading: {tileDebug.loading}</div>
-        <div>tileloadstart: {tileDebug.start}</div>
-        <div>tileload: {tileDebug.loaded}</div>
-        <div>load: {tileDebug.load}</div>
-        <div>tileerror: {tileDebug.error}</div>
-      </div>
     </div>
   );
 }
