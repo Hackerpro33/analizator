@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { MapContainer, Popup, CircleMarker, TileLayer } from 'react-leaflet';
+import { MapContainer, Popup, CircleMarker, TileLayer, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Badge } from "@/components/ui/badge";
 import { parseCoordinate, parseNumericValue, findNameField, findFirstValue } from "@/utils/mapUtils";
@@ -27,6 +27,48 @@ const TILE_PROVIDERS = [
     attribution: "Map data: &copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors, SRTM | Map style: &copy; <a href='https://opentopomap.org'>OpenTopoMap</a>",
   },
 ];
+
+function MapLifecycle() {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!map) {
+      return undefined;
+    }
+
+    const invalidate = () => {
+      map.invalidateSize({ pan: false, animate: false });
+    };
+
+    const animationFrameId = window.requestAnimationFrame(invalidate);
+    const timeoutId = window.setTimeout(invalidate, 150);
+
+    let resizeObserver;
+    const container = map.getContainer();
+
+    if (typeof ResizeObserver !== 'undefined' && container) {
+      resizeObserver = new ResizeObserver(() => {
+        invalidate();
+      });
+      resizeObserver.observe(container);
+    }
+
+    const handleWindowResize = () => {
+      invalidate();
+    };
+
+    window.addEventListener('resize', handleWindowResize);
+
+    return () => {
+      window.cancelAnimationFrame(animationFrameId);
+      window.clearTimeout(timeoutId);
+      window.removeEventListener('resize', handleWindowResize);
+      resizeObserver?.disconnect();
+    };
+  }, [map]);
+
+  return null;
+}
 
 const getValueByColumn = (point, column, fallbackKeys = []) => {
   if (column && point && point[column] !== undefined && point[column] !== null) {
@@ -553,6 +595,7 @@ export default function MapView({
           width: '100%',
         }}
       >
+        <MapLifecycle />
         <TileLayer
           key={tileProvider.name}
           url={tileProvider.url}
