@@ -241,14 +241,30 @@ export default function MapView({
   overlayInfo,
   analyticsOverlay,
 }) {
+  const [mapReady, setMapReady] = useState(false);
   const [tileProviderIndex, setTileProviderIndex] = useState(0);
   const [tileLoadFailed, setTileLoadFailed] = useState(false);
+  const [tileDebug, setTileDebug] = useState({
+    loading: 0,
+    load: 0,
+    start: 0,
+    loaded: 0,
+    error: 0,
+  });
   const hasLoadedTilesRef = useRef(false);
   const switchedProviderRef = useRef(false);
 
   useEffect(() => {
+    setMapReady(false);
     setTileProviderIndex(0);
     setTileLoadFailed(false);
+    setTileDebug({
+      loading: 0,
+      load: 0,
+      start: 0,
+      loaded: 0,
+      error: 0,
+    });
     hasLoadedTilesRef.current = false;
     switchedProviderRef.current = false;
   }, [config?.dataset_id]);
@@ -555,12 +571,21 @@ export default function MapView({
   const resolvedHeight = typeof height === 'number' ? `${height}px` : height;
   const tileProvider = TILE_PROVIDERS[tileProviderIndex];
 
+  const bumpTileDebug = (key) => {
+    setTileDebug((prev) => ({
+      ...prev,
+      [key]: prev[key] + 1,
+    }));
+  };
+
   const handleTileLoad = () => {
+    bumpTileDebug('load');
     hasLoadedTilesRef.current = true;
     setTileLoadFailed(false);
   };
 
   const handleTileError = () => {
+    bumpTileDebug('error');
     if (hasLoadedTilesRef.current || switchedProviderRef.current) {
       return;
     }
@@ -588,6 +613,9 @@ export default function MapView({
         maxBounds={WORLD_BOUNDS}
         maxBoundsViscosity={1}
         scrollWheelZoom={true}
+        whenReady={() => {
+          setMapReady(true);
+        }}
         className="map-neon-theme"
         attributionControl={false}
         style={{
@@ -601,7 +629,10 @@ export default function MapView({
           url={tileProvider.url}
           attribution={tileProvider.attribution}
           eventHandlers={{
+            loading: () => bumpTileDebug('loading'),
             load: handleTileLoad,
+            tileloadstart: () => bumpTileDebug('start'),
+            tileload: () => bumpTileDebug('loaded'),
             tileerror: handleTileError,
           }}
         />
@@ -882,6 +913,15 @@ export default function MapView({
           </div>
         </div>
       )}
+      <div className="pointer-events-none absolute left-4 top-4 z-40 rounded-xl border border-slate-200 bg-white/90 px-3 py-2 font-mono text-[11px] text-slate-700 shadow-md">
+        <div>mapReady: {mapReady ? 'yes' : 'no'}</div>
+        <div>provider: {tileProvider.name}</div>
+        <div>loading: {tileDebug.loading}</div>
+        <div>tileloadstart: {tileDebug.start}</div>
+        <div>tileload: {tileDebug.loaded}</div>
+        <div>load: {tileDebug.load}</div>
+        <div>tileerror: {tileDebug.error}</div>
+      </div>
     </div>
   );
 }
