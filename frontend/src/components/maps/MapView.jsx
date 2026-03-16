@@ -6,6 +6,10 @@ import { parseCoordinate, parseNumericValue, findNameField, findFirstValue } fro
 import samplePoints, { sampleTimeSeries } from "./sampleData";
 
 const DEFAULT_POSITION = [55.7558, 37.6173];
+const WORLD_BOUNDS = [
+  [-85, -180],
+  [85, 180],
+];
 const TILE_PROVIDERS = [
   {
     name: 'OpenStreetMap',
@@ -538,6 +542,9 @@ export default function MapView({
       <MapContainer
         center={mapCenter}
         zoom={pointsToRender.length > 0 ? 5 : 4}
+        minZoom={2}
+        maxBounds={WORLD_BOUNDS}
+        maxBoundsViscosity={1}
         scrollWheelZoom={true}
         className="map-neon-theme"
         attributionControl={false}
