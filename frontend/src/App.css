@@ -1,10 +1,11 @@
 /* Neon map theme overrides */
 .map-neon-theme {
-  background-color: #03091d;
-  background-image: radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.2), transparent 50%),
-    radial-gradient(circle at 75% 70%, rgba(14, 165, 233, 0.18), transparent 45%),
-    linear-gradient(135deg, #021027, #050b1a);
+  background: #dbeafe;
   box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+}
+
+.map-neon-theme.leaflet-container {
+  background: #dbeafe;
 }
 
 .map-neon-theme .leaflet-control-container .leaflet-control {
@@ -30,6 +31,12 @@
 
 .map-neon-theme .leaflet-pane.leaflet-tile-pane {
   filter: saturate(1.15) brightness(0.9);
+}
+
+.map-neon-theme .leaflet-tile-container img,
+.map-neon-theme .leaflet-image-layer,
+.map-neon-theme .leaflet-layer {
+  background: transparent;
 }
 
 .map-neon-theme .map-square-icon div {

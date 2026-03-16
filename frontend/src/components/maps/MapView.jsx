@@ -588,6 +588,7 @@ export default function MapView({
         maxBounds={WORLD_BOUNDS}
         maxBoundsViscosity={1}
         scrollWheelZoom={true}
+        worldCopyJump={false}
         className="map-neon-theme"
         attributionControl={false}
         style={{
@@ -600,6 +601,8 @@ export default function MapView({
           key={tileProvider.name}
           url={tileProvider.url}
           attribution={tileProvider.attribution}
+          noWrap={true}
+          bounds={WORLD_BOUNDS}
           eventHandlers={{
             load: handleTileLoad,
             tileerror: handleTileError,
