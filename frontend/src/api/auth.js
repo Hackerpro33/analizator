@@ -45,3 +45,9 @@ export function resendVerificationEmail(payload) {
 export function buildGoogleLoginUrl() {
   return buildApiUrl('/api/auth/google/login');
 }
+
+export function probeGoogleLogin() {
+  return jsonRequest('/api/auth/google/login?probe=1', {
+    method: 'GET',
+  });
+}

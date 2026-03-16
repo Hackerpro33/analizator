@@ -333,8 +333,10 @@ def resend_verification_email(
 
 
 @router.get("/google/login")
-async def google_login(request: Request):
+async def google_login(request: Request, probe: bool = False):
     client = _build_google_oauth_client()
+    if probe:
+        return {"status": "ready"}
     redirect_uri = f"{_api_base_url(request)}/auth/google/callback"
     return await client.authorize_redirect(request, redirect_uri)
 

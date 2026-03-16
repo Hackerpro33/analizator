@@ -6,7 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
-import { buildGoogleLoginUrl, resendVerificationEmail } from "@/api/auth";
+import { buildGoogleLoginUrl, probeGoogleLogin, resendVerificationEmail } from "@/api/auth";
 import { useAuth } from "@/contexts/AuthContext.jsx";
 import { AlertCircle, LogOut, MailCheck, Shield, UserPlus } from "lucide-react";
 
@@ -83,8 +83,26 @@ function CredentialsForm({ mode, onSubmit, footer = null, errorContent = null, s
 }
 
 function GoogleLoginButton() {
+  const { toast } = useToast();
+
   return (
-    <Button type="button" variant="outline" className="w-full" onClick={() => window.location.assign(buildGoogleLoginUrl())}>
+    <Button
+      type="button"
+      variant="outline"
+      className="w-full"
+      onClick={async () => {
+        try {
+          await probeGoogleLogin();
+          window.location.assign(buildGoogleLoginUrl());
+        } catch (error) {
+          toast({
+            title: "Google-вход недоступен",
+            description: error?.message || "Сервер временно недоступен. Попробуйте ещё раз позже.",
+            variant: "destructive",
+          });
+        }
+      }}
+    >
       Войти через Google
     </Button>
   );
