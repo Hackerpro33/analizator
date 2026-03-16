@@ -153,6 +153,11 @@ class Settings(BaseSettings):
         alias="AUTH_COOKIE_SECURE",
         description="Mark authentication cookies as Secure.",
     )
+    email_verification_expires_minutes: int = Field(
+        60 * 24,
+        alias="AUTH_EMAIL_VERIFICATION_EXPIRES_MINUTES",
+        description="Lifetime of email verification tokens in minutes.",
+    )
     force_https_redirect: bool = Field(
         False,
         alias="FORCE_HTTPS_REDIRECT",
@@ -193,6 +198,46 @@ class Settings(BaseSettings):
         default=Path(__file__).resolve().parent / "data" / "users.json",
         alias="USER_STORE_PATH",
         description="Path to the JSON file used for storing user accounts.",
+    )
+    google_client_id: Optional[str] = Field(
+        None,
+        alias="GOOGLE_CLIENT_ID",
+        description="Google OAuth client id for social sign-in.",
+    )
+    google_client_secret: Optional[str] = Field(
+        None,
+        alias="GOOGLE_CLIENT_SECRET",
+        description="Google OAuth client secret for social sign-in.",
+    )
+    smtp_host: Optional[str] = Field(
+        None,
+        alias="SMTP_HOST",
+        description="SMTP host used for email delivery.",
+    )
+    smtp_port: int = Field(
+        587,
+        alias="SMTP_PORT",
+        description="SMTP port used for email delivery.",
+    )
+    smtp_user: Optional[str] = Field(
+        None,
+        alias="SMTP_USER",
+        description="SMTP username used for authentication.",
+    )
+    smtp_password: Optional[str] = Field(
+        None,
+        alias="SMTP_PASSWORD",
+        description="SMTP password or app password used for authentication.",
+    )
+    smtp_from_email: Optional[EmailStr] = Field(
+        None,
+        alias="SMTP_FROM_EMAIL",
+        description="Optional sender email shown in verification messages.",
+    )
+    smtp_use_starttls: bool = Field(
+        True,
+        alias="SMTP_USE_STARTTLS",
+        description="Upgrade SMTP connections with STARTTLS before login.",
     )
     database_url: str = Field(
         default=f"sqlite:///{(Path(__file__).resolve().parent / 'data' / 'metadata.db').as_posix()}",
@@ -337,7 +382,17 @@ class Settings(BaseSettings):
             return None
         return value
 
-    @field_validator("initial_admin_email", "initial_admin_password", mode="before")
+    @field_validator(
+        "initial_admin_email",
+        "initial_admin_password",
+        "google_client_id",
+        "google_client_secret",
+        "smtp_host",
+        "smtp_user",
+        "smtp_password",
+        "smtp_from_email",
+        mode="before",
+    )
     def _optional_seed_empty(cls, value):
         if isinstance(value, str) and not value.strip():
             return None

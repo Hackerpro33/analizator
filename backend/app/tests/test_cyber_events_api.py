@@ -8,6 +8,7 @@ from fastapi.testclient import TestClient
 from app.config import get_settings
 from app.main import app
 from app.services.security_event_store import get_security_event_store
+from .test_auth_api import login_user, register_user, verify_registered_user
 
 
 def _build_client(tmp_path, monkeypatch) -> TestClient:
@@ -17,8 +18,13 @@ def _build_client(tmp_path, monkeypatch) -> TestClient:
     monkeypatch.setenv("USER_STORE_PATH", str(user_path))
     monkeypatch.setenv("DATABASE_URL", f"sqlite:///{db_path}")
     monkeypatch.setenv("AUTH_JWT_SECRET", "test-secret")
+    monkeypatch.setenv("ENVIRONMENT", "test")
     monkeypatch.setenv("INITIAL_ADMIN_EMAIL", "")
     monkeypatch.setenv("INITIAL_ADMIN_PASSWORD", "")
+    monkeypatch.setenv("SMTP_HOST", "smtp.test")
+    monkeypatch.setenv("SMTP_USER", "mailer")
+    monkeypatch.setenv("SMTP_PASSWORD", "secret")
+    monkeypatch.setenv("SMTP_USE_STARTTLS", "false")
     get_settings.cache_clear()
     get_security_event_store.cache_clear()
     return TestClient(app)
@@ -56,8 +62,10 @@ def test_cyber_endpoints_and_roles(tmp_path, monkeypatch):
     admin_payload = {"email": "chief@example.com", "password": "StrongPass!1", "full_name": "Chief Sec"}
     viewer_payload = {"email": "viewer@example.com", "password": "StrongPass!1", "full_name": "Read Only"}
 
-    register = client.post("/api/v1/auth/register", json=admin_payload)
-    assert register.status_code == 200
+    register_user(client, admin_payload)
+    verify_registered_user(client, tmp_path, admin_payload["email"])
+    login = login_user(client, admin_payload["email"], admin_payload["password"])
+    assert login.status_code == 200
 
     _seed_events()
 
@@ -93,16 +101,17 @@ def test_cyber_endpoints_and_roles(tmp_path, monkeypatch):
     assert isinstance(attack_map.json()["connections"], list)
 
     client.post("/api/v1/auth/logout")
-    client.post("/api/v1/auth/register", json=viewer_payload)
+    register_user(client, viewer_payload)
+    verify_registered_user(client, tmp_path, viewer_payload["email"])
     client.post("/api/v1/auth/logout")
-    client.post("/api/v1/auth/login", json={"email": admin_payload["email"], "password": admin_payload["password"]})
+    login_user(client, admin_payload["email"], admin_payload["password"])
     users = client.get("/api/v1/admin/users").json()["items"]
     viewer = next(item for item in users if item["email"] == viewer_payload["email"])
     update = client.patch(f"/api/v1/admin/users/{viewer['id']}", json={"role": "security_viewer"})
     assert update.status_code == 200
 
     client.post("/api/v1/auth/logout")
-    login_viewer = client.post("/api/v1/auth/login", json={"email": viewer_payload["email"], "password": viewer_payload["password"]})
+    login_viewer = login_user(client, viewer_payload["email"], viewer_payload["password"])
     assert login_viewer.status_code == 200
     viewer_summary = client.get("/api/v1/cyber/summary?range=24h")
     assert viewer_summary.status_code == 200
@@ -111,7 +120,9 @@ def test_cyber_endpoints_and_roles(tmp_path, monkeypatch):
 def test_summary_handles_incident_failures(tmp_path, monkeypatch):
     client = _build_client(tmp_path, monkeypatch)
     admin_payload = {"email": "chief@example.com", "password": "StrongPass!1", "full_name": "Chief Sec"}
-    client.post("/api/v1/auth/register", json=admin_payload)
+    register_user(client, admin_payload)
+    verify_registered_user(client, tmp_path, admin_payload["email"])
+    login_user(client, admin_payload["email"], admin_payload["password"])
     _seed_events()
 
     def boom(self, connection, filters):

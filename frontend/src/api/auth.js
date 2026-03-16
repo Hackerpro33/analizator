@@ -1,4 +1,4 @@
-import { jsonRequest } from './http';
+import { buildApiUrl, jsonRequest } from './http';
 
 export function registerUser(payload) {
   return jsonRequest('/api/auth/register', {
@@ -33,4 +33,15 @@ export function updateProfile(payload) {
     method: 'PATCH',
     body: JSON.stringify(payload),
   });
+}
+
+export function resendVerificationEmail(payload) {
+  return jsonRequest('/api/auth/resend-verification', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
+export function buildGoogleLoginUrl() {
+  return buildApiUrl('/api/auth/google/login');
 }

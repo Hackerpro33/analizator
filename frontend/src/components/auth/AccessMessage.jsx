@@ -13,7 +13,7 @@ export default function AccessMessage({ type = "login" }) {
   const description =
     type === "forbidden"
       ? "Эта секция доступна только пользователям с расширенными правами."
-      : "Войдите или зарегистрируйтесь, чтобы использовать этот раздел платформы.";
+      : "Войдите через Google или подтвердите email после регистрации, чтобы использовать этот раздел платформы.";
 
   return (
     <div className="flex flex-col items-center justify-center text-center py-16 px-4 bg-white/80 rounded-3xl shadow-inner">

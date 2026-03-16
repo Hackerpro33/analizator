@@ -25,11 +25,20 @@ def hash_password(password: str) -> str:
     return pwd_context.hash(password)
 
 
-def verify_password(password: str, hashed_password: str) -> bool:
+def verify_password(password: str, hashed_password: Optional[str]) -> bool:
+    if not hashed_password:
+        return False
     return pwd_context.verify(password, hashed_password)
 
 
-def _create_token(*, subject: str, role: str, token_type: str, expires_minutes: int) -> str:
+def _create_token(
+    *,
+    subject: str,
+    role: str,
+    token_type: str,
+    expires_minutes: int,
+    extra_claims: Optional[Dict[str, Any]] = None,
+) -> str:
     settings = get_settings()
     expire = datetime.now(timezone.utc) + timedelta(minutes=expires_minutes)
     payload = {
@@ -39,6 +48,8 @@ def _create_token(*, subject: str, role: str, token_type: str, expires_minutes: 
         "exp": expire,
         "iat": datetime.now(timezone.utc),
     }
+    if extra_claims:
+        payload.update(extra_claims)
     return jwt.encode(payload, settings.jwt_secret_key, algorithm=settings.jwt_algorithm)
 
 
@@ -60,6 +71,21 @@ def create_refresh_token(user: UserRecord) -> str:
         token_type="refresh",
         expires_minutes=settings.refresh_token_expires_minutes,
     )
+
+
+def create_email_verification_token(user: UserRecord) -> str:
+    settings = get_settings()
+    return _create_token(
+        subject=user["id"],
+        role=user.get("role", "user"),
+        token_type="verify_email",
+        expires_minutes=settings.email_verification_expires_minutes,
+        extra_claims={"email": user["email"]},
+    )
+
+
+def decode_email_verification_token(token: str) -> Dict[str, Any]:
+    return _decode_token(token, expected_type="verify_email")
 
 
 def _decode_token(token: str, expected_type: str) -> Dict[str, Any]:

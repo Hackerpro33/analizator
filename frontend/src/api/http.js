@@ -81,7 +81,13 @@ export async function jsonRequest(path, options = {}, base = NORMALIZED_API_BASE
   if (!response.ok) {
     let message;
     try {
-      message = await response.text();
+      const contentType = response.headers?.get?.('content-type') || '';
+      if (contentType.includes('application/json')) {
+        const payload = await response.json();
+        message = payload?.detail || payload?.message || JSON.stringify(payload);
+      } else {
+        message = await response.text();
+      }
     } catch (_error) {
       message = response.statusText;
     }

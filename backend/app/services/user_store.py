@@ -40,7 +40,18 @@ class UserStore:
                 data = []
         if not isinstance(data, list):
             return []
-        return data
+        return [self._normalize_user(user) for user in data if isinstance(user, dict)]
+
+    @staticmethod
+    def _normalize_user(user: UserRecord) -> UserRecord:
+        normalized = dict(user)
+        if "email_verified" not in normalized:
+            normalized["email_verified"] = True
+        normalized.setdefault("auth_provider", "local")
+        normalized.setdefault("google_sub", None)
+        normalized.setdefault("hashed_password", None)
+        normalized.setdefault("is_active", True)
+        return normalized
 
     def _write(self, payload: List[UserRecord]) -> None:
         tmp_path = self._path.with_suffix(".tmp")
@@ -67,6 +78,13 @@ class UserStore:
                     return dict(user)
         return None
 
+    def find_by_google_sub(self, google_sub: str) -> Optional[UserRecord]:
+        with self._lock:
+            for user in self._read():
+                if user.get("google_sub") == google_sub:
+                    return dict(user)
+        return None
+
     def has_role(self, role: str) -> bool:
         with self._lock:
             return any(user.get("role") == role for user in self._read())
@@ -80,9 +98,12 @@ class UserStore:
         *,
         email: EmailStr,
         full_name: str,
-        hashed_password: str,
+        hashed_password: Optional[str],
         role: str,
         is_active: bool = True,
+        email_verified: bool = False,
+        auth_provider: str = "local",
+        google_sub: Optional[str] = None,
     ) -> UserRecord:
         now = datetime.now(timezone.utc).isoformat()
         record = {
@@ -92,6 +113,9 @@ class UserStore:
             "hashed_password": hashed_password,
             "role": role,
             "is_active": is_active,
+            "email_verified": email_verified,
+            "auth_provider": auth_provider,
+            "google_sub": google_sub,
             "created_at": now,
             "updated_at": now,
             "last_login_at": None,
@@ -137,6 +161,9 @@ class UserStore:
                 "hashed_password": hashed_password,
                 "role": "admin",
                 "is_active": True,
+                "email_verified": True,
+                "auth_provider": "local",
+                "google_sub": None,
                 "created_at": now,
                 "updated_at": now,
                 "last_login_at": None,
@@ -153,6 +180,8 @@ def redact_user(user: UserRecord) -> Dict[str, Any]:
         "full_name": user.get("full_name") or "",
         "role": user.get("role", "user"),
         "is_active": user.get("is_active", True),
+        "email_verified": user.get("email_verified", False),
+        "auth_provider": user.get("auth_provider", "local"),
         "created_at": user.get("created_at"),
         "updated_at": user.get("updated_at"),
         "last_login_at": user.get("last_login_at"),

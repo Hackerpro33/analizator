@@ -1,9 +1,12 @@
 from __future__ import annotations
 
+import json
+
 from fastapi.testclient import TestClient
 
 from app.config import get_settings
 from app.main import app
+from app.security import create_email_verification_token
 
 
 def _build_client(tmp_path, monkeypatch) -> TestClient:
@@ -11,31 +14,69 @@ def _build_client(tmp_path, monkeypatch) -> TestClient:
     user_path.write_text("[]", encoding="utf-8")
     monkeypatch.setenv("USER_STORE_PATH", str(user_path))
     monkeypatch.setenv("AUTH_JWT_SECRET", "test-secret")
+    monkeypatch.setenv("ENVIRONMENT", "test")
     monkeypatch.setenv("INITIAL_ADMIN_EMAIL", "")
     monkeypatch.setenv("INITIAL_ADMIN_PASSWORD", "")
+    monkeypatch.setenv("SMTP_HOST", "smtp.test")
+    monkeypatch.setenv("SMTP_USER", "mailer")
+    monkeypatch.setenv("SMTP_PASSWORD", "secret")
+    monkeypatch.setenv("SMTP_USE_STARTTLS", "false")
     get_settings.cache_clear()
     return TestClient(app)
 
 
+def register_user(client: TestClient, payload: dict) -> dict:
+    response = client.post("/api/v1/auth/register", json=payload)
+    assert response.status_code == 200
+    return response.json()
+
+
+def verify_registered_user(client: TestClient, tmp_path, email: str) -> None:
+    records = json.loads((tmp_path / "users.json").read_text(encoding="utf-8"))
+    user = next(entry for entry in records if entry["email"] == email.lower())
+    token = create_email_verification_token(user)
+    response = client.post("/api/v1/auth/verify-email", json={"token": token})
+    assert response.status_code == 200
+
+
+def login_user(client: TestClient, email: str, password: str):
+    return client.post("/api/v1/auth/login", json={"email": email, "password": password})
+
+
 def test_register_first_user_becomes_admin(tmp_path, monkeypatch):
     client = _build_client(tmp_path, monkeypatch)
-    response = client.post(
-        "/api/v1/auth/register",
-        json={"email": "admin@example.com", "password": "StrongPass!1", "full_name": "Admin One"},
+    data = register_user(
+        client,
+        {"email": "admin@example.com", "password": "StrongPass!1", "full_name": "Admin One"},
     )
-    assert response.status_code == 200
-    data = response.json()
-    assert data["user"]["role"] == "admin"
-    assert data["user"]["email"] == "admin@example.com"
-    assert "insight_access_token" in response.cookies
+    assert data["status"] == "pending_verification"
+    verify_registered_user(client, tmp_path, "admin@example.com")
+
+    login = login_user(client, "admin@example.com", "StrongPass!1")
+    assert login.status_code == 200
+    assert login.json()["user"]["role"] == "admin"
+    assert login.json()["user"]["email"] == "admin@example.com"
+    assert login.json()["user"]["email_verified"] is True
+    assert "insight_access_token" in login.cookies
+
+
+def test_login_requires_verified_email(tmp_path, monkeypatch):
+    client = _build_client(tmp_path, monkeypatch)
+    payload = {"email": "admin@example.com", "password": "StrongPass!1", "full_name": "Admin One"}
+    register_user(client, payload)
+
+    blocked = login_user(client, payload["email"], payload["password"])
+    assert blocked.status_code == 403
+    assert blocked.json()["detail"] == "Email address is not verified"
 
 
 def test_login_and_access_protected_routes(tmp_path, monkeypatch):
     client = _build_client(tmp_path, monkeypatch)
     payload = {"email": "admin@example.com", "password": "StrongPass!1", "full_name": "Admin One"}
-    client.post("/api/v1/auth/register", json=payload)
-    client.post("/api/v1/auth/logout")
-    login = client.post("/api/v1/auth/login", json={"email": payload["email"], "password": payload["password"]})
+    register_user(client, payload)
+    verify_registered_user(client, tmp_path, payload["email"])
+
+    login = login_user(client, payload["email"], payload["password"])
     assert login.status_code == 200
     protected = client.get("/api/v1/cybersecurity/controls")
     assert protected.status_code == 200
@@ -46,9 +87,16 @@ def test_non_privileged_user_cannot_access_cybersecurity(tmp_path, monkeypatch):
     client = _build_client(tmp_path, monkeypatch)
     admin_payload = {"email": "admin@example.com", "password": "StrongPass!1", "full_name": "Admin One"}
     user_payload = {"email": "user@example.com", "password": "StrongPass!1", "full_name": "User One"}
-    client.post("/api/v1/auth/register", json=admin_payload)
+
+    register_user(client, admin_payload)
+    verify_registered_user(client, tmp_path, admin_payload["email"])
+    login_user(client, admin_payload["email"], admin_payload["password"])
     client.post("/api/v1/auth/logout")
-    client.post("/api/v1/auth/register", json=user_payload)
+
+    register_user(client, user_payload)
+    verify_registered_user(client, tmp_path, user_payload["email"])
+    login_user(client, user_payload["email"], user_payload["password"])
+
     forbidden = client.get("/api/v1/cybersecurity/controls")
     assert forbidden.status_code == 403
 
@@ -57,12 +105,18 @@ def test_admin_can_update_user_roles(tmp_path, monkeypatch):
     client = _build_client(tmp_path, monkeypatch)
     admin_payload = {"email": "admin@example.com", "password": "StrongPass!1", "full_name": "Admin One"}
     user_payload = {"email": "user@example.com", "password": "StrongPass!1", "full_name": "User One"}
-    client.post("/api/v1/auth/register", json=admin_payload)
-    client.post("/api/v1/auth/logout")
-    client.post("/api/v1/auth/register", json=user_payload)
-    client.post("/api/v1/auth/logout")
-    client.post("/api/v1/auth/login", json={"email": admin_payload["email"], "password": admin_payload["password"]})
 
+    register_user(client, admin_payload)
+    verify_registered_user(client, tmp_path, admin_payload["email"])
+    login_user(client, admin_payload["email"], admin_payload["password"])
+    client.post("/api/v1/auth/logout")
+
+    register_user(client, user_payload)
+    verify_registered_user(client, tmp_path, user_payload["email"])
+    login_user(client, user_payload["email"], user_payload["password"])
+    client.post("/api/v1/auth/logout")
+
+    client.post("/api/v1/auth/login", json={"email": admin_payload["email"], "password": admin_payload["password"]})
     users_response = client.get("/api/v1/admin/users")
     assert users_response.status_code == 200
     users = users_response.json()["items"]
@@ -82,10 +136,14 @@ def test_users_overview_read_only_access(tmp_path, monkeypatch):
     admin_payload = {"email": "admin@example.com", "password": "StrongPass!1", "full_name": "Admin One"}
     user_payload = {"email": "user@example.com", "password": "StrongPass!1", "full_name": "User One"}
 
-    # Bootstrap administrator then switch to regular user session
-    client.post("/api/v1/auth/register", json=admin_payload)
+    register_user(client, admin_payload)
+    verify_registered_user(client, tmp_path, admin_payload["email"])
+    login_user(client, admin_payload["email"], admin_payload["password"])
     client.post("/api/v1/auth/logout")
-    client.post("/api/v1/auth/register", json=user_payload)
+
+    register_user(client, user_payload)
+    verify_registered_user(client, tmp_path, user_payload["email"])
+    login_user(client, user_payload["email"], user_payload["password"])
 
     overview_user = client.get("/api/v1/users/overview")
     assert overview_user.status_code == 200
@@ -95,7 +153,7 @@ def test_users_overview_read_only_access(tmp_path, monkeypatch):
     assert payload["can_manage"] is False
 
     client.post("/api/v1/auth/logout")
-    client.post("/api/v1/auth/login", json={"email": admin_payload["email"], "password": admin_payload["password"]})
+    login_user(client, admin_payload["email"], admin_payload["password"])
     overview_admin = client.get("/api/v1/users/overview")
     assert overview_admin.status_code == 200
     assert overview_admin.json()["can_manage"] is True
@@ -104,8 +162,10 @@ def test_users_overview_read_only_access(tmp_path, monkeypatch):
 def test_user_can_update_profile(tmp_path, monkeypatch):
     client = _build_client(tmp_path, monkeypatch)
     payload = {"email": "admin@example.com", "password": "StrongPass!1", "full_name": "Admin One"}
-    register = client.post("/api/v1/auth/register", json=payload)
-    assert register.status_code == 200
+    register_user(client, payload)
+    verify_registered_user(client, tmp_path, payload["email"])
+    login = login_user(client, payload["email"], payload["password"])
+    assert login.status_code == 200
 
     profile_before = client.get("/api/v1/auth/me").json()
     assert profile_before["full_name"] == "Admin One"

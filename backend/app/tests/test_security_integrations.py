@@ -7,16 +7,15 @@ from typing import Dict
 from app.services import user_store
 from app.services.metadata_repository import JsonMetadataRepository
 from app.services.object_storage import ObjectStorageClient
-from .test_auth_api import _build_client as build_auth_client
+from .test_auth_api import _build_client as build_auth_client, login_user, register_user, verify_registered_user
 
 
 def test_cybersecurity_endpoints_require_privileged_user(tmp_path, monkeypatch):
     user_store.get_user_store.cache_clear()
     client = build_auth_client(tmp_path, monkeypatch)
-    client.post(
-        "/api/v1/auth/register",
-        json={"email": "sec@example.com", "password": "StrongPass!1", "full_name": "Sec Admin"},
-    )
+    register_user(client, {"email": "sec@example.com", "password": "StrongPass!1", "full_name": "Sec Admin"})
+    verify_registered_user(client, tmp_path, "sec@example.com")
+    login_user(client, "sec@example.com", "StrongPass!1")
     controls = client.get("/api/v1/cybersecurity/controls")
     assert controls.status_code == 200
     assert controls.json()["count"] > 0

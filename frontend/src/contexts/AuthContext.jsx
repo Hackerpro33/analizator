@@ -30,10 +30,9 @@ export function AuthProvider({ children }) {
 
   const register = useCallback(
     async (payload) => {
-      await registerUser(payload);
-      await loadProfile();
+      return registerUser(payload);
     },
-    [loadProfile]
+    []
   );
 
   const logout = useCallback(async () => {

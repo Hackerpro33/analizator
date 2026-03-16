@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
-import { LogOut, Shield, UserPlus } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { buildGoogleLoginUrl, resendVerificationEmail } from "@/api/auth";
 import { useAuth } from "@/contexts/AuthContext.jsx";
+import { LogOut, MailCheck, Shield, UserPlus } from "lucide-react";
 
 function CredentialsForm({ mode, onSubmit }) {
   const [form, setForm] = useState({
@@ -76,10 +77,39 @@ function CredentialsForm({ mode, onSubmit }) {
   );
 }
 
+function GoogleLoginButton() {
+  return (
+    <Button type="button" variant="outline" className="w-full" onClick={() => window.location.assign(buildGoogleLoginUrl())}>
+      Войти через Google
+    </Button>
+  );
+}
+
+function PendingVerification({ verification, onResend }) {
+  return (
+    <div className="space-y-4 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-slate-800">
+      <div className="flex items-center gap-3">
+        <MailCheck className="h-5 w-5 text-emerald-600" />
+        <div>
+          <p className="font-semibold">Проверьте почту</p>
+          <p className="text-sm text-slate-600">{verification.masked_email}</p>
+        </div>
+      </div>
+      <p className="text-sm text-slate-600">
+        Мы отправили ссылку для подтверждения. Локальный вход станет доступен только после активации email.
+      </p>
+      <Button type="button" variant="outline" className="w-full" onClick={onResend}>
+        Отправить письмо ещё раз
+      </Button>
+    </div>
+  );
+}
+
 export default function AuthControls() {
   const { user, status, login, register, logout } = useAuth();
   const { toast } = useToast();
   const [open, setOpen] = useState(null);
+  const [pendingVerification, setPendingVerification] = useState(null);
 
   useEffect(() => {
     const handler = (event) => {
@@ -88,6 +118,12 @@ export default function AuthControls() {
     window.addEventListener("open-auth", handler);
     return () => window.removeEventListener("open-auth", handler);
   }, []);
+
+  useEffect(() => {
+    if (open !== "register") {
+      setPendingVerification(null);
+    }
+  }, [open]);
 
   if (status === "loading") {
     return (
@@ -135,14 +171,19 @@ export default function AuthControls() {
           <DialogHeader>
             <DialogTitle>Вход в систему</DialogTitle>
           </DialogHeader>
-          <CredentialsForm
-            mode="login"
-            onSubmit={async (values) => {
-              await login({ email: values.email, password: values.password });
-              setOpen(null);
-              toast({ title: "Добро пожаловать" });
-            }}
-          />
+          <div className="space-y-4">
+            <GoogleLoginButton />
+            <div className="text-center text-xs uppercase tracking-[0.2em] text-slate-400">или</div>
+            <CredentialsForm
+              mode="login"
+              onSubmit={async (values) => {
+                await login({ email: values.email, password: values.password });
+                setOpen(null);
+                toast({ title: "Добро пожаловать" });
+              }}
+            />
+            <p className="text-sm text-slate-500">Локальный вход доступен только после подтверждения email.</p>
+          </div>
         </DialogContent>
       </Dialog>
 
@@ -157,19 +198,29 @@ export default function AuthControls() {
           <DialogHeader>
             <DialogTitle>Создать аккаунт</DialogTitle>
           </DialogHeader>
-          <CredentialsForm
-            mode="register"
-            onSubmit={async (values) => {
-              await register({
-                email: values.email,
-                password: values.password,
-                full_name: values.full_name,
-                invite_code: values.invite_code || undefined,
-              });
-              setOpen(null);
-              toast({ title: "Регистрация завершена" });
-            }}
-          />
+          {pendingVerification ? (
+            <PendingVerification
+              verification={pendingVerification}
+              onResend={async () => {
+                await resendVerificationEmail({ email: pendingVerification.email });
+                toast({ title: "Письмо отправлено повторно" });
+              }}
+            />
+          ) : (
+            <CredentialsForm
+              mode="register"
+              onSubmit={async (values) => {
+                const result = await register({
+                  email: values.email,
+                  password: values.password,
+                  full_name: values.full_name,
+                  invite_code: values.invite_code || undefined,
+                });
+                setPendingVerification(result);
+                toast({ title: "Регистрация создана", description: "Подтвердите email из письма" });
+              }}
+            />
+          )}
         </DialogContent>
       </Dialog>
     </div>

@@ -4,16 +4,15 @@ from datetime import datetime, timedelta, timezone
 
 from fastapi.testclient import TestClient
 
-from .test_auth_api import _build_client as build_auth_client
+from .test_auth_api import _build_client as build_auth_client, login_user, register_user, verify_registered_user
 
 
 def test_architecture_and_scenario_flow(tmp_path, monkeypatch):
     client: TestClient = build_auth_client(tmp_path, monkeypatch)
-    register = client.post(
-        "/api/v1/auth/register",
-        json={"email": "sec@example.com", "password": "StrongPass!1", "full_name": "Sec Owner"},
-    )
-    assert register.status_code == 200
+    register_user(client, {"email": "sec@example.com", "password": "StrongPass!1", "full_name": "Sec Owner"})
+    verify_registered_user(client, tmp_path, "sec@example.com")
+    login = login_user(client, "sec@example.com", "StrongPass!1")
+    assert login.status_code == 200
 
     versions = client.get("/api/v1/cyber/architecture/versions")
     assert versions.status_code == 200
@@ -43,10 +42,9 @@ def test_architecture_and_scenario_flow(tmp_path, monkeypatch):
 def test_host_protection_status(tmp_path, monkeypatch):
     monkeypatch.setenv("HOST_AGENT_TOKEN", "agent-token")
     client: TestClient = build_auth_client(tmp_path, monkeypatch)
-    client.post(
-        "/api/v1/auth/register",
-        json={"email": "sec@example.com", "password": "StrongPass!1", "full_name": "Sec Owner"},
-    )
+    register_user(client, {"email": "sec@example.com", "password": "StrongPass!1", "full_name": "Sec Owner"})
+    verify_registered_user(client, tmp_path, "sec@example.com")
+    login_user(client, "sec@example.com", "StrongPass!1")
 
     status = client.post(
         "/api/v1/cyber/host",
