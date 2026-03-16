@@ -66,6 +66,29 @@ class ProfileUpdateRequest(BaseModel):
     password: Optional[str] = Field(default=None, min_length=8, max_length=128)
 
 
+def _auth_error(
+    *,
+    status_code: int,
+    code: str,
+    message: str,
+    suggestion: Optional[str] = None,
+    allow_google: bool = False,
+    allow_registration: bool = False,
+    allow_resend_verification: bool = False,
+) -> HTTPException:
+    return HTTPException(
+        status_code=status_code,
+        detail={
+            "code": code,
+            "message": message,
+            "suggestion": suggestion,
+            "allow_google": allow_google,
+            "allow_registration": allow_registration,
+            "allow_resend_verification": allow_resend_verification,
+        },
+    )
+
+
 def _assign_role(store: UserStore, invite_code: Optional[str]) -> str:
     settings = get_settings()
     if not store.has_role("admin"):
@@ -190,12 +213,45 @@ def register_user(
 def login_user(payload: LoginRequest, response: Response, store: UserStore = Depends(get_user_store)) -> AuthResponse:
     _bootstrap_admin_if_needed(store)
     user = store.find_by_email(payload.email)
-    if not user or not user.get("is_active", True):
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
+    if not user:
+        raise _auth_error(
+            status_code=status.HTTP_404_NOT_FOUND,
+            code="email_not_found",
+            message="Аккаунт с таким email не найден.",
+            suggestion="Проверьте адрес или зарегистрируйтесь. Если вы раньше входили через Google, используйте Google-вход.",
+            allow_google=True,
+            allow_registration=True,
+        )
+    if not user.get("is_active", True):
+        raise _auth_error(
+            status_code=status.HTTP_403_FORBIDDEN,
+            code="account_inactive",
+            message="Этот аккаунт отключен.",
+        )
     if not user.get("email_verified", False):
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Email address is not verified")
+        raise _auth_error(
+            status_code=status.HTTP_403_FORBIDDEN,
+            code="email_not_verified",
+            message="Email ещё не подтверждён.",
+            suggestion="Подтвердите email из письма или запросите письмо повторно.",
+            allow_resend_verification=True,
+        )
+    if user.get("auth_provider") == "google" and not user.get("hashed_password"):
+        raise _auth_error(
+            status_code=status.HTTP_403_FORBIDDEN,
+            code="google_only_account",
+            message="Этот аккаунт привязан к Google-входу.",
+            suggestion="Войдите через Google для этого email.",
+            allow_google=True,
+        )
     if not verify_password(payload.password, user.get("hashed_password")):
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
+        raise _auth_error(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            code="invalid_password",
+            message="Неверный пароль.",
+            suggestion="Попробуйте ещё раз. Если аккаунт создавался через Google, используйте Google-вход.",
+            allow_google=True,
+        )
     store.mark_login(user["id"])
     fresh_user = store.get_user(user["id"]) or user
     return _issue_tokens(response, fresh_user)

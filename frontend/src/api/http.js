@@ -80,18 +80,34 @@ export async function jsonRequest(path, options = {}, base = NORMALIZED_API_BASE
 
   if (!response.ok) {
     let message;
+    let details = null;
     try {
       const contentType = response.headers?.get?.('content-type') || '';
       if (contentType.includes('application/json')) {
         const payload = await response.json();
-        message = payload?.detail || payload?.message || JSON.stringify(payload);
+        details = payload?.detail ?? payload ?? null;
+        if (typeof details === 'string') {
+          message = details;
+        } else if (details && typeof details === 'object') {
+          message = details.message || payload?.message || JSON.stringify(details);
+        } else {
+          message = payload?.message || JSON.stringify(payload);
+        }
       } else {
         message = await response.text();
+        if (typeof message === 'string' && /<html[\s>]/i.test(message)) {
+          message = response.status >= 500
+            ? 'Сервер временно недоступен. Попробуйте ещё раз через минуту.'
+            : 'Запрос не удалось обработать.';
+        }
       }
     } catch (_error) {
       message = response.statusText;
     }
-    throw new Error(message || 'Request failed');
+    const error = new Error(message || 'Request failed');
+    error.status = response.status;
+    error.details = details;
+    throw error;
   }
 
   if (response.status === 204) {

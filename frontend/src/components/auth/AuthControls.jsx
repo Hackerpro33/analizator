@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -7,9 +8,9 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { buildGoogleLoginUrl, resendVerificationEmail } from "@/api/auth";
 import { useAuth } from "@/contexts/AuthContext.jsx";
-import { LogOut, MailCheck, Shield, UserPlus } from "lucide-react";
+import { AlertCircle, LogOut, MailCheck, Shield, UserPlus } from "lucide-react";
 
-function CredentialsForm({ mode, onSubmit }) {
+function CredentialsForm({ mode, onSubmit, footer = null, errorContent = null, suppressErrorToast = false }) {
   const [form, setForm] = useState({
     full_name: "",
     email: "",
@@ -29,11 +30,13 @@ function CredentialsForm({ mode, onSubmit }) {
     try {
       await onSubmit(form);
     } catch (error) {
-      toast({
-        title: "Ошибка",
-        description: error?.message || "Не удалось выполнить запрос",
-        variant: "destructive",
-      });
+      if (!suppressErrorToast) {
+        toast({
+          title: "Ошибка",
+          description: error?.message || "Не удалось выполнить запрос",
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -73,6 +76,8 @@ function CredentialsForm({ mode, onSubmit }) {
       <Button type="submit" className="w-full" disabled={isSubmitting}>
         {isRegister ? "Зарегистрироваться" : "Войти"}
       </Button>
+      {errorContent}
+      {footer}
     </form>
   );
 }
@@ -110,6 +115,7 @@ export default function AuthControls() {
   const { toast } = useToast();
   const [open, setOpen] = useState(null);
   const [pendingVerification, setPendingVerification] = useState(null);
+  const [loginFeedback, setLoginFeedback] = useState(null);
 
   useEffect(() => {
     const handler = (event) => {
@@ -124,6 +130,25 @@ export default function AuthControls() {
       setPendingVerification(null);
     }
   }, [open]);
+
+  useEffect(() => {
+    if (open !== "login") {
+      setLoginFeedback(null);
+    }
+  }, [open]);
+
+  const buildLoginFeedback = (error, email) => {
+    const details = error?.details && typeof error.details === "object" ? error.details : {};
+    const message = details.message || error?.message || "Не удалось выполнить вход.";
+    return {
+      message,
+      suggestion: details.suggestion || null,
+      email,
+      allowGoogle: Boolean(details.allow_google),
+      allowRegistration: Boolean(details.allow_registration),
+      allowResendVerification: Boolean(details.allow_resend_verification),
+    };
+  };
 
   if (status === "loading") {
     return (
@@ -176,10 +201,47 @@ export default function AuthControls() {
             <div className="text-center text-xs uppercase tracking-[0.2em] text-slate-400">или</div>
             <CredentialsForm
               mode="login"
+              errorContent={
+                loginFeedback ? (
+                  <Alert variant="destructive" className="border-red-200 bg-red-50 text-red-900 [&>svg]:text-red-700">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertTitle>{loginFeedback.message}</AlertTitle>
+                    <AlertDescription className="space-y-3">
+                      {loginFeedback.suggestion ? <p>{loginFeedback.suggestion}</p> : null}
+                      {loginFeedback.allowResendVerification ? (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="w-full"
+                          onClick={async () => {
+                            await resendVerificationEmail({ email: loginFeedback.email });
+                            toast({ title: "Письмо отправлено повторно" });
+                          }}
+                        >
+                          Отправить письмо повторно
+                        </Button>
+                      ) : null}
+                      {loginFeedback.allowGoogle ? <GoogleLoginButton /> : null}
+                      {loginFeedback.allowRegistration ? (
+                        <Button type="button" variant="outline" className="w-full" onClick={() => setOpen("register")}>
+                          Зарегистрироваться
+                        </Button>
+                      ) : null}
+                    </AlertDescription>
+                  </Alert>
+                ) : null
+              }
+              suppressErrorToast
               onSubmit={async (values) => {
-                await login({ email: values.email, password: values.password });
-                setOpen(null);
-                toast({ title: "Добро пожаловать" });
+                try {
+                  await login({ email: values.email, password: values.password });
+                  setLoginFeedback(null);
+                  setOpen(null);
+                  toast({ title: "Добро пожаловать" });
+                } catch (error) {
+                  setLoginFeedback(buildLoginFeedback(error, values.email));
+                  throw error;
+                }
               }}
             />
             <p className="text-sm text-slate-500">Локальный вход доступен только после подтверждения email.</p>
@@ -209,6 +271,7 @@ export default function AuthControls() {
           ) : (
             <CredentialsForm
               mode="register"
+              footer={<p className="text-sm text-slate-500">Если аккаунт уже существует, попробуйте войти или используйте Google.</p>}
               onSubmit={async (values) => {
                 const result = await register({
                   email: values.email,
