@@ -1,11 +1,9 @@
-import React, { useEffect, useMemo } from 'react';
-import { MapContainer, Popup, CircleMarker, Marker, useMap } from 'react-leaflet';
+import React, { useMemo } from 'react';
+import { MapContainer, Popup, CircleMarker, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Badge } from "@/components/ui/badge";
 import { parseCoordinate, parseNumericValue, findNameField, findFirstValue } from "@/utils/mapUtils";
 import samplePoints, { sampleTimeSeries } from "./sampleData";
-
-import L from 'leaflet';
 
 const DEFAULT_POSITION = [55.7558, 37.6173];
 
@@ -172,81 +170,6 @@ const getCategoryColor = (category) => {
   };
   return colors[category] || 'bg-gray-100 text-gray-700';
 };
-
-const buildSquareIcon = (color, size) =>
-  L.divIcon({
-    html: `<div style="width:${size}px;height:${size}px;background:${color};border:2px solid rgba(15,23,42,0.25);box-shadow:0 10px 18px rgba(15,23,42,0.35);border-radius:10px;"></div>`,
-    className: 'map-square-icon',
-    iconSize: [size, size],
-    iconAnchor: [size / 2, size / 2],
-  });
-
-function LocalTileLayer() {
-  const map = useMap();
-
-  useEffect(() => {
-    const gridLayer = L.gridLayer({ tileSize: 256 });
-
-    gridLayer.createTile = () => {
-      const tile = document.createElement('canvas');
-      tile.width = 256;
-      tile.height = 256;
-
-      const ctx = tile.getContext('2d');
-      if (!ctx) {
-        return tile;
-      }
-
-      const gradient = ctx.createLinearGradient(0, 0, 256, 256);
-      gradient.addColorStop(0, '#01122a');
-      gradient.addColorStop(0.6, '#032349');
-      gradient.addColorStop(1, '#041637');
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, 256, 256);
-
-      ctx.strokeStyle = 'rgba(59, 130, 246, 0.14)';
-      ctx.lineWidth = 0.5;
-
-      for (let i = 0; i <= 256; i += 64) {
-        ctx.beginPath();
-        ctx.moveTo(i, 0);
-        ctx.lineTo(i, 256);
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.moveTo(0, i);
-        ctx.lineTo(256, i);
-        ctx.stroke();
-      }
-
-      const glowCenters = [
-        { x: 48, y: 70, r: 95, color: 'rgba(59,130,246,0.22)' },
-        { x: 210, y: 190, r: 90, color: 'rgba(14,165,233,0.18)' },
-        { x: 110, y: 210, r: 110, color: 'rgba(16,185,129,0.15)' },
-      ];
-
-      glowCenters.forEach(({ x, y, r, color }) => {
-        const radial = ctx.createRadialGradient(x, y, 0, x, y, r);
-        radial.addColorStop(0, color);
-        radial.addColorStop(1, 'transparent');
-        ctx.fillStyle = radial;
-        ctx.beginPath();
-        ctx.arc(x, y, r, 0, Math.PI * 2);
-        ctx.fill();
-      });
-
-      return tile;
-    };
-
-    gridLayer.addTo(map);
-
-    return () => {
-      gridLayer.remove();
-    };
-  }, [map]);
-
-  return null;
-}
 
 export default function MapView({
   data,
@@ -568,23 +491,31 @@ export default function MapView({
           width: '100%',
         }}
       >
-        <LocalTileLayer />
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution="&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
+        />
         {timeComparisonActive && comparisonPoints.length > 0
           ? comparisonPoints.map((point) => {
-              const magnitude = Math.abs(point.change);
-              const size = 24 + Math.min(22, Math.log(magnitude + 1) * 8);
               const color = point.change > 0
                 ? '#ef4444'
                 : point.change < 0
                   ? '#22c55e'
                   : '#f97316';
-              const icon = buildSquareIcon(color, size);
+              const magnitude = Math.abs(point.change);
+              const radius = 10 + Math.min(12, Math.log(magnitude + 1) * 2.5);
 
               return (
-                <Marker
+                <CircleMarker
                   key={`${point.lat}-${point.lon}-${point.basePeriod}-${point.comparisonPeriod}`}
-                  position={[point.lat, point.lon]}
-                  icon={icon}
+                  center={[point.lat, point.lon]}
+                  radius={radius}
+                  pathOptions={{
+                    color,
+                    fillColor: color,
+                    fillOpacity: 0.82,
+                    weight: 2,
+                  }}
                 >
                   <Popup>
                     <div className="space-y-3 min-w-64">
@@ -637,7 +568,7 @@ export default function MapView({
                       </div>
                     </div>
                   </Popup>
-                </Marker>
+                </CircleMarker>
               );
             })
           : pointsToRender.map((point, index) => {
