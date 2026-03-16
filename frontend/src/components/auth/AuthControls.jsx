@@ -258,7 +258,6 @@ export default function AuthControls() {
                   toast({ title: "Добро пожаловать" });
                 } catch (error) {
                   setLoginFeedback(buildLoginFeedback(error, values.email));
-                  throw error;
                 }
               }}
             />

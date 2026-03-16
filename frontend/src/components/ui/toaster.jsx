@@ -8,17 +8,29 @@ import {
   ToastViewport,
 } from "@/components/ui/toast";
 
+function normalizeToastText(value) {
+  if (typeof value !== "string") {
+    return value;
+  }
+  if (/<html[\s>]/i.test(value) || /<body[\s>]/i.test(value) || /<title>/i.test(value)) {
+    return "Сервер временно недоступен. Попробуйте ещё раз через минуту.";
+  }
+  return value;
+}
+
 export function Toaster() {
   const { currentToast, dismiss } = useToast({ subscribe: true });
+  const safeTitle = normalizeToastText(currentToast?.title);
+  const safeDescription = normalizeToastText(currentToast?.description);
 
   return (
     <ToastProvider>
       {currentToast && (
         <Toast key={currentToast.id} {...currentToast}>
           <div className="grid gap-1">
-            {currentToast.title && <ToastTitle>{currentToast.title}</ToastTitle>}
-            {currentToast.description && (
-              <ToastDescription>{currentToast.description}</ToastDescription>
+            {safeTitle && <ToastTitle>{safeTitle}</ToastTitle>}
+            {safeDescription && (
+              <ToastDescription>{safeDescription}</ToastDescription>
             )}
           </div>
           {currentToast.action}
