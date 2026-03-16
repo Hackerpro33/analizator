@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { MapContainer, Popup, CircleMarker, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Badge } from "@/components/ui/badge";
@@ -6,6 +6,23 @@ import { parseCoordinate, parseNumericValue, findNameField, findFirstValue } fro
 import samplePoints, { sampleTimeSeries } from "./sampleData";
 
 const DEFAULT_POSITION = [55.7558, 37.6173];
+const TILE_PROVIDERS = [
+  {
+    name: 'OpenStreetMap',
+    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    attribution: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors",
+  },
+  {
+    name: 'Carto Voyager',
+    url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+    attribution: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors &copy; CARTO",
+  },
+  {
+    name: 'OpenTopoMap',
+    url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+    attribution: "Map data: &copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors, SRTM | Map style: &copy; <a href='https://opentopomap.org'>OpenTopoMap</a>",
+  },
+];
 
 const getValueByColumn = (point, column, fallbackKeys = []) => {
   if (column && point && point[column] !== undefined && point[column] !== null) {
@@ -178,6 +195,22 @@ export default function MapView({
   overlayInfo,
   analyticsOverlay,
 }) {
+  const [tileProviderIndex, setTileProviderIndex] = useState(0);
+  const [tileLoadFailed, setTileLoadFailed] = useState(false);
+  const hasLoadedTilesRef = useRef(false);
+  const switchedProviderRef = useRef(false);
+
+  useEffect(() => {
+    setTileProviderIndex(0);
+    setTileLoadFailed(false);
+    hasLoadedTilesRef.current = false;
+    switchedProviderRef.current = false;
+  }, [config?.dataset_id]);
+
+  useEffect(() => {
+    switchedProviderRef.current = false;
+  }, [tileProviderIndex]);
+
   const timeComparisonActive = useMemo(() => {
     return Boolean(
       config?.time_column &&
@@ -474,6 +507,28 @@ export default function MapView({
   };
 
   const resolvedHeight = typeof height === 'number' ? `${height}px` : height;
+  const tileProvider = TILE_PROVIDERS[tileProviderIndex];
+
+  const handleTileLoad = () => {
+    hasLoadedTilesRef.current = true;
+    setTileLoadFailed(false);
+  };
+
+  const handleTileError = () => {
+    if (hasLoadedTilesRef.current || switchedProviderRef.current) {
+      return;
+    }
+
+    switchedProviderRef.current = true;
+
+    setTileProviderIndex((current) => {
+      if (current < TILE_PROVIDERS.length - 1) {
+        return current + 1;
+      }
+      setTileLoadFailed(true);
+      return current;
+    });
+  };
 
   return (
     <div
@@ -492,8 +547,13 @@ export default function MapView({
         }}
       >
         <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution="&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
+          key={tileProvider.name}
+          url={tileProvider.url}
+          attribution={tileProvider.attribution}
+          eventHandlers={{
+            load: handleTileLoad,
+            tileerror: handleTileError,
+          }}
         />
         {timeComparisonActive && comparisonPoints.length > 0
           ? comparisonPoints.map((point) => {
@@ -762,6 +822,13 @@ export default function MapView({
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
           <div className="rounded-xl bg-white/80 px-4 py-2 text-sm text-slate-600 shadow-md">
             Нет данных для отображения. Проверьте выбранные столбцы и периоды.
+          </div>
+        </div>
+      )}
+      {tileLoadFailed && (
+        <div className="pointer-events-none absolute inset-x-6 bottom-6 z-40 flex justify-center">
+          <div className="rounded-xl border border-amber-200 bg-amber-50/95 px-4 py-3 text-sm text-amber-900 shadow-lg">
+            Не удалось загрузить базовую карту ни с одного tile-сервера. Точки данных работают, но внешняя подложка недоступна.
           </div>
         </div>
       )}
