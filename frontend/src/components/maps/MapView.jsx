@@ -913,7 +913,7 @@ export default function MapView({
           </div>
         </div>
       )}
-      <div className="pointer-events-none absolute left-4 top-4 z-40 rounded-xl border border-slate-200 bg-white/90 px-3 py-2 font-mono text-[11px] text-slate-700 shadow-md">
+      <div className="pointer-events-none absolute bottom-20 left-4 z-[1200] rounded-xl border border-slate-200 bg-white/95 px-3 py-2 font-mono text-[11px] text-slate-700 shadow-md">
         <div>mapReady: {mapReady ? 'yes' : 'no'}</div>
         <div>provider: {tileProvider.name}</div>
         <div>loading: {tileDebug.loading}</div>
