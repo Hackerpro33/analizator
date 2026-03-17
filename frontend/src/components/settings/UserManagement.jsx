@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -31,11 +31,13 @@ import {
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useToast } from "@/components/ui/use-toast";
 import { fetchUsersOverview } from "@/api/users";
 import { updateUser } from "@/api/admin";
 import { updateProfile } from "@/api/auth";
 import { useAuth } from "@/contexts/AuthContext.jsx";
+import { getAttachmentObjectUrl, getMessengerProfile, updateMessengerProfile } from "@/api/messenger";
 
 const ROLE_LABELS = {
   admin: "Администратор",
@@ -46,9 +48,13 @@ const ROLE_LABELS = {
 export default function UserManagement() {
   const { user: sessionUser, refresh } = useAuth();
   const { toast } = useToast();
+  const avatarInputRef = useRef(null);
 
   const [users, setUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
+  const [currentUserProfile, setCurrentUserProfile] = useState(null);
+  const [profileAvatarUrl, setProfileAvatarUrl] = useState(null);
+  const [profileAvatarPreviewUrl, setProfileAvatarPreviewUrl] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [stats, setStats] = useState({ total: 0, active: 0, admins: 0 });
   const [canManage, setCanManage] = useState(false);
@@ -57,7 +63,16 @@ export default function UserManagement() {
   const [inlineUpdatingId, setInlineUpdatingId] = useState(null);
 
   const [profileDialogOpen, setProfileDialogOpen] = useState(false);
-  const [profileForm, setProfileForm] = useState({ full_name: "", password: "", confirmPassword: "" });
+  const [profileForm, setProfileForm] = useState({
+    full_name: "",
+    password: "",
+    confirmPassword: "",
+    status: "",
+    phone: "",
+    telegram: "",
+    department: "",
+    avatarFile: null,
+  });
   const [profileSaving, setProfileSaving] = useState(false);
   const [profileError, setProfileError] = useState(null);
 
@@ -85,6 +100,59 @@ export default function UserManagement() {
   useEffect(() => {
     loadOverview();
   }, [loadOverview]);
+
+  useEffect(() => {
+    let cancelled = false;
+    if (!sessionUser) return undefined;
+    getMessengerProfile(sessionUser)
+      .then(async (profile) => {
+        if (cancelled) return;
+        setCurrentUserProfile(profile);
+        if (profile?.avatar_attachment_id) {
+          try {
+            const url = await getAttachmentObjectUrl(profile.avatar_attachment_id);
+            if (cancelled) {
+              URL.revokeObjectURL(url);
+              return;
+            }
+            setProfileAvatarUrl((prev) => {
+              if (prev) URL.revokeObjectURL(prev);
+              return url;
+            });
+          } catch (_error) {
+            setProfileAvatarUrl(null);
+          }
+        } else {
+          setProfileAvatarUrl((prev) => {
+            if (prev) URL.revokeObjectURL(prev);
+            return null;
+          });
+        }
+      })
+      .catch(() => {});
+
+    return () => {
+      cancelled = true;
+    };
+  }, [sessionUser]);
+
+  useEffect(() => {
+    return () => {
+      if (profileAvatarUrl) {
+        URL.revokeObjectURL(profileAvatarUrl);
+      }
+    };
+  }, [profileAvatarUrl]);
+
+  useEffect(() => {
+    if (!profileForm.avatarFile) {
+      setProfileAvatarPreviewUrl(null);
+      return undefined;
+    }
+    const nextUrl = URL.createObjectURL(profileForm.avatarFile);
+    setProfileAvatarPreviewUrl(nextUrl);
+    return () => URL.revokeObjectURL(nextUrl);
+  }, [profileForm.avatarFile]);
 
   const filteredUsers = useMemo(() => {
     const query = searchTerm.toLowerCase();
@@ -175,9 +243,14 @@ export default function UserManagement() {
 
   const openProfileDialog = () => {
     setProfileForm({
-      full_name: currentUser?.full_name || "",
+      full_name: currentUserProfile?.full_name || currentUser?.full_name || "",
       password: "",
       confirmPassword: "",
+      status: currentUserProfile?.status || "",
+      phone: currentUserProfile?.phone || "",
+      telegram: currentUserProfile?.telegram || "",
+      department: currentUserProfile?.department || "",
+      avatarFile: null,
     });
     setProfileError(null);
     setProfileDialogOpen(true);
@@ -197,10 +270,20 @@ export default function UserManagement() {
         payload.password = profileForm.password;
       }
       await updateProfile(payload);
+      await updateMessengerProfile(sessionUser, {
+        full_name: profileForm.full_name,
+        status: profileForm.status,
+        phone: profileForm.phone,
+        telegram: profileForm.telegram,
+        department: profileForm.department,
+        avatarFile: profileForm.avatarFile,
+      });
       toast({ title: "Профиль обновлён" });
       setProfileDialogOpen(false);
       await refresh();
       await loadOverview();
+      const profile = await getMessengerProfile(sessionUser);
+      setCurrentUserProfile(profile);
     } catch (err) {
       setProfileError(err?.message || "Не удалось обновить профиль");
     } finally {
@@ -224,15 +307,21 @@ export default function UserManagement() {
           </CardHeader>
           <CardContent>
             <div className="flex items-center gap-4 p-4 bg-blue-50 rounded-lg">
-              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-600 rounded-full flex items-center justify-center">
-                <UserIcon className="w-8 h-8 text-white" />
-              </div>
+              <Avatar className="h-16 w-16">
+                <AvatarImage src={profileAvatarUrl || undefined} alt={currentUser.full_name} />
+                <AvatarFallback className="bg-gradient-to-r from-blue-500 to-cyan-600 text-white">
+                  {(currentUser.full_name || "U").slice(0, 2).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
               <div className="flex-1">
                 <div className="font-bold text-lg">{currentUser.full_name}</div>
                 <div className="text-slate-600 flex items-center gap-1">
                   <Mail className="w-4 h-4" />
                   {currentUser.email}
                 </div>
+                {currentUserProfile?.status ? (
+                  <div className="mt-1 text-sm text-slate-500">{currentUserProfile.status}</div>
+                ) : null}
                 <div className="flex items-center gap-2 mt-1">
                   {getRoleIcon(currentUser.role)}
                   {getRoleBadge(currentUser.role)}
@@ -418,6 +507,24 @@ export default function UserManagement() {
             <DialogTitle>Редактирование профиля</DialogTitle>
           </DialogHeader>
           <form className="space-y-4" onSubmit={handleProfileSubmit}>
+            <div className="flex items-center gap-4 rounded-xl border p-4">
+              <Avatar className="h-16 w-16">
+                <AvatarImage src={profileAvatarPreviewUrl || profileAvatarUrl || undefined} alt={profileForm.full_name} />
+                <AvatarFallback>{(profileForm.full_name || currentUser?.full_name || "U").slice(0, 2).toUpperCase()}</AvatarFallback>
+              </Avatar>
+              <div className="space-y-2">
+                <Button type="button" variant="outline" onClick={() => avatarInputRef.current?.click()}>
+                  Изменить фото
+                </Button>
+                <input
+                  ref={avatarInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(event) => setProfileForm((prev) => ({ ...prev, avatarFile: event.target.files?.[0] || null }))}
+                />
+              </div>
+            </div>
             <div className="space-y-2">
               <Label htmlFor="profile_full_name">Имя и фамилия</Label>
               <Input
@@ -425,6 +532,44 @@ export default function UserManagement() {
                 value={profileForm.full_name}
                 onChange={(event) => setProfileForm((prev) => ({ ...prev, full_name: event.target.value }))}
                 required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="profile_status">Статус</Label>
+              <Input
+                id="profile_status"
+                value={profileForm.status}
+                onChange={(event) => setProfileForm((prev) => ({ ...prev, status: event.target.value }))}
+                placeholder="На связи / Дежурю / Вне офиса"
+              />
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="profile_phone">Телефон</Label>
+                <Input
+                  id="profile_phone"
+                  value={profileForm.phone}
+                  onChange={(event) => setProfileForm((prev) => ({ ...prev, phone: event.target.value }))}
+                  placeholder="+7 ..."
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="profile_telegram">Контакт</Label>
+                <Input
+                  id="profile_telegram"
+                  value={profileForm.telegram}
+                  onChange={(event) => setProfileForm((prev) => ({ ...prev, telegram: event.target.value }))}
+                  placeholder="@handle / матричный ID"
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="profile_department">Подразделение</Label>
+              <Input
+                id="profile_department"
+                value={profileForm.department}
+                onChange={(event) => setProfileForm((prev) => ({ ...prev, department: event.target.value }))}
+                placeholder="ИБ / Администрирование / Аналитика"
               />
             </div>
             <div className="space-y-2">

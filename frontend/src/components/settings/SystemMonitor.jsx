@@ -53,7 +53,6 @@ export default function SystemMonitor() {
   const [metrics, setMetrics] = useState(null);
   const [performanceData, setPerformanceData] = useState([]);
   const [networkData, setNetworkData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const fetchSnapshot = useCallback(async () => {
@@ -98,11 +97,9 @@ export default function SystemMonitor() {
         setError(null);
       }
 
-      setIsLoading(false);
     } catch (err) {
       console.error("Failed to load system metrics", err);
       setError("Не удалось получить фактические метрики. Проверьте соединение или логи сервера.");
-      setIsLoading(false);
     }
   }, []);
 

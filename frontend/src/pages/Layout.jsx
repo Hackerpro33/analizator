@@ -21,6 +21,7 @@ import {
   Shield,
   UserCog,
   Columns3,
+  MessagesSquare,
 } from "lucide-react";
 import {
   Sidebar,
@@ -77,6 +78,15 @@ const navigationItems = [
     url: createPageUrl("CyberSecurity"),
     icon: Shield,
     gradient: "from-slate-600 to-slate-900",
+    requireAuth: true,
+    roles: ["admin", "security"]
+  },
+  {
+    accessKey: "Messenger",
+    title: "Мессенджер",
+    url: createPageUrl("Messenger"),
+    icon: MessagesSquare,
+    gradient: "from-sky-500 to-cyan-600",
     requireAuth: true,
     roles: ["admin", "security"]
   },

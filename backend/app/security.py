@@ -161,6 +161,17 @@ def get_current_user(
     return user
 
 
+def resolve_user_from_access_token(token: str, store: UserStore) -> UserRecord:
+    payload = _decode_token(token, expected_type="access")
+    user_id = payload.get("sub")
+    if not user_id:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token payload")
+    user = store.get_user(user_id)
+    if not user or not user.get("is_active", True):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User inactive or missing")
+    return user
+
+
 def optional_user(
     request: Request,
     authorization: Optional[str] = Header(None),

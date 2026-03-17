@@ -13,6 +13,7 @@ import AILab from './AILab'
 import CyberSecurity from './CyberSecurity'
 import Admin from './Admin'
 import Lineyka from './Lineyka'
+import Messenger from './Messenger'
 
 export const PAGES = {
   Dashboard,
@@ -30,6 +31,7 @@ export const PAGES = {
   CyberSecurity,
   Admin,
   Lineyka,
+  Messenger,
 }
 
 export function getCurrentPage(url) {

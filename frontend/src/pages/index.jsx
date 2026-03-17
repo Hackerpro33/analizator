@@ -9,6 +9,7 @@ import { ACCESS_ITEMS } from '@/utils/adminAccess';
 
 const ACCESS_RULES = {
   Dashboard: { requireAuth: false },
+  Messenger: { requireAuth: true, roles: ["admin", "security"] },
 };
 
 const DEFAULT_RULE = { requireAuth: true };

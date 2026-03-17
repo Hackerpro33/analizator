@@ -10,6 +10,7 @@ export const ACCESS_ITEMS = [
   { key: "AILab", label: "ИИ-лаборатория" },
   { key: "AdvancedAnalytics", label: "Продвинутая аналитика" },
   { key: "CyberSecurity", label: "Кибербезопасность" },
+  { key: "Messenger", label: "Мессенджер" },
   { key: "DataSources", label: "Источники данных" },
   { key: "DataTransformation", label: "Преобразование данных" },
   { key: "Lineyka", label: "Линейка" },
@@ -23,7 +24,7 @@ export const ACCESS_ITEMS = [
 ];
 
 const DEFAULT_STANDARD_ACCESS = ACCESS_ITEMS.filter((item) => !item.public && item.key !== "CyberSecurity" && item.key !== "Admin").map((item) => item.key);
-const DEFAULT_SECURITY_ACCESS = ACCESS_ITEMS.filter((item) => !item.public && item.key !== "Admin").map((item) => item.key);
+const DEFAULT_SECURITY_ACCESS = ACCESS_ITEMS.filter((item) => !item.public && item.key !== "Admin" && item.key !== "Messenger").map((item) => item.key);
 const DEFAULT_ADMIN_ACCESS = ACCESS_ITEMS.filter((item) => !item.public).map((item) => item.key);
 
 export const SYSTEM_ROLES = ["admin", "security", "security_viewer", "user"];
@@ -41,7 +42,7 @@ const DEFAULT_ROLE_DEFINITIONS = [
     label: "Безопасность",
     description: "Доступ к аналитике, настройкам и разделу кибербезопасности.",
     system: true,
-    access: DEFAULT_SECURITY_ACCESS,
+    access: [...DEFAULT_SECURITY_ACCESS, "Messenger"],
   },
   {
     key: "security_viewer",

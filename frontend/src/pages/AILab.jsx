@@ -137,7 +137,7 @@ export default function AILab() {
   const [jobStatus, setJobStatus] = useState(null);
   const [jobLogs, setJobLogs] = useState([]);
   const [sliceSummary, setSliceSummary] = useState(null);
-  const [auditHints, setAuditHints] = useState(null);
+  const [, setAuditHints] = useState(null);
 
   const algorithmOptions = useMemo(() => catalog[taskType] || [], [catalog, taskType]);
   const selectedAlgorithmSpec = useMemo(

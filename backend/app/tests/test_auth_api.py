@@ -67,7 +67,9 @@ def test_login_requires_verified_email(tmp_path, monkeypatch):
 
     blocked = login_user(client, payload["email"], payload["password"])
     assert blocked.status_code == 403
-    assert blocked.json()["detail"] == "Email address is not verified"
+    detail = blocked.json()["detail"]
+    assert detail["code"] == "email_not_verified"
+    assert detail["allow_resend_verification"] is True
 
 
 def test_login_and_access_protected_routes(tmp_path, monkeypatch):

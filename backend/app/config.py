@@ -290,6 +290,21 @@ class Settings(BaseSettings):
         alias="OBJECT_STORAGE_LOCAL_ROOT",
         description="Local directory where uploaded files are persisted for processing.",
     )
+    messenger_store_path: Path = Field(
+        default=Path(__file__).resolve().parent / "data" / "messenger.json",
+        alias="MESSENGER_STORE_PATH",
+        description="Path to the JSON file used for messenger spaces, devices, messages, and attachment metadata.",
+    )
+    messenger_max_attachment_size_mb: int = Field(
+        100,
+        alias="MESSENGER_MAX_ATTACHMENT_SIZE_MB",
+        description="Maximum allowed attachment size in megabytes for encrypted messenger media.",
+    )
+    messenger_max_video_note_seconds: int = Field(
+        15,
+        alias="MESSENGER_MAX_VIDEO_NOTE_SECONDS",
+        description="Maximum duration for short encrypted video notes.",
+    )
     sentry_dsn: Optional[AnyUrl] = Field(
         None,
         alias="SENTRY_DSN",

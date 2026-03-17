@@ -17,8 +17,18 @@ from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
 from fastapi.responses import PlainTextResponse
 from prometheus_client import CONTENT_TYPE_LATEST, CollectorRegistry, Counter, Histogram, generate_latest
 from starlette.middleware.base import BaseHTTPMiddleware
-from starlette.middleware.sessions import SessionMiddleware
 from starlette.middleware.trustedhost import TrustedHostMiddleware
+
+try:
+    from starlette.middleware.sessions import SessionMiddleware
+except ImportError:  # pragma: no cover - optional dependency in lightweight envs
+    class SessionMiddleware(BaseHTTPMiddleware):  # type: ignore[override]
+        def __init__(self, app, secret_key: str, **kwargs) -> None:
+            super().__init__(app)
+            self.secret_key = secret_key
+
+        async def dispatch(self, request, call_next):
+            return await call_next(request)
 
 from .config import get_settings
 from .observability import setup_observability
@@ -440,6 +450,7 @@ if __package__ in {None, ""}:
     import admin_api as admin_router_module
     import ai_lab_api as ai_lab_router_module
     import lineyka_api as lineyka_router_module
+    import messenger_api as messenger_router_module
     import auth_api as auth_router_module
     import audit_api as audit_router_module
     import collaboration_api as collaboration_router_module
@@ -458,6 +469,7 @@ else:
     from . import admin_api as admin_router_module
     from . import ai_lab_api as ai_lab_router_module
     from . import lineyka_api as lineyka_router_module
+    from . import messenger_api as messenger_router_module
     from . import auth_api as auth_router_module
     from . import audit_api as audit_router_module
     from . import collaboration_api as collaboration_router_module
@@ -482,6 +494,8 @@ collaboration_router = collaboration_router_module.router
 ml_router = ml_router_module.router
 ai_lab_router = ai_lab_router_module.router
 lineyka_router = lineyka_router_module.router
+messenger_router = messenger_router_module.router
+messenger_ws_router = messenger_router_module.ws_router
 admin_router = admin_router_module.router
 auth_router = auth_router_module.router
 cybersecurity_router = cybersecurity_router_module.router
@@ -525,6 +539,7 @@ _include_router(collaboration_router)
 _include_router(ml_router)
 _include_router(ai_lab_router)
 _include_router(lineyka_router)
+_include_router(messenger_router)
 _include_router(cybersecurity_router)
 _include_router(cyber_events_router)
 _include_router(cyber_architecture_router)
@@ -533,6 +548,7 @@ _include_router(admin_router)
 _include_router(auth_router)
 _include_router(users_router)
 _include_router(system_router)
+_include_router(messenger_ws_router)
 
 
 if __name__ == "__main__":

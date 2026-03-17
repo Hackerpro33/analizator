@@ -56,7 +56,7 @@ export default function DataAuditPanel() {
     try {
       const existing = await fetchDataAuditReport(datasetId);
       setReport(existing);
-    } catch (err) {
+    } catch (_err) {
       setReport(null);
     }
   };

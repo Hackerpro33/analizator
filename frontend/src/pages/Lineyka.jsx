@@ -80,7 +80,6 @@ import {
   Play,
   Plus,
   Save,
-  Search,
   Sparkles,
   Trash2,
   Upload,
@@ -88,13 +87,6 @@ import {
 
 const DEFAULT_PAGE_SIZE = 500;
 const ROW_HEIGHT = 38;
-
-const EMPTY_STATS = {
-  columns: [],
-  rows: [],
-  total: 0,
-  filtered: 0,
-};
 
 const FILTER_OPERATORS = {
   text: [
@@ -366,7 +358,7 @@ export default function Lineyka() {
       ) {
         setSelectedDataset(String(items[0].id));
       }
-    } catch (error) {
+    } catch (_error) {
       toast({ variant: 'destructive', description: 'Не удалось загрузить список наборов' });
     }
   };
@@ -382,7 +374,7 @@ export default function Lineyka() {
       } else {
         setSelectedVersion("");
       }
-    } catch (error) {
+    } catch (_error) {
       toast({ variant: "destructive", description: "Не удалось загрузить версии набора" });
     }
   };
@@ -393,7 +385,7 @@ export default function Lineyka() {
     try {
       const payload = await fetchLineykaAudit(datasetId, versionId);
       setAuditReport(payload);
-    } catch (error) {
+    } catch (_error) {
       setAuditReport(null);
     }
   };
@@ -704,7 +696,7 @@ export default function Lineyka() {
       }
       handleApplyOperation([{ type: "add_rows", rows: parsed }], "Добавлены новые строки");
       setAddRowsDialog(false);
-    } catch (error) {
+    } catch (_error) {
       toast({ variant: "destructive", description: "Неверный формат JSON" });
     }
   };
@@ -870,7 +862,7 @@ export default function Lineyka() {
     try {
       const payload = await exportLineykaVersion(selectedDataset, selectedVersion, format);
       triggerDownload(payload.blob, payload.filename);
-    } catch (error) {
+    } catch (_error) {
       toast({ variant: "destructive", description: "Экспорт не удался" });
     }
   };
@@ -884,7 +876,7 @@ export default function Lineyka() {
       const payload = await exportLineykaHistory(selectedDataset);
       const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
       triggerDownload(blob, `lineyka-history-${selectedDataset}.json`);
-    } catch (error) {
+    } catch (_error) {
       toast({ variant: "destructive", description: "Не удалось экспортировать историю" });
     }
   };

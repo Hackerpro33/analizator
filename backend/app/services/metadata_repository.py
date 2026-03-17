@@ -944,7 +944,23 @@ else:  # pragma: no cover
 def _ensure_sqlite_path(url: str) -> None:
     if url.startswith("sqlite"):
         location = url.split("///")[-1]
-        Path(location).parent.mkdir(parents=True, exist_ok=True)
+        candidate = Path(location).parent
+        try:
+            candidate.mkdir(parents=True, exist_ok=True)
+        except OSError:
+            fallback = Path(__file__).resolve().parent.parent / "data"
+            fallback.mkdir(parents=True, exist_ok=True)
+
+
+def _safe_local_sqlite_url(candidate: Path, filename: str) -> str:
+    try:
+        candidate.mkdir(parents=True, exist_ok=True)
+        target = (candidate / filename).resolve()
+    except OSError:
+        fallback = Path(__file__).resolve().parent.parent / "data"
+        fallback.mkdir(parents=True, exist_ok=True)
+        target = (fallback / filename).resolve()
+    return f"sqlite:///{target.as_posix()}"
 
 
 def _build_sql_repository(database_url: str) -> SqlMetadataRepository:
@@ -967,10 +983,10 @@ def get_metadata_repository():
                 exc,
             )
             if not database_url.startswith("sqlite"):
-                fallback_sqlite = (
-                    Path(settings.object_storage_local_root).parent / "metadata_local.db"
-                ).resolve()
-                sqlite_url = f"sqlite:///{fallback_sqlite.as_posix()}"
+                sqlite_url = _safe_local_sqlite_url(
+                    Path(settings.object_storage_local_root).parent,
+                    "metadata_local.db",
+                )
                 try:
                     logger.info(
                         "Falling back to local SQLite metadata repository at %s",
@@ -1011,10 +1027,10 @@ def get_model_tracking_repository():
                 exc,
             )
             if not database_url.startswith("sqlite"):
-                fallback_sqlite = (
-                    Path(settings.object_storage_local_root).parent / "model_tracking_local.db"
-                ).resolve()
-                sqlite_url = f"sqlite:///{fallback_sqlite.as_posix()}"
+                sqlite_url = _safe_local_sqlite_url(
+                    Path(settings.object_storage_local_root).parent,
+                    "model_tracking_local.db",
+                )
                 try:
                     return _build_tracking_repository(sqlite_url)
                 except SQLAlchemyError as sqlite_exc:  # pragma: no cover
