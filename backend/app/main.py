@@ -80,7 +80,7 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
             "X-Content-Type-Options": "nosniff",
             "X-Frame-Options": "DENY",
             "Referrer-Policy": "same-origin",
-            "Permissions-Policy": "geolocation=(), microphone=(), camera=()",
+            "Permissions-Policy": 'geolocation=(), microphone=(self), camera=(self)',
             "Cross-Origin-Opener-Policy": "same-origin",
             "Cross-Origin-Embedder-Policy": "require-corp",
         }

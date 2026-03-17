@@ -47,6 +47,9 @@ import {
 
 const ATTACHMENT_ACCEPT =
   "image/*,audio/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.csv,.txt,.ppt,.pptx";
+const IMAGE_ACCEPT = "image/*";
+const AUDIO_RECORDING_MIME_TYPES = ["audio/webm;codecs=opus", "audio/webm", "audio/mp4"];
+const VIDEO_RECORDING_MIME_TYPES = ["video/webm;codecs=vp9,opus", "video/webm;codecs=vp8,opus", "video/webm"];
 
 function formatMessageTime(value) {
   return new Date(value).toLocaleString("ru-RU", {
@@ -84,11 +87,32 @@ function readVideoDuration(file) {
   });
 }
 
+function formatRecordingDuration(milliseconds) {
+  const totalSeconds = Math.max(0, Math.floor(milliseconds / 1000));
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+}
+
+function pickSupportedMimeType(candidates) {
+  if (typeof MediaRecorder === "undefined" || typeof MediaRecorder.isTypeSupported !== "function") {
+    return "";
+  }
+  return candidates.find((candidate) => MediaRecorder.isTypeSupported(candidate)) || "";
+}
+
 export default function Messenger() {
   const { user, refresh } = useAuth();
   const { toast } = useToast();
   const fileInputRef = useRef(null);
+  const imageInputRef = useRef(null);
   const avatarInputRef = useRef(null);
+  const liveVideoRef = useRef(null);
+  const mediaRecorderRef = useRef(null);
+  const mediaStreamRef = useRef(null);
+  const recordingChunksRef = useRef([]);
+  const recordingStartedAtRef = useRef(0);
+  const recordingModeRef = useRef(null);
 
   const [bootstrap, setBootstrap] = useState(null);
   const [activeSpaceId, setActiveSpaceId] = useState("");
@@ -102,6 +126,12 @@ export default function Messenger() {
   const [avatarPreviewUrl, setAvatarPreviewUrl] = useState(null);
   const [messagesBySpace, setMessagesBySpace] = useState({});
   const [messagesLoading, setMessagesLoading] = useState(false);
+  const [recordingState, setRecordingState] = useState({
+    mode: null,
+    active: false,
+    stream: null,
+  });
+  const [recordingElapsedMs, setRecordingElapsedMs] = useState(0);
   const [createForm, setCreateForm] = useState({
     type: "group",
     title: "",
@@ -239,85 +269,332 @@ export default function Messenger() {
     ? assetUrls[bootstrap.profile.avatar_attachment_id]
     : null;
 
-  const handleAttachmentSelection = async (event) => {
-    const files = Array.from(event.target.files || []);
-    event.target.value = "";
-    if (files.length === 0) return;
+  const collectValidAttachments = useCallback(
+    async (files) => {
+      const nextAttachments = [];
 
-    const nextAttachments = [];
+      for (const file of files) {
+        let durationSeconds = null;
+        const inferredKind = file.type.startsWith("audio/")
+          ? "voice"
+          : file.type.startsWith("video/")
+            ? "video_note"
+            : undefined;
 
-    for (const file of files) {
-      let durationSeconds = null;
-      const inferredKind = file.type.startsWith("audio/")
-        ? "voice"
-        : file.type.startsWith("video/")
-          ? "video_note"
-          : undefined;
+        if (inferredKind === "video_note") {
+          try {
+            durationSeconds = await readVideoDuration(file);
+          } catch (error) {
+            toast({
+              title: "Видео не добавлено",
+              description: error.message,
+              variant: "destructive",
+            });
+            continue;
+          }
+        }
 
-      if (inferredKind === "video_note") {
-        try {
-          durationSeconds = await readVideoDuration(file);
-        } catch (error) {
+        const validation = validateAttachmentFile(file, {
+          kind: inferredKind,
+          durationSeconds,
+        });
+
+        if (!validation.ok) {
           toast({
-            title: "Видео не добавлено",
-            description: error.message,
+            title: "Вложение отклонено",
+            description: validation.error,
             variant: "destructive",
           });
           continue;
         }
+
+        nextAttachments.push({
+          id: `${file.name}-${file.size}-${file.lastModified}`,
+          file,
+          kind: validation.kind,
+          durationSeconds,
+        });
       }
 
-      const validation = validateAttachmentFile(file, {
-        kind: inferredKind,
-        durationSeconds,
-      });
+      return nextAttachments;
+    },
+    [toast]
+  );
 
+  const queueAttachments = useCallback(
+    async (files) => {
+      const nextAttachments = await collectValidAttachments(files);
+      if (nextAttachments.length > 0) {
+        setPendingAttachments((prev) => [...prev, ...nextAttachments]);
+      }
+      return nextAttachments;
+    },
+    [collectValidAttachments]
+  );
+
+  const handleAttachmentSelection = async (event) => {
+    const files = Array.from(event.target.files || []);
+    event.target.value = "";
+    if (files.length === 0) return;
+    await queueAttachments(files);
+  };
+
+  const sendPayload = useCallback(
+    async ({ text, attachments, resetDraft = false, resetPendingAttachments = false }) => {
+      if (!activeSpace || sending) return false;
+      const trimmedText = String(text || "").trim();
+      if (!trimmedText && (!attachments || attachments.length === 0)) return false;
+
+      setSending(true);
+      try {
+        await sendMessengerMessage(user, {
+          spaceId: activeSpace.id,
+          text: trimmedText,
+          attachments,
+          memberIds: activeSpace.member_ids || [],
+        });
+        if (resetDraft) {
+          setDraft("");
+        }
+        if (resetPendingAttachments) {
+          setPendingAttachments([]);
+        }
+        await loadSpaceMessages(activeSpace.id);
+        await loadMessenger(activeSpace.id);
+        return true;
+      } catch (error) {
+        toast({
+          title: "Сообщение не отправлено",
+          description: error?.message,
+          variant: "destructive",
+        });
+        return false;
+      } finally {
+        setSending(false);
+      }
+    },
+    [activeSpace, loadMessenger, loadSpaceMessages, sending, toast, user]
+  );
+
+  const handleSend = useCallback(async () => {
+    await sendPayload({
+      text: draft,
+      attachments: pendingAttachments,
+      resetDraft: true,
+      resetPendingAttachments: true,
+    });
+  }, [draft, pendingAttachments, sendPayload]);
+
+  const stopRecordingStream = useCallback(() => {
+    const stream = mediaStreamRef.current;
+    if (stream) {
+      stream.getTracks().forEach((track) => track.stop());
+    }
+    mediaStreamRef.current = null;
+  }, []);
+
+  const finalizeRecording = useCallback(
+    async (blob, mode, elapsedMs) => {
+      if (!blob || blob.size === 0) {
+        toast({
+          title: "Запись не сохранена",
+          description: "Не удалось получить данные с микрофона или камеры.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const extension = blob.type.includes("mp4") ? "mp4" : "webm";
+      const file = new File(
+        [blob],
+        mode === "voice" ? `voice-${Date.now()}.${extension}` : `video-note-${Date.now()}.${extension}`,
+        { type: blob.type || (mode === "voice" ? "audio/webm" : "video/webm") }
+      );
+      const durationSeconds =
+        mode === "video_note"
+          ? elapsedMs > 0
+            ? elapsedMs / 1000
+            : await readVideoDuration(file)
+          : elapsedMs > 0
+            ? elapsedMs / 1000
+            : null;
+      const validation = validateAttachmentFile(file, { kind: mode, durationSeconds });
       if (!validation.ok) {
         toast({
           title: "Вложение отклонено",
           description: validation.error,
           variant: "destructive",
         });
-        continue;
+        return;
       }
+      const attachments = [
+        {
+          id: `${file.name}-${file.size}-${file.lastModified}`,
+          file,
+          kind: validation.kind,
+          durationSeconds,
+        },
+      ];
 
-      nextAttachments.push({
-        id: `${file.name}-${file.size}-${file.lastModified}`,
-        file,
-        kind: validation.kind,
-        durationSeconds,
+      await sendPayload({
+        text: draft,
+        attachments,
+        resetDraft: true,
       });
+    },
+    [draft, sendPayload, toast]
+  );
+
+  const stopRecording = useCallback(async () => {
+    const recorder = mediaRecorderRef.current;
+    if (!recorder) return;
+    if (recorder.state === "inactive") return;
+    recorder.stop();
+  }, []);
+
+  const startRecording = useCallback(
+    async (mode) => {
+      if (sending || !activeSpace) return;
+      if (typeof window === "undefined" || !navigator.mediaDevices?.getUserMedia) {
+        toast({
+          title: "Запись недоступна",
+          description: "Браузер не поддерживает доступ к микрофону или камере.",
+          variant: "destructive",
+        });
+        return;
+      }
+      if (typeof MediaRecorder === "undefined") {
+        toast({
+          title: "Запись недоступна",
+          description: "MediaRecorder не поддерживается в этом браузере.",
+          variant: "destructive",
+        });
+        return;
+      }
+      if (recordingState.active) return;
+
+      try {
+        const wantsVideo = mode === "video_note";
+        const stream = await navigator.mediaDevices.getUserMedia({
+          audio: {
+            echoCancellation: true,
+            noiseSuppression: true,
+          },
+          video: wantsVideo
+            ? {
+                facingMode: "user",
+                width: { ideal: 480 },
+                height: { ideal: 480 },
+              }
+            : false,
+        });
+
+        const mimeType = pickSupportedMimeType(wantsVideo ? VIDEO_RECORDING_MIME_TYPES : AUDIO_RECORDING_MIME_TYPES);
+        const recorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream);
+        const startedAt = Date.now();
+
+        mediaStreamRef.current = stream;
+        mediaRecorderRef.current = recorder;
+        recordingChunksRef.current = [];
+        recordingStartedAtRef.current = startedAt;
+        recordingModeRef.current = mode;
+
+        recorder.ondataavailable = (event) => {
+          if (event.data && event.data.size > 0) {
+            recordingChunksRef.current.push(event.data);
+          }
+        };
+
+        recorder.onerror = () => {
+          stopRecordingStream();
+          setRecordingState({ mode: null, active: false, stream: null });
+          toast({
+            title: "Ошибка записи",
+            description: "Не удалось записать медиа. Проверьте доступ к устройству и попробуйте снова.",
+            variant: "destructive",
+          });
+        };
+
+        recorder.onstop = async () => {
+          const currentMode = recordingModeRef.current;
+          const elapsedMs = Math.max(0, Date.now() - recordingStartedAtRef.current);
+          const blob = new Blob(recordingChunksRef.current, {
+            type: recorder.mimeType || (currentMode === "voice" ? "audio/webm" : "video/webm"),
+          });
+
+          mediaRecorderRef.current = null;
+          recordingChunksRef.current = [];
+          recordingModeRef.current = null;
+          recordingStartedAtRef.current = 0;
+          stopRecordingStream();
+          setRecordingElapsedMs(0);
+          setRecordingState({ mode: null, active: false, stream: null });
+
+          await finalizeRecording(blob, currentMode, elapsedMs);
+        };
+
+        recorder.start();
+        setRecordingElapsedMs(0);
+        setRecordingState({ mode, active: true, stream });
+      } catch (error) {
+        const denied = error?.name === "NotAllowedError" || error?.name === "SecurityError";
+        const missingDevice = error?.name === "NotFoundError" || error?.name === "DevicesNotFoundError";
+        toast({
+          title: denied ? "Нужен доступ к устройству" : "Запись не запущена",
+          description: denied
+            ? `Разрешите доступ к ${mode === "video_note" ? "камере и микрофону" : "микрофону"} в окне браузера или в настройках сайта.`
+            : missingDevice
+              ? `На устройстве не найден ${mode === "video_note" ? "камера или микрофон" : "микрофон"}.`
+              : error?.message || "Не удалось начать запись.",
+          variant: "destructive",
+        });
+      }
+    },
+    [activeSpace, finalizeRecording, recordingState.active, sending, stopRecordingStream, toast]
+  );
+
+  useEffect(() => {
+    if (!recordingState.active) {
+      setRecordingElapsedMs(0);
+      return undefined;
     }
+    const timer = window.setInterval(() => {
+      setRecordingElapsedMs(Math.max(0, Date.now() - recordingStartedAtRef.current));
+    }, 200);
+    return () => window.clearInterval(timer);
+  }, [recordingState.active]);
 
-    setPendingAttachments((prev) => [...prev, ...nextAttachments]);
-  };
+  useEffect(() => {
+    const video = liveVideoRef.current;
+    if (!video || !recordingState.stream) return undefined;
+    video.srcObject = recordingState.stream;
+    video.play().catch(() => {});
+    return () => {
+      if (video.srcObject) {
+        video.srcObject = null;
+      }
+    };
+  }, [recordingState.stream]);
 
-  const handleSend = async () => {
-    if (!activeSpace || sending) return;
-    if (!draft.trim() && pendingAttachments.length === 0) return;
+  useEffect(() => {
+    if (!recordingState.active) return undefined;
+    const handlePointerRelease = () => {
+      void stopRecording();
+    };
+    window.addEventListener("pointerup", handlePointerRelease);
+    window.addEventListener("pointercancel", handlePointerRelease);
+    return () => {
+      window.removeEventListener("pointerup", handlePointerRelease);
+      window.removeEventListener("pointercancel", handlePointerRelease);
+    };
+  }, [recordingState.active, stopRecording]);
 
-    setSending(true);
-    try {
-      await sendMessengerMessage(user, {
-        spaceId: activeSpace.id,
-        text: draft.trim(),
-        attachments: pendingAttachments,
-        memberIds: activeSpace.member_ids || [],
-      });
-      setDraft("");
-      setPendingAttachments([]);
-      await loadSpaceMessages(activeSpace.id);
-      await loadMessenger(activeSpace.id);
-    } catch (error) {
-      toast({
-        title: "Сообщение не отправлено",
-        description: error?.message,
-        variant: "destructive",
-      });
-    } finally {
-      setSending(false);
-    }
-  };
+  useEffect(
+    () => () => {
+      stopRecordingStream();
+    },
+    [stopRecordingStream]
+  );
 
   const handleCreateSpace = async (event) => {
     event.preventDefault();
@@ -414,7 +691,7 @@ export default function Messenger() {
                 <Shield className="mt-0.5 h-5 w-5 text-violet-600" />
                 <div>
                   <p className="text-sm font-semibold text-slate-900">Приватные ключи остаются в браузере</p>
-                  <p className="text-xs text-slate-600">Текущая реализация хранит ключи и медиа локально до серверной интеграции.</p>
+                  <p className="text-xs text-slate-600">Ключевой материал не покидает устройство, сообщения и вложения отправляются в серверный контур.</p>
                 </div>
               </CardContent>
             </Card>
@@ -607,6 +884,14 @@ export default function Messenger() {
                 />
                 <div className="flex flex-col gap-2">
                   <input
+                    ref={imageInputRef}
+                    type="file"
+                    accept={IMAGE_ACCEPT}
+                    multiple
+                    className="hidden"
+                    onChange={handleAttachmentSelection}
+                  />
+                  <input
                     ref={fileInputRef}
                     type="file"
                     accept={ATTACHMENT_ACCEPT}
@@ -618,17 +903,35 @@ export default function Messenger() {
                     <FileUp className="h-4 w-4" />
                     Файлы
                   </Button>
-                  <Button type="button" variant="outline" className="justify-start gap-2" onClick={() => fileInputRef.current?.click()}>
+                  <Button type="button" variant="outline" className="justify-start gap-2" onClick={() => imageInputRef.current?.click()}>
                     <ImageIcon className="h-4 w-4" />
                     Картинки
                   </Button>
-                  <Button type="button" variant="outline" className="justify-start gap-2" onClick={() => fileInputRef.current?.click()}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className={`justify-start gap-2 ${recordingState.active && recordingState.mode === "voice" ? "border-emerald-500 bg-emerald-50 text-emerald-700" : ""}`}
+                    disabled={sending || recordingState.active}
+                    onPointerDown={(event) => {
+                      event.preventDefault();
+                      void startRecording("voice");
+                    }}
+                  >
                     <Mic className="h-4 w-4" />
-                    Голос
+                    {recordingState.active && recordingState.mode === "voice" ? "Запись..." : "Голос"}
                   </Button>
-                  <Button type="button" variant="outline" className="justify-start gap-2" onClick={() => fileInputRef.current?.click()}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className={`justify-start gap-2 ${recordingState.active && recordingState.mode === "video_note" ? "border-violet-500 bg-violet-50 text-violet-700" : ""}`}
+                    disabled={sending || recordingState.active}
+                    onPointerDown={(event) => {
+                      event.preventDefault();
+                      void startRecording("video_note");
+                    }}
+                  >
                     <Video className="h-4 w-4" />
-                    Видео-кружок
+                    {recordingState.active && recordingState.mode === "video_note" ? "Идет видео..." : "Видео-кружок"}
                   </Button>
                   <Button type="button" className="justify-start gap-2" disabled={sending} onClick={handleSend}>
                     <Send className="h-4 w-4" />
@@ -636,6 +939,9 @@ export default function Messenger() {
                   </Button>
                 </div>
               </div>
+              <p className="mt-3 text-xs text-slate-500">
+                Для голоса и видео удерживайте кнопку. Браузер сам запросит разрешение на микрофон и камеру, если оно еще не выдано.
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -845,6 +1151,40 @@ export default function Messenger() {
           </form>
         </DialogContent>
       </Dialog>
+
+      {recordingState.active && (
+        <div className="fixed bottom-6 right-6 z-50">
+          {recordingState.mode === "voice" ? (
+            <div className="flex items-center gap-4 rounded-full border border-emerald-200 bg-white/95 px-5 py-4 shadow-2xl backdrop-blur">
+              <div className="relative flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/15">
+                <span className="absolute h-12 w-12 rounded-full bg-emerald-500/20 animate-ping" />
+                <Mic className="relative z-10 h-5 w-5 text-emerald-600" />
+              </div>
+              <div className="space-y-1">
+                <div className="text-sm font-semibold text-slate-900">Идет запись голоса</div>
+                <div className="flex items-center gap-2 text-xs text-slate-500">
+                  <span className="font-mono text-sm text-slate-700">{formatRecordingDuration(recordingElapsedMs)}</span>
+                  <span>Отпустите кнопку, чтобы отправить</span>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="rounded-[2rem] border border-violet-200 bg-slate-950/95 p-4 text-white shadow-2xl backdrop-blur">
+              <div className="flex items-center gap-4">
+                <div className="relative h-28 w-28 overflow-hidden rounded-full border-4 border-violet-400/80 shadow-lg">
+                  <span className="absolute inset-0 rounded-full border-4 border-violet-300/70 animate-pulse" />
+                  <video ref={liveVideoRef} muted playsInline className="h-full w-full object-cover" />
+                </div>
+                <div className="space-y-2">
+                  <div className="text-sm font-semibold">Идет запись видео</div>
+                  <div className="font-mono text-lg">{formatRecordingDuration(recordingElapsedMs)}</div>
+                  <div className="text-xs text-slate-300">Отпустите кнопку, чтобы остановить и отправить кружок</div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </PageContainer>
   );
 }

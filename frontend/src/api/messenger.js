@@ -233,6 +233,9 @@ async function uploadMessengerAttachment(file, kind, durationSeconds = null) {
   const form = new FormData();
   form.append("file", file);
   form.append("media_kind", kind);
+  if (typeof durationSeconds === "number" && Number.isFinite(durationSeconds)) {
+    form.append("duration_seconds", String(Math.round(durationSeconds)));
+  }
   form.append(
     "encrypted_metadata",
     JSON.stringify({
@@ -248,8 +251,29 @@ async function uploadMessengerAttachment(file, kind, durationSeconds = null) {
     body: form,
   });
   if (!response.ok) {
-    const message = await response.text();
-    throw new Error(message || "Не удалось загрузить вложение");
+    let message = "Не удалось загрузить вложение";
+    try {
+      const contentType = response.headers?.get?.("content-type") || "";
+      if (contentType.includes("application/json")) {
+        const payload = await response.json();
+        const detail = payload?.detail ?? payload?.message ?? payload;
+        if (typeof detail === "string") {
+          message = detail;
+        } else if (detail && typeof detail === "object") {
+          message = detail.message || JSON.stringify(detail);
+        }
+      } else {
+        const text = await response.text();
+        if (text && !/<html[\s>]/i.test(text)) {
+          message = text;
+        } else if (response.status >= 500) {
+          message = "Сервер временно недоступен. Попробуйте еще раз через минуту.";
+        }
+      }
+    } catch (_error) {
+      message = response.statusText || message;
+    }
+    throw new Error(message);
   }
   return response.json();
 }
