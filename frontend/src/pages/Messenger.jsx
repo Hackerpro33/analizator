@@ -20,11 +20,13 @@ import { useAuth } from "@/contexts/AuthContext.jsx";
 import { updateProfile } from "@/api/auth";
 import {
   createMessengerSpace,
+  deleteMessengerMessage,
   getAttachmentObjectUrl,
   getMessengerBootstrap,
   getMessengerSpaceMessages,
   sendMessengerMessage,
   subscribeMessengerEvents,
+  updateMessengerMessage,
   updateMessengerProfile,
 } from "@/api/messenger";
 import { formatBytes, getMessengerConstraints, validateAttachmentFile } from "@/lib/messengerUtils";
@@ -132,6 +134,8 @@ export default function Messenger() {
     stream: null,
   });
   const [recordingElapsedMs, setRecordingElapsedMs] = useState(0);
+  const [editingMessageId, setEditingMessageId] = useState("");
+  const [editingText, setEditingText] = useState("");
   const [createForm, setCreateForm] = useState({
     type: "group",
     title: "",
@@ -243,7 +247,7 @@ export default function Messenger() {
           await loadMessenger(activeSpaceId);
           return;
         }
-        if (event.type === "message.created") {
+        if (event.type === "message.created" || event.type === "message.updated" || event.type === "message.deleted") {
           await loadMessenger(activeSpaceId || event.space_id);
           await loadSpaceMessages(event.space_id);
         }
@@ -483,8 +487,8 @@ export default function Messenger() {
           video: wantsVideo
             ? {
                 facingMode: "user",
-                width: { ideal: 480 },
-                height: { ideal: 480 },
+                width: { ideal: 360 },
+                height: { ideal: 360 },
               }
             : false,
         });
@@ -533,7 +537,12 @@ export default function Messenger() {
           await finalizeRecording(blob, currentMode, elapsedMs);
         };
 
-        recorder.start();
+        const videoTrack = wantsVideo ? stream.getVideoTracks()[0] : null;
+        if (videoTrack) {
+          videoTrack.enabled = true;
+        }
+
+        recorder.start(250);
         setRecordingElapsedMs(0);
         setRecordingState({ mode, active: true, stream });
       } catch (error) {
@@ -551,6 +560,62 @@ export default function Messenger() {
       }
     },
     [activeSpace, finalizeRecording, recordingState.active, sending, stopRecordingStream, toast]
+  );
+
+  const handleDeleteMessage = useCallback(
+    async (message) => {
+      if (!activeSpace || sending) return;
+      try {
+        await deleteMessengerMessage(activeSpace.id, message.id);
+        if (editingMessageId === message.id) {
+          setEditingMessageId("");
+          setEditingText("");
+        }
+        await loadSpaceMessages(activeSpace.id);
+        await loadMessenger(activeSpace.id);
+      } catch (error) {
+        toast({
+          title: "Сообщение не удалено",
+          description: error?.message,
+          variant: "destructive",
+        });
+      }
+    },
+    [activeSpace, editingMessageId, loadMessenger, loadSpaceMessages, sending, toast]
+  );
+
+  const handleEditMessage = useCallback(
+    async (message) => {
+      if (!activeSpace || sending) return;
+      const nextText = editingText.trim();
+      if (!nextText) {
+        toast({
+          title: "Пустой текст",
+          description: "Введите текст, который нужно сохранить.",
+          variant: "destructive",
+        });
+        return;
+      }
+      try {
+        await updateMessengerMessage(user, {
+          spaceId: activeSpace.id,
+          messageId: message.id,
+          text: nextText,
+          memberIds: activeSpace.member_ids || [],
+        });
+        setEditingMessageId("");
+        setEditingText("");
+        await loadSpaceMessages(activeSpace.id);
+        await loadMessenger(activeSpace.id);
+      } catch (error) {
+        toast({
+          title: "Сообщение не обновлено",
+          description: error?.message,
+          variant: "destructive",
+        });
+      }
+    },
+    [activeSpace, editingText, loadMessenger, loadSpaceMessages, sending, toast, user]
   );
 
   useEffect(() => {
@@ -783,6 +848,9 @@ export default function Messenger() {
               {activeMessages.map((message) => {
                 const isOwn = message.sender_id === bootstrap?.currentUserId;
                 const payload = message.payload || {};
+                const isEditing = editingMessageId === message.id;
+                const canEdit = isOwn && !message.is_deleted && (payload.attachments || []).length === 0;
+                const canDelete = isOwn && !message.is_deleted;
                 return (
                   <div key={message.id} className={`flex ${isOwn ? "justify-end" : "justify-start"}`}>
                     <div
@@ -793,13 +861,42 @@ export default function Messenger() {
                       <div className={`mb-2 flex items-center gap-2 text-xs ${isOwn ? "text-slate-300" : "text-slate-500"}`}>
                         <span className="font-medium">{message.sender?.full_name || "Система"}</span>
                         <span>{formatMessageTime(message.created_at)}</span>
+                        {message.is_edited && !message.is_deleted ? <span>изменено</span> : null}
                         {message.encrypted && <Lock className="h-3.5 w-3.5" />}
                       </div>
-                      {payload.decryption_error ? (
+                      {message.is_deleted ? (
+                        <p className="text-sm italic opacity-80">Сообщение удалено</p>
+                      ) : payload.decryption_error ? (
                         <p className="text-sm">Не удалось расшифровать сообщение.</p>
                       ) : (
                         <>
-                          {payload.text ? <p className="whitespace-pre-wrap text-sm leading-6">{payload.text}</p> : null}
+                          {isEditing ? (
+                            <div className="space-y-2">
+                              <Textarea
+                                value={editingText}
+                                onChange={(event) => setEditingText(event.target.value)}
+                                className="min-h-[96px] resize-none rounded-2xl border-slate-300 bg-white text-slate-900"
+                              />
+                              <div className="flex justify-end gap-2">
+                                <Button
+                                  type="button"
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => {
+                                    setEditingMessageId("");
+                                    setEditingText("");
+                                  }}
+                                >
+                                  Отмена
+                                </Button>
+                                <Button type="button" size="sm" onClick={() => void handleEditMessage(message)}>
+                                  Сохранить
+                                </Button>
+                              </div>
+                            </div>
+                          ) : payload.text ? (
+                            <p className="whitespace-pre-wrap text-sm leading-6">{payload.text}</p>
+                          ) : null}
                           {(payload.attachments || []).length > 0 && (
                             <div className="mt-3 space-y-3">
                               {payload.attachments.map((attachment) => {
@@ -849,6 +946,31 @@ export default function Messenger() {
                               })}
                             </div>
                           )}
+                          {(canEdit || canDelete) && !isEditing ? (
+                            <div className={`mt-3 flex gap-2 text-xs ${isOwn ? "text-slate-300" : "text-slate-500"}`}>
+                              {canEdit ? (
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setEditingMessageId(message.id);
+                                    setEditingText(payload.text || "");
+                                  }}
+                                  className="transition hover:opacity-100 opacity-80"
+                                >
+                                  Редактировать
+                                </button>
+                              ) : null}
+                              {canDelete ? (
+                                <button
+                                  type="button"
+                                  onClick={() => void handleDeleteMessage(message)}
+                                  className="transition hover:opacity-100 opacity-80"
+                                >
+                                  Удалить
+                                </button>
+                              ) : null}
+                            </div>
+                          ) : null}
                         </>
                       )}
                     </div>
@@ -1173,7 +1295,7 @@ export default function Messenger() {
               <div className="flex items-center gap-4">
                 <div className="relative h-28 w-28 overflow-hidden rounded-full border-4 border-violet-400/80 shadow-lg">
                   <span className="absolute inset-0 rounded-full border-4 border-violet-300/70 animate-pulse" />
-                  <video ref={liveVideoRef} muted playsInline className="h-full w-full object-cover" />
+                  <video ref={liveVideoRef} muted playsInline autoPlay className="h-full w-full object-cover" />
                 </div>
                 <div className="space-y-2">
                   <div className="text-sm font-semibold">Идет запись видео</div>

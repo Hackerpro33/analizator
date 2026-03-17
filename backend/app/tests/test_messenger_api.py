@@ -152,6 +152,91 @@ def test_messenger_attachment_message_and_download(tmp_path, monkeypatch):
     assert download.content == b"encrypted-blob"
 
 
+def test_messenger_image_attachment_upload(tmp_path, monkeypatch):
+    admin_client, _security_client, _admin_payload, _security_payload, _security_user_id = _prepare_admin_and_security(
+        tmp_path, monkeypatch
+    )
+
+    upload = admin_client.post(
+        "/api/v1/messenger/attachments",
+        files={"file": ("proof.png", b"\x89PNG\r\n\x1a\nfake", "image/png")},
+        data={
+            "media_kind": "image",
+            "encrypted_metadata": '{"width":256,"height":256}',
+        },
+    )
+    assert upload.status_code == 201
+    payload = upload.json()
+    assert payload["media_kind"] == "image"
+    assert payload["content_type"] == "image/png"
+
+
+def test_messenger_message_update_and_delete(tmp_path, monkeypatch):
+    admin_client, security_client, _admin_payload, _security_payload, security_user_id = _prepare_admin_and_security(
+        tmp_path, monkeypatch
+    )
+
+    admin_device_id = admin_client.post(
+        "/api/v1/messenger/devices",
+        json={
+            "label": "Admin browser",
+            "device_kind": "web",
+            "identity_key": {"kty": "OKP", "crv": "X25519", "x": "admin-key"},
+            "prekey_bundle": {"signed_prekey": {"key_id": 1, "public_key": "signed-admin"}},
+        },
+    ).json()["id"]
+
+    security_client.post(
+        "/api/v1/messenger/devices",
+        json={
+            "label": "Security browser",
+            "device_kind": "web",
+            "identity_key": {"kty": "OKP", "crv": "X25519", "x": "sec-key"},
+            "prekey_bundle": {"signed_prekey": {"key_id": 1, "public_key": "signed-sec"}},
+        },
+    )
+
+    space_id = admin_client.post(
+        "/api/v1/messenger/spaces",
+        json={"type": "direct", "title": "Direct", "member_ids": [security_user_id]},
+    ).json()["id"]
+
+    created = admin_client.post(
+        f"/api/v1/messenger/spaces/{space_id}/messages",
+        json={
+            "sender_device_id": admin_device_id,
+            "message_type": "text",
+            "encrypted_payload": {"algorithm": "AES-GCM", "ciphertext": "opaque"},
+            "envelopes": [{"device_id": admin_device_id, "key": "sealed-key"}],
+            "attachment_ids": [],
+        },
+    )
+    assert created.status_code == 201
+    message_id = created.json()["id"]
+
+    updated = admin_client.patch(
+        f"/api/v1/messenger/spaces/{space_id}/messages/{message_id}",
+        json={
+            "message_type": "text",
+            "encrypted_payload": {"algorithm": "AES-GCM", "ciphertext": "edited"},
+            "envelopes": [{"device_id": admin_device_id, "key": "edited-key"}],
+        },
+    )
+    assert updated.status_code == 200
+    assert updated.json()["is_edited"] is True
+    assert updated.json()["edited_at"]
+
+    deleted = admin_client.delete(f"/api/v1/messenger/spaces/{space_id}/messages/{message_id}")
+    assert deleted.status_code == 200
+    assert deleted.json()["message"]["is_deleted"] is True
+
+    listed = admin_client.get(f"/api/v1/messenger/spaces/{space_id}/messages")
+    assert listed.status_code == 200
+    message = listed.json()["items"][0]
+    assert message["is_deleted"] is True
+    assert message["attachments"] == []
+
+
 def test_messenger_websocket_receives_new_messages(tmp_path, monkeypatch):
     admin_client, security_client, _admin_payload, _security_payload, security_user_id = _prepare_admin_and_security(
         tmp_path, monkeypatch

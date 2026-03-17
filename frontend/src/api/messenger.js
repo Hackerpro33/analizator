@@ -62,6 +62,19 @@ function normalizeAttachment(attachment) {
   };
 }
 
+function normalizeMessage(message) {
+  return {
+    ...message,
+    sender_id: message.sender_user_id,
+    created_at: message.created_at,
+    updated_at: message.updated_at || null,
+    edited_at: message.edited_at || null,
+    deleted_at: message.deleted_at || null,
+    is_edited: Boolean(message.is_edited),
+    is_deleted: Boolean(message.is_deleted),
+  };
+}
+
 function normalizeSpace(space) {
   return {
     id: space.id,
@@ -133,38 +146,47 @@ export function getAttachmentObjectUrl(attachmentId) {
 }
 
 async function decryptServerMessage(message, keyBundle, deviceId) {
+  if (message.is_deleted) {
+    return normalizeMessage({
+      ...message,
+      payload: {
+        text: "",
+        attachments: [],
+      },
+    });
+  }
   const envelope = (message.envelopes || []).find(
     (item) => item.device_id === deviceId || item.deviceId === deviceId
   );
   if (!envelope) {
-    return {
+    return normalizeMessage({
       ...message,
       payload: {
         text: "",
         attachments: (message.attachments || []).map(normalizeAttachment),
         decryption_error: true,
       },
-    };
+    });
   }
 
   try {
     const payload = await decryptPayload(message.encrypted_payload, keyBundle.privateJwk, envelope.key);
-    return {
+    return normalizeMessage({
       ...message,
       payload: {
         ...payload,
         attachments: (message.attachments || []).map(normalizeAttachment),
       },
-    };
+    });
   } catch (_error) {
-    return {
+    return normalizeMessage({
       ...message,
       payload: {
         text: "",
         attachments: (message.attachments || []).map(normalizeAttachment),
         decryption_error: true,
       },
-    };
+    });
   }
 }
 
@@ -197,14 +219,7 @@ export async function getMessengerSpaceMessages(spaceId, keyBundle, deviceId) {
     method: "GET",
   });
   const messages = await Promise.all(
-    (payload.items || []).map(async (message) => {
-      const decrypted = await decryptServerMessage(message, keyBundle, deviceId);
-      return {
-        ...decrypted,
-        sender_id: decrypted.sender_user_id,
-        created_at: decrypted.created_at,
-      };
-    })
+    (payload.items || []).map((message) => decryptServerMessage(message, keyBundle, deviceId))
   );
   return messages;
 }
@@ -227,6 +242,31 @@ async function fetchUserDevices(userId) {
     method: "GET",
   });
   return (payload.items || []).map(normalizeRecipientDevice);
+}
+
+async function buildEncryptedMessagePayload(user, memberIds, clearPayload) {
+  const bootstrap = await getMessengerBootstrap(user);
+  const recipientDevicesById = new Map();
+
+  for (const memberId of memberIds || []) {
+    const devices = await fetchUserDevices(memberId);
+    devices.forEach((device) => recipientDevicesById.set(device.deviceId, device));
+  }
+
+  recipientDevicesById.set(bootstrap.deviceId, {
+    deviceId: bootstrap.deviceId,
+    publicJwk: bootstrap.keyBundle.publicJwk,
+  });
+
+  const encrypted = await encryptPayloadForRecipients(
+    clearPayload,
+    Array.from(recipientDevicesById.values())
+  );
+
+  return {
+    bootstrap,
+    encrypted,
+  };
 }
 
 async function uploadMessengerAttachment(file, kind, durationSeconds = null) {
@@ -279,19 +319,6 @@ async function uploadMessengerAttachment(file, kind, durationSeconds = null) {
 }
 
 export async function sendMessengerMessage(user, payload) {
-  const bootstrap = await getMessengerBootstrap(user);
-  const recipientDevicesById = new Map();
-
-  for (const memberId of payload.memberIds || []) {
-    const devices = await fetchUserDevices(memberId);
-    devices.forEach((device) => recipientDevicesById.set(device.deviceId, device));
-  }
-
-  recipientDevicesById.set(bootstrap.deviceId, {
-    deviceId: bootstrap.deviceId,
-    publicJwk: bootstrap.keyBundle.publicJwk,
-  });
-
   const uploadedAttachments = [];
   for (const attachment of payload.attachments || []) {
     const uploaded = await uploadMessengerAttachment(attachment.file, attachment.kind, attachment.durationSeconds);
@@ -303,10 +330,7 @@ export async function sendMessengerMessage(user, payload) {
     attachments: uploadedAttachments.map(normalizeAttachment),
   };
 
-  const encrypted = await encryptPayloadForRecipients(
-    clearPayload,
-    Array.from(recipientDevicesById.values())
-  );
+  const { bootstrap, encrypted } = await buildEncryptedMessagePayload(user, payload.memberIds || [], clearPayload);
 
   return jsonRequest(`/api/messenger/spaces/${encodeURIComponent(payload.spaceId)}/messages`, {
     method: "POST",
@@ -322,6 +346,38 @@ export async function sendMessengerMessage(user, payload) {
       attachment_ids: uploadedAttachments.map((item) => item.id),
     }),
   });
+}
+
+export async function updateMessengerMessage(user, payload) {
+  const clearPayload = {
+    text: String(payload.text || ""),
+    attachments: [],
+  };
+  const { encrypted } = await buildEncryptedMessagePayload(user, payload.memberIds || [], clearPayload);
+
+  return jsonRequest(
+    `/api/messenger/spaces/${encodeURIComponent(payload.spaceId)}/messages/${encodeURIComponent(payload.messageId)}`,
+    {
+      method: "PATCH",
+      body: JSON.stringify({
+        message_type: "text",
+        encrypted_payload: encrypted.encryptedPayload,
+        envelopes: encrypted.envelopes.map((item) => ({
+          device_id: item.deviceId,
+          key: item.key,
+        })),
+      }),
+    }
+  );
+}
+
+export async function deleteMessengerMessage(spaceId, messageId) {
+  return jsonRequest(
+    `/api/messenger/spaces/${encodeURIComponent(spaceId)}/messages/${encodeURIComponent(messageId)}`,
+    {
+      method: "DELETE",
+    }
+  );
 }
 
 export async function updateMessengerProfile(_user, payload) {

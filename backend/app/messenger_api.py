@@ -123,6 +123,12 @@ class CreateMessageRequest(BaseModel):
     attachment_ids: List[str] = Field(default_factory=list)
 
 
+class UpdateMessageRequest(BaseModel):
+    message_type: Literal["text", "mixed"] = "text"
+    encrypted_payload: Dict[str, Any]
+    envelopes: List[Dict[str, Any]] = Field(default_factory=list)
+
+
 def _resolve_space_payload(
     *,
     space: Dict[str, Any],
@@ -187,6 +193,11 @@ def _resolve_message_payload(
         "envelopes": message.get("envelopes", []),
         "attachments": attachments,
         "created_at": message["created_at"],
+        "updated_at": message.get("updated_at"),
+        "edited_at": message.get("edited_at"),
+        "deleted_at": message.get("deleted_at"),
+        "is_edited": bool(message.get("is_edited")),
+        "is_deleted": bool(message.get("is_deleted")),
     }
 
 
@@ -433,6 +444,86 @@ async def create_message(
     for member_id in space.get("member_ids", []):
         await connection_manager.send_user_event(member_id, event)
     return resolved
+
+
+@router.patch("/spaces/{space_id}/messages/{message_id}")
+async def update_message(
+    space_id: str,
+    message_id: str,
+    payload: UpdateMessageRequest,
+    request: Request,
+    current_user: UserRecord = Depends(get_current_user),
+    store: MessengerStore = Depends(get_messenger_store),
+    user_store: UserStore = Depends(get_user_store),
+) -> Dict[str, Any]:
+    space = store.get_space(space_id)
+    if not space or current_user["id"] not in space.get("member_ids", []):
+        raise HTTPException(status_code=404, detail="Space not found")
+    message = store.get_message(message_id)
+    if not message or message.get("space_id") != space_id:
+        raise HTTPException(status_code=404, detail="Message not found")
+    if message.get("sender_user_id") != current_user["id"]:
+        raise HTTPException(status_code=403, detail="You can edit only your own messages")
+    if message.get("is_deleted"):
+        raise HTTPException(status_code=400, detail="Deleted message cannot be edited")
+    if message.get("attachment_ids"):
+        raise HTTPException(status_code=400, detail="Only text messages can be edited")
+
+    updated = store.update_message(
+        message_id=message_id,
+        encrypted_payload=payload.encrypted_payload,
+        envelopes=payload.envelopes,
+        message_type=payload.message_type,
+    )
+    if not updated:
+        raise HTTPException(status_code=404, detail="Message not found")
+    resolved = _resolve_message_payload(message=updated, store=store, user_store=user_store)
+    _record_audit(
+        request,
+        current_user["id"],
+        "messenger.message.updated",
+        f"/messenger/spaces/{space_id}/messages/{message_id}",
+        {"space_id": space_id, "message_id": message_id},
+    )
+    event = {"type": "message.updated", "space_id": space_id, "message": resolved}
+    for member_id in space.get("member_ids", []):
+        await connection_manager.send_user_event(member_id, event)
+    return resolved
+
+
+@router.delete("/spaces/{space_id}/messages/{message_id}")
+async def delete_message(
+    space_id: str,
+    message_id: str,
+    request: Request,
+    current_user: UserRecord = Depends(get_current_user),
+    store: MessengerStore = Depends(get_messenger_store),
+    user_store: UserStore = Depends(get_user_store),
+) -> Dict[str, Any]:
+    space = store.get_space(space_id)
+    if not space or current_user["id"] not in space.get("member_ids", []):
+        raise HTTPException(status_code=404, detail="Space not found")
+    message = store.get_message(message_id)
+    if not message or message.get("space_id") != space_id:
+        raise HTTPException(status_code=404, detail="Message not found")
+    if message.get("sender_user_id") != current_user["id"]:
+        raise HTTPException(status_code=403, detail="You can delete only your own messages")
+
+    deleted = store.delete_message(message_id=message_id)
+    if not deleted:
+        raise HTTPException(status_code=404, detail="Message not found")
+    resolved = _resolve_message_payload(message=deleted, store=store, user_store=user_store)
+    _record_audit(
+        request,
+        current_user["id"],
+        "messenger.message.deleted",
+        f"/messenger/spaces/{space_id}/messages/{message_id}",
+        {"space_id": space_id, "message_id": message_id},
+    )
+    event = {"type": "message.deleted", "space_id": space_id, "message": resolved}
+    for member_id in space.get("member_ids", []):
+        await connection_manager.send_user_event(member_id, event)
+    return {"status": "deleted", "message": resolved}
 
 
 @router.post("/attachments", status_code=status.HTTP_201_CREATED)

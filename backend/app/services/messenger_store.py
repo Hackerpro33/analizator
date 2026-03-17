@@ -241,6 +241,53 @@ class MessengerStore:
             self._write(state)
         return dict(record)
 
+    def get_message(self, message_id: str) -> Optional[MessengerRecord]:
+        with self._lock:
+            state = self._read()
+            message = state["messages"].get(message_id)
+            return dict(message) if message else None
+
+    def update_message(
+        self,
+        *,
+        message_id: str,
+        encrypted_payload: Dict[str, Any],
+        envelopes: List[Dict[str, Any]],
+        message_type: str,
+    ) -> Optional[MessengerRecord]:
+        now = _utcnow().isoformat()
+        with self._lock:
+            state = self._read()
+            record = state["messages"].get(message_id)
+            if not record:
+                return None
+            record["encrypted_payload"] = encrypted_payload
+            record["envelopes"] = envelopes
+            record["message_type"] = message_type
+            record["updated_at"] = now
+            record["edited_at"] = now
+            record["is_edited"] = True
+            state["messages"][message_id] = record
+            self._write(state)
+            return dict(record)
+
+    def delete_message(self, *, message_id: str) -> Optional[MessengerRecord]:
+        now = _utcnow().isoformat()
+        with self._lock:
+            state = self._read()
+            record = state["messages"].get(message_id)
+            if not record:
+                return None
+            record["deleted_at"] = now
+            record["updated_at"] = now
+            record["is_deleted"] = True
+            record["attachment_ids"] = []
+            record["encrypted_payload"] = None
+            record["envelopes"] = []
+            state["messages"][message_id] = record
+            self._write(state)
+            return dict(record)
+
     def list_messages_for_space(
         self,
         space_id: str,
