@@ -51,7 +51,13 @@ const ATTACHMENT_ACCEPT =
   "image/*,audio/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.csv,.txt,.ppt,.pptx";
 const IMAGE_ACCEPT = "image/*";
 const AUDIO_RECORDING_MIME_TYPES = ["audio/webm;codecs=opus", "audio/webm", "audio/mp4"];
-const VIDEO_RECORDING_MIME_TYPES = ["video/webm;codecs=vp9,opus", "video/webm;codecs=vp8,opus", "video/webm"];
+const VIDEO_RECORDING_MIME_TYPES = [
+  "video/mp4;codecs=h264,aac",
+  "video/mp4",
+  "video/webm;codecs=vp9,opus",
+  "video/webm;codecs=vp8,opus",
+  "video/webm",
+];
 
 function formatMessageTime(value) {
   return new Date(value).toLocaleString("ru-RU", {
@@ -115,6 +121,8 @@ export default function Messenger() {
   const recordingChunksRef = useRef([]);
   const recordingStartedAtRef = useRef(0);
   const recordingModeRef = useRef(null);
+  const recordingMimeTypeRef = useRef("");
+  const recordingAutoStopTimerRef = useRef(null);
   const assetUrlsRef = useRef({});
 
   const [bootstrap, setBootstrap] = useState(null);
@@ -434,6 +442,13 @@ export default function Messenger() {
     mediaStreamRef.current = null;
   }, []);
 
+  const clearRecordingAutoStop = useCallback(() => {
+    if (recordingAutoStopTimerRef.current) {
+      window.clearTimeout(recordingAutoStopTimerRef.current);
+      recordingAutoStopTimerRef.current = null;
+    }
+  }, []);
+
   const finalizeRecording = useCallback(
     async (blob, mode, elapsedMs) => {
       if (!blob || blob.size === 0) {
@@ -523,9 +538,11 @@ export default function Messenger() {
           },
           video: wantsVideo
             ? {
-                facingMode: "user",
-                width: { ideal: 360 },
-                height: { ideal: 360 },
+                facingMode: { ideal: "user" },
+                width: { ideal: 480 },
+                height: { ideal: 480 },
+                aspectRatio: { ideal: 1 },
+                frameRate: { ideal: 24, max: 30 },
               }
             : false,
         });
@@ -539,6 +556,7 @@ export default function Messenger() {
         recordingChunksRef.current = [];
         recordingStartedAtRef.current = startedAt;
         recordingModeRef.current = mode;
+        recordingMimeTypeRef.current = mimeType || recorder.mimeType || (wantsVideo ? "video/mp4" : "audio/webm");
 
         recorder.ondataavailable = (event) => {
           if (event.data && event.data.size > 0) {
@@ -547,6 +565,7 @@ export default function Messenger() {
         };
 
         recorder.onerror = () => {
+          clearRecordingAutoStop();
           stopRecordingStream();
           setRecordingState({ mode: null, active: false, stream: null });
           toast({
@@ -560,13 +579,18 @@ export default function Messenger() {
           const currentMode = recordingModeRef.current;
           const elapsedMs = Math.max(0, Date.now() - recordingStartedAtRef.current);
           const blob = new Blob(recordingChunksRef.current, {
-            type: recorder.mimeType || (currentMode === "voice" ? "audio/webm" : "video/webm"),
+            type:
+              recordingMimeTypeRef.current ||
+              recorder.mimeType ||
+              (currentMode === "voice" ? "audio/webm" : "video/mp4"),
           });
 
           mediaRecorderRef.current = null;
           recordingChunksRef.current = [];
           recordingModeRef.current = null;
+          recordingMimeTypeRef.current = "";
           recordingStartedAtRef.current = 0;
+          clearRecordingAutoStop();
           stopRecordingStream();
           setRecordingElapsedMs(0);
           setRecordingState({ mode: null, active: false, stream: null });
@@ -579,7 +603,14 @@ export default function Messenger() {
           videoTrack.enabled = true;
         }
 
-        recorder.start(250);
+        if (wantsVideo) {
+          recorder.start();
+          recordingAutoStopTimerRef.current = window.setTimeout(() => {
+            void stopRecording();
+          }, constraints.maxVideoNoteSeconds * 1000);
+        } else {
+          recorder.start(250);
+        }
         setRecordingElapsedMs(0);
         setRecordingState({ mode, active: true, stream });
       } catch (error) {
@@ -596,7 +627,7 @@ export default function Messenger() {
         });
       }
     },
-    [activeSpace, finalizeRecording, recordingState.active, sending, stopRecordingStream, toast]
+    [activeSpace, clearRecordingAutoStop, constraints.maxVideoNoteSeconds, finalizeRecording, recordingState.active, sending, stopRecording, stopRecordingStream, toast]
   );
 
   const handleDeleteMessage = useCallback(
@@ -693,9 +724,10 @@ export default function Messenger() {
 
   useEffect(
     () => () => {
+      clearRecordingAutoStop();
       stopRecordingStream();
     },
-    [stopRecordingStream]
+    [clearRecordingAutoStop, stopRecordingStream]
   );
 
   const handleCreateSpace = async (event) => {
