@@ -141,8 +141,22 @@ export function getAttachmentDownloadUrl(attachmentId) {
   return buildApiUrl(`/api/messenger/attachments/${encodeURIComponent(attachmentId)}/download`);
 }
 
-export function getAttachmentObjectUrl(attachmentId) {
-  return getAttachmentDownloadUrl(attachmentId);
+export async function getAttachmentObjectUrl(attachmentId) {
+  const response = await fetch(getAttachmentDownloadUrl(attachmentId), {
+    method: "GET",
+    credentials: "include",
+  });
+  if (!response.ok) {
+    let message = "Не удалось загрузить вложение";
+    try {
+      message = await response.text();
+    } catch (_error) {
+      message = response.statusText || message;
+    }
+    throw new Error(message);
+  }
+  const blob = await response.blob();
+  return URL.createObjectURL(blob);
 }
 
 async function decryptServerMessage(message, keyBundle, deviceId) {

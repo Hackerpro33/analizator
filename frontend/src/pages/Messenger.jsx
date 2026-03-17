@@ -115,6 +115,7 @@ export default function Messenger() {
   const recordingChunksRef = useRef([]);
   const recordingStartedAtRef = useRef(0);
   const recordingModeRef = useRef(null);
+  const assetUrlsRef = useRef({});
 
   const [bootstrap, setBootstrap] = useState(null);
   const [activeSpaceId, setActiveSpaceId] = useState("");
@@ -207,12 +208,48 @@ export default function Messenger() {
     if (bootstrap.profile.avatar_attachment_id) {
       ids.add(bootstrap.profile.avatar_attachment_id);
     }
-    const nextUrls = {};
-    ids.forEach((id) => {
-      nextUrls[id] = getAttachmentObjectUrl(id);
+    let cancelled = false;
+    const previousUrls = assetUrlsRef.current;
+
+    Promise.all(
+      Array.from(ids).map(async (id) => {
+        try {
+          const url = await getAttachmentObjectUrl(id);
+          return [id, url];
+        } catch (_error) {
+          return [id, null];
+        }
+      })
+    ).then((entries) => {
+      if (cancelled) {
+        entries.forEach(([, url]) => {
+          if (url) URL.revokeObjectURL(url);
+        });
+        return;
+      }
+      const nextUrls = Object.fromEntries(entries.filter(([, url]) => Boolean(url)));
+      Object.values(previousUrls).forEach((url) => {
+        if (url && !Object.values(nextUrls).includes(url)) {
+          URL.revokeObjectURL(url);
+        }
+      });
+      assetUrlsRef.current = nextUrls;
+      setAssetUrls(nextUrls);
     });
-    setAssetUrls(nextUrls);
+
+    return () => {
+      cancelled = true;
+    };
   }, [bootstrap, messagesBySpace]);
+
+  useEffect(
+    () => () => {
+      Object.values(assetUrlsRef.current).forEach((url) => {
+        if (url) URL.revokeObjectURL(url);
+      });
+    },
+    []
+  );
 
   const loadSpaceMessages = useCallback(
     async (spaceId) => {
