@@ -468,9 +468,10 @@ export default function Messenger() {
       );
       const durationSeconds =
         mode === "video_note"
-          ? elapsedMs > 0
-            ? elapsedMs / 1000
-            : await readVideoDuration(file)
+          ? Math.min(
+              constraints.maxVideoNoteSeconds,
+              elapsedMs > 0 ? elapsedMs / 1000 : await readVideoDuration(file)
+            )
           : elapsedMs > 0
             ? elapsedMs / 1000
             : null;
@@ -498,13 +499,20 @@ export default function Messenger() {
         resetDraft: true,
       });
     },
-    [draft, sendPayload, toast]
+    [constraints.maxVideoNoteSeconds, draft, sendPayload, toast]
   );
 
   const stopRecording = useCallback(async () => {
     const recorder = mediaRecorderRef.current;
     if (!recorder) return;
     if (recorder.state === "inactive") return;
+    try {
+      if (typeof recorder.requestData === "function") {
+        recorder.requestData();
+      }
+    } catch (_error) {
+      // Safari/WebKit may throw if data is not ready yet; stopping is still safe.
+    }
     recorder.stop();
   }, []);
 
