@@ -91,6 +91,18 @@ function normalizeRoleDefinition(role) {
   };
 }
 
+function mergeSystemRoleDefinition(defaultRole, storedRole) {
+  if (!storedRole) {
+    return defaultRole;
+  }
+  const normalizedStored = normalizeRoleDefinition(storedRole);
+  return {
+    ...defaultRole,
+    ...normalizedStored,
+    access: Array.from(new Set([...(defaultRole.access || []), ...(normalizedStored.access || [])])),
+  };
+}
+
 export function slugifyRoleKey(value) {
   return String(value || "")
     .trim()
@@ -104,7 +116,7 @@ export function getRoleDefinitions() {
   const storedMap = new Map((Array.isArray(stored) ? stored : []).map((item) => [item.key, normalizeRoleDefinition(item)]));
 
   return DEFAULT_ROLE_DEFINITIONS
-    .map((role) => ({ ...role, ...(storedMap.get(role.key) || {}) }))
+    .map((role) => mergeSystemRoleDefinition(role, storedMap.get(role.key)))
     .concat(
       (Array.isArray(stored) ? stored : [])
         .map(normalizeRoleDefinition)
