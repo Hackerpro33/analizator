@@ -10,10 +10,13 @@ export function AuthProvider({ children }) {
   const loadProfile = useCallback(async () => {
     try {
       const profile = await fetchCurrentUser();
-      setState({ status: "authenticated", user: { ...profile, role: resolveUserRole(profile) }, error: null });
+      const normalizedProfile = { ...profile, role: resolveUserRole(profile) };
+      setState({ status: "authenticated", user: normalizedProfile, error: null });
+      return normalizedProfile;
     } catch (error) {
       console.warn("Не удалось загрузить профиль пользователя", error);
       setState({ status: "guest", user: null, error: null });
+      return null;
     }
   }, []);
 
@@ -42,7 +45,7 @@ export function AuthProvider({ children }) {
   const login = useCallback(
     async (credentials) => {
       await loginUser(credentials);
-      await loadProfile();
+      return loadProfile();
     },
     [loadProfile]
   );

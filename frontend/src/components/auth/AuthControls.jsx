@@ -2,24 +2,42 @@ import React, { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { buildGoogleLoginUrl, probeGoogleLogin, resendVerificationEmail } from "@/api/auth";
 import { useAuth } from "@/contexts/AuthContext.jsx";
+import { clearRememberedAccount, loadRememberedAccount, saveRememberedAccount } from "@/lib/rememberedAccount";
 import { getRoleLabel } from "@/utils/adminAccess";
 import { AlertCircle, LogOut, MailCheck, Shield, UserPlus } from "lucide-react";
 
-function CredentialsForm({ mode, onSubmit, footer = null, errorContent = null, suppressErrorToast = false }) {
+function CredentialsForm({
+  mode,
+  onSubmit,
+  footer = null,
+  errorContent = null,
+  suppressErrorToast = false,
+  initialValues = null,
+}) {
   const [form, setForm] = useState({
     full_name: "",
     email: "",
     password: "",
     invite_code: "",
+    rememberAccount: false,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+
+  useEffect(() => {
+    if (!initialValues) return;
+    setForm((prev) => ({
+      ...prev,
+      ...initialValues,
+    }));
+  }, [initialValues]);
 
   const handleChange = (field) => (event) => {
     setForm((prev) => ({ ...prev, [field]: event.target.value }));
@@ -68,6 +86,18 @@ function CredentialsForm({ mode, onSubmit, footer = null, errorContent = null, s
           required
         />
       </div>
+      {!isRegister && (
+        <div className="flex items-center gap-2">
+          <Checkbox
+            id="remember_account"
+            checked={form.rememberAccount}
+            onCheckedChange={(checked) => setForm((prev) => ({ ...prev, rememberAccount: Boolean(checked) }))}
+          />
+          <Label htmlFor="remember_account" className="text-sm font-normal">
+            Запомнить учетную запись
+          </Label>
+        </div>
+      )}
       {isRegister && (
         <div className="space-y-2">
           <Label htmlFor="invite_code">Инвайт-код (для ролей безопасности)</Label>
@@ -135,6 +165,7 @@ export default function AuthControls() {
   const [open, setOpen] = useState(null);
   const [pendingVerification, setPendingVerification] = useState(null);
   const [loginFeedback, setLoginFeedback] = useState(null);
+  const [rememberedAccount, setRememberedAccount] = useState(() => loadRememberedAccount());
 
   useEffect(() => {
     const handler = (event) => {
@@ -253,13 +284,28 @@ export default function AuthControls() {
               suppressErrorToast
               onSubmit={async (values) => {
                 try {
-                  await login({ email: values.email, password: values.password });
+                  const authenticatedUser = await login({ email: values.email, password: values.password });
+                  if (authenticatedUser?.role === "admin") {
+                    clearRememberedAccount();
+                    setRememberedAccount(null);
+                  } else if (values.rememberAccount) {
+                    const nextRememberedAccount = { email: values.email.trim() };
+                    saveRememberedAccount(nextRememberedAccount.email);
+                    setRememberedAccount(nextRememberedAccount);
+                  } else {
+                    clearRememberedAccount();
+                    setRememberedAccount(null);
+                  }
                   setLoginFeedback(null);
                   setOpen(null);
                   toast({ title: "Добро пожаловать" });
                 } catch (error) {
                   setLoginFeedback(buildLoginFeedback(error, values.email));
                 }
+              }}
+              initialValues={{
+                email: rememberedAccount?.email || "",
+                rememberAccount: Boolean(rememberedAccount?.email),
               }}
             />
             <p className="text-sm text-slate-500">Локальный вход доступен только после подтверждения email.</p>
