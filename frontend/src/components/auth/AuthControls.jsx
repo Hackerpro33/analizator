@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { buildGoogleLoginUrl, probeGoogleLogin, resendVerificationEmail } from "@/api/auth";
 import { useAuth } from "@/contexts/AuthContext.jsx";
+import { getRoleLabel } from "@/utils/adminAccess";
 import { AlertCircle, LogOut, MailCheck, Shield, UserPlus } from "lucide-react";
 
 function CredentialsForm({ mode, onSubmit, footer = null, errorContent = null, suppressErrorToast = false }) {
@@ -185,7 +186,7 @@ export default function AuthControls() {
           <p className="text-xs text-slate-400 uppercase">Роль: {user.role}</p>
         </div>
         <Badge variant="outline" className="text-xs">
-          {user.role === "admin" ? "Админ" : user.role === "security" ? "Безопасность" : "Пользователь"}
+          {getRoleLabel(user.role)}
         </Badge>
         <Button
           variant="ghost"

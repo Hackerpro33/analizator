@@ -5,18 +5,18 @@ import Layout from './Layout.jsx';
 import { PAGES } from './pageRegistry';
 import { useAuth } from '@/contexts/AuthContext.jsx';
 import AccessMessage from '@/components/auth/AccessMessage.jsx';
+import { ACCESS_ITEMS } from '@/utils/adminAccess';
 
 const ACCESS_RULES = {
   Dashboard: { requireAuth: false },
-  CyberSecurity: { requireAuth: true, roles: ['admin', 'security', 'security_viewer'] },
-  Admin: { requireAuth: true, roles: ['admin'] },
 };
 
 const DEFAULT_RULE = { requireAuth: true };
 
 function GuardedPage({ name, Component }) {
-  const { status, user, hasRole } = useAuth();
+  const { status, user, canAccess } = useAuth();
   const rules = ACCESS_RULES[name] ?? DEFAULT_RULE;
+  const hasManagedAccess = ACCESS_ITEMS.some((item) => item.key === name);
 
   if (status === 'loading') {
     return (
@@ -34,7 +34,11 @@ function GuardedPage({ name, Component }) {
     return <AccessMessage type="login" />;
   }
 
-  if (rules.roles && !hasRole(rules.roles)) {
+  if (hasManagedAccess && !canAccess(name)) {
+    return <AccessMessage type="forbidden" />;
+  }
+
+  if (rules.roles && !rules.roles.includes(user.role)) {
     return <AccessMessage type="forbidden" />;
   }
 

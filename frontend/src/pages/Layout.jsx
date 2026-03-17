@@ -40,6 +40,7 @@ import { useAuth } from "@/contexts/AuthContext.jsx";
 
 const navigationItems = [
   {
+    accessKey: "Dashboard",
     title: "Панель управления",
     url: createPageUrl("Dashboard"),
     icon: Home,
@@ -47,6 +48,7 @@ const navigationItems = [
     requireAuth: false
   },
   {
+    accessKey: "Assistant",
     title: "Аналитический ассистент",
     url: createPageUrl("Assistant"),
     icon: MessageSquare,
@@ -54,6 +56,7 @@ const navigationItems = [
     requireAuth: true
   },
   {
+    accessKey: "AILab",
     title: "ИИ-лаборатория",
     url: createPageUrl("AILab"),
     icon: Brain,
@@ -61,6 +64,7 @@ const navigationItems = [
     requireAuth: true
   },
   {
+    accessKey: "AdvancedAnalytics",
     title: "Продвинутая аналитика",
     url: createPageUrl("AdvancedAnalytics"),
     icon: ShieldCheck,
@@ -68,6 +72,7 @@ const navigationItems = [
     requireAuth: true
   },
   {
+    accessKey: "CyberSecurity",
     title: "Кибербезопасность",
     url: createPageUrl("CyberSecurity"),
     icon: Shield,
@@ -76,6 +81,7 @@ const navigationItems = [
     roles: ["admin", "security"]
   },
   {
+    accessKey: "DataSources",
     title: "Источники данных",
     url: createPageUrl("DataSources"),
     icon: Database,
@@ -83,6 +89,7 @@ const navigationItems = [
     requireAuth: true
   },
   {
+    accessKey: "DataTransformation",
     title: "Преобразование данных",
     url: createPageUrl("DataTransformation"),
     icon: RefreshCw,
@@ -90,6 +97,7 @@ const navigationItems = [
     requireAuth: true
   },
   {
+    accessKey: "Lineyka",
     title: "Линейка",
     url: createPageUrl("Lineyka"),
     icon: Columns3,
@@ -97,6 +105,7 @@ const navigationItems = [
     requireAuth: true
   },
   {
+    accessKey: "Maps",
     title: "Карты",
     url: createPageUrl("Maps"),
     icon: Map,
@@ -104,6 +113,7 @@ const navigationItems = [
     requireAuth: true
   },
   {
+    accessKey: "Charts",
     title: "Графики",
     url: createPageUrl("Charts"),
     icon: BarChart3,
@@ -111,6 +121,7 @@ const navigationItems = [
     requireAuth: true
   },
   {
+    accessKey: "Forecasting",
     title: "Прогнозирование",
     url: createPageUrl("Forecasting"),
     icon: TrendingUp,
@@ -118,6 +129,7 @@ const navigationItems = [
     requireAuth: true
   },
   {
+    accessKey: "NetworkGraphs",
     title: "Графы связей",
     url: createPageUrl("NetworkGraphs"),
     icon: Network,
@@ -125,6 +137,7 @@ const navigationItems = [
     requireAuth: true
   },
   {
+    accessKey: "Constructor",
     title: "Конструктор",
     url: createPageUrl("Constructor"),
     icon: Component,
@@ -132,6 +145,7 @@ const navigationItems = [
     requireAuth: true
   },
   {
+    accessKey: "Settings",
     title: "Настройки",
     url: createPageUrl("Settings"),
     icon: SettingsIcon,
@@ -139,6 +153,7 @@ const navigationItems = [
     requireAuth: true
   },
   {
+    accessKey: "Admin",
     title: "Администрирование",
     url: createPageUrl("Admin"),
     icon: UserCog,
@@ -150,7 +165,7 @@ const navigationItems = [
 
 export default function Layout({ children }) {
   const location = useLocation();
-  const { user, hasRole } = useAuth();
+  const { user, canAccess } = useAuth();
 
   const filteredNavigation = navigationItems.filter((item) => {
     if (item.requireAuth === false) {
@@ -159,7 +174,10 @@ export default function Layout({ children }) {
     if (!user) {
       return false;
     }
-    if (item.roles && !hasRole(item.roles)) {
+    if (item.accessKey && !canAccess(item.accessKey)) {
+      return false;
+    }
+    if (item.roles && !item.roles.includes(user.role)) {
       return false;
     }
     return true;

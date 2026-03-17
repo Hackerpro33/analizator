@@ -1,5 +1,6 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { fetchCurrentUser, loginUser, logoutUser, registerUser } from "@/api/auth";
+import { canRoleAccess, resolveUserRole } from "@/utils/adminAccess";
 
 const AuthContext = createContext(null);
 
@@ -9,7 +10,7 @@ export function AuthProvider({ children }) {
   const loadProfile = useCallback(async () => {
     try {
       const profile = await fetchCurrentUser();
-      setState({ status: "authenticated", user: profile, error: null });
+      setState({ status: "authenticated", user: { ...profile, role: resolveUserRole(profile) }, error: null });
     } catch (error) {
       console.warn("Не удалось загрузить профиль пользователя", error);
       setState({ status: "guest", user: null, error: null });
@@ -19,6 +20,24 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     loadProfile();
   }, [loadProfile]);
+
+  useEffect(() => {
+    const handleAccessUpdate = () => {
+      setState((prev) => {
+        if (!prev.user) return prev;
+        return {
+          ...prev,
+          user: {
+            ...prev.user,
+            role: resolveUserRole(prev.user),
+          },
+        };
+      });
+    };
+
+    window.addEventListener("admin-access-updated", handleAccessUpdate);
+    return () => window.removeEventListener("admin-access-updated", handleAccessUpdate);
+  }, []);
 
   const login = useCallback(
     async (credentials) => {
@@ -53,6 +72,11 @@ export function AuthProvider({ children }) {
         if (!roles || roles.length === 0) return true;
         if (!state.user) return false;
         return roles.includes(state.user.role);
+      },
+      canAccess: (accessKey) => {
+        if (!accessKey) return true;
+        if (!state.user) return false;
+        return canRoleAccess(state.user.role, accessKey);
       },
     }),
     [state, login, register, logout, loadProfile]
