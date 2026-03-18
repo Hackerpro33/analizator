@@ -115,6 +115,10 @@ function pickSupportedMimeType(candidates) {
   return candidates.find((candidate) => MediaRecorder.isTypeSupported(candidate)) || "";
 }
 
+function clamp(value, min, max) {
+  return Math.min(Math.max(value, min), max);
+}
+
 export default function Messenger() {
   const { user, refresh } = useAuth();
   const { toast } = useToast();
@@ -135,6 +139,8 @@ export default function Messenger() {
   const callPeersRef = useRef(new Map());
   const localCallStreamRef = useRef(null);
   const callIdRef = useRef("");
+  const callWindowDragRef = useRef(null);
+  const callWindowResizeRef = useRef(null);
 
   const [bootstrap, setBootstrap] = useState(null);
   const [activeSpaceId, setActiveSpaceId] = useState("");
@@ -170,6 +176,12 @@ export default function Messenger() {
     localStream: null,
     participantIds: [],
     remoteStreams: [],
+  });
+  const [callWindow, setCallWindow] = useState({
+    x: null,
+    y: null,
+    width: 520,
+    height: 420,
   });
   const [createForm, setCreateForm] = useState({
     type: "group",
@@ -1064,6 +1076,77 @@ export default function Messenger() {
     cleanupCall();
   }, [callState.callId, callState.spaceId, cleanupCall, sendSocketEvent]);
 
+  const startDraggingCallWindow = useCallback(
+    (event) => {
+      if (callState.status === "idle") return;
+      event.preventDefault();
+      const startX = event.clientX;
+      const startY = event.clientY;
+      const originX = callWindow.x ?? Math.max(24, window.innerWidth - callWindow.width - 24);
+      const originY = callWindow.y ?? Math.max(24, window.innerHeight - callWindow.height - 24);
+      callWindowDragRef.current = { startX, startY, originX, originY };
+    },
+    [callState.status, callWindow.height, callWindow.width, callWindow.x, callWindow.y]
+  );
+
+  const startResizingCallWindow = useCallback(
+    (event) => {
+      if (callState.status === "idle") return;
+      event.preventDefault();
+      event.stopPropagation();
+      callWindowResizeRef.current = {
+        startX: event.clientX,
+        startY: event.clientY,
+        originWidth: callWindow.width,
+        originHeight: callWindow.height,
+      };
+    },
+    [callState.status, callWindow.height, callWindow.width]
+  );
+
+  useEffect(() => {
+    if (callState.status === "idle") return undefined;
+    const handlePointerMove = (event) => {
+      if (callWindowDragRef.current) {
+        const nextX = callWindowDragRef.current.originX + (event.clientX - callWindowDragRef.current.startX);
+        const nextY = callWindowDragRef.current.originY + (event.clientY - callWindowDragRef.current.startY);
+        setCallWindow((prev) => ({
+          ...prev,
+          x: clamp(nextX, 12, Math.max(12, window.innerWidth - prev.width - 12)),
+          y: clamp(nextY, 12, Math.max(12, window.innerHeight - prev.height - 12)),
+        }));
+      }
+      if (callWindowResizeRef.current) {
+        const nextWidth = callWindowResizeRef.current.originWidth + (event.clientX - callWindowResizeRef.current.startX);
+        const nextHeight = callWindowResizeRef.current.originHeight + (event.clientY - callWindowResizeRef.current.startY);
+        setCallWindow((prev) => ({
+          ...prev,
+          width: clamp(nextWidth, 360, Math.max(360, window.innerWidth - 24)),
+          height: clamp(nextHeight, 280, Math.max(280, window.innerHeight - 24)),
+        }));
+      }
+    };
+    const handlePointerUp = () => {
+      callWindowDragRef.current = null;
+      callWindowResizeRef.current = null;
+    };
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerup", handlePointerUp);
+    return () => {
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", handlePointerUp);
+    };
+  }, [callState.status]);
+
+  useEffect(() => {
+    if (callState.status === "idle") return;
+    setCallWindow((prev) => ({
+      ...prev,
+      x: prev.x ?? Math.max(24, window.innerWidth - prev.width - 24),
+      y: prev.y ?? Math.max(24, window.innerHeight - prev.height - 24),
+    }));
+  }, [callState.status]);
+
   useEffect(() => {
     if (!user) return undefined;
     const socketClient = subscribeMessengerEvents(
@@ -1865,8 +1948,19 @@ export default function Messenger() {
       ) : null}
 
       {callState.status !== "idle" ? (
-        <div className="fixed inset-x-6 bottom-6 z-50 rounded-[2rem] border border-slate-200 bg-white/95 p-5 shadow-2xl backdrop-blur xl:left-auto xl:right-6 xl:w-[520px]">
-          <div className="flex items-center justify-between gap-3">
+        <div
+          className="fixed z-50 rounded-[2rem] border border-slate-200 bg-white/95 p-5 shadow-2xl backdrop-blur"
+          style={{
+            left: callWindow.x ?? Math.max(24, window.innerWidth - callWindow.width - 24),
+            top: callWindow.y ?? Math.max(24, window.innerHeight - callWindow.height - 24),
+            width: callWindow.width,
+            minHeight: callWindow.height,
+          }}
+        >
+          <div
+            className="flex cursor-move items-center justify-between gap-3 rounded-2xl bg-slate-50 px-3 py-2"
+            onPointerDown={startDraggingCallWindow}
+          >
             <div>
               <div className="text-lg font-semibold text-slate-900">
                 {callState.mode === "video" ? "Видеозвонок" : "Аудиозвонок"}
@@ -1918,6 +2012,12 @@ export default function Messenger() {
               </div>
             )}
           </div>
+          <button
+            type="button"
+            aria-label="Изменить размер окна звонка"
+            className="absolute bottom-3 right-3 h-6 w-6 cursor-se-resize rounded-full border border-slate-300 bg-white/90"
+            onPointerDown={startResizingCallWindow}
+          />
         </div>
       ) : null}
 
