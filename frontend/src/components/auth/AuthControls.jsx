@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { buildGoogleLoginUrl, probeGoogleLogin, resendVerificationEmail } from "@/api/auth";
 import { useAuth } from "@/contexts/AuthContext.jsx";
+import { openExternalUrl } from "@/lib/externalNavigation";
 import { clearRememberedAccount, loadRememberedAccount, saveRememberedAccount } from "@/lib/rememberedAccount";
 import { getRoleLabel } from "@/utils/adminAccess";
 import { AlertCircle, LogOut, MailCheck, Shield, UserPlus } from "lucide-react";
@@ -116,26 +117,57 @@ function CredentialsForm({
 function GoogleLoginButton() {
   const { toast } = useToast();
 
+  const copyGoogleLink = async () => {
+    try {
+      await navigator.clipboard.writeText(buildGoogleLoginUrl());
+      toast({
+        title: "Ссылка скопирована",
+        description: "Откройте её во внешнем браузере, если встроенный WebView блокирует Google-вход.",
+      });
+    } catch (_error) {
+      toast({
+        title: "Не удалось скопировать ссылку",
+        description: "Скопируйте URL вручную из адресной строки или откройте страницу во внешнем браузере.",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
-    <Button
-      type="button"
-      variant="outline"
-      className="w-full"
-      onClick={async () => {
-        try {
-          await probeGoogleLogin();
-          window.location.assign(buildGoogleLoginUrl());
-        } catch (error) {
-          toast({
-            title: "Google-вход недоступен",
-            description: error?.message || "Сервер временно недоступен. Попробуйте ещё раз позже.",
-            variant: "destructive",
-          });
-        }
-      }}
-    >
-      Войти через Google
-    </Button>
+    <div className="space-y-2">
+      <Button
+        type="button"
+        variant="outline"
+        className="w-full"
+        onClick={async () => {
+          try {
+            await probeGoogleLogin();
+            const url = buildGoogleLoginUrl();
+            const navigation = openExternalUrl(url);
+            if (navigation.method !== "window.open" && navigation.method !== "anchor") {
+              toast({
+                title: "Открываем Google-вход",
+                description: "Если вход снова откроется во встроенном WebView, скопируйте ссылку ниже и откройте её во внешнем браузере.",
+              });
+            }
+          } catch (error) {
+            toast({
+              title: "Google-вход недоступен",
+              description: error?.message || "Сервер временно недоступен. Попробуйте ещё раз позже.",
+              variant: "destructive",
+            });
+          }
+        }}
+      >
+        Войти через Google
+      </Button>
+      <div className="flex items-center justify-between gap-3 text-xs text-slate-500">
+        <p>Во встроенном WebView Google может отклонить вход. Открывайте авторизацию во внешнем браузере.</p>
+        <Button type="button" variant="ghost" size="sm" className="h-auto px-2 py-1 text-xs" onClick={copyGoogleLink}>
+          Скопировать ссылку
+        </Button>
+      </div>
+    </div>
   );
 }
 
