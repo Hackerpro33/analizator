@@ -122,6 +122,86 @@ function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
 }
 
+async function requestUserMedia(constraints) {
+  if (typeof navigator === "undefined") {
+    throw new Error("Доступ к устройствам недоступен в текущем окружении.");
+  }
+
+  const tryGetUserMedia = async (nextConstraints) => {
+    if (navigator.mediaDevices?.getUserMedia) {
+      return navigator.mediaDevices.getUserMedia(nextConstraints);
+    }
+
+    const legacyGetUserMedia =
+      navigator.getUserMedia ||
+      navigator.webkitGetUserMedia ||
+      navigator.mozGetUserMedia;
+
+    if (typeof legacyGetUserMedia === "function") {
+      return new Promise((resolve, reject) => {
+        legacyGetUserMedia.call(navigator, nextConstraints, resolve, reject);
+      });
+    }
+
+    throw new Error("UNSUPPORTED_MEDIA_API");
+  }
+
+  const fallbackConstraints = [];
+  if (constraints?.video) {
+    fallbackConstraints.push({
+      audio: constraints.audio || true,
+      video: true,
+    });
+    fallbackConstraints.push({
+      audio: true,
+      video: true,
+    });
+  } else {
+    fallbackConstraints.push({
+      audio: true,
+      video: false,
+    });
+  }
+
+  try {
+    return await tryGetUserMedia(constraints);
+  } catch (error) {
+    const retryableNames = new Set([
+      "OverconstrainedError",
+      "ConstraintNotSatisfiedError",
+      "NotReadableError",
+      "AbortError",
+      "TypeError",
+    ]);
+
+    if (!retryableNames.has(error?.name)) {
+      if (error?.message === "UNSUPPORTED_MEDIA_API") {
+        const secureContextHint =
+          typeof window !== "undefined" && !window.isSecureContext
+            ? " Откройте сайт по HTTPS."
+            : "";
+        throw new Error(`Браузер не поддерживает доступ к камере и микрофону.${secureContextHint}`);
+      }
+      throw error;
+    }
+
+    for (const nextConstraints of fallbackConstraints) {
+      try {
+        return await tryGetUserMedia(nextConstraints);
+      } catch (_retryError) {
+        // Continue to the next fallback profile.
+      }
+    }
+  }
+
+  const secureContextHint =
+    typeof window !== "undefined" && !window.isSecureContext
+      ? " Откройте сайт по HTTPS."
+      : "";
+
+  throw new Error(`Браузер не поддерживает доступ к камере и микрофону.${secureContextHint}`);
+}
+
 function readCallLayoutMap() {
   if (typeof window === "undefined") return {};
   try {
@@ -607,7 +687,7 @@ export default function Messenger() {
   const startRecording = useCallback(
     async (mode) => {
       if (sending || !activeSpace) return;
-      if (typeof window === "undefined" || !navigator.mediaDevices?.getUserMedia) {
+      if (typeof window === "undefined") {
         toast({
           title: "Запись недоступна",
           description: "Браузер не поддерживает доступ к микрофону или камере.",
@@ -627,7 +707,7 @@ export default function Messenger() {
 
       try {
         const wantsVideo = mode === "video_note";
-        const stream = await navigator.mediaDevices.getUserMedia({
+        const stream = await requestUserMedia({
           audio: {
             echoCancellation: true,
             noiseSuppression: true,
@@ -968,7 +1048,7 @@ export default function Messenger() {
     if (localCallStreamRef.current) {
       return localCallStreamRef.current;
     }
-    const stream = await navigator.mediaDevices.getUserMedia({
+    const stream = await requestUserMedia({
       audio: true,
       video: mode === "video" ? { facingMode: { ideal: "user" } } : false,
     });
