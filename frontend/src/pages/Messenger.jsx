@@ -1156,45 +1156,6 @@ export default function Messenger() {
     [activeSpace, ensureCallMedia, sendSocketEvent, upsertRemoteStream]
   );
 
-  const startSpaceCall = useCallback(
-    async (mode, spaceOverride = null) => {
-      const targetSpace = spaceOverride || activeSpace;
-      if (!targetSpace) return;
-      try {
-        const stream = await ensureCallMedia(mode);
-        setCallControls({
-          micEnabled: true,
-          videoEnabled: stream.getVideoTracks().some((track) => track.enabled),
-        });
-        const callId = createStableCallId(targetSpace.id, mode);
-        callIdRef.current = callId;
-        callSpaceIdRef.current = targetSpace.id;
-        setCallState({
-          status: "outgoing",
-          mode,
-          callId,
-          spaceId: targetSpace.id,
-          localStream: stream,
-          participantIds: [bootstrap?.currentUserId].filter(Boolean),
-          remoteStreams: [],
-        });
-        sendSocketEvent({
-          type: "call.invite",
-          call_id: callId,
-          space_id: targetSpace.id,
-          mode,
-        });
-      } catch (error) {
-        toast({
-          title: "Звонок не запущен",
-          description: error?.message || "Не удалось получить доступ к микрофону или камере.",
-          variant: "destructive",
-        });
-      }
-    },
-    [activeSpace, bootstrap?.currentUserId, ensureCallMedia, sendSocketEvent, toast]
-  );
-
   const acceptIncomingCall = useCallback(async () => {
     if (!incomingCall) return;
     try {
@@ -1232,6 +1193,57 @@ export default function Messenger() {
       });
     }
   }, [bootstrap?.currentUserId, ensureCallMedia, incomingCall, sendSocketEvent, toast, upsertPeerConnection]);
+
+  const startSpaceCall = useCallback(
+    async (mode, spaceOverride = null) => {
+      const targetSpace = spaceOverride || activeSpace;
+      if (!targetSpace) return;
+
+      const matchingIncomingCallId = createStableCallId(targetSpace.id, mode);
+      if (
+        incomingCall &&
+        incomingCall.spaceId === targetSpace.id &&
+        incomingCall.mode === mode &&
+        incomingCall.callId === matchingIncomingCallId
+      ) {
+        await acceptIncomingCall();
+        return;
+      }
+
+      try {
+        const stream = await ensureCallMedia(mode);
+        setCallControls({
+          micEnabled: true,
+          videoEnabled: stream.getVideoTracks().some((track) => track.enabled),
+        });
+        const callId = matchingIncomingCallId;
+        callIdRef.current = callId;
+        callSpaceIdRef.current = targetSpace.id;
+        setCallState({
+          status: "outgoing",
+          mode,
+          callId,
+          spaceId: targetSpace.id,
+          localStream: stream,
+          participantIds: [bootstrap?.currentUserId].filter(Boolean),
+          remoteStreams: [],
+        });
+        sendSocketEvent({
+          type: "call.invite",
+          call_id: callId,
+          space_id: targetSpace.id,
+          mode,
+        });
+      } catch (error) {
+        toast({
+          title: "Звонок не запущен",
+          description: error?.message || "Не удалось получить доступ к микрофону или камере.",
+          variant: "destructive",
+        });
+      }
+    },
+    [acceptIncomingCall, activeSpace, bootstrap?.currentUserId, ensureCallMedia, incomingCall, sendSocketEvent, toast]
+  );
 
   const declineIncomingCall = useCallback(() => {
     if (!incomingCall) return;
