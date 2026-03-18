@@ -1323,6 +1323,31 @@ export default function Messenger() {
     [ensureDirectSpace, startSpaceCall, toast]
   );
 
+  const handleInviteParticipantToCurrentCall = useCallback(
+    (member) => {
+      if (!member?.id || !callState.callId || !callState.spaceId || callState.status === "idle") return;
+      if (callState.participantIds.includes(member.id)) {
+        toast({
+          title: "Участник уже в звонке",
+          description: member.full_name || member.email || "Пользователь уже подключен.",
+        });
+        return;
+      }
+      sendSocketEvent({
+        type: "call.invite",
+        call_id: callState.callId,
+        space_id: callState.spaceId,
+        mode: callState.mode || "audio",
+        target_user_id: member.id,
+      });
+      toast({
+        title: "Приглашение отправлено",
+        description: member.full_name || member.email || "Пользователь получил приглашение в звонок.",
+      });
+    },
+    [callState.callId, callState.mode, callState.participantIds, callState.spaceId, callState.status, sendSocketEvent, toast]
+  );
+
   const moveRemoteTile = useCallback(
     (draggedUserId, targetUserId) => {
       if (!callState.spaceId || !draggedUserId || !targetUserId || draggedUserId === targetUserId) return;
@@ -1416,7 +1441,15 @@ export default function Messenger() {
     const socketClient = subscribeMessengerEvents(
       async (event) => {
         if (event.type === "call.invite") {
-          if (!activeSpace || event.space_id !== activeSpace.id || event.from_user_id === bootstrap?.currentUserId) return;
+          if (event.from_user_id === bootstrap?.currentUserId) return;
+          if (activeSpace?.id !== event.space_id) {
+            const incomingSpace = bootstrap?.spaces?.find((space) => space.id === event.space_id);
+            toast({
+              title: event.mode === "video" ? "Видеозвонок в другом канале" : "Звонок в другом канале",
+              description: `${incomingSpace?.title || "Другое пространство"}: откройте этот канал, чтобы ответить.`,
+            });
+            return;
+          }
           if (callIdRef.current === event.call_id && callStatusRef.current !== "idle") {
             setCallState((prev) => ({
               ...prev,
@@ -1517,7 +1550,7 @@ export default function Messenger() {
       messengerSocketRef.current = null;
       socketClient.close();
     };
-  }, [activeSpace, activeSpaceId, bootstrap?.currentUserId, cleanupCall, loadMessenger, loadSpaceMessages, sendSocketEvent, upsertPeerConnection, user]);
+  }, [activeSpace, activeSpaceId, bootstrap, bootstrap?.currentUserId, cleanupCall, loadMessenger, loadSpaceMessages, sendSocketEvent, toast, upsertPeerConnection, user]);
 
   if (loading && !bootstrap) {
     return (
@@ -1927,6 +1960,11 @@ export default function Messenger() {
                 if (!member) return null;
                 const isAdmin = activeSpace?.admin_user_ids?.includes(member.id);
                 const contactLine = [member.email, member.phone, member.telegram].filter(Boolean);
+                const canInviteToCurrentCall =
+                  member.id !== bootstrap?.currentUserId &&
+                  callState.status !== "idle" &&
+                  callState.spaceId === activeSpace?.id &&
+                  !callState.participantIds.includes(member.id);
                 return (
                   <div key={member.id} className="rounded-2xl border border-slate-200 p-3">
                     <div className="flex items-start gap-3">
@@ -1950,6 +1988,18 @@ export default function Messenger() {
                       </div>
                       {member.id !== bootstrap?.currentUserId ? (
                         <div className="ml-auto flex shrink-0 items-center gap-1">
+                          {canInviteToCurrentCall ? (
+                            <Button
+                              type="button"
+                              size="icon"
+                              variant="ghost"
+                              className="h-8 w-8 rounded-full text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+                              onClick={() => handleInviteParticipantToCurrentCall(member)}
+                              title="Пригласить в звонок"
+                            >
+                              <UserPlus className="h-4 w-4" />
+                            </Button>
+                          ) : null}
                           <Button
                             type="button"
                             size="icon"
