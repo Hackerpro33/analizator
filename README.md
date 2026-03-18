@@ -219,7 +219,7 @@ server {
   listen 443 ssl;
   server_name cyber.example.com;
   location /api/ {
-    proxy_pass http://backend:8080/;
+    proxy_pass http://backend:8080;
     proxy_http_version 1.1;
     proxy_set_header Host $host;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -236,7 +236,7 @@ server {
   server_name lab.example.com;
   location /api/ {
     if ($is_lab_ip = 0) { return 403; }
-    proxy_pass http://backend:8080/;
+    proxy_pass http://backend:8080;
     proxy_http_version 1.1;
     proxy_set_header Host $host;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
