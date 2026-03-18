@@ -251,6 +251,13 @@ export default function Messenger() {
   const incomingRingtoneRef = useRef(null);
   const incomingRingtoneTimerRef = useRef(null);
   const hasUserInteractedRef = useRef(false);
+  const bootstrapRef = useRef(null);
+  const activeSpaceRef = useRef(null);
+  const activeSpaceIdRef = useRef("");
+  const upsertPeerConnectionRef = useRef(null);
+  const loadMessengerRef = useRef(null);
+  const loadSpaceMessagesRef = useRef(null);
+  const cleanupCallRef = useRef(null);
 
   const [bootstrap, setBootstrap] = useState(null);
   const [activeSpaceId, setActiveSpaceId] = useState("");
@@ -427,6 +434,18 @@ export default function Messenger() {
     };
   }, []);
 
+  useEffect(() => {
+    bootstrapRef.current = bootstrap;
+  }, [bootstrap]);
+
+  useEffect(() => {
+    activeSpaceRef.current = activeSpace;
+  }, [activeSpace]);
+
+  useEffect(() => {
+    activeSpaceIdRef.current = activeSpaceId;
+  }, [activeSpaceId]);
+
   const loadSpaceMessages = useCallback(
     async (spaceId) => {
       if (!bootstrap?.keyBundle || !bootstrap?.deviceId || !spaceId) return;
@@ -456,6 +475,17 @@ export default function Messenger() {
     () => bootstrap?.spaces.find((space) => space.id === activeSpaceId) || bootstrap?.spaces[0] || null,
     [bootstrap, activeSpaceId]
   );
+
+  const centerCallWindow = useCallback((width = callWindow.width, height = callWindow.height) => {
+    if (typeof window === "undefined") return;
+    setCallWindow((prev) => ({
+      ...prev,
+      x: Math.max(12, Math.round((window.innerWidth - width) / 2)),
+      y: Math.max(12, Math.round((window.innerHeight - height) / 2)),
+      width,
+      height,
+    }));
+  }, [callWindow.height, callWindow.width]);
 
   const activeMessages = messagesBySpace[activeSpace?.id] || [];
 
@@ -1223,10 +1253,15 @@ export default function Messenger() {
     [activeSpace, ensureCallMedia, sendSocketEvent, upsertRemoteStream]
   );
 
+  useEffect(() => {
+    upsertPeerConnectionRef.current = upsertPeerConnection;
+  }, [upsertPeerConnection]);
+
   const acceptIncomingCall = useCallback(async () => {
     if (!incomingCall) return;
     try {
       const stream = await ensureCallMedia(incomingCall.mode);
+      centerCallWindow();
       setCallControls({
         micEnabled: true,
         videoEnabled: stream.getVideoTracks().some((track) => track.enabled),
@@ -1260,7 +1295,7 @@ export default function Messenger() {
         variant: "destructive",
       });
     }
-  }, [bootstrap?.currentUserId, ensureCallMedia, incomingCall, sendSocketEvent, stopIncomingRingtone, toast, upsertPeerConnection]);
+  }, [bootstrap?.currentUserId, centerCallWindow, ensureCallMedia, incomingCall, sendSocketEvent, stopIncomingRingtone, toast, upsertPeerConnection]);
 
   const startSpaceCall = useCallback(
     async (mode, spaceOverride = null) => {
@@ -1280,6 +1315,7 @@ export default function Messenger() {
 
       try {
         const stream = await ensureCallMedia(mode);
+        centerCallWindow();
         setCallControls({
           micEnabled: true,
           videoEnabled: stream.getVideoTracks().some((track) => track.enabled),
@@ -1310,7 +1346,7 @@ export default function Messenger() {
         });
       }
     },
-    [acceptIncomingCall, activeSpace, bootstrap?.currentUserId, ensureCallMedia, incomingCall, sendSocketEvent, toast]
+    [acceptIncomingCall, activeSpace, bootstrap?.currentUserId, centerCallWindow, ensureCallMedia, incomingCall, sendSocketEvent, toast]
   );
 
   const declineIncomingCall = useCallback(() => {
@@ -1403,6 +1439,18 @@ export default function Messenger() {
     },
     [ensureDirectSpace, startSpaceCall, toast]
   );
+
+  useEffect(() => {
+    loadMessengerRef.current = loadMessenger;
+  }, [loadMessenger]);
+
+  useEffect(() => {
+    loadSpaceMessagesRef.current = loadSpaceMessages;
+  }, [loadSpaceMessages]);
+
+  useEffect(() => {
+    cleanupCallRef.current = cleanupCall;
+  }, [cleanupCall]);
 
   const handleInviteParticipantToCurrentCall = useCallback(
     (member) => {
@@ -1529,10 +1577,13 @@ export default function Messenger() {
     if (!user) return undefined;
     const socketClient = subscribeMessengerEvents(
       async (event) => {
+        const currentBootstrap = bootstrapRef.current;
+        const currentActiveSpace = activeSpaceRef.current;
+        const currentActiveSpaceId = activeSpaceIdRef.current;
         if (event.type === "call.invite") {
-          if (event.from_user_id === bootstrap?.currentUserId) return;
-          if (activeSpace?.id !== event.space_id) {
-            const incomingSpace = bootstrap?.spaces?.find((space) => space.id === event.space_id);
+          if (event.from_user_id === currentBootstrap?.currentUserId) return;
+          if (currentActiveSpace?.id !== event.space_id) {
+            const incomingSpace = currentBootstrap?.spaces?.find((space) => space.id === event.space_id);
             toast({
               title: event.mode === "video" ? "Видеозвонок в другом канале" : "Звонок в другом канале",
               description: `${incomingSpace?.title || "Другое пространство"}: откройте этот канал, чтобы ответить.`,
@@ -1549,10 +1600,15 @@ export default function Messenger() {
               call_id: event.call_id,
               space_id: event.space_id,
             });
-            const currentUserId = String(bootstrap?.currentUserId || "");
+            const currentUserId = String(currentBootstrap?.currentUserId || "");
             const remoteUserId = String(event.from_user_id || "");
             const shouldInitiate = currentUserId && remoteUserId && currentUserId.localeCompare(remoteUserId) < 0;
-            await upsertPeerConnection(event.from_user_id, event.mode === "video" ? "video" : "audio", shouldInitiate, event.space_id);
+            await upsertPeerConnectionRef.current?.(
+              event.from_user_id,
+              event.mode === "video" ? "video" : "audio",
+              shouldInitiate,
+              event.space_id
+            );
             return;
           }
           toast({
@@ -1568,27 +1624,28 @@ export default function Messenger() {
           return;
         }
         if (event.type === "call.accept") {
-          if (!callIdRef.current || event.call_id !== callIdRef.current || event.from_user_id === bootstrap?.currentUserId) return;
+          if (!callIdRef.current || event.call_id !== callIdRef.current || event.from_user_id === currentBootstrap?.currentUserId) return;
           setCallState((prev) => ({
             ...prev,
             status: "connecting",
             participantIds: Array.from(new Set([...prev.participantIds, event.from_user_id])),
           }));
-          const currentUserId = String(bootstrap?.currentUserId || "");
+          const currentUserId = String(currentBootstrap?.currentUserId || "");
           const remoteUserId = String(event.from_user_id || "");
           const shouldInitiate = currentUserId && remoteUserId && currentUserId.localeCompare(remoteUserId) < 0;
-          await upsertPeerConnection(event.from_user_id, callModeRef.current || "audio", shouldInitiate, event.space_id);
+          await upsertPeerConnectionRef.current?.(event.from_user_id, callModeRef.current || "audio", shouldInitiate, event.space_id);
           return;
         }
         if (event.type === "call.decline" || event.type === "call.end") {
           if (event.call_id === callIdRef.current) {
-            cleanupCall();
+            cleanupCallRef.current?.();
           }
           return;
         }
         if (event.type === "call.signal") {
-          if (!callIdRef.current || event.call_id !== callIdRef.current || event.from_user_id === bootstrap?.currentUserId) return;
-          const peer = await upsertPeerConnection(event.from_user_id, callModeRef.current || "audio", false, event.space_id);
+          if (!callIdRef.current || event.call_id !== callIdRef.current || event.from_user_id === currentBootstrap?.currentUserId) return;
+          const peer = await upsertPeerConnectionRef.current?.(event.from_user_id, callModeRef.current || "audio", false, event.space_id);
+          if (!peer) return;
           const payload = event.payload || {};
           if (payload.offer) {
             await peer.setRemoteDescription(new RTCSessionDescription(payload.offer));
@@ -1609,7 +1666,7 @@ export default function Messenger() {
           return;
         }
         if (event.type === "call.chat") {
-          if (!callIdRef.current || event.call_id !== callIdRef.current || event.from_user_id === bootstrap?.currentUserId) return;
+          if (!callIdRef.current || event.call_id !== callIdRef.current || event.from_user_id === currentBootstrap?.currentUserId) return;
           const text = event.payload?.text;
           if (!text) return;
           setCallChatMessages((prev) => [
@@ -1624,16 +1681,16 @@ export default function Messenger() {
           return;
         }
         if (event.type === "space.created") {
-          await loadMessenger(activeSpaceId);
+          await loadMessengerRef.current?.(currentActiveSpaceId);
           return;
         }
         if (event.type === "space.updated") {
-          await loadMessenger(activeSpaceId || event.space_id);
+          await loadMessengerRef.current?.(currentActiveSpaceId || event.space_id);
           return;
         }
         if (event.type === "message.created" || event.type === "message.updated" || event.type === "message.deleted") {
-          await loadMessenger(activeSpaceId || event.space_id);
-          await loadSpaceMessages(event.space_id);
+          await loadMessengerRef.current?.(currentActiveSpaceId || event.space_id);
+          await loadSpaceMessagesRef.current?.(event.space_id);
         }
       },
       () => {}
@@ -1643,7 +1700,7 @@ export default function Messenger() {
       messengerSocketRef.current = null;
       socketClient.close();
     };
-  }, [activeSpace, activeSpaceId, bootstrap, bootstrap?.currentUserId, cleanupCall, loadMessenger, loadSpaceMessages, sendSocketEvent, toast, upsertPeerConnection, user]);
+  }, [sendSocketEvent, toast, user]);
 
   if (loading && !bootstrap) {
     return (
@@ -2428,7 +2485,7 @@ export default function Messenger() {
       </Dialog>
 
       {incomingCall ? (
-        <div className="fixed bottom-6 left-1/2 z-50 w-full max-w-md -translate-x-1/2 rounded-3xl border border-slate-200 bg-white p-5 shadow-2xl">
+        <div className="fixed left-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-3xl border border-slate-200 bg-white p-5 shadow-2xl">
           <div className="space-y-3">
             <div className="text-lg font-semibold text-slate-900">
               {incomingCall.mode === "video" ? "Входящий видеозвонок" : "Входящий звонок"}
