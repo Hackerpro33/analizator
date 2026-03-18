@@ -311,6 +311,18 @@ export default function Messenger() {
     loadSpaceMessages(activeSpaceId);
   }, [activeSpaceId, loadSpaceMessages]);
 
+  const activeSpace = useMemo(
+    () => bootstrap?.spaces.find((space) => space.id === activeSpaceId) || bootstrap?.spaces[0] || null,
+    [bootstrap, activeSpaceId]
+  );
+
+  const activeMessages = messagesBySpace[activeSpace?.id] || [];
+
+  const selectableMembers = useMemo(() => {
+    if (!bootstrap) return [];
+    return (bootstrap.directory || []).filter((entry) => entry.id !== bootstrap.currentUserId);
+  }, [bootstrap]);
+
   useEffect(() => {
     if (!user) return undefined;
     const socketClient = subscribeMessengerEvents(
@@ -380,18 +392,6 @@ export default function Messenger() {
       socketClient.close();
     };
   }, [activeSpace, activeSpaceId, bootstrap?.currentUserId, callState.mode, cleanupCall, loadMessenger, loadSpaceMessages, upsertPeerConnection, user]);
-
-  const activeSpace = useMemo(
-    () => bootstrap?.spaces.find((space) => space.id === activeSpaceId) || bootstrap?.spaces[0] || null,
-    [bootstrap, activeSpaceId]
-  );
-
-  const activeMessages = messagesBySpace[activeSpace?.id] || [];
-
-  const selectableMembers = useMemo(() => {
-    if (!bootstrap) return [];
-    return (bootstrap.directory || []).filter((entry) => entry.id !== bootstrap.currentUserId);
-  }, [bootstrap]);
 
   const filteredSelectableMembers = useMemo(() => {
     const query = createMemberSearch.trim().toLowerCase();
