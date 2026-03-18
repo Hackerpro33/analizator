@@ -141,8 +141,12 @@ cat <<EOF >> backend/.env
 LAB_MODE=PRIVATE_LAB         # PUBLIC_VIEW для витрины
 HOST_AGENT_TOKEN=super-secret
 FRONTEND_ORIGIN=https://cyber.example.com
+MESSENGER_ICE_SERVERS=[{"urls":["stun:stun.l.google.com:19302","stun:stun1.l.google.com:19302"]},{"urls":["turns:turn.example.com:5349?transport=tcp"],"username":"turn_user","credential":"turn_password"}]
 EOF
 ```
+
+`MESSENGER_ICE_SERVERS` должен содержать хотя бы один `turn:`/`turns:` сервер с `username` и `credential`.
+Без TURN звонки между мобильными сетями (iPhone/Android, LTE/5G) часто не поднимаются даже при рабочем STUN.
 
 `docker-compose.yml` (фрагмент):
 
