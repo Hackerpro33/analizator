@@ -304,6 +304,7 @@ export default function Messenger() {
     micEnabled: true,
     videoEnabled: true,
   });
+  const [callDebugLog, setCallDebugLog] = useState([]);
   const [callChatDraft, setCallChatDraft] = useState("");
   const [callChatMessages, setCallChatMessages] = useState([]);
   const [createForm, setCreateForm] = useState({
@@ -323,6 +324,18 @@ export default function Messenger() {
   });
 
   const constraints = getMessengerConstraints();
+
+  const appendCallDebug = useCallback((label, detail = "") => {
+    setCallDebugLog((prev) => [
+      ...prev.slice(-19),
+      {
+        id: crypto.randomUUID?.() || `${Date.now()}-${Math.random()}`,
+        at: new Date().toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit", second: "2-digit" }),
+        label,
+        detail,
+      },
+    ]);
+  }, []);
 
   const loadMessenger = useCallback(
     async (preferredSpaceId) => {
@@ -1148,6 +1161,7 @@ export default function Messenger() {
     callSpaceIdRef.current = "";
     setIncomingCall(null);
     setCallControls({ micEnabled: true, videoEnabled: true });
+    setCallDebugLog([]);
     setCallChatDraft("");
     setCallChatMessages([]);
     setCallState({
@@ -1182,8 +1196,11 @@ export default function Messenger() {
   }, []);
 
   const sendSocketEvent = useCallback((event) => {
+    if (event?.type?.startsWith?.("call.")) {
+      appendCallDebug(`out:${event.type}`, event.target_user_id || event.space_id || "");
+    }
     messengerSocketRef.current?.send(event);
-  }, []);
+  }, [appendCallDebug]);
 
   const ensureCallMedia = useCallback(async (mode) => {
     if (localCallStreamRef.current) {
@@ -1200,11 +1217,13 @@ export default function Messenger() {
   const upsertPeerConnection = useCallback(
     async (remoteUserId, mode, initiator = false, spaceIdOverride = "") => {
       if (callPeersRef.current.has(remoteUserId)) {
+        appendCallDebug("peer.reuse", remoteUserId);
         return callPeersRef.current.get(remoteUserId);
       }
 
       const stream = await ensureCallMedia(mode);
       const signalSpaceId = spaceIdOverride || callSpaceIdRef.current || activeSpace?.id || "";
+      appendCallDebug("peer.create", `${remoteUserId} ${initiator ? "initiator" : "receiver"}`);
       const peer = new RTCPeerConnection({
         iceServers: [{ urls: ["stun:stun.l.google.com:19302"] }],
       });
@@ -1213,6 +1232,7 @@ export default function Messenger() {
 
       peer.onicecandidate = (event) => {
         if (event.candidate && signalSpaceId) {
+          appendCallDebug("ice.local", remoteUserId);
           sendSocketEvent({
             type: "call.signal",
             call_id: callIdRef.current,
@@ -1225,10 +1245,12 @@ export default function Messenger() {
 
       peer.ontrack = (event) => {
         const [remoteStream] = event.streams;
+        appendCallDebug("track.remote", remoteUserId);
         upsertRemoteStream(remoteUserId, remoteStream);
       };
 
       peer.onconnectionstatechange = () => {
+        appendCallDebug("peer.state", `${remoteUserId} ${peer.connectionState}`);
         if (["failed", "closed", "disconnected"].includes(peer.connectionState)) {
           callPeersRef.current.delete(remoteUserId);
         }
@@ -1239,6 +1261,7 @@ export default function Messenger() {
       if (initiator && signalSpaceId) {
         const offer = await peer.createOffer();
         await peer.setLocalDescription(offer);
+        appendCallDebug("offer.sent", remoteUserId);
         sendSocketEvent({
           type: "call.signal",
           call_id: callIdRef.current,
@@ -1250,7 +1273,7 @@ export default function Messenger() {
 
       return peer;
     },
-    [activeSpace, ensureCallMedia, sendSocketEvent, upsertRemoteStream]
+    [activeSpace, appendCallDebug, ensureCallMedia, sendSocketEvent, upsertRemoteStream]
   );
 
   useEffect(() => {
@@ -1260,6 +1283,7 @@ export default function Messenger() {
   const acceptIncomingCall = useCallback(async () => {
     if (!incomingCall) return;
     try {
+      appendCallDebug("incoming.accept", incomingCall.fromUserId || "");
       const stream = await ensureCallMedia(incomingCall.mode);
       centerCallWindow();
       setCallControls({
@@ -1289,13 +1313,14 @@ export default function Messenger() {
       setIncomingCall(null);
       stopIncomingRingtone();
     } catch (error) {
+      appendCallDebug("incoming.accept.error", error?.message || "unknown");
       toast({
         title: "Звонок не принят",
         description: error?.message || "Не удалось открыть устройства.",
         variant: "destructive",
       });
     }
-  }, [bootstrap?.currentUserId, centerCallWindow, ensureCallMedia, incomingCall, sendSocketEvent, stopIncomingRingtone, toast, upsertPeerConnection]);
+  }, [appendCallDebug, bootstrap?.currentUserId, centerCallWindow, ensureCallMedia, incomingCall, sendSocketEvent, stopIncomingRingtone, toast, upsertPeerConnection]);
 
   const startSpaceCall = useCallback(
     async (mode, spaceOverride = null) => {
@@ -1314,6 +1339,7 @@ export default function Messenger() {
       }
 
       try {
+        appendCallDebug("call.start", `${targetSpace.id} ${mode}`);
         const stream = await ensureCallMedia(mode);
         centerCallWindow();
         setCallControls({
@@ -1339,6 +1365,7 @@ export default function Messenger() {
           mode,
         });
       } catch (error) {
+        appendCallDebug("call.start.error", error?.message || "unknown");
         toast({
           title: "Звонок не запущен",
           description: error?.message || "Не удалось получить доступ к микрофону или камере.",
@@ -1346,7 +1373,7 @@ export default function Messenger() {
         });
       }
     },
-    [acceptIncomingCall, activeSpace, bootstrap?.currentUserId, centerCallWindow, ensureCallMedia, incomingCall, sendSocketEvent, toast]
+    [acceptIncomingCall, activeSpace, appendCallDebug, bootstrap?.currentUserId, centerCallWindow, ensureCallMedia, incomingCall, sendSocketEvent, toast]
   );
 
   const declineIncomingCall = useCallback(() => {
@@ -1577,6 +1604,9 @@ export default function Messenger() {
     if (!user) return undefined;
     const socketClient = subscribeMessengerEvents(
       async (event) => {
+        if (event?.type) {
+          appendCallDebug(`in:${event.type}`, event.from_user_id || event.space_id || "");
+        }
         const currentBootstrap = bootstrapRef.current;
         const currentActiveSpace = activeSpaceRef.current;
         const currentActiveSpaceId = activeSpaceIdRef.current;
@@ -1648,9 +1678,11 @@ export default function Messenger() {
           if (!peer) return;
           const payload = event.payload || {};
           if (payload.offer) {
+            appendCallDebug("offer.received", event.from_user_id || "");
             await peer.setRemoteDescription(new RTCSessionDescription(payload.offer));
             const answer = await peer.createAnswer();
             await peer.setLocalDescription(answer);
+            appendCallDebug("answer.sent", event.from_user_id || "");
             messengerSocketRef.current?.send({
               type: "call.signal",
               call_id: event.call_id,
@@ -1659,8 +1691,10 @@ export default function Messenger() {
               payload: { answer },
             });
           } else if (payload.answer) {
+            appendCallDebug("answer.received", event.from_user_id || "");
             await peer.setRemoteDescription(new RTCSessionDescription(payload.answer));
           } else if (payload.candidate) {
+            appendCallDebug("ice.remote", event.from_user_id || "");
             await peer.addIceCandidate(new RTCIceCandidate(payload.candidate));
           }
           return;
@@ -1693,14 +1727,18 @@ export default function Messenger() {
           await loadSpaceMessagesRef.current?.(event.space_id);
         }
       },
-      () => {}
+      () => {
+        appendCallDebug("socket.error");
+      }
     );
+    appendCallDebug("socket.connecting");
     messengerSocketRef.current = socketClient;
     return () => {
+      appendCallDebug("socket.closed");
       messengerSocketRef.current = null;
       socketClient.close();
     };
-  }, [sendSocketEvent, toast, user]);
+  }, [appendCallDebug, sendSocketEvent, toast, user]);
 
   if (loading && !bootstrap) {
     return (
@@ -2491,6 +2529,16 @@ export default function Messenger() {
               {incomingCall.mode === "video" ? "Входящий видеозвонок" : "Входящий звонок"}
             </div>
             <div className="text-sm text-slate-600">Пользователь из текущего диалога предлагает подключиться.</div>
+            {callDebugLog.length > 0 ? (
+              <div className="max-h-28 space-y-1 overflow-y-auto rounded-2xl bg-slate-50 p-3 text-xs text-slate-500">
+                {callDebugLog.slice(-6).map((item) => (
+                  <div key={item.id}>
+                    <span className="font-medium text-slate-700">{item.at}</span> {item.label}
+                    {item.detail ? ` • ${item.detail}` : ""}
+                  </div>
+                ))}
+              </div>
+            ) : null}
             <div className="flex justify-end gap-2">
               <Button type="button" variant="ghost" onClick={declineIncomingCall}>
                 Отклонить
@@ -2619,6 +2667,21 @@ export default function Messenger() {
                   </Button>
                 </div>
               </div>
+            </div>
+          </div>
+          <div className="mt-3 rounded-3xl border border-slate-200 bg-slate-50 p-3">
+            <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">Диагностика звонка</div>
+            <div className="max-h-28 space-y-1 overflow-y-auto text-xs text-slate-600">
+              {callDebugLog.length > 0 ? (
+                callDebugLog.slice(-10).map((item) => (
+                  <div key={item.id}>
+                    <span className="font-medium text-slate-800">{item.at}</span> {item.label}
+                    {item.detail ? ` • ${item.detail}` : ""}
+                  </div>
+                ))
+              ) : (
+                <div>Событий пока нет</div>
+              )}
             </div>
           </div>
           <button
