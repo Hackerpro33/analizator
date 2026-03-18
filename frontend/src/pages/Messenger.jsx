@@ -323,76 +323,6 @@ export default function Messenger() {
     return (bootstrap.directory || []).filter((entry) => entry.id !== bootstrap.currentUserId);
   }, [bootstrap]);
 
-  useEffect(() => {
-    if (!user) return undefined;
-    const socketClient = subscribeMessengerEvents(
-      async (event) => {
-        if (event.type === "call.invite") {
-          if (!activeSpace || event.space_id !== activeSpace.id || event.from_user_id === bootstrap?.currentUserId) return;
-          setIncomingCall({
-            callId: event.call_id,
-            spaceId: event.space_id,
-            mode: event.mode === "video" ? "video" : "audio",
-            fromUserId: event.from_user_id,
-          });
-          return;
-        }
-        if (event.type === "call.accept") {
-          if (!callIdRef.current || event.call_id !== callIdRef.current || event.from_user_id === bootstrap?.currentUserId) return;
-          setCallState((prev) => ({ ...prev, status: "connecting", remoteUserId: event.from_user_id }));
-          await upsertPeerConnection(event.from_user_id, callState.mode || "audio", true);
-          return;
-        }
-        if (event.type === "call.decline" || event.type === "call.end") {
-          if (event.call_id === callIdRef.current) {
-            cleanupCall();
-          }
-          return;
-        }
-        if (event.type === "call.signal") {
-          if (!callIdRef.current || event.call_id !== callIdRef.current || event.from_user_id === bootstrap?.currentUserId) return;
-          const peer = await upsertPeerConnection(event.from_user_id, callState.mode || "audio", false);
-          const payload = event.payload || {};
-          if (payload.offer) {
-            await peer.setRemoteDescription(new RTCSessionDescription(payload.offer));
-            const answer = await peer.createAnswer();
-            await peer.setLocalDescription(answer);
-            messengerSocketRef.current?.send({
-              type: "call.signal",
-              call_id: event.call_id,
-              space_id: event.space_id,
-              target_user_id: event.from_user_id,
-              payload: { answer },
-            });
-          } else if (payload.answer) {
-            await peer.setRemoteDescription(new RTCSessionDescription(payload.answer));
-          } else if (payload.candidate) {
-            await peer.addIceCandidate(new RTCIceCandidate(payload.candidate));
-          }
-          return;
-        }
-        if (event.type === "space.created") {
-          await loadMessenger(activeSpaceId);
-          return;
-        }
-        if (event.type === "space.updated") {
-          await loadMessenger(activeSpaceId || event.space_id);
-          return;
-        }
-        if (event.type === "message.created" || event.type === "message.updated" || event.type === "message.deleted") {
-          await loadMessenger(activeSpaceId || event.space_id);
-          await loadSpaceMessages(event.space_id);
-        }
-      },
-      () => {}
-    );
-    messengerSocketRef.current = socketClient;
-    return () => {
-      messengerSocketRef.current = null;
-      socketClient.close();
-    };
-  }, [activeSpace, activeSpaceId, bootstrap?.currentUserId, callState.mode, cleanupCall, loadMessenger, loadSpaceMessages, upsertPeerConnection, user]);
-
   const filteredSelectableMembers = useMemo(() => {
     const query = createMemberSearch.trim().toLowerCase();
     if (!query) return selectableMembers;
@@ -1140,6 +1070,76 @@ export default function Messenger() {
     }
     cleanupCall();
   }, [callState.callId, callState.spaceId, cleanupCall, sendSocketEvent]);
+
+  useEffect(() => {
+    if (!user) return undefined;
+    const socketClient = subscribeMessengerEvents(
+      async (event) => {
+        if (event.type === "call.invite") {
+          if (!activeSpace || event.space_id !== activeSpace.id || event.from_user_id === bootstrap?.currentUserId) return;
+          setIncomingCall({
+            callId: event.call_id,
+            spaceId: event.space_id,
+            mode: event.mode === "video" ? "video" : "audio",
+            fromUserId: event.from_user_id,
+          });
+          return;
+        }
+        if (event.type === "call.accept") {
+          if (!callIdRef.current || event.call_id !== callIdRef.current || event.from_user_id === bootstrap?.currentUserId) return;
+          setCallState((prev) => ({ ...prev, status: "connecting", remoteUserId: event.from_user_id }));
+          await upsertPeerConnection(event.from_user_id, callState.mode || "audio", true);
+          return;
+        }
+        if (event.type === "call.decline" || event.type === "call.end") {
+          if (event.call_id === callIdRef.current) {
+            cleanupCall();
+          }
+          return;
+        }
+        if (event.type === "call.signal") {
+          if (!callIdRef.current || event.call_id !== callIdRef.current || event.from_user_id === bootstrap?.currentUserId) return;
+          const peer = await upsertPeerConnection(event.from_user_id, callState.mode || "audio", false);
+          const payload = event.payload || {};
+          if (payload.offer) {
+            await peer.setRemoteDescription(new RTCSessionDescription(payload.offer));
+            const answer = await peer.createAnswer();
+            await peer.setLocalDescription(answer);
+            messengerSocketRef.current?.send({
+              type: "call.signal",
+              call_id: event.call_id,
+              space_id: event.space_id,
+              target_user_id: event.from_user_id,
+              payload: { answer },
+            });
+          } else if (payload.answer) {
+            await peer.setRemoteDescription(new RTCSessionDescription(payload.answer));
+          } else if (payload.candidate) {
+            await peer.addIceCandidate(new RTCIceCandidate(payload.candidate));
+          }
+          return;
+        }
+        if (event.type === "space.created") {
+          await loadMessenger(activeSpaceId);
+          return;
+        }
+        if (event.type === "space.updated") {
+          await loadMessenger(activeSpaceId || event.space_id);
+          return;
+        }
+        if (event.type === "message.created" || event.type === "message.updated" || event.type === "message.deleted") {
+          await loadMessenger(activeSpaceId || event.space_id);
+          await loadSpaceMessages(event.space_id);
+        }
+      },
+      () => {}
+    );
+    messengerSocketRef.current = socketClient;
+    return () => {
+      messengerSocketRef.current = null;
+      socketClient.close();
+    };
+  }, [activeSpace, activeSpaceId, bootstrap?.currentUserId, callState.mode, cleanupCall, loadMessenger, loadSpaceMessages, upsertPeerConnection, user]);
 
   if (loading && !bootstrap) {
     return (
