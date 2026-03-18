@@ -305,6 +305,11 @@ class Settings(BaseSettings):
         alias="MESSENGER_MAX_VIDEO_NOTE_SECONDS",
         description="Maximum duration for short encrypted video notes.",
     )
+    messenger_ice_servers: str = Field(
+        '[{"urls":["stun:stun.l.google.com:19302","stun:stun1.l.google.com:19302"]}]',
+        alias="MESSENGER_ICE_SERVERS",
+        description="JSON array of RTCIceServer objects for messenger calls. Add TURN here for mobile networks.",
+    )
     sentry_dsn: Optional[AnyUrl] = Field(
         None,
         alias="SENTRY_DSN",
@@ -461,6 +466,19 @@ class Settings(BaseSettings):
             _add(remainder or "/")
         _add("/")
         return prefixes
+
+    @property
+    def messenger_ice_servers_config(self) -> List[dict]:
+        raw_value = self.messenger_ice_servers
+        try:
+            parsed = json.loads(raw_value) if isinstance(raw_value, str) else raw_value
+        except (TypeError, ValueError, json.JSONDecodeError):
+            parsed = None
+        if isinstance(parsed, list):
+            normalized = [item for item in parsed if isinstance(item, dict) and item.get("urls")]
+            if normalized:
+                return normalized
+        return [{"urls": ["stun:stun.l.google.com:19302", "stun:stun1.l.google.com:19302"]}]
 
     @classmethod
     def settings_customise_sources(

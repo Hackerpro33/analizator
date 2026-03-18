@@ -217,6 +217,7 @@ def get_bootstrap(
     store: MessengerStore = Depends(get_messenger_store),
     user_store: UserStore = Depends(get_user_store),
 ) -> Dict[str, Any]:
+    settings = get_settings()
     profile = _merge_profile(current_user, store.get_profile(current_user["id"]))
     spaces = [
         {
@@ -230,6 +231,9 @@ def get_bootstrap(
         "profile": profile,
         "spaces": spaces,
         "devices": devices,
+        "rtc": {
+            "ice_servers": settings.messenger_ice_servers_config,
+        },
     }
 
 

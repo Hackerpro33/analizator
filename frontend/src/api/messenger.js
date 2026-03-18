@@ -220,6 +220,9 @@ export async function getMessengerBootstrap(user) {
     profile: normalizeProfile(bootstrap.profile),
     spaces: (bootstrap.spaces || []).map(normalizeSpace),
     devices: bootstrap.devices || [],
+    rtc: {
+      iceServers: bootstrap.rtc?.ice_servers || [],
+    },
     directory: (directory.items || []).map(normalizeProfile),
     keyBundle,
     deviceId,

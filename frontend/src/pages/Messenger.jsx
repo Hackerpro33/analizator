@@ -129,6 +129,23 @@ function createStableCallId(spaceId, mode) {
   return `call:${spaceId}:${mode}`;
 }
 
+const DEFAULT_ICE_SERVERS = [
+  { urls: ["stun:stun.l.google.com:19302", "stun:stun1.l.google.com:19302", "stun:stun2.l.google.com:19302"] },
+  { urls: ["stun:stun.cloudflare.com:3478"] },
+];
+
+function hasRelayIceServer(iceServers) {
+  return (iceServers || []).some((server) => {
+    const urls = Array.isArray(server?.urls) ? server.urls : [server?.urls];
+    return urls.some((value) => typeof value === "string" && (value.startsWith("turn:") || value.startsWith("turns:")));
+  });
+}
+
+function isMobileClient() {
+  if (typeof navigator === "undefined") return false;
+  return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || "");
+}
+
 async function requestUserMedia(constraints) {
   if (typeof navigator === "undefined") {
     throw new Error("Доступ к устройствам недоступен в текущем окружении.");
@@ -251,6 +268,7 @@ export default function Messenger() {
   const incomingRingtoneRef = useRef(null);
   const incomingRingtoneTimerRef = useRef(null);
   const hasUserInteractedRef = useRef(false);
+  const turnHintShownRef = useRef(false);
   const bootstrapRef = useRef(null);
   const activeSpaceRef = useRef(null);
   const activeSpaceIdRef = useRef("");
@@ -300,6 +318,7 @@ export default function Messenger() {
     width: 520,
     height: 420,
   });
+  const [viewportSize, setViewportSize] = useState({ width: 0, height: 0 });
   const [callControls, setCallControls] = useState({
     micEnabled: true,
     videoEnabled: true,
@@ -447,6 +466,22 @@ export default function Messenger() {
     };
   }, []);
 
+  useEffect(() => {
+    const syncViewport = () => {
+      setViewportSize({
+        width: typeof window === "undefined" ? 0 : window.innerWidth,
+        height: typeof window === "undefined" ? 0 : window.innerHeight,
+      });
+    };
+    syncViewport();
+    window.addEventListener("resize", syncViewport);
+    window.addEventListener("orientationchange", syncViewport);
+    return () => {
+      window.removeEventListener("resize", syncViewport);
+      window.removeEventListener("orientationchange", syncViewport);
+    };
+  }, []);
+
   const loadSpaceMessages = useCallback(
     async (spaceId) => {
       if (!bootstrap?.keyBundle || !bootstrap?.deviceId || !spaceId) return;
@@ -499,6 +534,27 @@ export default function Messenger() {
       height,
     }));
   }, [callWindow.height, callWindow.width]);
+
+  const isCompactCallLayout = viewportSize.width > 0 && viewportSize.width < 900;
+  const minCallWidth = isCompactCallLayout ? 280 : 360;
+  const minCallHeight = isCompactCallLayout ? 340 : 280;
+  const maxCallWidth = Math.max(minCallWidth, (viewportSize.width || window.innerWidth || 360) - 12);
+  const maxCallHeight = Math.max(minCallHeight, (viewportSize.height || window.innerHeight || 640) - 12);
+  const effectiveCallWidth = clamp(callWindow.width, minCallWidth, maxCallWidth);
+  const effectiveCallHeight = clamp(callWindow.height, minCallHeight, maxCallHeight);
+  const fallbackX = Math.max(6, Math.round(((viewportSize.width || window.innerWidth || 360) - effectiveCallWidth) / 2));
+  const fallbackY = Math.max(6, Math.round(((viewportSize.height || window.innerHeight || 640) - effectiveCallHeight) / 2));
+  const effectiveCallX = clamp(
+    callWindow.x ?? fallbackX,
+    6,
+    Math.max(6, (viewportSize.width || window.innerWidth || 360) - effectiveCallWidth - 6)
+  );
+  const effectiveCallY = clamp(
+    callWindow.y ?? fallbackY,
+    6,
+    Math.max(6, (viewportSize.height || window.innerHeight || 640) - effectiveCallHeight - 6)
+  );
+  const rtcIceServers = bootstrap?.rtc?.iceServers?.length ? bootstrap.rtc.iceServers : DEFAULT_ICE_SERVERS;
 
   const activeMessages = messagesBySpace[activeSpace?.id] || [];
 
@@ -1206,13 +1262,31 @@ export default function Messenger() {
     if (localCallStreamRef.current) {
       return localCallStreamRef.current;
     }
-    const stream = await requestUserMedia({
-      audio: true,
-      video: mode === "video" ? { facingMode: { ideal: "user" } } : false,
-    });
+    let stream = null;
+    try {
+      stream = await requestUserMedia({
+        audio: true,
+        video: mode === "video" ? { facingMode: { ideal: "user" } } : false,
+      });
+    } catch (error) {
+      if (mode === "video") {
+        appendCallDebug("media.video.fallback", error?.name || error?.message || "unknown");
+        stream = await requestUserMedia({
+          audio: true,
+          video: false,
+        });
+        toast({
+          title: "Видео недоступно на устройстве",
+          description: "Подключение продолжено в аудио-режиме. Проверьте разрешение к камере.",
+          variant: "destructive",
+        });
+      } else {
+        throw error;
+      }
+    }
     localCallStreamRef.current = stream;
     return stream;
-  }, []);
+  }, [appendCallDebug, toast]);
 
   const upsertPeerConnection = useCallback(
     async (remoteUserId, mode, initiator = false, spaceIdOverride = "") => {
@@ -1225,7 +1299,7 @@ export default function Messenger() {
       const signalSpaceId = spaceIdOverride || callSpaceIdRef.current || activeSpace?.id || "";
       appendCallDebug("peer.create", `${remoteUserId} ${initiator ? "initiator" : "receiver"}`);
       const peer = new RTCPeerConnection({
-        iceServers: [{ urls: ["stun:stun.l.google.com:19302"] }],
+        iceServers: rtcIceServers,
       });
 
       stream.getTracks().forEach((track) => peer.addTrack(track, stream));
@@ -1273,7 +1347,7 @@ export default function Messenger() {
 
       return peer;
     },
-    [activeSpace, appendCallDebug, ensureCallMedia, sendSocketEvent, upsertRemoteStream]
+    [activeSpace, appendCallDebug, ensureCallMedia, rtcIceServers, sendSocketEvent, upsertRemoteStream]
   );
 
   useEffect(() => {
@@ -1326,6 +1400,15 @@ export default function Messenger() {
     async (mode, spaceOverride = null) => {
       const targetSpace = spaceOverride || activeSpace;
       if (!targetSpace) return;
+      if (isMobileClient() && !hasRelayIceServer(rtcIceServers) && !turnHintShownRef.current) {
+        turnHintShownRef.current = true;
+        appendCallDebug("rtc.turn.missing", "mobile");
+        toast({
+          title: "Ограничение мобильной сети",
+          description: "Для стабильной связи на iPhone/Android нужен TURN-сервер (MESSENGER_ICE_SERVERS).",
+          variant: "destructive",
+        });
+      }
 
       const matchingIncomingCallId = createStableCallId(targetSpace.id, mode);
       if (
@@ -1373,7 +1456,7 @@ export default function Messenger() {
         });
       }
     },
-    [acceptIncomingCall, activeSpace, appendCallDebug, bootstrap?.currentUserId, centerCallWindow, ensureCallMedia, incomingCall, sendSocketEvent, toast]
+    [acceptIncomingCall, activeSpace, appendCallDebug, bootstrap?.currentUserId, centerCallWindow, ensureCallMedia, incomingCall, rtcIceServers, sendSocketEvent, toast]
   );
 
   const declineIncomingCall = useCallback(() => {
@@ -1564,10 +1647,13 @@ export default function Messenger() {
       if (callWindowResizeRef.current) {
         const nextWidth = callWindowResizeRef.current.originWidth + (event.clientX - callWindowResizeRef.current.startX);
         const nextHeight = callWindowResizeRef.current.originHeight + (event.clientY - callWindowResizeRef.current.startY);
+        const compact = window.innerWidth < 900;
+        const minWidth = compact ? 280 : 360;
+        const minHeight = compact ? 340 : 280;
         setCallWindow((prev) => ({
           ...prev,
-          width: clamp(nextWidth, 360, Math.max(360, window.innerWidth - 24)),
-          height: clamp(nextHeight, 280, Math.max(280, window.innerHeight - 24)),
+          width: clamp(nextWidth, minWidth, Math.max(minWidth, window.innerWidth - 12)),
+          height: clamp(nextHeight, minHeight, Math.max(minHeight, window.innerHeight - 12)),
         }));
       }
     };
@@ -2555,10 +2641,11 @@ export default function Messenger() {
         <div
           className="fixed z-50 rounded-[2rem] border border-slate-200 bg-white/95 p-5 shadow-2xl backdrop-blur"
           style={{
-            left: callWindow.x ?? Math.max(24, window.innerWidth - callWindow.width - 24),
-            top: callWindow.y ?? Math.max(24, window.innerHeight - callWindow.height - 24),
-            width: callWindow.width,
-            minHeight: callWindow.height,
+            left: effectiveCallX,
+            top: effectiveCallY,
+            width: effectiveCallWidth,
+            minHeight: effectiveCallHeight,
+            maxHeight: Math.max(320, viewportSize.height - 16),
           }}
         >
           <div
@@ -2593,13 +2680,13 @@ export default function Messenger() {
               </Button>
             ) : null}
           </div>
-          <div className="mt-4 grid gap-3 xl:grid-cols-[1.8fr_1fr]">
-            <div className="grid gap-3 md:grid-cols-2">
+          <div className={`mt-4 grid gap-3 ${isCompactCallLayout ? "grid-cols-1" : "xl:grid-cols-[1.8fr_1fr]"}`}>
+            <div className={`grid gap-3 ${isCompactCallLayout ? "grid-cols-1" : "md:grid-cols-2"}`}>
               <div className="overflow-hidden rounded-3xl border border-slate-200 bg-slate-950">
                 {callState.mode === "video" ? (
-                  <video ref={localCallVideoRef} muted playsInline autoPlay className="h-52 w-full object-cover" />
+                  <video ref={localCallVideoRef} muted playsInline autoPlay className={`${isCompactCallLayout ? "h-40" : "h-52"} w-full object-cover`} />
                 ) : (
-                  <div className="flex h-52 items-center justify-center text-sm text-white">
+                  <div className={`flex ${isCompactCallLayout ? "h-40" : "h-52"} items-center justify-center text-sm text-white`}>
                     {callControls.micEnabled ? "Ваш микрофон активен" : "Ваш микрофон отключен"}
                   </div>
                 )}
@@ -2621,7 +2708,7 @@ export default function Messenger() {
                       <video
                         playsInline
                         autoPlay
-                        className="h-52 w-full object-cover"
+                        className={`${isCompactCallLayout ? "h-40" : "h-52"} w-full object-cover`}
                         ref={(node) => {
                           if (!node) return;
                           if (node.srcObject !== item.stream) {
@@ -2631,17 +2718,17 @@ export default function Messenger() {
                         }}
                       />
                     ) : (
-                      <div className="flex h-52 items-center justify-center text-sm text-white">Участник {item.userId.slice(0, 8)} подключен</div>
+                      <div className={`flex ${isCompactCallLayout ? "h-40" : "h-52"} items-center justify-center text-sm text-white`}>Участник {item.userId.slice(0, 8)} подключен</div>
                     )}
                   </div>
                 ))
               ) : (
                 <div className="overflow-hidden rounded-3xl border border-slate-200 bg-slate-950">
-                  <div className="flex h-52 items-center justify-center text-sm text-white">Ожидание участников</div>
+                  <div className={`flex ${isCompactCallLayout ? "h-40" : "h-52"} items-center justify-center text-sm text-white`}>Ожидание участников</div>
                 </div>
               )}
             </div>
-            <div className="flex min-h-[320px] flex-col rounded-3xl border border-slate-200 bg-slate-50">
+            <div className={`flex ${isCompactCallLayout ? "min-h-[220px]" : "min-h-[320px]"} flex-col rounded-3xl border border-slate-200 bg-slate-50`}>
               <div className="border-b border-slate-200 px-4 py-3 text-sm font-semibold text-slate-900">Чат звонка</div>
               <div className="flex-1 space-y-2 overflow-y-auto px-4 py-3">
                 {callChatMessages.length > 0 ? (
@@ -2687,9 +2774,11 @@ export default function Messenger() {
           <button
             type="button"
             aria-label="Изменить размер окна звонка"
-            className="absolute bottom-3 right-3 h-6 w-6 cursor-se-resize rounded-full border border-slate-300 bg-white/90"
+            className={`absolute bottom-3 right-3 ${isCompactCallLayout ? "h-8 w-8" : "h-6 w-6"} cursor-se-resize rounded-full border border-slate-300 bg-white/95 text-xs text-slate-500`}
             onPointerDown={startResizingCallWindow}
-          />
+          >
+            {isCompactCallLayout ? "↘" : null}
+          </button>
         </div>
       ) : null}
 
