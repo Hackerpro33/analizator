@@ -41,6 +41,7 @@ import {
   KeyRound,
   Lock,
   Mic,
+  MicOff,
   Phone,
   Plus,
   Radio,
@@ -51,6 +52,7 @@ import {
   UserPlus,
   Users,
   Video,
+  VideoOff,
 } from "lucide-react";
 
 const ATTACHMENT_ACCEPT =
@@ -64,6 +66,7 @@ const VIDEO_RECORDING_MIME_TYPES = [
   "video/webm;codecs=vp8,opus",
   "video/webm",
 ];
+const CALL_LAYOUT_STORAGE_KEY = "messenger-call-layout-v1";
 
 function formatMessageTime(value) {
   return new Date(value).toLocaleString("ru-RU", {
@@ -117,6 +120,20 @@ function pickSupportedMimeType(candidates) {
 
 function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
+}
+
+function readCallLayoutMap() {
+  if (typeof window === "undefined") return {};
+  try {
+    return JSON.parse(window.localStorage.getItem(CALL_LAYOUT_STORAGE_KEY) || "{}");
+  } catch (_error) {
+    return {};
+  }
+}
+
+function writeCallLayoutMap(value) {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(CALL_LAYOUT_STORAGE_KEY, JSON.stringify(value));
 }
 
 export default function Messenger() {
@@ -183,6 +200,12 @@ export default function Messenger() {
     width: 520,
     height: 420,
   });
+  const [callControls, setCallControls] = useState({
+    micEnabled: true,
+    videoEnabled: true,
+  });
+  const [callChatDraft, setCallChatDraft] = useState("");
+  const [callChatMessages, setCallChatMessages] = useState([]);
   const [createForm, setCreateForm] = useState({
     type: "group",
     title: "",
@@ -370,6 +393,18 @@ export default function Messenger() {
   const profileAvatarUrl = bootstrap?.profile?.avatar_attachment_id
     ? assetUrls[bootstrap.profile.avatar_attachment_id]
     : null;
+
+  const orderedCallRemoteStreams = useMemo(() => {
+    const layoutMap = readCallLayoutMap();
+    const savedOrder = layoutMap[callState.spaceId] || [];
+    const savedIndex = new Map(savedOrder.map((userId, index) => [userId, index]));
+    return [...callState.remoteStreams].sort((left, right) => {
+      const leftIndex = savedIndex.has(left.userId) ? savedIndex.get(left.userId) : Number.MAX_SAFE_INTEGER;
+      const rightIndex = savedIndex.has(right.userId) ? savedIndex.get(right.userId) : Number.MAX_SAFE_INTEGER;
+      if (leftIndex !== rightIndex) return leftIndex - rightIndex;
+      return left.userId.localeCompare(right.userId);
+    });
+  }, [callState.remoteStreams, callState.spaceId]);
 
   const collectValidAttachments = useCallback(
     async (files) => {
@@ -892,6 +927,9 @@ export default function Messenger() {
     }
     callIdRef.current = "";
     setIncomingCall(null);
+    setCallControls({ micEnabled: true, videoEnabled: true });
+    setCallChatDraft("");
+    setCallChatMessages([]);
     setCallState({
       status: "idle",
       mode: null,
@@ -998,6 +1036,10 @@ export default function Messenger() {
       if (!activeSpace) return;
       try {
         const stream = await ensureCallMedia(mode);
+        setCallControls({
+          micEnabled: true,
+          videoEnabled: stream.getVideoTracks().some((track) => track.enabled),
+        });
         const callId = crypto.randomUUID?.() || `${Date.now()}`;
         callIdRef.current = callId;
         setCallState({
@@ -1030,6 +1072,10 @@ export default function Messenger() {
     if (!incomingCall) return;
     try {
       const stream = await ensureCallMedia(incomingCall.mode);
+      setCallControls({
+        micEnabled: true,
+        videoEnabled: stream.getVideoTracks().some((track) => track.enabled),
+      });
       callIdRef.current = incomingCall.callId;
       setCallState({
         status: "connecting",
@@ -1075,6 +1121,60 @@ export default function Messenger() {
     }
     cleanupCall();
   }, [callState.callId, callState.spaceId, cleanupCall, sendSocketEvent]);
+
+  const toggleMicrophone = useCallback(() => {
+    if (!localCallStreamRef.current) return;
+    const nextEnabled = !callControls.micEnabled;
+    localCallStreamRef.current.getAudioTracks().forEach((track) => {
+      track.enabled = nextEnabled;
+    });
+    setCallControls((prev) => ({ ...prev, micEnabled: nextEnabled }));
+  }, [callControls.micEnabled]);
+
+  const toggleCallVideo = useCallback(() => {
+    if (!localCallStreamRef.current) return;
+    const nextEnabled = !callControls.videoEnabled;
+    localCallStreamRef.current.getVideoTracks().forEach((track) => {
+      track.enabled = nextEnabled;
+    });
+    setCallControls((prev) => ({ ...prev, videoEnabled: nextEnabled }));
+  }, [callControls.videoEnabled]);
+
+  const sendCallChatMessage = useCallback(() => {
+    const text = callChatDraft.trim();
+    if (!text || !callState.callId || !callState.spaceId) return;
+    const message = {
+      id: crypto.randomUUID?.() || `${Date.now()}`,
+      userId: bootstrap?.currentUserId || "self",
+      text,
+      createdAt: new Date().toISOString(),
+    };
+    setCallChatMessages((prev) => [...prev, message]);
+    sendSocketEvent({
+      type: "call.chat",
+      call_id: callState.callId,
+      space_id: callState.spaceId,
+      payload: { text },
+    });
+    setCallChatDraft("");
+  }, [bootstrap?.currentUserId, callChatDraft, callState.callId, callState.spaceId, sendSocketEvent]);
+
+  const moveRemoteTile = useCallback(
+    (draggedUserId, targetUserId) => {
+      if (!callState.spaceId || !draggedUserId || !targetUserId || draggedUserId === targetUserId) return;
+      const currentOrder = orderedCallRemoteStreams.map((item) => item.userId);
+      const nextOrder = currentOrder.filter((userId) => userId !== draggedUserId);
+      const targetIndex = nextOrder.indexOf(targetUserId);
+      nextOrder.splice(targetIndex < 0 ? nextOrder.length : targetIndex, 0, draggedUserId);
+      const layoutMap = readCallLayoutMap();
+      writeCallLayoutMap({
+        ...layoutMap,
+        [callState.spaceId]: nextOrder,
+      });
+      setCallState((prev) => ({ ...prev, remoteStreams: [...prev.remoteStreams] }));
+    },
+    [callState.spaceId, orderedCallRemoteStreams]
+  );
 
   const startDraggingCallWindow = useCallback(
     (event) => {
@@ -1200,6 +1300,21 @@ export default function Messenger() {
           } else if (payload.candidate) {
             await peer.addIceCandidate(new RTCIceCandidate(payload.candidate));
           }
+          return;
+        }
+        if (event.type === "call.chat") {
+          if (!callIdRef.current || event.call_id !== callIdRef.current || event.from_user_id === bootstrap?.currentUserId) return;
+          const text = event.payload?.text;
+          if (!text) return;
+          setCallChatMessages((prev) => [
+            ...prev,
+            {
+              id: crypto.randomUUID?.() || `${Date.now()}`,
+              userId: event.from_user_id,
+              text,
+              createdAt: new Date().toISOString(),
+            },
+          ]);
           return;
         }
         if (event.type === "space.created") {
@@ -1977,40 +2092,93 @@ export default function Messenger() {
               Завершить
             </Button>
           </div>
-          <div className="mt-4 grid gap-3 md:grid-cols-2">
-            <div className="overflow-hidden rounded-3xl border border-slate-200 bg-slate-950">
-              {callState.mode === "video" ? (
-                <video ref={localCallVideoRef} muted playsInline autoPlay className="h-52 w-full object-cover" />
+          <div className="mt-4 flex flex-wrap gap-2">
+            <Button type="button" variant={callControls.micEnabled ? "outline" : "default"} className="gap-2" onClick={toggleMicrophone}>
+              {callControls.micEnabled ? <Mic className="h-4 w-4" /> : <MicOff className="h-4 w-4" />}
+              {callControls.micEnabled ? "Микрофон включен" : "Микрофон выключен"}
+            </Button>
+            {callState.mode === "video" ? (
+              <Button type="button" variant={callControls.videoEnabled ? "outline" : "default"} className="gap-2" onClick={toggleCallVideo}>
+                {callControls.videoEnabled ? <Video className="h-4 w-4" /> : <VideoOff className="h-4 w-4" />}
+                {callControls.videoEnabled ? "Видео включено" : "Видео выключено"}
+              </Button>
+            ) : null}
+          </div>
+          <div className="mt-4 grid gap-3 xl:grid-cols-[1.8fr_1fr]">
+            <div className="grid gap-3 md:grid-cols-2">
+              <div className="overflow-hidden rounded-3xl border border-slate-200 bg-slate-950">
+                {callState.mode === "video" ? (
+                  <video ref={localCallVideoRef} muted playsInline autoPlay className="h-52 w-full object-cover" />
+                ) : (
+                  <div className="flex h-52 items-center justify-center text-sm text-white">
+                    {callControls.micEnabled ? "Ваш микрофон активен" : "Ваш микрофон отключен"}
+                  </div>
+                )}
+              </div>
+              {orderedCallRemoteStreams.length > 0 ? (
+                orderedCallRemoteStreams.map((item) => (
+                  <div
+                    key={item.userId}
+                    draggable
+                    onDragStart={(event) => event.dataTransfer.setData("text/plain", item.userId)}
+                    onDragOver={(event) => event.preventDefault()}
+                    onDrop={(event) => {
+                      event.preventDefault();
+                      moveRemoteTile(event.dataTransfer.getData("text/plain"), item.userId);
+                    }}
+                    className="overflow-hidden rounded-3xl border border-slate-200 bg-slate-950"
+                  >
+                    {callState.mode === "video" ? (
+                      <video
+                        playsInline
+                        autoPlay
+                        className="h-52 w-full object-cover"
+                        ref={(node) => {
+                          if (!node) return;
+                          if (node.srcObject !== item.stream) {
+                            node.srcObject = item.stream;
+                            node.play().catch(() => {});
+                          }
+                        }}
+                      />
+                    ) : (
+                      <div className="flex h-52 items-center justify-center text-sm text-white">Участник {item.userId.slice(0, 8)} подключен</div>
+                    )}
+                  </div>
+                ))
               ) : (
-                <div className="flex h-52 items-center justify-center text-sm text-white">Ваш микрофон активен</div>
+                <div className="overflow-hidden rounded-3xl border border-slate-200 bg-slate-950">
+                  <div className="flex h-52 items-center justify-center text-sm text-white">Ожидание участников</div>
+                </div>
               )}
             </div>
-            {callState.remoteStreams.length > 0 ? (
-              callState.remoteStreams.map((item) => (
-                <div key={item.userId} className="overflow-hidden rounded-3xl border border-slate-200 bg-slate-950">
-                  {callState.mode === "video" ? (
-                    <video
-                      playsInline
-                      autoPlay
-                      className="h-52 w-full object-cover"
-                      ref={(node) => {
-                        if (!node) return;
-                        if (node.srcObject !== item.stream) {
-                          node.srcObject = item.stream;
-                          node.play().catch(() => {});
-                        }
-                      }}
-                    />
-                  ) : (
-                    <div className="flex h-52 items-center justify-center text-sm text-white">Участник {item.userId.slice(0, 8)} подключен</div>
-                  )}
-                </div>
-              ))
-            ) : (
-              <div className="overflow-hidden rounded-3xl border border-slate-200 bg-slate-950">
-                <div className="flex h-52 items-center justify-center text-sm text-white">Ожидание участников</div>
+            <div className="flex min-h-[320px] flex-col rounded-3xl border border-slate-200 bg-slate-50">
+              <div className="border-b border-slate-200 px-4 py-3 text-sm font-semibold text-slate-900">Чат звонка</div>
+              <div className="flex-1 space-y-2 overflow-y-auto px-4 py-3">
+                {callChatMessages.length > 0 ? (
+                  callChatMessages.map((message) => (
+                    <div key={message.id} className="rounded-2xl bg-white px-3 py-2 text-sm text-slate-700 shadow-sm">
+                      <div className="mb-1 text-xs text-slate-400">{message.userId.slice(0, 8)}</div>
+                      <div>{message.text}</div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-sm text-slate-400">Сообщений пока нет</div>
+                )}
               </div>
-            )}
+              <div className="border-t border-slate-200 p-3">
+                <div className="flex gap-2">
+                  <Input
+                    value={callChatDraft}
+                    onChange={(event) => setCallChatDraft(event.target.value)}
+                    placeholder="Сообщение в чат звонка"
+                  />
+                  <Button type="button" onClick={sendCallChatMessage}>
+                    Отправить
+                  </Button>
+                </div>
+              </div>
+            </div>
           </div>
           <button
             type="button"
