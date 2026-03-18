@@ -447,18 +447,6 @@ export default function Messenger() {
     };
   }, []);
 
-  useEffect(() => {
-    bootstrapRef.current = bootstrap;
-  }, [bootstrap]);
-
-  useEffect(() => {
-    activeSpaceRef.current = activeSpace;
-  }, [activeSpace]);
-
-  useEffect(() => {
-    activeSpaceIdRef.current = activeSpaceId;
-  }, [activeSpaceId]);
-
   const loadSpaceMessages = useCallback(
     async (spaceId) => {
       if (!bootstrap?.keyBundle || !bootstrap?.deviceId || !spaceId) return;
@@ -488,6 +476,18 @@ export default function Messenger() {
     () => bootstrap?.spaces.find((space) => space.id === activeSpaceId) || bootstrap?.spaces[0] || null,
     [bootstrap, activeSpaceId]
   );
+
+  useEffect(() => {
+    bootstrapRef.current = bootstrap;
+  }, [bootstrap]);
+
+  useEffect(() => {
+    activeSpaceRef.current = activeSpace;
+  }, [activeSpace]);
+
+  useEffect(() => {
+    activeSpaceIdRef.current = activeSpaceId;
+  }, [activeSpaceId]);
 
   const centerCallWindow = useCallback((width = callWindow.width, height = callWindow.height) => {
     if (typeof window === "undefined") return;
