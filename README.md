@@ -214,7 +214,16 @@ map $http_x_forwarded_for $is_lab_ip {
 server {
   listen 443 ssl;
   server_name cyber.example.com;
-  location /api/ { proxy_pass http://backend:8080/; }
+  location /api/ {
+    proxy_pass http://backend:8080/;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_read_timeout 86400;
+  }
   location / { proxy_pass http://frontend:4173/; }
 }
 
@@ -224,6 +233,13 @@ server {
   location /api/ {
     if ($is_lab_ip = 0) { return 403; }
     proxy_pass http://backend:8080/;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_read_timeout 86400;
   }
   location / {
     if ($is_lab_ip = 0) { return 403; }
