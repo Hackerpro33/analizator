@@ -141,6 +141,7 @@ class MessengerStore:
             "description": (description or "").strip(),
             "member_ids": unique_members,
             "created_by": created_by,
+            "admin_user_ids": [created_by],
             "created_at": now,
             "updated_at": now,
             "last_message_id": None,
@@ -156,6 +157,55 @@ class MessengerStore:
             state = self._read()
             space = state["spaces"].get(space_id)
             return dict(space) if space else None
+
+    def update_space_membership(
+        self,
+        *,
+        space_id: str,
+        add_member_ids: Optional[List[str]] = None,
+        remove_member_ids: Optional[List[str]] = None,
+        grant_admin_ids: Optional[List[str]] = None,
+        revoke_admin_ids: Optional[List[str]] = None,
+    ) -> Optional[MessengerRecord]:
+        now = _utcnow().isoformat()
+        with self._lock:
+            state = self._read()
+            record = state["spaces"].get(space_id)
+            if not record:
+                return None
+
+            member_ids = list(dict.fromkeys(record.get("member_ids", [])))
+            admin_user_ids = list(dict.fromkeys(record.get("admin_user_ids", [record.get("created_by")])))
+            created_by = record.get("created_by")
+
+            for member_id in add_member_ids or []:
+                if member_id not in member_ids:
+                    member_ids.append(member_id)
+
+            remove_set = set(remove_member_ids or [])
+            if created_by in remove_set:
+                remove_set.remove(created_by)
+
+            member_ids = [member_id for member_id in member_ids if member_id not in remove_set]
+            admin_user_ids = [admin_id for admin_id in admin_user_ids if admin_id in member_ids and admin_id not in remove_set]
+
+            for admin_id in grant_admin_ids or []:
+                if admin_id in member_ids and admin_id not in admin_user_ids:
+                    admin_user_ids.append(admin_id)
+
+            revoke_set = set(revoke_admin_ids or [])
+            if created_by in revoke_set:
+                revoke_set.remove(created_by)
+            admin_user_ids = [admin_id for admin_id in admin_user_ids if admin_id not in revoke_set]
+            if created_by and created_by in member_ids and created_by not in admin_user_ids:
+                admin_user_ids.insert(0, created_by)
+
+            record["member_ids"] = member_ids
+            record["admin_user_ids"] = list(dict.fromkeys(admin_user_ids))
+            record["updated_at"] = now
+            state["spaces"][space_id] = record
+            self._write(state)
+            return dict(record)
 
     def list_spaces_for_user(self, user_id: str) -> List[MessengerRecord]:
         with self._lock:

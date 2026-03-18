@@ -26,12 +26,14 @@ import {
   getMessengerSpaceMessages,
   sendMessengerMessage,
   subscribeMessengerEvents,
+  updateMessengerSpaceMembership,
   updateMessengerMessage,
   updateMessengerProfile,
 } from "@/api/messenger";
 import { formatBytes, getMessengerConstraints, validateAttachmentFile } from "@/lib/messengerUtils";
 import {
   BadgeCheck,
+  Crown,
   Download,
   FileUp,
   Hash,
@@ -39,10 +41,14 @@ import {
   KeyRound,
   Lock,
   Mic,
+  Phone,
   Plus,
   Radio,
   Send,
+  Search,
   Shield,
+  UserMinus,
+  UserPlus,
   Users,
   Video,
 } from "lucide-react";
@@ -116,6 +122,8 @@ export default function Messenger() {
   const imageInputRef = useRef(null);
   const avatarInputRef = useRef(null);
   const liveVideoRef = useRef(null);
+  const localCallVideoRef = useRef(null);
+  const remoteCallVideoRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const mediaStreamRef = useRef(null);
   const recordingChunksRef = useRef([]);
@@ -124,6 +132,10 @@ export default function Messenger() {
   const recordingMimeTypeRef = useRef("");
   const recordingAutoStopTimerRef = useRef(null);
   const assetUrlsRef = useRef({});
+  const messengerSocketRef = useRef(null);
+  const callPeersRef = useRef(new Map());
+  const localCallStreamRef = useRef(null);
+  const callIdRef = useRef("");
 
   const [bootstrap, setBootstrap] = useState(null);
   const [activeSpaceId, setActiveSpaceId] = useState("");
@@ -145,6 +157,21 @@ export default function Messenger() {
   const [recordingElapsedMs, setRecordingElapsedMs] = useState(0);
   const [editingMessageId, setEditingMessageId] = useState("");
   const [editingText, setEditingText] = useState("");
+  const [participantSearch, setParticipantSearch] = useState("");
+  const [createMemberSearch, setCreateMemberSearch] = useState("");
+  const [manageDialogOpen, setManageDialogOpen] = useState(false);
+  const [manageMemberSearch, setManageMemberSearch] = useState("");
+  const [manageSelection, setManageSelection] = useState({ memberIds: [], adminIds: [] });
+  const [incomingCall, setIncomingCall] = useState(null);
+  const [callState, setCallState] = useState({
+    status: "idle",
+    mode: null,
+    callId: "",
+    spaceId: "",
+    localStream: null,
+    remoteStream: null,
+    remoteUserId: "",
+  });
   const [createForm, setCreateForm] = useState({
     type: "group",
     title: "",
@@ -286,10 +313,58 @@ export default function Messenger() {
 
   useEffect(() => {
     if (!user) return undefined;
-    const unsubscribe = subscribeMessengerEvents(
+    const socketClient = subscribeMessengerEvents(
       async (event) => {
+        if (event.type === "call.invite") {
+          if (!activeSpace || event.space_id !== activeSpace.id || event.from_user_id === bootstrap?.currentUserId) return;
+          setIncomingCall({
+            callId: event.call_id,
+            spaceId: event.space_id,
+            mode: event.mode === "video" ? "video" : "audio",
+            fromUserId: event.from_user_id,
+          });
+          return;
+        }
+        if (event.type === "call.accept") {
+          if (!callIdRef.current || event.call_id !== callIdRef.current || event.from_user_id === bootstrap?.currentUserId) return;
+          setCallState((prev) => ({ ...prev, status: "connecting", remoteUserId: event.from_user_id }));
+          await upsertPeerConnection(event.from_user_id, callState.mode || "audio", true);
+          return;
+        }
+        if (event.type === "call.decline" || event.type === "call.end") {
+          if (event.call_id === callIdRef.current) {
+            cleanupCall();
+          }
+          return;
+        }
+        if (event.type === "call.signal") {
+          if (!callIdRef.current || event.call_id !== callIdRef.current || event.from_user_id === bootstrap?.currentUserId) return;
+          const peer = await upsertPeerConnection(event.from_user_id, callState.mode || "audio", false);
+          const payload = event.payload || {};
+          if (payload.offer) {
+            await peer.setRemoteDescription(new RTCSessionDescription(payload.offer));
+            const answer = await peer.createAnswer();
+            await peer.setLocalDescription(answer);
+            messengerSocketRef.current?.send({
+              type: "call.signal",
+              call_id: event.call_id,
+              space_id: event.space_id,
+              target_user_id: event.from_user_id,
+              payload: { answer },
+            });
+          } else if (payload.answer) {
+            await peer.setRemoteDescription(new RTCSessionDescription(payload.answer));
+          } else if (payload.candidate) {
+            await peer.addIceCandidate(new RTCIceCandidate(payload.candidate));
+          }
+          return;
+        }
         if (event.type === "space.created") {
           await loadMessenger(activeSpaceId);
+          return;
+        }
+        if (event.type === "space.updated") {
+          await loadMessenger(activeSpaceId || event.space_id);
           return;
         }
         if (event.type === "message.created" || event.type === "message.updated" || event.type === "message.deleted") {
@@ -299,8 +374,12 @@ export default function Messenger() {
       },
       () => {}
     );
-    return unsubscribe;
-  }, [activeSpaceId, loadMessenger, loadSpaceMessages, user]);
+    messengerSocketRef.current = socketClient;
+    return () => {
+      messengerSocketRef.current = null;
+      socketClient.close();
+    };
+  }, [activeSpace, activeSpaceId, bootstrap?.currentUserId, callState.mode, cleanupCall, loadMessenger, loadSpaceMessages, upsertPeerConnection, user]);
 
   const activeSpace = useMemo(
     () => bootstrap?.spaces.find((space) => space.id === activeSpaceId) || bootstrap?.spaces[0] || null,
@@ -313,6 +392,39 @@ export default function Messenger() {
     if (!bootstrap) return [];
     return (bootstrap.directory || []).filter((entry) => entry.id !== bootstrap.currentUserId);
   }, [bootstrap]);
+
+  const filteredSelectableMembers = useMemo(() => {
+    const query = createMemberSearch.trim().toLowerCase();
+    if (!query) return selectableMembers;
+    return selectableMembers.filter((member) =>
+      [member.full_name, member.email, member.phone, member.telegram]
+        .filter(Boolean)
+        .some((value) => String(value).toLowerCase().includes(query))
+    );
+  }, [createMemberSearch, selectableMembers]);
+
+  const filteredSpaceMembers = useMemo(() => {
+    const query = participantSearch.trim().toLowerCase();
+    const members = activeSpace?.members || [];
+    if (!query) return members;
+    return members.filter((member) =>
+      [member.full_name, member.email, member.phone, member.telegram]
+        .filter(Boolean)
+        .some((value) => String(value).toLowerCase().includes(query))
+    );
+  }, [activeSpace?.members, participantSearch]);
+
+  const manageCandidates = useMemo(() => {
+    if (!bootstrap) return [];
+    const query = manageMemberSearch.trim().toLowerCase();
+    const items = bootstrap.directory || [];
+    if (!query) return items;
+    return items.filter((member) =>
+      [member.full_name, member.email, member.phone, member.telegram]
+        .filter(Boolean)
+        .some((value) => String(value).toLowerCase().includes(query))
+    );
+  }, [bootstrap, manageMemberSearch]);
 
   const profileAvatarUrl = bootstrap?.profile?.avatar_attachment_id
     ? assetUrls[bootstrap.profile.avatar_attachment_id]
@@ -718,6 +830,30 @@ export default function Messenger() {
   }, [recordingState.stream]);
 
   useEffect(() => {
+    const video = localCallVideoRef.current;
+    if (!video || !callState.localStream) return undefined;
+    video.srcObject = callState.localStream;
+    video.play().catch(() => {});
+    return () => {
+      if (video.srcObject) {
+        video.srcObject = null;
+      }
+    };
+  }, [callState.localStream]);
+
+  useEffect(() => {
+    const video = remoteCallVideoRef.current;
+    if (!video || !callState.remoteStream) return undefined;
+    video.srcObject = callState.remoteStream;
+    video.play().catch(() => {});
+    return () => {
+      if (video.srcObject) {
+        video.srcObject = null;
+      }
+    };
+  }, [callState.remoteStream]);
+
+  useEffect(() => {
     if (!recordingState.active) return undefined;
     const handlePointerRelease = () => {
       void stopRecording();
@@ -747,6 +883,7 @@ export default function Messenger() {
       });
       setCreateDialogOpen(false);
       setCreateForm({ type: "group", title: "", description: "", memberIds: [] });
+      setCreateMemberSearch("");
       await loadMessenger(created.id);
       toast({ title: `${created.type === "channel" ? "Канал" : "Группа"} создан(а)` });
     } catch (error) {
@@ -775,6 +912,234 @@ export default function Messenger() {
       });
     }
   };
+
+  const openManageMembersDialog = useCallback(() => {
+    if (!activeSpace) return;
+    setManageSelection({
+      memberIds: activeSpace.member_ids || [],
+      adminIds: activeSpace.admin_user_ids || [],
+    });
+    setManageMemberSearch("");
+    setManageDialogOpen(true);
+  }, [activeSpace]);
+
+  const handleManageMembersSave = useCallback(
+    async (event) => {
+      event.preventDefault();
+      if (!activeSpace) return;
+
+      const currentMemberIds = activeSpace.member_ids || [];
+      const currentAdminIds = activeSpace.admin_user_ids || [];
+      const nextMemberIds = Array.from(new Set(manageSelection.memberIds));
+      const nextAdminIds = Array.from(new Set(manageSelection.adminIds)).filter((memberId) => nextMemberIds.includes(memberId));
+
+      try {
+        await updateMessengerSpaceMembership(activeSpace.id, {
+          addMemberIds: nextMemberIds.filter((memberId) => !currentMemberIds.includes(memberId)),
+          removeMemberIds: currentMemberIds.filter((memberId) => !nextMemberIds.includes(memberId)),
+          grantAdminIds: nextAdminIds.filter((memberId) => !currentAdminIds.includes(memberId)),
+          revokeAdminIds: currentAdminIds.filter((memberId) => !nextAdminIds.includes(memberId)),
+        });
+        setManageDialogOpen(false);
+        await loadMessenger(activeSpace.id);
+        toast({ title: "Состав пространства обновлен" });
+      } catch (error) {
+        toast({
+          title: "Не удалось обновить состав",
+          description: error?.message,
+          variant: "destructive",
+        });
+      }
+    },
+    [activeSpace, loadMessenger, manageSelection.adminIds, manageSelection.memberIds, toast]
+  );
+
+  const cleanupCall = useCallback(() => {
+    callPeersRef.current.forEach((peer) => peer.close());
+    callPeersRef.current.clear();
+    if (localCallStreamRef.current) {
+      localCallStreamRef.current.getTracks().forEach((track) => track.stop());
+      localCallStreamRef.current = null;
+    }
+    callIdRef.current = "";
+    setIncomingCall(null);
+    setCallState({
+      status: "idle",
+      mode: null,
+      callId: "",
+      spaceId: "",
+      localStream: null,
+      remoteStream: null,
+      remoteUserId: "",
+    });
+  }, []);
+
+  const sendSocketEvent = useCallback((event) => {
+    messengerSocketRef.current?.send(event);
+  }, []);
+
+  const ensureCallMedia = useCallback(async (mode) => {
+    if (localCallStreamRef.current) {
+      return localCallStreamRef.current;
+    }
+    const stream = await navigator.mediaDevices.getUserMedia({
+      audio: true,
+      video: mode === "video" ? { facingMode: { ideal: "user" } } : false,
+    });
+    localCallStreamRef.current = stream;
+    return stream;
+  }, []);
+
+  const upsertPeerConnection = useCallback(
+    async (remoteUserId, mode, initiator = false) => {
+      if (callPeersRef.current.has(remoteUserId)) {
+        return callPeersRef.current.get(remoteUserId);
+      }
+
+      const stream = await ensureCallMedia(mode);
+      const peer = new RTCPeerConnection({
+        iceServers: [{ urls: ["stun:stun.l.google.com:19302"] }],
+      });
+
+      stream.getTracks().forEach((track) => peer.addTrack(track, stream));
+
+      peer.onicecandidate = (event) => {
+        if (event.candidate && activeSpace) {
+          sendSocketEvent({
+            type: "call.signal",
+            call_id: callIdRef.current,
+            space_id: activeSpace.id,
+            target_user_id: remoteUserId,
+            payload: { candidate: event.candidate },
+          });
+        }
+      };
+
+      peer.ontrack = (event) => {
+        const [remoteStream] = event.streams;
+        setCallState((prev) => ({
+          ...prev,
+          status: "active",
+          remoteStream,
+          remoteUserId,
+        }));
+      };
+
+      peer.onconnectionstatechange = () => {
+        if (["failed", "closed", "disconnected"].includes(peer.connectionState)) {
+          callPeersRef.current.delete(remoteUserId);
+        }
+      };
+
+      callPeersRef.current.set(remoteUserId, peer);
+
+      if (initiator && activeSpace) {
+        const offer = await peer.createOffer();
+        await peer.setLocalDescription(offer);
+        sendSocketEvent({
+          type: "call.signal",
+          call_id: callIdRef.current,
+          space_id: activeSpace.id,
+          target_user_id: remoteUserId,
+          payload: { offer },
+        });
+      }
+
+      return peer;
+    },
+    [activeSpace, ensureCallMedia, sendSocketEvent]
+  );
+
+  const startDirectCall = useCallback(
+    async (mode) => {
+      if (!activeSpace || activeSpace.members.length !== 2) {
+        toast({
+          title: "Звонок пока доступен только в прямом диалоге",
+          description: "Для групп и каналов сначала нужно расширить call mesh.",
+          variant: "destructive",
+        });
+        return;
+      }
+      try {
+        const stream = await ensureCallMedia(mode);
+        const remoteUser = (activeSpace.members || []).find((member) => member.id !== bootstrap?.currentUserId);
+        const callId = crypto.randomUUID?.() || `${Date.now()}`;
+        callIdRef.current = callId;
+        setCallState({
+          status: "outgoing",
+          mode,
+          callId,
+          spaceId: activeSpace.id,
+          localStream: stream,
+          remoteStream: null,
+          remoteUserId: remoteUser?.id || "",
+        });
+        sendSocketEvent({
+          type: "call.invite",
+          call_id: callId,
+          space_id: activeSpace.id,
+          mode,
+        });
+      } catch (error) {
+        toast({
+          title: "Звонок не запущен",
+          description: error?.message || "Не удалось получить доступ к микрофону или камере.",
+          variant: "destructive",
+        });
+      }
+    },
+    [activeSpace, bootstrap?.currentUserId, ensureCallMedia, sendSocketEvent, toast]
+  );
+
+  const acceptIncomingCall = useCallback(async () => {
+    if (!incomingCall) return;
+    try {
+      const stream = await ensureCallMedia(incomingCall.mode);
+      callIdRef.current = incomingCall.callId;
+      setCallState({
+        status: "connecting",
+        mode: incomingCall.mode,
+        callId: incomingCall.callId,
+        spaceId: incomingCall.spaceId,
+        localStream: stream,
+        remoteStream: null,
+        remoteUserId: incomingCall.fromUserId,
+      });
+      sendSocketEvent({
+        type: "call.accept",
+        call_id: incomingCall.callId,
+        space_id: incomingCall.spaceId,
+      });
+      setIncomingCall(null);
+    } catch (error) {
+      toast({
+        title: "Звонок не принят",
+        description: error?.message || "Не удалось открыть устройства.",
+        variant: "destructive",
+      });
+    }
+  }, [ensureCallMedia, incomingCall, sendSocketEvent, toast]);
+
+  const declineIncomingCall = useCallback(() => {
+    if (!incomingCall) return;
+    sendSocketEvent({
+      type: "call.decline",
+      call_id: incomingCall.callId,
+      space_id: incomingCall.spaceId,
+    });
+    setIncomingCall(null);
+  }, [incomingCall, sendSocketEvent]);
+
+  const endCurrentCall = useCallback(() => {
+    if (callState.callId && callState.spaceId) {
+      sendSocketEvent({
+        type: "call.end",
+        call_id: callState.callId,
+        space_id: callState.spaceId,
+      });
+    }
+    cleanupCall();
+  }, [callState.callId, callState.spaceId, cleanupCall, sendSocketEvent]);
 
   if (loading && !bootstrap) {
     return (
@@ -914,7 +1279,27 @@ export default function Messenger() {
                 <CardTitle className="text-lg">{activeSpace?.title || "Диалог не выбран"}</CardTitle>
                 <p className="mt-1 text-sm text-slate-500">{activeSpace?.description || "Выберите группу, канал или прямой диалог."}</p>
               </div>
-              {activeSpace && <Badge variant="secondary">{activeSpace.label}</Badge>}
+              <div className="flex flex-wrap items-center gap-2">
+                {activeSpace ? (
+                  <>
+                    <Button type="button" variant="outline" size="sm" className="gap-2" onClick={() => void startDirectCall("audio")}>
+                      <Phone className="h-4 w-4" />
+                      Звонок
+                    </Button>
+                    <Button type="button" variant="outline" size="sm" className="gap-2" onClick={() => void startDirectCall("video")}>
+                      <Video className="h-4 w-4" />
+                      Видеозвонок
+                    </Button>
+                  </>
+                ) : null}
+                {activeSpace?.can_manage_members && activeSpace?.type !== "direct" ? (
+                  <Button type="button" variant="outline" size="sm" className="gap-2" onClick={openManageMembersDialog}>
+                    <UserPlus className="h-4 w-4" />
+                    Участники
+                  </Button>
+                ) : null}
+                {activeSpace && <Badge variant="secondary">{activeSpace.label}</Badge>}
+              </div>
             </div>
           </CardHeader>
           <CardContent className="space-y-4 p-0">
@@ -1151,9 +1536,18 @@ export default function Messenger() {
               <CardTitle className="text-base">Участники</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              {(activeSpace?.members || []).map((memberId) => {
-                const member = memberId;
+              <div className="relative">
+                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                <Input
+                  value={participantSearch}
+                  onChange={(event) => setParticipantSearch(event.target.value)}
+                  placeholder="Поиск по имени, почте, телефону, контакту"
+                  className="pl-9"
+                />
+              </div>
+              {filteredSpaceMembers.map((member) => {
                 if (!member) return null;
+                const isAdmin = activeSpace?.admin_user_ids?.includes(member.id);
                 return (
                   <div key={member.id} className="flex items-center gap-3 rounded-2xl border border-slate-200 p-3">
                     <Avatar className="h-10 w-10">
@@ -1161,9 +1555,19 @@ export default function Messenger() {
                     </Avatar>
                     <div className="min-w-0 flex-1">
                       <div className="truncate text-sm font-medium text-slate-900">{member.full_name}</div>
-                      <div className="truncate text-xs text-slate-500">{member.email}</div>
+                      <div className="truncate text-xs text-slate-500">
+                        {[member.email, member.phone, member.telegram].filter(Boolean).join(" • ") || "Контакты не заполнены"}
+                      </div>
                     </div>
-                    <Badge variant="outline">{member.role}</Badge>
+                    <div className="flex items-center gap-2">
+                      {isAdmin ? (
+                        <Badge variant="secondary" className="gap-1">
+                          <Crown className="h-3 w-3" />
+                          Админ
+                        </Badge>
+                      ) : null}
+                      <Badge variant="outline">{member.role}</Badge>
+                    </div>
                   </div>
                 );
               })}
@@ -1231,8 +1635,17 @@ export default function Messenger() {
             </div>
             <div className="space-y-2">
               <Label>Участники</Label>
+              <div className="relative">
+                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                <Input
+                  value={createMemberSearch}
+                  onChange={(event) => setCreateMemberSearch(event.target.value)}
+                  placeholder="Поиск по имени, почте, телефону, контакту"
+                  className="pl-9"
+                />
+              </div>
               <div className="grid gap-2 sm:grid-cols-2">
-                {selectableMembers.map((member) => {
+                {filteredSelectableMembers.map((member) => {
                   const checked = createForm.memberIds.includes(member.id);
                   return (
                     <button
@@ -1251,7 +1664,9 @@ export default function Messenger() {
                       }`}
                     >
                       <div className="font-medium text-slate-900">{member.full_name}</div>
-                      <div className="text-xs text-slate-500">{member.email}</div>
+                      <div className="text-xs text-slate-500">
+                        {[member.email, member.phone, member.telegram].filter(Boolean).join(" • ") || "Контакты не заполнены"}
+                      </div>
                     </button>
                   );
                 })}
@@ -1350,6 +1765,140 @@ export default function Messenger() {
           </form>
         </DialogContent>
       </Dialog>
+
+      <Dialog open={manageDialogOpen} onOpenChange={setManageDialogOpen}>
+        <DialogContent className="sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Управление участниками</DialogTitle>
+          </DialogHeader>
+          <form className="space-y-4" onSubmit={handleManageMembersSave}>
+            <div className="relative">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+              <Input
+                value={manageMemberSearch}
+                onChange={(event) => setManageMemberSearch(event.target.value)}
+                placeholder="Поиск по имени, почте, телефону, контакту"
+                className="pl-9"
+              />
+            </div>
+            <div className="max-h-[420px] space-y-2 overflow-y-auto pr-1">
+              {manageCandidates.map((member) => {
+                const selected = manageSelection.memberIds.includes(member.id);
+                const isAdmin = manageSelection.adminIds.includes(member.id);
+                const isCreator = activeSpace?.created_by === member.id;
+                return (
+                  <div key={member.id} className="flex items-center gap-3 rounded-2xl border border-slate-200 p-3">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setManageSelection((prev) => ({
+                          ...prev,
+                          memberIds: selected
+                            ? prev.memberIds.filter((item) => item !== member.id)
+                            : [...prev.memberIds, member.id],
+                          adminIds: selected
+                            ? prev.adminIds.filter((item) => item !== member.id)
+                            : prev.adminIds,
+                        }))
+                      }
+                      className={`inline-flex h-9 w-9 items-center justify-center rounded-full border ${
+                        selected ? "border-blue-500 bg-blue-50 text-blue-600" : "border-slate-200 text-slate-400"
+                      }`}
+                    >
+                      {selected ? <UserMinus className="h-4 w-4" /> : <UserPlus className="h-4 w-4" />}
+                    </button>
+                    <div className="min-w-0 flex-1">
+                      <div className="truncate text-sm font-medium text-slate-900">{member.full_name}</div>
+                      <div className="truncate text-xs text-slate-500">
+                        {[member.email, member.phone, member.telegram].filter(Boolean).join(" • ") || "Контакты не заполнены"}
+                      </div>
+                    </div>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant={isAdmin ? "default" : "outline"}
+                      disabled={!selected || isCreator}
+                      className="gap-2"
+                      onClick={() =>
+                        setManageSelection((prev) => ({
+                          ...prev,
+                          adminIds: isAdmin
+                            ? prev.adminIds.filter((item) => item !== member.id)
+                            : [...prev.adminIds, member.id],
+                        }))
+                      }
+                    >
+                      <Crown className="h-4 w-4" />
+                      {isCreator ? "Создатель" : isAdmin ? "Админ" : "Сделать админом"}
+                    </Button>
+                  </div>
+                );
+              })}
+            </div>
+            <DialogFooter>
+              <Button type="button" variant="ghost" onClick={() => setManageDialogOpen(false)}>
+                Отмена
+              </Button>
+              <Button type="submit">Сохранить состав</Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {incomingCall ? (
+        <div className="fixed bottom-6 left-1/2 z-50 w-full max-w-md -translate-x-1/2 rounded-3xl border border-slate-200 bg-white p-5 shadow-2xl">
+          <div className="space-y-3">
+            <div className="text-lg font-semibold text-slate-900">
+              {incomingCall.mode === "video" ? "Входящий видеозвонок" : "Входящий звонок"}
+            </div>
+            <div className="text-sm text-slate-600">Пользователь из текущего диалога предлагает подключиться.</div>
+            <div className="flex justify-end gap-2">
+              <Button type="button" variant="ghost" onClick={declineIncomingCall}>
+                Отклонить
+              </Button>
+              <Button type="button" onClick={() => void acceptIncomingCall()}>
+                Принять
+              </Button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {callState.status !== "idle" ? (
+        <div className="fixed inset-x-6 bottom-6 z-50 rounded-[2rem] border border-slate-200 bg-white/95 p-5 shadow-2xl backdrop-blur xl:left-auto xl:right-6 xl:w-[520px]">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <div className="text-lg font-semibold text-slate-900">
+                {callState.mode === "video" ? "Видеозвонок" : "Аудиозвонок"}
+              </div>
+              <div className="text-sm text-slate-500">
+                {callState.status === "outgoing" ? "Ожидание ответа…" : callState.status === "connecting" ? "Соединение…" : "Соединение установлено"}
+              </div>
+            </div>
+            <Button type="button" variant="destructive" onClick={endCurrentCall}>
+              Завершить
+            </Button>
+          </div>
+          <div className="mt-4 grid gap-3 md:grid-cols-2">
+            <div className="overflow-hidden rounded-3xl border border-slate-200 bg-slate-950">
+              {callState.mode === "video" ? (
+                <video ref={localCallVideoRef} muted playsInline autoPlay className="h-52 w-full object-cover" />
+              ) : (
+                <div className="flex h-52 items-center justify-center text-sm text-white">Ваш микрофон активен</div>
+              )}
+            </div>
+            <div className="overflow-hidden rounded-3xl border border-slate-200 bg-slate-950">
+              {callState.mode === "video" ? (
+                <video ref={remoteCallVideoRef} playsInline autoPlay className="h-52 w-full object-cover" />
+              ) : (
+                <div className="flex h-52 items-center justify-center text-sm text-white">
+                  {callState.remoteStream ? "Собеседник подключен" : "Ожидание собеседника"}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      ) : null}
 
       {recordingState.active && (
         <div className="fixed bottom-6 right-6 z-50">

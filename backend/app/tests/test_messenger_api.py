@@ -237,6 +237,83 @@ def test_messenger_message_update_and_delete(tmp_path, monkeypatch):
     assert message["attachments"] == []
 
 
+def test_messenger_space_membership_management(tmp_path, monkeypatch):
+    admin_client, _security_client, _admin_payload, _security_payload, security_user_id = _prepare_admin_and_security(
+        tmp_path, monkeypatch
+    )
+
+    space = admin_client.post(
+        "/api/v1/messenger/spaces",
+        json={"type": "group", "title": "Ops", "member_ids": [security_user_id]},
+    )
+    assert space.status_code == 201
+    space_id = space.json()["id"]
+
+    users = admin_client.get("/api/v1/admin/users").json()["items"]
+    extra_user = next(item for item in users if item["id"] == security_user_id)
+
+    patched = admin_client.patch(
+        f"/api/v1/messenger/spaces/{space_id}/membership",
+        json={
+            "add_member_ids": [extra_user["id"]],
+            "grant_admin_ids": [security_user_id],
+        },
+    )
+    assert patched.status_code == 200
+    payload = patched.json()
+    assert security_user_id in payload["member_ids"]
+    assert security_user_id in payload["admin_user_ids"]
+
+
+def test_messenger_websocket_call_invite_forwarding(tmp_path, monkeypatch):
+    admin_client, security_client, _admin_payload, _security_payload, security_user_id = _prepare_admin_and_security(
+        tmp_path, monkeypatch
+    )
+
+    admin_client.post(
+        "/api/v1/messenger/devices",
+        json={
+            "label": "Admin browser",
+            "device_kind": "web",
+            "identity_key": {"kty": "OKP", "crv": "X25519", "x": "admin-key"},
+            "prekey_bundle": {"signed_prekey": {"key_id": 1, "public_key": "signed-admin"}},
+        },
+    )
+    security_client.post(
+        "/api/v1/messenger/devices",
+        json={
+            "label": "Security browser",
+            "device_kind": "web",
+            "identity_key": {"kty": "OKP", "crv": "X25519", "x": "sec-key"},
+            "prekey_bundle": {"signed_prekey": {"key_id": 1, "public_key": "signed-sec"}},
+        },
+    )
+    space_id = admin_client.post(
+        "/api/v1/messenger/spaces",
+        json={"type": "direct", "title": "Direct", "member_ids": [security_user_id]},
+    ).json()["id"]
+
+    with admin_client.websocket_connect("/api/v1/messenger/ws") as admin_ws, security_client.websocket_connect(
+        "/api/v1/messenger/ws"
+    ) as security_ws:
+        admin_ws.receive_json()
+        security_ws.receive_json()
+
+        admin_ws.send_json(
+            {
+                "type": "call.invite",
+                "call_id": "call-1",
+                "space_id": space_id,
+                "mode": "audio",
+            }
+        )
+
+        event = security_ws.receive_json()
+        assert event["type"] == "call.invite"
+        assert event["from_user_id"]
+        assert event["call_id"] == "call-1"
+
+
 def test_messenger_websocket_receives_new_messages(tmp_path, monkeypatch):
     admin_client, security_client, _admin_payload, _security_payload, security_user_id = _prepare_admin_and_security(
         tmp_path, monkeypatch

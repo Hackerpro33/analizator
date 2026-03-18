@@ -114,6 +114,13 @@ class CreateSpaceRequest(BaseModel):
     member_ids: List[str] = Field(default_factory=list)
 
 
+class SpaceMembershipPatch(BaseModel):
+    add_member_ids: List[str] = Field(default_factory=list)
+    remove_member_ids: List[str] = Field(default_factory=list)
+    grant_admin_ids: List[str] = Field(default_factory=list)
+    revoke_admin_ids: List[str] = Field(default_factory=list)
+
+
 class CreateMessageRequest(BaseModel):
     sender_device_id: str = Field(min_length=1, max_length=128)
     client_message_id: Optional[str] = Field(default=None, max_length=128)
@@ -149,6 +156,7 @@ def _resolve_space_payload(
         "label": _space_label(space["type"]),
         "description": space.get("description") or "",
         "member_ids": space.get("member_ids", []),
+        "admin_user_ids": space.get("admin_user_ids", [space.get("created_by")]),
         "members": [
             _merge_profile(users[member_id], profiles.get(member_id, {}))
             for member_id in space.get("member_ids", [])
@@ -157,6 +165,7 @@ def _resolve_space_payload(
         "created_by": space.get("created_by"),
         "created_at": space.get("created_at"),
         "updated_at": space.get("updated_at"),
+        "can_manage_members": False,
         "last_message": (
             {
                 "id": last_message["id"],
@@ -209,7 +218,10 @@ def get_bootstrap(
 ) -> Dict[str, Any]:
     profile = _merge_profile(current_user, store.get_profile(current_user["id"]))
     spaces = [
-        _resolve_space_payload(space=space, store=store, user_store=user_store)
+        {
+            **_resolve_space_payload(space=space, store=store, user_store=user_store),
+            "can_manage_members": current_user["id"] in space.get("admin_user_ids", [space.get("created_by")]),
+        }
         for space in store.list_spaces_for_user(current_user["id"])
     ]
     devices = store.list_devices(current_user["id"], active_only=False)
@@ -336,7 +348,10 @@ def list_spaces(
     user_store: UserStore = Depends(get_user_store),
 ) -> Dict[str, Any]:
     items = [
-        _resolve_space_payload(space=space, store=store, user_store=user_store)
+        {
+            **_resolve_space_payload(space=space, store=store, user_store=user_store),
+            "can_manage_members": current_user["id"] in space.get("admin_user_ids", [space.get("created_by")]),
+        }
         for space in store.list_spaces_for_user(current_user["id"])
     ]
     return {"items": items}
@@ -363,7 +378,10 @@ async def create_space(
         member_ids=member_ids,
         created_by=current_user["id"],
     )
-    resolved = _resolve_space_payload(space=space, store=store, user_store=user_store)
+    resolved = {
+        **_resolve_space_payload(space=space, store=store, user_store=user_store),
+        "can_manage_members": True,
+    }
     _record_audit(
         request,
         current_user["id"],
@@ -396,6 +414,64 @@ def list_messages(
         for message in reversed(store.list_messages_for_space(space_id, limit=limit, before=before))
     ]
     return {"items": items}
+
+
+@router.patch("/spaces/{space_id}/membership")
+async def patch_space_membership(
+    space_id: str,
+    payload: SpaceMembershipPatch,
+    request: Request,
+    current_user: UserRecord = Depends(get_current_user),
+    store: MessengerStore = Depends(get_messenger_store),
+    user_store: UserStore = Depends(get_user_store),
+) -> Dict[str, Any]:
+    space = store.get_space(space_id)
+    if not space or current_user["id"] not in space.get("member_ids", []):
+        raise HTTPException(status_code=404, detail="Space not found")
+    if space.get("type") not in {"group", "channel"}:
+        raise HTTPException(status_code=400, detail="Membership can be managed only for groups and channels")
+
+    admin_user_ids = set(space.get("admin_user_ids", [space.get("created_by")]))
+    if current_user["id"] not in admin_user_ids and current_user["id"] != space.get("created_by"):
+        raise HTTPException(status_code=403, detail="Only creator or delegated admins can manage members")
+
+    known_users = {user["id"]: user for user in user_store.list_users()}
+    requested_ids = set(payload.add_member_ids + payload.remove_member_ids + payload.grant_admin_ids + payload.revoke_admin_ids)
+    if any(member_id not in known_users for member_id in requested_ids):
+        raise HTTPException(status_code=400, detail="Unknown member id")
+
+    updated = store.update_space_membership(
+        space_id=space_id,
+        add_member_ids=payload.add_member_ids,
+        remove_member_ids=payload.remove_member_ids,
+        grant_admin_ids=payload.grant_admin_ids,
+        revoke_admin_ids=payload.revoke_admin_ids,
+    )
+    if not updated:
+        raise HTTPException(status_code=404, detail="Space not found")
+    resolved = {
+        **_resolve_space_payload(space=updated, store=store, user_store=user_store),
+        "can_manage_members": current_user["id"] in updated.get("admin_user_ids", [updated.get("created_by")]),
+    }
+    _record_audit(
+        request,
+        current_user["id"],
+        "messenger.space.membership.updated",
+        f"/messenger/spaces/{space_id}/membership",
+        {
+            "space_id": space_id,
+            "added": payload.add_member_ids,
+            "removed": payload.remove_member_ids,
+            "granted_admin": payload.grant_admin_ids,
+            "revoked_admin": payload.revoke_admin_ids,
+        },
+    )
+    event = {"type": "space.updated", "space_id": space_id, "space": resolved}
+    for member_id in updated.get("member_ids", []):
+        await connection_manager.send_user_event(member_id, event)
+    for removed_member_id in payload.remove_member_ids:
+        await connection_manager.send_user_event(removed_member_id, event)
+    return resolved
 
 
 @router.post("/spaces/{space_id}/messages", status_code=status.HTTP_201_CREATED)
@@ -638,6 +714,34 @@ async def messenger_ws(
             }
         )
         while True:
-            await websocket.receive_text()
+            raw_message = await websocket.receive_text()
+            try:
+                payload = json.loads(raw_message)
+            except json.JSONDecodeError:
+                continue
+            event_type = payload.get("type")
+            if not isinstance(event_type, str) or not event_type.startswith("call."):
+                continue
+
+            space_id = payload.get("space_id")
+            if not isinstance(space_id, str):
+                continue
+            space = store.get_space(space_id)
+            if not space or user["id"] not in space.get("member_ids", []):
+                continue
+
+            target_user_id = payload.get("target_user_id")
+            event = {
+                **payload,
+                "from_user_id": user["id"],
+            }
+
+            if isinstance(target_user_id, str) and target_user_id in space.get("member_ids", []):
+                await connection_manager.send_user_event(target_user_id, event)
+                continue
+
+            for member_id in space.get("member_ids", []):
+                if member_id != user["id"]:
+                    await connection_manager.send_user_event(member_id, event)
     except WebSocketDisconnect:
         await connection_manager.disconnect(user["id"], websocket)

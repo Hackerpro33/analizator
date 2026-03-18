@@ -84,6 +84,9 @@ function normalizeSpace(space) {
     description: space.description || "",
     members: (space.members || []).map(normalizeProfile),
     member_ids: space.member_ids || [],
+    admin_user_ids: space.admin_user_ids || [],
+    can_manage_members: Boolean(space.can_manage_members),
+    created_by: space.created_by || null,
     updated_at: space.updated_at,
     last_message_at: space.last_message?.created_at || space.updated_at,
     preview: space.last_message ? `Сообщение ${new Date(space.last_message.created_at).toLocaleString("ru-RU")}` : "Сообщений пока нет",
@@ -246,6 +249,19 @@ export async function createMessengerSpace(_user, payload) {
       title: payload.title,
       description: payload.description,
       member_ids: payload.memberIds,
+    }),
+  });
+  return normalizeSpace(response);
+}
+
+export async function updateMessengerSpaceMembership(spaceId, payload) {
+  const response = await jsonRequest(`/api/messenger/spaces/${encodeURIComponent(spaceId)}/membership`, {
+    method: "PATCH",
+    body: JSON.stringify({
+      add_member_ids: payload.addMemberIds || [],
+      remove_member_ids: payload.removeMemberIds || [],
+      grant_admin_ids: payload.grantAdminIds || [],
+      revoke_admin_ids: payload.revokeAdminIds || [],
     }),
   });
   return normalizeSpace(response);
@@ -423,5 +439,14 @@ export function subscribeMessengerEvents(onEvent, onError) {
     }
   };
   socket.onerror = (event) => onError?.(event);
-  return () => socket.close();
+  return {
+    send(event) {
+      if (socket.readyState === WebSocket.OPEN) {
+        socket.send(JSON.stringify(event));
+      }
+    },
+    close() {
+      socket.close();
+    },
+  };
 }
