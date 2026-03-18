@@ -431,6 +431,13 @@ export async function updateMessengerProfile(_user, payload) {
 
 export function subscribeMessengerEvents(onEvent, onError) {
   const socket = new WebSocket(buildWsUrl("/api/messenger/ws"));
+  const pendingEvents = [];
+
+  socket.onopen = () => {
+    while (pendingEvents.length > 0 && socket.readyState === WebSocket.OPEN) {
+      socket.send(JSON.stringify(pendingEvents.shift()));
+    }
+  };
   socket.onmessage = (event) => {
     try {
       onEvent?.(JSON.parse(event.data));
@@ -443,6 +450,8 @@ export function subscribeMessengerEvents(onEvent, onError) {
     send(event) {
       if (socket.readyState === WebSocket.OPEN) {
         socket.send(JSON.stringify(event));
+      } else if (socket.readyState === WebSocket.CONNECTING) {
+        pendingEvents.push(event);
       }
     },
     close() {

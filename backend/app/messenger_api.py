@@ -41,6 +41,7 @@ def _merge_profile(user: UserRecord, profile: Dict[str, Any]) -> Dict[str, Any]:
         "phone": profile.get("phone") or "",
         "telegram": profile.get("telegram") or "",
         "department": profile.get("department") or "",
+        "silent_mode": bool(profile.get("silent_mode", False)),
         "avatar_attachment_id": profile.get("avatar_attachment_id"),
     }
 
@@ -96,6 +97,7 @@ class MessengerProfilePatch(BaseModel):
     phone: Optional[str] = Field(default=None, max_length=64)
     telegram: Optional[str] = Field(default=None, max_length=128)
     department: Optional[str] = Field(default=None, max_length=128)
+    silent_mode: Optional[bool] = None
     avatar_attachment_id: Optional[str] = Field(default=None, max_length=128)
 
 

@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -33,6 +34,7 @@ import {
 import { formatBytes, getMessengerConstraints, validateAttachmentFile } from "@/lib/messengerUtils";
 import {
   BadgeCheck,
+  BellOff,
   Crown,
   Download,
   FileUp,
@@ -246,6 +248,9 @@ export default function Messenger() {
   const callSpaceIdRef = useRef("");
   const callWindowDragRef = useRef(null);
   const callWindowResizeRef = useRef(null);
+  const incomingRingtoneRef = useRef(null);
+  const incomingRingtoneTimerRef = useRef(null);
+  const hasUserInteractedRef = useRef(false);
 
   const [bootstrap, setBootstrap] = useState(null);
   const [activeSpaceId, setActiveSpaceId] = useState("");
@@ -306,6 +311,7 @@ export default function Messenger() {
     phone: "",
     telegram: "",
     department: "",
+    silent_mode: false,
     avatarFile: null,
   });
 
@@ -325,6 +331,7 @@ export default function Messenger() {
           phone: next.profile.phone || "",
           telegram: next.profile.telegram || "",
           department: next.profile.department || "",
+          silent_mode: Boolean(next.profile.silent_mode),
           avatarFile: null,
         });
       } catch (error) {
@@ -407,6 +414,18 @@ export default function Messenger() {
     },
     []
   );
+
+  useEffect(() => {
+    const markInteraction = () => {
+      hasUserInteractedRef.current = true;
+    };
+    window.addEventListener("pointerdown", markInteraction);
+    window.addEventListener("keydown", markInteraction);
+    return () => {
+      window.removeEventListener("pointerdown", markInteraction);
+      window.removeEventListener("keydown", markInteraction);
+    };
+  }, []);
 
   const loadSpaceMessages = useCallback(
     async (spaceId) => {
@@ -617,6 +636,53 @@ export default function Messenger() {
     }
     mediaStreamRef.current = null;
   }, []);
+
+  const stopIncomingRingtone = useCallback(() => {
+    if (incomingRingtoneTimerRef.current) {
+      window.clearInterval(incomingRingtoneTimerRef.current);
+      incomingRingtoneTimerRef.current = null;
+    }
+    if (incomingRingtoneRef.current) {
+      try {
+        incomingRingtoneRef.current.close();
+      } catch (_error) {
+        // ignore
+      }
+      incomingRingtoneRef.current = null;
+    }
+  }, []);
+
+  const playIncomingRingtone = useCallback(() => {
+    if (typeof window === "undefined" || !hasUserInteractedRef.current || bootstrap?.profile?.silent_mode) {
+      return;
+    }
+    stopIncomingRingtone();
+    const AudioContextCtor = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextCtor) return;
+
+    try {
+      const audioContext = new AudioContextCtor();
+      incomingRingtoneRef.current = audioContext;
+      const playPulse = () => {
+        const now = audioContext.currentTime;
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        oscillator.type = "sine";
+        oscillator.frequency.setValueAtTime(880, now);
+        gainNode.gain.setValueAtTime(0.0001, now);
+        gainNode.gain.exponentialRampToValueAtTime(0.08, now + 0.02);
+        gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.35);
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        oscillator.start(now);
+        oscillator.stop(now + 0.36);
+      };
+      playPulse();
+      incomingRingtoneTimerRef.current = window.setInterval(playPulse, 1200);
+    } catch (_error) {
+      stopIncomingRingtone();
+    }
+  }, [bootstrap?.profile?.silent_mode, stopIncomingRingtone]);
 
   const clearRecordingAutoStop = useCallback(() => {
     if (recordingAutoStopTimerRef.current) {
@@ -1063,7 +1129,8 @@ export default function Messenger() {
       participantIds: [],
       remoteStreams: [],
     });
-  }, []);
+    stopIncomingRingtone();
+  }, [stopIncomingRingtone]);
 
   const upsertRemoteStream = useCallback((remoteUserId, remoteStream) => {
     setCallState((prev) => {
@@ -1185,6 +1252,7 @@ export default function Messenger() {
       const shouldInitiate = currentUserId && remoteUserId && currentUserId.localeCompare(remoteUserId) < 0;
       await upsertPeerConnection(incomingCall.fromUserId, incomingCall.mode, shouldInitiate, incomingCall.spaceId);
       setIncomingCall(null);
+      stopIncomingRingtone();
     } catch (error) {
       toast({
         title: "Звонок не принят",
@@ -1192,7 +1260,7 @@ export default function Messenger() {
         variant: "destructive",
       });
     }
-  }, [bootstrap?.currentUserId, ensureCallMedia, incomingCall, sendSocketEvent, toast, upsertPeerConnection]);
+  }, [bootstrap?.currentUserId, ensureCallMedia, incomingCall, sendSocketEvent, stopIncomingRingtone, toast, upsertPeerConnection]);
 
   const startSpaceCall = useCallback(
     async (mode, spaceOverride = null) => {
@@ -1253,7 +1321,8 @@ export default function Messenger() {
       space_id: incomingCall.spaceId,
     });
     setIncomingCall(null);
-  }, [incomingCall, sendSocketEvent]);
+    stopIncomingRingtone();
+  }, [incomingCall, sendSocketEvent, stopIncomingRingtone]);
 
   const endCurrentCall = useCallback(() => {
     if (callState.callId && callState.spaceId) {
@@ -1449,6 +1518,14 @@ export default function Messenger() {
   }, [callState.status]);
 
   useEffect(() => {
+    if (incomingCall) {
+      playIncomingRingtone();
+      return;
+    }
+    stopIncomingRingtone();
+  }, [incomingCall, playIncomingRingtone, stopIncomingRingtone]);
+
+  useEffect(() => {
     if (!user) return undefined;
     const socketClient = subscribeMessengerEvents(
       async (event) => {
@@ -1478,6 +1555,10 @@ export default function Messenger() {
             await upsertPeerConnection(event.from_user_id, event.mode === "video" ? "video" : "audio", shouldInitiate, event.space_id);
             return;
           }
+          toast({
+            title: event.mode === "video" ? "Входящий видеозвонок" : "Входящий звонок",
+            description: "Откройте окно вызова и примите звонок.",
+          });
           setIncomingCall({
             callId: event.call_id,
             spaceId: event.space_id,
@@ -1642,7 +1723,15 @@ export default function Messenger() {
               </Avatar>
               <div>
                 <div className="font-semibold">{bootstrap?.profile?.full_name}</div>
-                <div className="text-sm text-slate-300">{bootstrap?.profile?.status}</div>
+                <div className="flex flex-wrap items-center gap-2 text-sm text-slate-300">
+                  <span>{bootstrap?.profile?.status}</span>
+                  {bootstrap?.profile?.silent_mode ? (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2 py-0.5 text-xs text-white">
+                      <BellOff className="h-3.5 w-3.5" />
+                      Без звука
+                    </span>
+                  ) : null}
+                </div>
               </div>
             </div>
             <div className="grid gap-2 text-sm text-slate-300">
@@ -1993,6 +2082,12 @@ export default function Messenger() {
                             </Badge>
                           ) : null}
                           <Badge variant="outline">{member.role}</Badge>
+                          {member.silent_mode ? (
+                            <Badge variant="outline" className="gap-1 text-slate-500">
+                              <BellOff className="h-3 w-3" />
+                              Без звука
+                            </Badge>
+                          ) : null}
                         </div>
                         <div className="break-words text-xs leading-5 text-slate-500">
                           {contactLine.length ? contactLine.join(" • ") : "Контакты не заполнены"}
@@ -2231,6 +2326,16 @@ export default function Messenger() {
                 value={profileForm.department}
                 onChange={(event) => setProfileForm((prev) => ({ ...prev, department: event.target.value }))}
                 placeholder="ИБ / Администрирование / Аналитика"
+              />
+            </div>
+            <div className="flex items-center justify-between rounded-2xl border border-slate-200 px-4 py-3">
+              <div className="space-y-1">
+                <div className="text-sm font-medium text-slate-900">Беззвучный режим</div>
+                <p className="text-xs text-slate-500">Другие пользователи увидят, что у вас отключен звук входящих вызовов.</p>
+              </div>
+              <Switch
+                checked={profileForm.silent_mode}
+                onCheckedChange={(checked) => setProfileForm((prev) => ({ ...prev, silent_mode: Boolean(checked) }))}
               />
             </div>
             <DialogFooter>
