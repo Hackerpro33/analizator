@@ -123,7 +123,6 @@ export default function Messenger() {
   const avatarInputRef = useRef(null);
   const liveVideoRef = useRef(null);
   const localCallVideoRef = useRef(null);
-  const remoteCallVideoRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const mediaStreamRef = useRef(null);
   const recordingChunksRef = useRef([]);
@@ -169,8 +168,8 @@ export default function Messenger() {
     callId: "",
     spaceId: "",
     localStream: null,
-    remoteStream: null,
-    remoteUserId: "",
+    participantIds: [],
+    remoteStreams: [],
   });
   const [createForm, setCreateForm] = useState({
     type: "group",
@@ -772,18 +771,6 @@ export default function Messenger() {
   }, [callState.localStream]);
 
   useEffect(() => {
-    const video = remoteCallVideoRef.current;
-    if (!video || !callState.remoteStream) return undefined;
-    video.srcObject = callState.remoteStream;
-    video.play().catch(() => {});
-    return () => {
-      if (video.srcObject) {
-        video.srcObject = null;
-      }
-    };
-  }, [callState.remoteStream]);
-
-  useEffect(() => {
     if (!recordingState.active) return undefined;
     const handlePointerRelease = () => {
       void stopRecording();
@@ -899,8 +886,27 @@ export default function Messenger() {
       callId: "",
       spaceId: "",
       localStream: null,
-      remoteStream: null,
-      remoteUserId: "",
+      participantIds: [],
+      remoteStreams: [],
+    });
+  }, []);
+
+  const upsertRemoteStream = useCallback((remoteUserId, remoteStream) => {
+    setCallState((prev) => {
+      const nextStreams = [...prev.remoteStreams];
+      const existingIndex = nextStreams.findIndex((item) => item.userId === remoteUserId);
+      const nextItem = { userId: remoteUserId, stream: remoteStream };
+      if (existingIndex >= 0) {
+        nextStreams[existingIndex] = nextItem;
+      } else {
+        nextStreams.push(nextItem);
+      }
+      return {
+        ...prev,
+        status: "active",
+        participantIds: Array.from(new Set([...prev.participantIds, remoteUserId])),
+        remoteStreams: nextStreams,
+      };
     });
   }, []);
 
@@ -947,12 +953,7 @@ export default function Messenger() {
 
       peer.ontrack = (event) => {
         const [remoteStream] = event.streams;
-        setCallState((prev) => ({
-          ...prev,
-          status: "active",
-          remoteStream,
-          remoteUserId,
-        }));
+        upsertRemoteStream(remoteUserId, remoteStream);
       };
 
       peer.onconnectionstatechange = () => {
@@ -977,22 +978,14 @@ export default function Messenger() {
 
       return peer;
     },
-    [activeSpace, ensureCallMedia, sendSocketEvent]
+    [activeSpace, ensureCallMedia, sendSocketEvent, upsertRemoteStream]
   );
 
-  const startDirectCall = useCallback(
+  const startSpaceCall = useCallback(
     async (mode) => {
-      if (!activeSpace || activeSpace.members.length !== 2) {
-        toast({
-          title: "Звонок пока доступен только в прямом диалоге",
-          description: "Для групп и каналов сначала нужно расширить call mesh.",
-          variant: "destructive",
-        });
-        return;
-      }
+      if (!activeSpace) return;
       try {
         const stream = await ensureCallMedia(mode);
-        const remoteUser = (activeSpace.members || []).find((member) => member.id !== bootstrap?.currentUserId);
         const callId = crypto.randomUUID?.() || `${Date.now()}`;
         callIdRef.current = callId;
         setCallState({
@@ -1001,8 +994,8 @@ export default function Messenger() {
           callId,
           spaceId: activeSpace.id,
           localStream: stream,
-          remoteStream: null,
-          remoteUserId: remoteUser?.id || "",
+          participantIds: [bootstrap?.currentUserId].filter(Boolean),
+          remoteStreams: [],
         });
         sendSocketEvent({
           type: "call.invite",
@@ -1032,8 +1025,8 @@ export default function Messenger() {
         callId: incomingCall.callId,
         spaceId: incomingCall.spaceId,
         localStream: stream,
-        remoteStream: null,
-        remoteUserId: incomingCall.fromUserId,
+        participantIds: [bootstrap?.currentUserId, incomingCall.fromUserId].filter(Boolean),
+        remoteStreams: [],
       });
       sendSocketEvent({
         type: "call.accept",
@@ -1048,7 +1041,7 @@ export default function Messenger() {
         variant: "destructive",
       });
     }
-  }, [ensureCallMedia, incomingCall, sendSocketEvent, toast]);
+  }, [bootstrap?.currentUserId, ensureCallMedia, incomingCall, sendSocketEvent, toast]);
 
   const declineIncomingCall = useCallback(() => {
     if (!incomingCall) return;
@@ -1087,8 +1080,15 @@ export default function Messenger() {
         }
         if (event.type === "call.accept") {
           if (!callIdRef.current || event.call_id !== callIdRef.current || event.from_user_id === bootstrap?.currentUserId) return;
-          setCallState((prev) => ({ ...prev, status: "connecting", remoteUserId: event.from_user_id }));
-          await upsertPeerConnection(event.from_user_id, callState.mode || "audio", true);
+          setCallState((prev) => ({
+            ...prev,
+            status: "connecting",
+            participantIds: Array.from(new Set([...prev.participantIds, event.from_user_id])),
+          }));
+          const currentUserId = String(bootstrap?.currentUserId || "");
+          const remoteUserId = String(event.from_user_id || "");
+          const shouldInitiate = currentUserId && remoteUserId && currentUserId.localeCompare(remoteUserId) < 0;
+          await upsertPeerConnection(event.from_user_id, callState.mode || "audio", shouldInitiate);
           return;
         }
         if (event.type === "call.decline" || event.type === "call.end") {
@@ -1282,11 +1282,11 @@ export default function Messenger() {
               <div className="flex flex-wrap items-center gap-2">
                 {activeSpace ? (
                   <>
-                    <Button type="button" variant="outline" size="sm" className="gap-2" onClick={() => void startDirectCall("audio")}>
+                    <Button type="button" variant="outline" size="sm" className="gap-2" onClick={() => void startSpaceCall("audio")}>
                       <Phone className="h-4 w-4" />
                       Звонок
                     </Button>
-                    <Button type="button" variant="outline" size="sm" className="gap-2" onClick={() => void startDirectCall("video")}>
+                    <Button type="button" variant="outline" size="sm" className="gap-2" onClick={() => void startSpaceCall("video")}>
                       <Video className="h-4 w-4" />
                       Видеозвонок
                     </Button>
@@ -1872,7 +1872,11 @@ export default function Messenger() {
                 {callState.mode === "video" ? "Видеозвонок" : "Аудиозвонок"}
               </div>
               <div className="text-sm text-slate-500">
-                {callState.status === "outgoing" ? "Ожидание ответа…" : callState.status === "connecting" ? "Соединение…" : "Соединение установлено"}
+                {callState.status === "outgoing"
+                  ? "Ожидание подключения участников…"
+                  : callState.status === "connecting"
+                    ? "Соединение…"
+                    : `Подключено: ${Math.max(1, callState.participantIds.length)} участника`}
               </div>
             </div>
             <Button type="button" variant="destructive" onClick={endCurrentCall}>
@@ -1887,15 +1891,32 @@ export default function Messenger() {
                 <div className="flex h-52 items-center justify-center text-sm text-white">Ваш микрофон активен</div>
               )}
             </div>
-            <div className="overflow-hidden rounded-3xl border border-slate-200 bg-slate-950">
-              {callState.mode === "video" ? (
-                <video ref={remoteCallVideoRef} playsInline autoPlay className="h-52 w-full object-cover" />
-              ) : (
-                <div className="flex h-52 items-center justify-center text-sm text-white">
-                  {callState.remoteStream ? "Собеседник подключен" : "Ожидание собеседника"}
+            {callState.remoteStreams.length > 0 ? (
+              callState.remoteStreams.map((item) => (
+                <div key={item.userId} className="overflow-hidden rounded-3xl border border-slate-200 bg-slate-950">
+                  {callState.mode === "video" ? (
+                    <video
+                      playsInline
+                      autoPlay
+                      className="h-52 w-full object-cover"
+                      ref={(node) => {
+                        if (!node) return;
+                        if (node.srcObject !== item.stream) {
+                          node.srcObject = item.stream;
+                          node.play().catch(() => {});
+                        }
+                      }}
+                    />
+                  ) : (
+                    <div className="flex h-52 items-center justify-center text-sm text-white">Участник {item.userId.slice(0, 8)} подключен</div>
+                  )}
                 </div>
-              )}
-            </div>
+              ))
+            ) : (
+              <div className="overflow-hidden rounded-3xl border border-slate-200 bg-slate-950">
+                <div className="flex h-52 items-center justify-center text-sm text-white">Ожидание участников</div>
+              </div>
+            )}
           </div>
         </div>
       ) : null}
