@@ -122,6 +122,10 @@ function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
 }
 
+function createStableCallId(spaceId, mode) {
+  return `call:${spaceId}:${mode}`;
+}
+
 async function requestUserMedia(constraints) {
   if (typeof navigator === "undefined") {
     throw new Error("Доступ к устройствам недоступен в текущем окружении.");
@@ -236,6 +240,9 @@ export default function Messenger() {
   const callPeersRef = useRef(new Map());
   const localCallStreamRef = useRef(null);
   const callIdRef = useRef("");
+  const callStatusRef = useRef("idle");
+  const callModeRef = useRef(null);
+  const callSpaceIdRef = useRef("");
   const callWindowDragRef = useRef(null);
   const callWindowResizeRef = useRef(null);
 
@@ -898,6 +905,12 @@ export default function Messenger() {
   }, [callState.localStream]);
 
   useEffect(() => {
+    callStatusRef.current = callState.status;
+    callModeRef.current = callState.mode;
+    callSpaceIdRef.current = callState.spaceId;
+  }, [callState.mode, callState.spaceId, callState.status]);
+
+  useEffect(() => {
     if (!recordingState.active) return undefined;
     const handlePointerRelease = () => {
       void stopRecording();
@@ -998,6 +1011,35 @@ export default function Messenger() {
     [activeSpace, loadMessenger, manageSelection.adminIds, manageSelection.memberIds, toast]
   );
 
+  const ensureDirectSpace = useCallback(
+    async (member) => {
+      if (!bootstrap?.currentUserId || !member?.id) return null;
+      const existing = (bootstrap.spaces || []).find(
+        (space) =>
+          space.type === "direct" &&
+          Array.isArray(space.member_ids) &&
+          space.member_ids.length === 2 &&
+          space.member_ids.includes(bootstrap.currentUserId) &&
+          space.member_ids.includes(member.id)
+      );
+      if (existing) {
+        setActiveSpaceId(existing.id);
+        return existing;
+      }
+
+      const created = await createMessengerSpace(user, {
+        type: "direct",
+        title: member.full_name || member.email || "Личный диалог",
+        description: "",
+        memberIds: [member.id],
+      });
+      await loadMessenger(created.id);
+      setActiveSpaceId(created.id);
+      return created;
+    },
+    [bootstrap, loadMessenger, user]
+  );
+
   const cleanupCall = useCallback(() => {
     callPeersRef.current.forEach((peer) => peer.close());
     callPeersRef.current.clear();
@@ -1006,6 +1048,7 @@ export default function Messenger() {
       localCallStreamRef.current = null;
     }
     callIdRef.current = "";
+    callSpaceIdRef.current = "";
     setIncomingCall(null);
     setCallControls({ micEnabled: true, videoEnabled: true });
     setCallChatDraft("");
@@ -1057,12 +1100,13 @@ export default function Messenger() {
   }, []);
 
   const upsertPeerConnection = useCallback(
-    async (remoteUserId, mode, initiator = false) => {
+    async (remoteUserId, mode, initiator = false, spaceIdOverride = "") => {
       if (callPeersRef.current.has(remoteUserId)) {
         return callPeersRef.current.get(remoteUserId);
       }
 
       const stream = await ensureCallMedia(mode);
+      const signalSpaceId = spaceIdOverride || callSpaceIdRef.current || activeSpace?.id || "";
       const peer = new RTCPeerConnection({
         iceServers: [{ urls: ["stun:stun.l.google.com:19302"] }],
       });
@@ -1070,11 +1114,11 @@ export default function Messenger() {
       stream.getTracks().forEach((track) => peer.addTrack(track, stream));
 
       peer.onicecandidate = (event) => {
-        if (event.candidate && activeSpace) {
+        if (event.candidate && signalSpaceId) {
           sendSocketEvent({
             type: "call.signal",
             call_id: callIdRef.current,
-            space_id: activeSpace.id,
+            space_id: signalSpaceId,
             target_user_id: remoteUserId,
             payload: { candidate: event.candidate },
           });
@@ -1094,13 +1138,13 @@ export default function Messenger() {
 
       callPeersRef.current.set(remoteUserId, peer);
 
-      if (initiator && activeSpace) {
+      if (initiator && signalSpaceId) {
         const offer = await peer.createOffer();
         await peer.setLocalDescription(offer);
         sendSocketEvent({
           type: "call.signal",
           call_id: callIdRef.current,
-          space_id: activeSpace.id,
+          space_id: signalSpaceId,
           target_user_id: remoteUserId,
           payload: { offer },
         });
@@ -1112,21 +1156,23 @@ export default function Messenger() {
   );
 
   const startSpaceCall = useCallback(
-    async (mode) => {
-      if (!activeSpace) return;
+    async (mode, spaceOverride = null) => {
+      const targetSpace = spaceOverride || activeSpace;
+      if (!targetSpace) return;
       try {
         const stream = await ensureCallMedia(mode);
         setCallControls({
           micEnabled: true,
           videoEnabled: stream.getVideoTracks().some((track) => track.enabled),
         });
-        const callId = crypto.randomUUID?.() || `${Date.now()}`;
+        const callId = createStableCallId(targetSpace.id, mode);
         callIdRef.current = callId;
+        callSpaceIdRef.current = targetSpace.id;
         setCallState({
           status: "outgoing",
           mode,
           callId,
-          spaceId: activeSpace.id,
+          spaceId: targetSpace.id,
           localStream: stream,
           participantIds: [bootstrap?.currentUserId].filter(Boolean),
           remoteStreams: [],
@@ -1134,7 +1180,7 @@ export default function Messenger() {
         sendSocketEvent({
           type: "call.invite",
           call_id: callId,
-          space_id: activeSpace.id,
+          space_id: targetSpace.id,
           mode,
         });
       } catch (error) {
@@ -1157,6 +1203,7 @@ export default function Messenger() {
         videoEnabled: stream.getVideoTracks().some((track) => track.enabled),
       });
       callIdRef.current = incomingCall.callId;
+      callSpaceIdRef.current = incomingCall.spaceId;
       setCallState({
         status: "connecting",
         mode: incomingCall.mode,
@@ -1171,6 +1218,10 @@ export default function Messenger() {
         call_id: incomingCall.callId,
         space_id: incomingCall.spaceId,
       });
+      const currentUserId = String(bootstrap?.currentUserId || "");
+      const remoteUserId = String(incomingCall.fromUserId || "");
+      const shouldInitiate = currentUserId && remoteUserId && currentUserId.localeCompare(remoteUserId) < 0;
+      await upsertPeerConnection(incomingCall.fromUserId, incomingCall.mode, shouldInitiate, incomingCall.spaceId);
       setIncomingCall(null);
     } catch (error) {
       toast({
@@ -1179,7 +1230,7 @@ export default function Messenger() {
         variant: "destructive",
       });
     }
-  }, [bootstrap?.currentUserId, ensureCallMedia, incomingCall, sendSocketEvent, toast]);
+  }, [bootstrap?.currentUserId, ensureCallMedia, incomingCall, sendSocketEvent, toast, upsertPeerConnection]);
 
   const declineIncomingCall = useCallback(() => {
     if (!incomingCall) return;
@@ -1238,6 +1289,38 @@ export default function Messenger() {
     });
     setCallChatDraft("");
   }, [bootstrap?.currentUserId, callChatDraft, callState.callId, callState.spaceId, sendSocketEvent]);
+
+  const handleParticipantDirectMessage = useCallback(
+    async (member) => {
+      try {
+        await ensureDirectSpace(member);
+      } catch (error) {
+        toast({
+          title: "Не удалось открыть диалог",
+          description: error?.message,
+          variant: "destructive",
+        });
+      }
+    },
+    [ensureDirectSpace, toast]
+  );
+
+  const handleParticipantCall = useCallback(
+    async (member, mode) => {
+      try {
+        const directSpace = await ensureDirectSpace(member);
+        if (!directSpace) return;
+        await startSpaceCall(mode, directSpace);
+      } catch (error) {
+        toast({
+          title: "Не удалось начать звонок",
+          description: error?.message,
+          variant: "destructive",
+        });
+      }
+    },
+    [ensureDirectSpace, startSpaceCall, toast]
+  );
 
   const moveRemoteTile = useCallback(
     (draggedUserId, targetUserId) => {
@@ -1333,6 +1416,14 @@ export default function Messenger() {
       async (event) => {
         if (event.type === "call.invite") {
           if (!activeSpace || event.space_id !== activeSpace.id || event.from_user_id === bootstrap?.currentUserId) return;
+          if (callIdRef.current === event.call_id && callStatusRef.current !== "idle") {
+            sendSocketEvent({
+              type: "call.accept",
+              call_id: event.call_id,
+              space_id: event.space_id,
+            });
+            return;
+          }
           setIncomingCall({
             callId: event.call_id,
             spaceId: event.space_id,
@@ -1348,7 +1439,10 @@ export default function Messenger() {
             status: "connecting",
             participantIds: Array.from(new Set([...prev.participantIds, event.from_user_id])),
           }));
-          await upsertPeerConnection(event.from_user_id, callState.mode || "audio", true);
+          const currentUserId = String(bootstrap?.currentUserId || "");
+          const remoteUserId = String(event.from_user_id || "");
+          const shouldInitiate = currentUserId && remoteUserId && currentUserId.localeCompare(remoteUserId) < 0;
+          await upsertPeerConnection(event.from_user_id, callModeRef.current || "audio", shouldInitiate, event.space_id);
           return;
         }
         if (event.type === "call.decline" || event.type === "call.end") {
@@ -1359,7 +1453,7 @@ export default function Messenger() {
         }
         if (event.type === "call.signal") {
           if (!callIdRef.current || event.call_id !== callIdRef.current || event.from_user_id === bootstrap?.currentUserId) return;
-          const peer = await upsertPeerConnection(event.from_user_id, callState.mode || "audio", false);
+          const peer = await upsertPeerConnection(event.from_user_id, callModeRef.current || "audio", false, event.space_id);
           const payload = event.payload || {};
           if (payload.offer) {
             await peer.setRemoteDescription(new RTCSessionDescription(payload.offer));
@@ -1414,7 +1508,7 @@ export default function Messenger() {
       messengerSocketRef.current = null;
       socketClient.close();
     };
-  }, [activeSpace, activeSpaceId, bootstrap?.currentUserId, callState.mode, cleanupCall, loadMessenger, loadSpaceMessages, upsertPeerConnection, user]);
+  }, [activeSpace, activeSpaceId, bootstrap?.currentUserId, cleanupCall, loadMessenger, loadSpaceMessages, sendSocketEvent, upsertPeerConnection, user]);
 
   if (loading && !bootstrap) {
     return (
@@ -1835,6 +1929,19 @@ export default function Messenger() {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
+                      {member.id !== bootstrap?.currentUserId ? (
+                        <>
+                          <Button type="button" size="sm" variant="outline" onClick={() => void handleParticipantDirectMessage(member)}>
+                            ЛС
+                          </Button>
+                          <Button type="button" size="icon" variant="outline" onClick={() => void handleParticipantCall(member, "audio")}>
+                            <Phone className="h-4 w-4" />
+                          </Button>
+                          <Button type="button" size="icon" variant="outline" onClick={() => void handleParticipantCall(member, "video")}>
+                            <Video className="h-4 w-4" />
+                          </Button>
+                        </>
+                      ) : null}
                       {isAdmin ? (
                         <Badge variant="secondary" className="gap-1">
                           <Crown className="h-3 w-3" />
