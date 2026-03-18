@@ -314,6 +314,32 @@ def test_messenger_websocket_call_invite_forwarding(tmp_path, monkeypatch):
         assert event["call_id"] == "call-1"
 
 
+def test_messenger_available_for_standard_user_and_directory_includes_all_active_users(tmp_path, monkeypatch):
+    admin_client = _build_client(tmp_path, monkeypatch)
+    user_client = _build_client(tmp_path, monkeypatch)
+
+    admin_payload = {"email": "admin@example.com", "password": "StrongPass!1", "full_name": "Admin One"}
+    user_payload = {"email": "user@example.com", "password": "StrongPass!1", "full_name": "Standard User"}
+
+    register_user(admin_client, admin_payload)
+    verify_registered_user(admin_client, tmp_path, admin_payload["email"])
+    login_user(admin_client, admin_payload["email"], admin_payload["password"])
+
+    register_user(admin_client, user_payload)
+    verify_registered_user(admin_client, tmp_path, user_payload["email"])
+    login = login_user(user_client, user_payload["email"], user_payload["password"])
+    assert login.status_code == 200
+
+    bootstrap = user_client.get("/api/v1/messenger/bootstrap")
+    assert bootstrap.status_code == 200
+
+    directory = user_client.get("/api/v1/messenger/directory")
+    assert directory.status_code == 200
+    emails = {item["email"] for item in directory.json()["items"]}
+    assert admin_payload["email"] in emails
+    assert user_payload["email"] in emails
+
+
 def test_messenger_websocket_receives_new_messages(tmp_path, monkeypatch):
     admin_client, security_client, _admin_payload, _security_payload, security_user_id = _prepare_admin_and_security(
         tmp_path, monkeypatch

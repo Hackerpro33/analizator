@@ -12,7 +12,7 @@ from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
 from .config import get_settings
-from .security import ACCESS_COOKIE_NAME, get_current_user, require_roles, resolve_user_from_access_token
+from .security import ACCESS_COOKIE_NAME, get_current_user, resolve_user_from_access_token
 from .services.metadata_repository import get_model_tracking_repository
 from .services.messenger_store import MessengerStore, get_messenger_store
 from .services.object_storage import get_object_storage
@@ -22,7 +22,6 @@ from .services.user_store import UserRecord, UserStore, get_user_store, redact_u
 router = APIRouter(
     prefix="/messenger",
     tags=["messenger"],
-    dependencies=[Depends(require_roles("admin", "security"))],
 )
 ws_router = APIRouter(prefix="/messenger", tags=["messenger"])
 
@@ -238,11 +237,10 @@ def get_directory(
     store: MessengerStore = Depends(get_messenger_store),
     user_store: UserStore = Depends(get_user_store),
 ) -> Dict[str, Any]:
-    allowed_roles = {"admin", "security"}
     items = [
         _merge_profile(user, store.get_profile(user["id"]))
         for user in user_store.list_users()
-        if user.get("is_active", True) and user.get("role") in allowed_roles
+        if user.get("is_active", True)
     ]
     _record_audit(None, current_user["id"], "messenger.directory.read", "/messenger/directory", {"count": len(items)})
     return {"items": items}
@@ -292,8 +290,6 @@ def list_user_devices(
     target_user = user_store.get_user(user_id)
     if not target_user or not target_user.get("is_active", True):
         raise HTTPException(status_code=404, detail="User not found")
-    if target_user.get("role") not in {"admin", "security"}:
-        raise HTTPException(status_code=403, detail="Target user is not available for messenger routing")
     return {"items": store.list_devices(user_id, active_only=True)}
 
 
@@ -698,8 +694,6 @@ async def messenger_ws(
         return
     try:
         user = resolve_user_from_access_token(token, user_store)
-        if user.get("role") not in {"admin", "security"}:
-            raise HTTPException(status_code=403, detail="Insufficient permissions")
     except HTTPException:
         await websocket.close(code=4403)
         return
