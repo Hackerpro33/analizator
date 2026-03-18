@@ -1348,10 +1348,7 @@ export default function Messenger() {
             status: "connecting",
             participantIds: Array.from(new Set([...prev.participantIds, event.from_user_id])),
           }));
-          const currentUserId = String(bootstrap?.currentUserId || "");
-          const remoteUserId = String(event.from_user_id || "");
-          const shouldInitiate = currentUserId && remoteUserId && currentUserId.localeCompare(remoteUserId) < 0;
-          await upsertPeerConnection(event.from_user_id, callState.mode || "audio", shouldInitiate);
+          await upsertPeerConnection(event.from_user_id, callState.mode || "audio", true);
           return;
         }
         if (event.type === "call.decline" || event.type === "call.end") {
