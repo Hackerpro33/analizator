@@ -87,8 +87,7 @@ const navigationItems = [
     url: createPageUrl("Messenger"),
     icon: MessagesSquare,
     gradient: "from-sky-500 to-cyan-600",
-    requireAuth: true,
-    roles: ["admin", "security"]
+    requireAuth: true
   },
   {
     accessKey: "DataSources",
