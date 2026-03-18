@@ -40,6 +40,7 @@ import {
   Image as ImageIcon,
   KeyRound,
   Lock,
+  MessageCircle,
   Mic,
   MicOff,
   Phone,
@@ -1417,11 +1418,19 @@ export default function Messenger() {
         if (event.type === "call.invite") {
           if (!activeSpace || event.space_id !== activeSpace.id || event.from_user_id === bootstrap?.currentUserId) return;
           if (callIdRef.current === event.call_id && callStatusRef.current !== "idle") {
+            setCallState((prev) => ({
+              ...prev,
+              participantIds: Array.from(new Set([...prev.participantIds, event.from_user_id])),
+            }));
             sendSocketEvent({
               type: "call.accept",
               call_id: event.call_id,
               space_id: event.space_id,
             });
+            const currentUserId = String(bootstrap?.currentUserId || "");
+            const remoteUserId = String(event.from_user_id || "");
+            const shouldInitiate = currentUserId && remoteUserId && currentUserId.localeCompare(remoteUserId) < 0;
+            await upsertPeerConnection(event.from_user_id, event.mode === "video" ? "video" : "audio", shouldInitiate, event.space_id);
             return;
           }
           setIncomingCall({
@@ -1917,38 +1926,62 @@ export default function Messenger() {
               {filteredSpaceMembers.map((member) => {
                 if (!member) return null;
                 const isAdmin = activeSpace?.admin_user_ids?.includes(member.id);
+                const contactLine = [member.email, member.phone, member.telegram].filter(Boolean);
                 return (
-                  <div key={member.id} className="flex items-center gap-3 rounded-2xl border border-slate-200 p-3">
+                  <div key={member.id} className="rounded-2xl border border-slate-200 p-3">
+                    <div className="flex items-start gap-3">
                     <Avatar className="h-10 w-10">
                       <AvatarFallback>{getInitials(member.full_name)}</AvatarFallback>
                     </Avatar>
-                    <div className="min-w-0 flex-1">
-                      <div className="truncate text-sm font-medium text-slate-900">{member.full_name}</div>
-                      <div className="truncate text-xs text-slate-500">
-                        {[member.email, member.phone, member.telegram].filter(Boolean).join(" • ") || "Контакты не заполнены"}
+                      <div className="min-w-0 flex-1 space-y-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <div className="min-w-0 break-words text-sm font-medium leading-5 text-slate-900">{member.full_name}</div>
+                          {isAdmin ? (
+                            <Badge variant="secondary" className="gap-1">
+                              <Crown className="h-3 w-3" />
+                              Админ
+                            </Badge>
+                          ) : null}
+                          <Badge variant="outline">{member.role}</Badge>
+                        </div>
+                        <div className="break-words text-xs leading-5 text-slate-500">
+                          {contactLine.length ? contactLine.join(" • ") : "Контакты не заполнены"}
+                        </div>
                       </div>
-                    </div>
-                    <div className="flex items-center gap-2">
                       {member.id !== bootstrap?.currentUserId ? (
-                        <>
-                          <Button type="button" size="sm" variant="outline" onClick={() => void handleParticipantDirectMessage(member)}>
-                            ЛС
+                        <div className="ml-auto flex shrink-0 items-center gap-1">
+                          <Button
+                            type="button"
+                            size="icon"
+                            variant="ghost"
+                            className="h-8 w-8 rounded-full text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+                            onClick={() => void handleParticipantDirectMessage(member)}
+                            title="Личное сообщение"
+                          >
+                            <MessageCircle className="h-4 w-4" />
                           </Button>
-                          <Button type="button" size="icon" variant="outline" onClick={() => void handleParticipantCall(member, "audio")}>
+                          <Button
+                            type="button"
+                            size="icon"
+                            variant="ghost"
+                            className="h-8 w-8 rounded-full text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+                            onClick={() => void handleParticipantCall(member, "audio")}
+                            title="Позвонить"
+                          >
                             <Phone className="h-4 w-4" />
                           </Button>
-                          <Button type="button" size="icon" variant="outline" onClick={() => void handleParticipantCall(member, "video")}>
+                          <Button
+                            type="button"
+                            size="icon"
+                            variant="ghost"
+                            className="h-8 w-8 rounded-full text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+                            onClick={() => void handleParticipantCall(member, "video")}
+                            title="Видеозвонок"
+                          >
                             <Video className="h-4 w-4" />
                           </Button>
-                        </>
+                        </div>
                       ) : null}
-                      {isAdmin ? (
-                        <Badge variant="secondary" className="gap-1">
-                          <Crown className="h-3 w-3" />
-                          Админ
-                        </Badge>
-                      ) : null}
-                      <Badge variant="outline">{member.role}</Badge>
                     </div>
                   </div>
                 );
