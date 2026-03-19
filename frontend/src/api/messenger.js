@@ -433,32 +433,78 @@ export async function updateMessengerProfile(_user, payload) {
 }
 
 export function subscribeMessengerEvents(onEvent, onError) {
-  const socket = new WebSocket(buildWsUrl("/api/messenger/ws"));
   const pendingEvents = [];
+  let socket = null;
+  let reconnectAttempts = 0;
+  let reconnectTimer = null;
+  let closedByClient = false;
 
-  socket.onopen = () => {
-    while (pendingEvents.length > 0 && socket.readyState === WebSocket.OPEN) {
+  const clearReconnect = () => {
+    if (reconnectTimer) {
+      window.clearTimeout(reconnectTimer);
+      reconnectTimer = null;
+    }
+  };
+
+  const scheduleReconnect = () => {
+    if (closedByClient) return;
+    clearReconnect();
+    const delayMs = Math.min(5000, 500 * 2 ** reconnectAttempts);
+    reconnectAttempts += 1;
+    reconnectTimer = window.setTimeout(() => {
+      connect();
+    }, delayMs);
+  };
+
+  const flushPending = () => {
+    while (pendingEvents.length > 0 && socket?.readyState === WebSocket.OPEN) {
       socket.send(JSON.stringify(pendingEvents.shift()));
     }
   };
-  socket.onmessage = (event) => {
+
+  const connect = () => {
     try {
-      onEvent?.(JSON.parse(event.data));
+      socket = new WebSocket(buildWsUrl("/api/messenger/ws"));
     } catch (error) {
       onError?.(error);
+      scheduleReconnect();
+      return;
     }
+
+    socket.onopen = () => {
+      reconnectAttempts = 0;
+      flushPending();
+    };
+    socket.onmessage = (event) => {
+      try {
+        onEvent?.(JSON.parse(event.data));
+      } catch (error) {
+        onError?.(error);
+      }
+    };
+    socket.onerror = (event) => onError?.(event);
+    socket.onclose = () => {
+      scheduleReconnect();
+    };
   };
-  socket.onerror = (event) => onError?.(event);
+
+  connect();
+
   return {
     send(event) {
-      if (socket.readyState === WebSocket.OPEN) {
+      if (socket?.readyState === WebSocket.OPEN) {
         socket.send(JSON.stringify(event));
-      } else if (socket.readyState === WebSocket.CONNECTING) {
+      } else {
         pendingEvents.push(event);
+        if (!socket || socket.readyState === WebSocket.CLOSED) {
+          scheduleReconnect();
+        }
       }
     },
     close() {
-      socket.close();
+      closedByClient = true;
+      clearReconnect();
+      socket?.close();
     },
   };
 }

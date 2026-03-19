@@ -1826,6 +1826,20 @@ export default function Messenger() {
     };
   }, [appendCallDebug, sendSocketEvent, toast, user]);
 
+  useEffect(() => {
+    if (!user || !bootstrap?.keyBundle || !bootstrap?.deviceId) return undefined;
+    const intervalId = window.setInterval(() => {
+      if (typeof document !== "undefined" && document.hidden) return;
+      const currentSpaceId = activeSpaceIdRef.current;
+      if (!currentSpaceId) return;
+      loadSpaceMessagesRef.current?.(currentSpaceId);
+      loadMessengerRef.current?.(currentSpaceId);
+    }, 5000);
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, [bootstrap?.deviceId, bootstrap?.keyBundle, user]);
+
   if (loading && !bootstrap) {
     return (
       <PageContainer className="space-y-6">
