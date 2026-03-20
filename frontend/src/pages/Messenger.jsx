@@ -584,6 +584,21 @@ export default function Messenger() {
     );
   }, [activeSpace?.members, participantSearch]);
 
+  const resolveDisplayNameByUserId = useCallback(
+    (userId) => {
+      if (!userId) return "Участник";
+      if (String(userId) === String(bootstrap?.currentUserId)) {
+        return bootstrap?.profile?.full_name || "Вы";
+      }
+      const fromActiveSpace = (activeSpace?.members || []).find((member) => String(member.id) === String(userId));
+      if (fromActiveSpace?.full_name) return fromActiveSpace.full_name;
+      const fromDirectory = (bootstrap?.directory || []).find((member) => String(member.id) === String(userId));
+      if (fromDirectory?.full_name) return fromDirectory.full_name;
+      return String(userId).slice(0, 8);
+    },
+    [activeSpace?.members, bootstrap?.currentUserId, bootstrap?.directory, bootstrap?.profile?.full_name]
+  );
+
   const manageCandidates = useMemo(() => {
     if (!bootstrap) return [];
     const query = manageMemberSearch.trim().toLowerCase();
@@ -1505,6 +1520,7 @@ export default function Messenger() {
     const message = {
       id: crypto.randomUUID?.() || `${Date.now()}`,
       userId: bootstrap?.currentUserId || "self",
+      userName: resolveDisplayNameByUserId(bootstrap?.currentUserId || "self"),
       text,
       createdAt: new Date().toISOString(),
     };
@@ -1516,7 +1532,7 @@ export default function Messenger() {
       payload: { text },
     });
     setCallChatDraft("");
-  }, [bootstrap?.currentUserId, callChatDraft, callState.callId, callState.spaceId, sendSocketEvent]);
+  }, [bootstrap?.currentUserId, callChatDraft, callState.callId, callState.spaceId, resolveDisplayNameByUserId, sendSocketEvent]);
 
   const handleParticipantDirectMessage = useCallback(
     async (member) => {
@@ -1794,6 +1810,7 @@ export default function Messenger() {
             {
               id: crypto.randomUUID?.() || `${Date.now()}`,
               userId: event.from_user_id,
+              userName: resolveDisplayNameByUserId(event.from_user_id),
               text,
               createdAt: new Date().toISOString(),
             },
@@ -1811,6 +1828,9 @@ export default function Messenger() {
         if (event.type === "message.created" || event.type === "message.updated" || event.type === "message.deleted") {
           await loadMessengerRef.current?.(currentActiveSpaceId || event.space_id);
           await loadSpaceMessagesRef.current?.(event.space_id);
+          window.setTimeout(() => {
+            void loadSpaceMessagesRef.current?.(event.space_id);
+          }, 800);
         }
       },
       () => {
@@ -1824,7 +1844,7 @@ export default function Messenger() {
       messengerSocketRef.current = null;
       socketClient.close();
     };
-  }, [appendCallDebug, sendSocketEvent, toast, user]);
+  }, [appendCallDebug, resolveDisplayNameByUserId, sendSocketEvent, toast, user]);
 
   useEffect(() => {
     if (!user || !bootstrap?.keyBundle || !bootstrap?.deviceId) return undefined;
@@ -2748,7 +2768,7 @@ export default function Messenger() {
                 {callChatMessages.length > 0 ? (
                   callChatMessages.map((message) => (
                     <div key={message.id} className="rounded-2xl bg-white px-3 py-2 text-sm text-slate-700 shadow-sm">
-                      <div className="mb-1 text-xs text-slate-400">{message.userId.slice(0, 8)}</div>
+                      <div className="mb-1 text-xs text-slate-400">{message.userName || message.userId?.slice?.(0, 8) || "Участник"}</div>
                       <div>{message.text}</div>
                     </div>
                   ))
